@@ -1,0 +1,23 @@
+/*
+ * @package   theme_essential
+ * @author    Franc Pombal
+ * @modified  Julian Ridden
+ * @modified  Gareth J Barnard, David Bezemer
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
+
+/* @group Category Icons */
+
+.categoryicons .course_category_tree .category[data-categoryid] {
+  &:hover {
+    background-color: ~"[[setting:themecolor]]";
+    > .info > .categoryname a {
+      color: ~"[[setting:themenavcolor]]";
+      i {
+        color: inherit;
+      }
+    }
+  }
+}
+
+/* @end */

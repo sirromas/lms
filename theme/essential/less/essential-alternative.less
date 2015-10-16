@@ -1,0 +1,94 @@
+/*
+ * @package     theme_essential
+ * @copyright   2013 Julian Ridden
+ * @copyright   2014 Gareth J Barnard, David Bezemer
+ * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
+// Import the bootstrap variables and mixins
+@import "bootstrap/variables";
+@import "bootstrap/mixins";
+// Import the essential variables
+@import "essential/variables";
+@import "essential/alternative/alternative1";
+@import "essential/alternative/alternative2";
+@import "essential/alternative/alternative3";
+@import "essential/alternative/alternative4";
+
+.navbar .navbar-inner #custom_menu_themecolours .dropdown-menu > li > a.default {
+  &:hover,
+  &:focus {
+    color: ~"[[setting:themenavcolor]]";
+    background-color: ~"[[setting:themecolor]]";
+    background-image: none;
+  }
+}
+.navbar .navbar-inner #custom_menu_themecolours .dropdown-menu > li > a.alternative1 {
+  &:hover,
+  &:focus {
+    color: ~"[[setting:alternativethemenavcolor1]]";
+    background-color: ~"[[setting:alternativethemecolor1]]";
+    background-image: -moz-linear-gradient(top, ~"[[setting:alternativethemetextcolor1]]", ~"[[setting:alternativethemecolor1]]");
+    background-image: -webkit-gradient(linear, 0 0, 0 100%, from(~"[[setting:alternativethemetextcolor1]]"), to(~"[[setting:alternativethemecolor1]]"));
+    background-image: -webkit-linear-gradient(top, ~"[[setting:alternativethemetextcolor1]]", ~"[[setting:alternativethemecolor1]]");
+    background-image: -o-linear-gradient(top, ~"[[setting:alternativethemetextcolor1]]", ~"[[setting:alternativethemecolor1]]");
+    background-image: linear-gradient(to bottom, ~"[[setting:alternativethemetextcolor1]]", ~"[[setting:alternativethemecolor1]]");
+  }
+}
+.navbar .navbar-inner #custom_menu_themecolours .dropdown-menu > li > a.alternative2 {
+  &:hover,
+  &:focus {
+    color: ~"[[setting:alternativethemenavcolor2]]";
+    background-color: ~"[[setting:alternativethemecolor2]]";
+    background-image: -moz-linear-gradient(top, ~"[[setting:alternativethemetextcolor2]]", ~"[[setting:alternativethemecolor2]]");
+    background-image: -webkit-gradient(linear, 0 0, 0 100%, from(~"[[setting:alternativethemetextcolor2]]"), to(~"[[setting:alternativethemecolor2]]"));
+    background-image: -webkit-linear-gradient(top, ~"[[setting:alternativethemetextcolor2]]", ~"[[setting:alternativethemecolor2]]");
+    background-image: -o-linear-gradient(top, ~"[[setting:alternativethemetextcolor2]]", ~"[[setting:alternativethemecolor2]]");
+    background-image: linear-gradient(to bottom, ~"[[setting:alternativethemetextcolor2]]", ~"[[setting:alternativethemecolor2]]");
+  }
+}
+.navbar .navbar-inner #custom_menu_themecolours .dropdown-menu > li > a.alternative3 {
+  &:hover,
+  &:focus {
+    color: ~"[[setting:alternativethemenavcolor3]]";
+    background-color: ~"[[setting:alternativethemecolor3]]";
+    background-image: -moz-linear-gradient(top, ~"[[setting:alternativethemetextcolor3]]", ~"[[setting:alternativethemecolor3]]");
+    background-image: -webkit-gradient(linear, 0 0, 0 100%, from(~"[[setting:alternativethemetextcolor3]]"), to(~"[[setting:alternativethemecolor3]]"));
+    background-image: -webkit-linear-gradient(top, ~"[[setting:alternativethemetextcolor3]]", ~"[[setting:alternativethemecolor3]]");
+    background-image: -o-linear-gradient(top, ~"[[setting:alternativethemetextcolor3]]", ~"[[setting:alternativethemecolor3]]");
+    background-image: linear-gradient(to bottom, ~"[[setting:alternativethemetextcolor3]]", ~"[[setting:alternativethemecolor3]]");
+  }
+}
+.navbar .navbar-inner #custom_menu_themecolours .dropdown-menu > li > a.alternative4 {
+  &:hover,
+  &:focus {
+    color: ~"[[setting:alternativethemenavcolor4]]";
+    background-color: ~"[[setting:alternativethemecolor4]]";
+    background-image: -moz-linear-gradient(top, ~"[[setting:alternativethemetextcolor4]]", ~"[[setting:alternativethemecolor4]]");
+    background-image: -webkit-gradient(linear, 0 0, 0 100%, from(~"[[setting:alternativethemetextcolor4]]"), to(~"[[setting:alternativethemecolor4]]"));
+    background-image: -webkit-linear-gradient(top, ~"[[setting:alternativethemetextcolor4]]", ~"[[setting:alternativethemecolor4]]");
+    background-image: -o-linear-gradient(top, ~"[[setting:alternativethemetextcolor4]]", ~"[[setting:alternativethemecolor4]]");
+    background-image: linear-gradient(to bottom, ~"[[setting:alternativethemetextcolor4]]", ~"[[setting:alternativethemecolor4]]");
+  }
+}
+.navbar .navbar-inner #custom_menu_themecolours .dropdown-menu > li > a {
+  &.alternative1 {
+    i {
+      background-color: ~"[[setting:alternativethemecolor1]]";
+    }
+  }
+  &.alternative2 {
+    i {
+      background-color: ~"[[setting:alternativethemecolor2]]";
+    }
+  }
+  &.alternative3 {
+    i {
+      background-color: ~"[[setting:alternativethemecolor3]]";
+    }
+  }
+  &.alternative4 {
+    i {
+      background-color: ~"[[setting:alternativethemecolor4]]";
+    }
+  }
+}
