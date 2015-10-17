@@ -17,12 +17,13 @@ class DB
             $this->host = $data_item->db_host;
             $this->user = $data_item->db_user;
             $this->password = $data_item->db_pwd;
+            
         }
         
         // This will load only once regardless of how many times the class is called
         $connection = mysql_connect($this->host, $this->user, $this->password) or die(mysql_error());
-        $db = mysql_select_db($this->databaseName, $connection) or die(mysql_error());
-        echo 'DB initiated<br>';
+        $db = mysql_select_db($this->databaseName, $connection) or die(mysql_error());        
+        $this->db=$db;
     }
     
     // this function makes sure there's only 1 instance of the Database class
@@ -36,7 +37,7 @@ class DB
 
     public function connect()
     {
-        // db connection
+        return $this->db;
     }
 
     public function query($query)

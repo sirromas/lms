@@ -7,7 +7,7 @@
 <meta http-equiv="content-type" content="text/html;charset=utf-8" />
 <meta name="generator" content="Adobe GoLive" />
 <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
-<script type="text/javascript" src="lms.js" ></script>
+<script type="text/javascript" src="lms.js"></script>
 
 <title>Globalization Plus</title>
 
@@ -138,26 +138,32 @@ body {
 				<p>
 					<img src="register_new.jpg" alt="" height="475" width="991"
 						border="0" />
-						
-						<table>
-						
-						<rt>
-						<td width="50%"><div id='student'><a id='a_student' href=''>I want to sign up as student</a></div></td>
-						<td width="50%"><div id='tutor'><a id='a_tutor' href=''>I want to sign up as tutor</a></div></td>						
-						</rt>
-						<tr>
-						<td><div id='signup_content'></div></td>
-						</tr>
-						
-						</table>table>
-						
-						<?php 
-						
-						
-						
-						?>
-						
 				</p>
+				<table>
+
+					<tr>
+						<td width="50%"><div id='student'>
+								<span class="ds275" id='a_student'
+									style="cursor: pointer; text-decoration: underline;">I want to
+									sign up as student</span>
+
+							</div></td>
+						<td width="50%"><div id='tutor'>
+								<span class="ds275" id='a_tutor'
+									style="cursor: pointer; text-decoration: underline;">I want to
+									sign up as tutor</span>
+
+							</div></td>
+					</tr>
+					<tr>
+						<td><div id='signup_content'></div></td>
+					</tr>
+
+				</table>
+						
+						<?php
+    ?>
+				
 				<div align="center">
 					<div id="container16"></div>
 					<span class="ds281"><a href="issue.html" target="_parent">Click
@@ -189,5 +195,6 @@ body {
 			</div>
 		</div>
 	</div>
+</body>
 
 </html>
