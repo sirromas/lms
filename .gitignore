@@ -1,43 +1,38 @@
-# Windows image file caches
-Thumbs.db
-ehthumbs.db
-
-# Folder config file
-Desktop.ini
-
-# Recycle Bin used on file shares
-$RECYCLE.BIN/
-
-# Windows Installer files
-*.cab
-*.msi
-*.msm
-*.msp
-
-# Windows shortcuts
-*.lnk
-
-# =========================
-# Operating System Files
-# =========================
-
-# OSX
-# =========================
-
+# This file specifies intentionally untracked files that all Moodle git
+# repositories should ignore. It is recommended not to modify this file in your
+# local clone. Instead, use .git/info/exclude and add new records there as
+# needed.
+#
+# Example: if you deploy a contributed plugin mod/foobar into your site, put
+# the following line into .git/info/exclude file in your Moodle clone:
+# /mod/foobar/
+#
+# See gitignore(5) man page for more details
+#
+/config.php
+/lib/editor/tinymce/extra/tools/temp/
+*~
+*.swp
+/tags
+/TAGS
+/cscope.*
+/.patches/
+/.idea/
+/nbproject/
+CVS
 .DS_Store
-.AppleDouble
-.LSOverride
-
-# Thumbnails
-._*
-
-# Files that might appear on external disk
-.Spotlight-V100
-.Trashes
-
-# Directories potentially created on remote AFP share
-.AppleDB
-.AppleDesktop
-Network Trash Folder
-Temporary Items
-.apdisk
+/.settings/
+/.project
+/.buildpath
+/.cache
+phpunit.xml
+# Composer support. Do not ignore composer.json, or composer.lock. These should be shipped by us.
+composer.phar
+/vendor/
+/behat.yml
+*/yui/build/*/*-coverage.js
+/lib/yuilib/*/build/*/*-coverage.js
+# lib/yuilib/version/module/module-coverage.js
+/lib/yuilib/*/*/*-coverage.js
+atlassian-ide-plugin.xml
+/node_modules/

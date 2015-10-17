@@ -1,0 +1,9 @@
+
+Username:	lms@mycodebusters.com
+Password:	aK6SKymc
+Incoming Server:	mail.mycodebusters.com
+IMAP Port: 143
+POP3 Port: 110
+Outgoing Server:	mail.mycodebusters.com
+SMTP Port: 26
+Authentication is required for IMAP, POP3, and SMTP.
