@@ -7,23 +7,28 @@ class DB
 
     private static $instance; // store the single instance of the database
 
+    private $databaseName;
+
+    private $host;
+
+    private $user;
+
+    private $password;
+
     private function __construct()
     {
         $config_data = file_get_contents('db.xml');
         $config = new SimpleXMLElement($config_data);
-        foreach ($config as $data_item) {
-            
-            $this->databaseName = $data_item->db_name;
-            $this->host = $data_item->db_host;
-            $this->user = $data_item->db_user;
-            $this->password = $data_item->db_pwd;
-            
-        }
+        
+        $this->databaseName = $config->db_name;
+        $this->host = $config->db_host;
+        $this->user = $config->db_user;
+        $this->password = $config->db_pwd;
         
         // This will load only once regardless of how many times the class is called
         $connection = mysql_connect($this->host, $this->user, $this->password) or die(mysql_error());
-        $db = mysql_select_db($this->databaseName, $connection) or die(mysql_error());        
-        $this->db=$db;
+        $db = mysql_select_db($this->databaseName, $connection) or die(mysql_error());
+        $this->db = $db;
     }
     
     // this function makes sure there's only 1 instance of the Database class
@@ -55,17 +60,14 @@ class DB
     }
     
     /*
-     * 
+     *
      * $db = DB::getInstance();
-       query = "SELECT * FROM registrations";
-       echo $db->numrows($query);
-       $result = $db->query($query);
-     * 
-     * 
+     * query = "SELECT * FROM registrations";
+     * echo $db->numrows($query);
+     * $result = $db->query($query);
+     *
+     *
      */
-    
-    
-    
 }
 
 ?>

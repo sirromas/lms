@@ -14,8 +14,7 @@ class signup_user
     function __construct($use_type)
     {
         $this->user_type=$use_type;
-        $db=DB::getInstance();
-        echo "User provided: " .$this->user_type;
+        $db=DB::getInstance();        
     }
     
     function getSignUpForm(){
