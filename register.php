@@ -6,6 +6,9 @@
 <head>
 <meta http-equiv="content-type" content="text/html;charset=utf-8" />
 <meta name="generator" content="Adobe GoLive" />
+<script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
+<script type="text/javascript" src="lms.js" ></script>
+
 <title>Globalization Plus</title>
 
 <style type="text/css" media="all">
@@ -135,6 +138,25 @@ body {
 				<p>
 					<img src="register_new.jpg" alt="" height="475" width="991"
 						border="0" />
+						
+						<table>
+						
+						<rt>
+						<td width="50%"><div id='student'><a id='a_student' href=''>I want to sign up as student</a></div></td>
+						<td width="50%"><div id='tutor'><a id='a_tutor' href=''>I want to sign up as tutor</a></div></td>						
+						</rt>
+						<tr>
+						<td><div id='signup_content'></div></td>
+						</tr>
+						
+						</table>table>
+						
+						<?php 
+						
+						
+						
+						?>
+						
 				</p>
 				<div align="center">
 					<div id="container16"></div>
