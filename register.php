@@ -7,6 +7,7 @@
 <meta http-equiv="content-type" content="text/html;charset=utf-8" />
 <meta name="generator" content="Adobe GoLive" />
 <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
+<script src="validator/dist/jquery.validate.js"></script>
 <script type="text/javascript" src="lms.js"></script>
 
 <title>Globalization Plus</title>
@@ -139,30 +140,13 @@ body {
 					<img src="register_new.jpg" alt="" height="475" width="991"
 						border="0" />
 				</p>
-				<table>
 
-					<tr>
-						<td width="50%"><div id='student'>
-								<span class="ds275" id='a_student'
-									style="cursor: pointer; text-decoration: underline;">I want to
-									sign up as student</span>
-
-							</div></td>
-						<td width="50%"><div id='tutor'>
-								<span class="ds275" id='a_tutor'
-									style="cursor: pointer; text-decoration: underline;">I want to
-									sign up as tutor</span>
-
-							</div></td>
-					</tr>
-					<tr>
-						<td><div id='signup_content'></div></td>
-					</tr>
-
-				</table>
+				
 						
-						<?php
-    ?>
+				<span class="ds275" style='z-index: 100; position: absolute; left: 380px;top:475px;'><span class="ds280" id='a_student' style='color: #570101;cursor:pointer;text-decoration:underline;'>I want to sign up as student</span><span class="ds273"> </span></span>
+				<span class="ds275" style='z-index: 100; position: absolute; left: 690px;top:475px;'><span class="ds280" id='a_tutor' style='color: #570101;cursor:pointer;text-decoration:underline;'>I want to sign up as tutor</span><span class="ds273"> </span></span>		
+				<span class="ds275" class="ds275" style='z-index: 100; position: absolute; left: 575px;top:540px;'><span class="ds280" id='signin'><a href="http://globalizationplus.com/signin.html" style='color: #570101;cursor:pointer;text-decoration:underline;'>I already have an account</a></span></span>
+				<div id='signup_content' style='z-index: 100; position: absolute; left: 380px;top:600px;border:thin;visibility:visible;'></div>						
 				
 				<div align="center">
 					<div id="container16"></div>
