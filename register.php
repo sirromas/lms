@@ -7,7 +7,100 @@
 <meta http-equiv="content-type" content="text/html;charset=utf-8" />
 <meta name="generator" content="Adobe GoLive" />
 <title>Globalization Plus</title>
-<link rel="stylesheet" type="text/css" href="register.css">
+
+<style type="text/css" media="all">
+<!--
+a:link {
+	color: #570101;
+}
+
+a:visited {
+	color: #570101;
+}
+
+a:active {
+	color: #570101;
+}
+
+body {
+	color: #570101;
+}
+
+#container6 {
+	width: 1000px;
+	height: 1003px;
+}
+
+.ds271 /*agl rulekind: base;*/ {
+	color: #000;
+	font-size: 24px;
+	font-weight: bold;
+}
+
+#container10 {
+	width: 833px;
+	height: 40px;
+}
+
+#container2 {
+	width: 825px;
+	height: 26px;
+}
+
+#container17 {
+	width: 400px;
+	height: 9px;
+}
+
+.ds273 /*agl rulekind: base;*/ {
+	color: #000;
+	font-size: 40px;
+}
+
+.ds275 /*agl rulekind: base;*/ {
+	color: #000;
+}
+
+.ds276 /*agl rulekind: base;*/ {
+	color: #000;
+	font-size: 22px;
+}
+
+#container16 {
+	width: 400px;
+	height: 9px;
+}
+
+.ds277 /*agl rulekind: base;*/ {
+	font-size: 14px;
+}
+
+.ds278 /*agl rulekind: base;*/ {
+	color: #fff;
+}
+
+.dsR1628 /*agl rulekind: base;*/ {
+	width: auto;
+	height: 99px;
+}
+
+.ds280 /*agl rulekind: base;*/ {
+	color: #000;
+	font-size: 24px;
+}
+
+#container13 {
+	width: 989px;
+	height: 82px;
+}
+
+.ds281 /*agl rulekind: base;*/ {
+	color: #000;
+	font-size: 18px;
+}
+-->
+</style>
+
 </head>
 
 <body>
@@ -18,8 +111,8 @@
 					<div id="container10">
 						<div align="center">
 							<p>
-								<a href="index.html"><img src="images/globalizationplus.jpg"
-									alt="" height="56" width="416" border="0" /></a>
+								<a href="index.html"><img src="globalizationplus.jpg" alt=""
+									height="56" width="416" border="0" /></a>
 							</p>
 						</div>
 					</div>
@@ -40,7 +133,7 @@
 					</div>
 				</div>
 				<p>
-					<img src="registration.gif" alt="" height="615" width="991"
+					<img src="register_new.jpg" alt="" height="475" width="991"
 						border="0" />
 				</p>
 				<div align="center">
