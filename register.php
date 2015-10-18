@@ -6,106 +6,15 @@
 <head>
 <meta http-equiv="content-type" content="text/html;charset=utf-8" />
 <meta name="generator" content="Adobe GoLive" />
-<script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
+<script src="https://code.jquery.com/jquery-1.7.2.min.js"></script>
+<script src="validator/lib/jquery.mockjax.js"></script>
 <script src="validator/dist/jquery.validate.js"></script>
 <script type="text/javascript" src="lms.js"></script>
-
+<link rel="stylesheet" href="register.css">
 <title>Globalization Plus</title>
-
-<style type="text/css" media="all">
-<!--
-a:link {
-	color: #570101;
-}
-
-a:visited {
-	color: #570101;
-}
-
-a:active {
-	color: #570101;
-}
-
-body {
-	color: #570101;
-}
-
-#container6 {
-	width: 1000px;
-	height: 1003px;
-}
-
-.ds271 /*agl rulekind: base;*/ {
-	color: #000;
-	font-size: 24px;
-	font-weight: bold;
-}
-
-#container10 {
-	width: 833px;
-	height: 40px;
-}
-
-#container2 {
-	width: 825px;
-	height: 26px;
-}
-
-#container17 {
-	width: 400px;
-	height: 9px;
-}
-
-.ds273 /*agl rulekind: base;*/ {
-	color: #000;
-	font-size: 40px;
-}
-
-.ds275 /*agl rulekind: base;*/ {
-	color: #000;
-}
-
-.ds276 /*agl rulekind: base;*/ {
-	color: #000;
-	font-size: 22px;
-}
-
-#container16 {
-	width: 400px;
-	height: 9px;
-}
-
-.ds277 /*agl rulekind: base;*/ {
-	font-size: 14px;
-}
-
-.ds278 /*agl rulekind: base;*/ {
-	color: #fff;
-}
-
-.dsR1628 /*agl rulekind: base;*/ {
-	width: auto;
-	height: 99px;
-}
-
-.ds280 /*agl rulekind: base;*/ {
-	color: #000;
-	font-size: 24px;
-}
-
-#container13 {
-	width: 989px;
-	height: 82px;
-}
-
-.ds281 /*agl rulekind: base;*/ {
-	color: #000;
-	font-size: 18px;
-}
--->
-</style>
-
 </head>
+
+
 
 <body>
 	<div align="center">
@@ -137,20 +46,19 @@ body {
 					</div>
 				</div>
 				<p>
-					<img src="register_new.jpg" alt="" height="475" width="991"
+					<img src="students.jpg" alt="" height="203" width="991"
 						border="0" />
 				</p>
-
 				
+				<table>  
 						
-				<span class="ds275" style='z-index: 100; position: absolute; left: 380px;top:475px;'><span class="ds280" id='a_student' style='color: #570101;cursor:pointer;text-decoration:underline;'>I want to sign up as student</span><span class="ds273"> </span></span>
-				<span class="ds275" style='z-index: 100; position: absolute; left: 690px;top:475px;'><span class="ds280" id='a_tutor' style='color: #570101;cursor:pointer;text-decoration:underline;'>I want to sign up as tutor</span><span class="ds273"> </span></span>		
-				<span class="ds275" class="ds275" style='z-index: 100; position: absolute; left: 575px;top:540px;'><span class="ds280" id='signin'><a href="http://globalizationplus.com/signin.html" style='color: #570101;cursor:pointer;text-decoration:underline;'>I already have an account</a></span></span>
-				<div id='signup_content' style='z-index: 100; position: absolute; left: 380px;top:600px;border:thin;visibility:visible;'></div>						
-				
+				<span class="ds275" ><span class="ds280" id='a_student' style='color: #570101;cursor:pointer;text-decoration:underline;'>I want to sign up as student</span><span class="ds273"> </span></span>
+				&nbsp;&nbsp;&nbsp;&nbsp;<span class="ds275" ><span class="ds280" id='a_tutor' style='color: #570101;cursor:pointer;text-decoration:underline;'>I want to sign up as tutor</span><span class="ds273"> </span></span>	
+			   <div id='signup_content'></div>
+				 
 				<div align="center">
 					<div id="container16"></div>
-					<span class="ds281"><a href="issue.html" target="_parent">Click
+					<span class="ds281"><a href="issue.html" target="_parent" style='color: #570101;cursor:pointer;text-decoration:underline;'>Click
 							here to review a typical assignment so you can assess its value
 							for yourself.</a></span>
 					<form class="dsR1628"
@@ -164,11 +72,11 @@ body {
 								width="1" height="1" />
 							<p>___________________________________________________________________________________________________________________________</p>
 							<p>
-								<a href="information.html"><span class="ds277">About US</span></a><span
+								<a href="information.html" style='color: #570101;cursor:pointer;text-decoration:underline;'><span class="ds277">About US</span></a><span
 									class="ds278">................................................</span><span
 									class="ds277">© copyright 2015 by Executive Clarity. All Rights
 									Reserved.</span><span class="ds278">................................................</span><a
-									href="mailto:info@globalizationplus.com"><span class="ds277">Email
+									href="mailto:info@globalizationplus.com" style='color: #570101;cursor:pointer;text-decoration:underline;'><span class="ds277">Email
 										Us</span></a>
 							</p>
 							<p></p>
