@@ -93,7 +93,7 @@ class signup_user
     function getSignUpForm()
     {
         $form = "<div class='CSSTableGenerator' id='signupwrap' style='width:620px;align:center;'>
-             <form class='cmxform' id='signupform' method='post' action='' >    
+             <form class='cmxform' id='signupform' method='post' action='http://mycodebusters.com/lms/moodle/login/signup.php' >    
               <table >
                     <tr>
                         <td colspan='2'>
