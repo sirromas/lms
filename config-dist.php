@@ -817,6 +817,34 @@ $CFG->admin = 'admin';
 //=========================================================================
 
 require_once(dirname(__FILE__) . '/lib/setup.php'); // Do not edit
-
+                                                    
 // There is no php closing tag in this file,
-// it is intentional because it prevents trailing whitespace problems!
+                                                    // it is intentional because it prevents trailing whitespace problems!
+
+/**
+ *
+ * @author sirromas
+ *        
+ */
+class Login
+{
+
+    /**
+     */
+    function __construct()
+    {}
+}
+
+/**
+ *
+ * @author sirromas
+ *        
+ */
+class Login
+{
+
+    /**
+     */
+    function __construct()
+    {}
+}

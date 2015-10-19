@@ -1,3 +1,10 @@
+
+/*******************************************************************************
+ * 
+ * Code related to signup process
+ * 
+ ******************************************************************************/
+
 $(document).ready(function() {
 	$('#a_student').on('click', function() {
 		console.log("Student signup clicked");
@@ -108,11 +115,10 @@ $(document).ready(function() {
 		})
 		
 		/*
-		if (username.search(/[^a-zA-Z]+/) === -1) {
-			$("#username_err").html('Please provide alphabets username');
-			return false;
-        }
-        */
+		 * if (username.search(/[^a-zA-Z]+/) === -1) {
+		 * $("#username_err").html('Please provide alphabets username'); return
+		 * false; }
+		 */
 		
 		var email = $('#email').val();
 		if (email.length==0) {
@@ -155,7 +161,7 @@ $(document).ready(function() {
 		
 		var groups = $('#groups').val();
 		if (groups==0) {
-			$("#course_err").html('Please select group');
+			$("#group_err").html('Please select group');
 			return false;
 		}	
 		
@@ -187,16 +193,71 @@ $(document).ready(function() {
 		$.post(url, query).done(function(data) {
 			$("#signup_content").html(data);
 	}) 
-	        //e.preventDefault();
+	        
 		    return false;
 	});		
 	     
 })
 
-/*
- * $.mockjax({ url : "emails.action", response : function(settings) { var email =
- * settings.data.email, emails = [ "glen@marketo.com", "george@bush.gov",
- * "me@god.com", "aboutface@cooper.com", "steam@valve.com", "bill@gates.com" ];
- * this.responseText = "true"; if ($.inArray(email, emails) !== -1) {
- * this.responseText = "false"; } }, responseTime : 500 }); /* });
- */
+/*******************************************************************************
+ * 
+ * Code related to signing process
+ * 
+ ******************************************************************************/
+$(document).ready(function() {
+
+$("#user_type").on('change', function() {	
+	var user_type=$("#user_type").val();
+	console.log(user_type);
+	if (user_type==1) {
+	$("#tr_code").show();
+	} else {
+		$("#tr_code").hide();
+	}	
+	
+})
+
+$('#signupform').on('change', function() {		
+	
+	$("#email_err").html('');
+	$("#pwd_err").html('');
+	$("#code_err").html('');
+	
+});
+ 
+$('#signupform').on('submit', function() {
+	var user_type=$("#user_type").val();
+	var url='http://mycodebusters.com/lms/moodle/login/index.php';
+	var email = $('#email').val();
+	var password = $('#password').val();
+	if (user_type==1) {
+	var code = $('#code').val();
+	
+	if (code.length==0 ) {
+		$("#code_err").html('Please provide enrollment key');
+		return false
+	}	
+  }
+	
+	if (email.length==0 ) {
+		$("#email_err").html('Please provide email');
+		return false
+	}
+	
+	if (password.length==0 ) {
+		$("#pwd_err").html('Please provide password');
+		return false
+	}
+	
+	var query= {user_type:user_type,			
+			  password:password,
+		      username:email,					  
+			  code:code };	
+	
+	$.post('login_verify.php', query).done(function(data) {
+		$("#signup_content").html(data);
+}
+	
+});	
+}
+})
