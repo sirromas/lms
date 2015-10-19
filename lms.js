@@ -50,9 +50,11 @@ $(document).ready(function() {
 		$.post("getGroups.php", {
 			username : username
 		}).done(function(data) {
+			console.log('UserStatus: '+data);
 			return data;
+	}).fail(function(data) {
+	    console.log('Error occured:'+data);
 	})
-	
 	}
 		
 	
@@ -78,38 +80,66 @@ $(document).ready(function() {
     });
 		
 	$('#signupform').live('submit', function() {
-		
-		if ($('#firstname').val().length==0) {
+		var fn=$('#firstname').val();
+		if (fn.length==0) {
 			$("#fn_err").html('Please provide firstname');
 			return false;
-		}		
-		if ($('#lastname').val()==0) {
+		}
+		var ln=$('#lastname').val();
+		if (ln.length==0) {
 			$("#ln_err").html('Please provide lastname');
 			return false;
 		}		
 		var username = $('#username').val();
-		if ($('#username').val()==0) {
-			$("#username_err").html('Please provide username');
+		if (username.length==0 || username.length<=5) {
+			$("#username_err").html('Please provide correct username');
 			return false;
 		}
-		if (isUserUsed (username)!=1) {
-			$("#username_err").html('Username already in use');
+		
+		$.post("getGroups.php", {
+			username : username
+		}).done(function(data) {
+			console.log('UserStatus: '+data);
+			if (data !=0) {
+				$("#username_err").html('Username already in use');
+				return false;
+			}
+			
+		})
+		
+		/*
+		if (username.search(/[^a-zA-Z]+/) === -1) {
+			$("#username_err").html('Please provide alphabets username');
 			return false;
-		}			
+        }
+        */
+		
 		var email = $('#email').val();
-		if ($('#email').val()==0) {
+		if (email.length==0) {
 			$("#email_err").html('Please provide email');
 			return false;
 		}
-		if (processEmail (email)!=true) {
-			$("#email_err").html('Provided email is incorrect or already in use');
-			return false;
-		}		
+		
+		$.post("getGroups.php", {
+			email : email
+		}).done(function(data) {
+			console.log ('Email status: '+data);
+			if (data!=0) {
+				$("#email_err").html('Provided email already in use');
+				return false;
+			}
+			if (validateEmail(email)!=true) {
+				$("#email_err").html('Provided email is incorrect');
+				return false;
+			}
+	   })		
+				
 		var password = $('#password').val();
-		if ($('#password').val()==0 || $('#password').val().length<=5) {
+		if (password.length==0 || password.length<=5) {
 			$("#pwd_err").html('Please provide password at least 5 symbols');
 			return false;
-		}		
+		}
+		
 		if ($("#user_type").val()=='student') {
 		var school = $('#school').val();
 		console.log('School: ' + school);
@@ -117,31 +147,50 @@ $(document).ready(function() {
 		
 		var address = $('#address').val();
 		
+		var courses=$('#courses').val();
 		if ($('#courses').val()==0) {
 			$("#course_err").html('Please select course');
 			return false;
 		}
 		
 		var groups = $('#groups').val();
-		if (groups = $('#groups').val()==0) {
+		if (groups==0) {
 			$("#course_err").html('Please select group');
 			return false;
+		}	
+		
+		var user_type=$("#user_type").val();
+		var url='http://mycodebusters.com/lms/moodle/login/signup.php';
+		if  (user_type=='student') {
+			query= {user_type:user_type,
+			      firstname:fn,
+				  lastname:ln,
+				  username:username,
+				  password:password,
+				  email:email,
+				  school:school,
+				  course:courses,
+				  group:groups,
+				  address:address};			
 		}
-		
-		console.log("Courses: " + courses);
-		console.log("Groups: " + groups);
-		console.log('Email: ' + email);
-		console.log('Validate email:'+validateEmail(email));
-		console.log('Username: ' + username);
-		console.log('First name: ' + Fn);
-		console.log('Last name: ' + Ln);
-		console.log('Paswword: ' + password);		
-		console.log('Address: ' + address);
-		
-		return true;
-		
+		else {
+			query= {user_type:user_type, 
+				  firstname:fn,					  
+			      lastname:ln,
+				  username:username,
+				  password:password,
+			      email:email,					  
+				  course:courses,
+				  group:groups,
+				  address:address};		 
+		}
+		$.post(url, query).done(function(data) {
+			$("#signup_content").html(data);
+	}) 
+	        //e.preventDefault();
+		    return false;
 	});		
-		
+	     
 })
 
 /*

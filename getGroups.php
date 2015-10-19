@@ -2,6 +2,7 @@
 require_once 'signup_user.php';
 $groups = new signup_user('student');
 
+
 if ($_POST['course'] != '') {
     $list = $groups->getGroupsList('student', $_POST['course']);
 } elseif ($_POST['email'] != '') {

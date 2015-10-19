@@ -92,19 +92,19 @@ class signup_user
 
     function getSignUpForm()
     {
-        $form = "<div class='CSSTableGenerator' id='signupwrap' style='width:620px;align:center;'>
-             <form class='cmxform' id='signupform' method='post' action='http://mycodebusters.com/lms/moodle/login/signup.php' >    
+        $form = "<div class='CSSTableGenerator' id='signupwrap' style='table-layout:fixed;width:620px;align:center;'>
+             <form class='cmxform' id='signupform'>    
               <table >
                     <tr>
                         <td colspan='2'>
-                            User signup
+                            USER SIGNUP
                         </td>                        
                     </tr>
                     <tr>
-                        <td >
+                        <td style='width: 250px;'>
                             <label for='firstname'>Firstname*</label>
                         </td>
-                        <td>
+                        <td style='width: 350px;'>
                             <input id='firstname' name='firstname' type='text' style='background-color: rgb(250, 255, 189);'>&nbsp;<span style='color:red;font-size:12px;' id='fn_err'></span>
                         </td>
                                                 
@@ -162,14 +162,14 @@ class signup_user
             </td>
             </tr>";
             $form = $form . "<input type='hidden' id='user_type' value='student'>";
-            $form = $form . "<tr><td><label for='course'>Course</label></td><td>" . $courses . "</td>&nbsp;<span style='color:red;font-size:12px;' id='course_err'></span></tr>";
-            $form = $form . "<tr><td><label for='group'>Group</label></td><td>" . $groups . "</td>&nbsp;<span style='color:red;font-size:12px;' id='group_err'></span></tr>";
+            $form = $form . "<tr><td><label for='course'>Course</label></td><td>" . $courses . "&nbsp;<span style='color:red;font-size:12px;' id='course_err'></span></td></tr>";
+            $form = $form . "<tr><td><label for='group'>Group</label></td><td>" . $groups . "&nbsp;<span style='color:red;font-size:12px;' id='group_err'></span></td></tr>";
         } else {
             $courses = $this->getCoursesList();
             $groups = $this->getGroupsList('tutor', null);
             $form = $form . "<input type='hidden' id='user_type' value='tutor'>";
-            $form = $form . "<tr><td><label for='course'>Course</label></td><td>" . $courses . "</td><span style='color:red;font-size:12px;' id='course_err'></span></tr>";
-            $form = $form . "<tr><td><label for='course'>Number of groups</label></td><td>" . $groups . "</td><span style='color:red;font-size:12px;' id='fn_err'></span></tr>";
+            $form = $form . "<tr><td><label for='course'>Course</label></td><td>" . $courses . "&nbsp;<span style='color:red;font-size:12px;' id='course_err'></span></td></tr>";
+            $form = $form . "<tr><td><label for='course'>Number of groups</label></td><td>" . $groups . "&nbsp;<span style='color:red;font-size:12px;' id='group_err'></span></td></tr>";
         }
         
         $form = $form . "<tr><td colspan='2'><input class='submit' type='submit' value='Submit'></td></tr></table></form>
