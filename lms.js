@@ -78,8 +78,7 @@ $(document).ready(function() {
 		
 	$('#signupform').live('change', function() {		
 		$("#fn_err").html('');
-		$("#ln_err").html('');
-		$("#username_err").html('');
+		$("#ln_err").html('');		
 		$("#email_err").html('');
 		$("#pwd_err").html('');
 		$("#course_err").html('');
@@ -88,6 +87,7 @@ $(document).ready(function() {
 		
 	$('#signupform').live('submit', function() {
 		var fn=$('#firstname').val();
+		console.log('Fisrt name:'+fn);
 		if (fn.length==0) {
 			$("#fn_err").html('Please provide firstname');
 			return false;
@@ -97,35 +97,12 @@ $(document).ready(function() {
 			$("#ln_err").html('Please provide lastname');
 			return false;
 		}		
-		var username = $('#username').val();
-		if (username.length==0 || username.length<=5) {
-			$("#username_err").html('Please provide correct username');
-			return false;
-		}
-		
-		$.post("getGroups.php", {
-			username : username
-		}).done(function(data) {
-			console.log('UserStatus: '+data);
-			if (data !=0) {
-				$("#username_err").html('Username already in use');
-				return false;
-			}
-			
-		})
-		
-		/*
-		 * if (username.search(/[^a-zA-Z]+/) === -1) {
-		 * $("#username_err").html('Please provide alphabets username'); return
-		 * false; }
-		 */
-		
+				
 		var email = $('#email').val();
 		if (email.length==0) {
 			$("#email_err").html('Please provide email');
 			return false;
-		}
-		
+		}		
 		$.post("getGroups.php", {
 			email : email
 		}).done(function(data) {
@@ -171,7 +148,7 @@ $(document).ready(function() {
 			query= {user_type:user_type,
 			      firstname:fn,
 				  lastname:ln,
-				  username:username,
+				  username:email,
 				  password:password,
 				  email:email,
 				  school:school,
@@ -183,7 +160,7 @@ $(document).ready(function() {
 			query= {user_type:user_type, 
 				  firstname:fn,					  
 			      lastname:ln,
-				  username:username,
+				  username:email,
 				  password:password,
 			      email:email,					  
 				  course:courses,
@@ -217,27 +194,23 @@ $("#user_type").on('change', function() {
 	
 })
 
-$('#signupform').on('change', function() {		
-	
+$('#loginform').on('change', function() {	
 	$("#email_err").html('');
 	$("#pwd_err").html('');
-	$("#code_err").html('');
-	
+	$("#user_err").html('');
+	$("#code_err").html('');	
 });
  
-$('#signupform').on('submit', function() {
+$('#loginform').on('submit', function() {
 	var user_type=$("#user_type").val();
-	var url='http://mycodebusters.com/lms/moodle/login/index.php';
-	var email = $('#email').val();
+	console.log('User type: '+user_type);	
+	var email = $('#username').val();
+	console.log('Email: '+email);
 	var password = $('#password').val();
-	if (user_type==1) {
+	console.log('Password:' +password);
 	var code = $('#code').val();
+	console.log('Code: '+code);
 	
-	if (code.length==0 ) {
-		$("#code_err").html('Please provide enrollment key');
-		return false
-	}	
-  }
 	
 	if (email.length==0 ) {
 		$("#email_err").html('Please provide email');
@@ -249,15 +222,40 @@ $('#signupform').on('submit', function() {
 		return false
 	}
 	
+	if (user_type==0) {
+		$("#user_err").html('Please select user type');
+		return false 
+	}
+		else { 
+	
+  	if (user_type==1) {
+	if (code.length==0 ) {
+		$("#code_err").html('Please provide enrollment key');
+		return false
+	}	
+  }	
+}
+	
+	
 	var query= {user_type:user_type,			
 			  password:password,
 		      username:email,					  
-			  code:code };	
+			  code:code };
 	
-	$.post('login_verify.php', query).done(function(data) {
-		$("#signup_content").html(data);
-}
+	console.log(query);
 	
-});	
-}
+	$.post('login_verify.php', query).done(function(data) {				
+		var user_data=$.parseJSON(data);
+		console.log(user_data);
+		 if (user_data.code==0) {
+				$("#code_err").html('Invalid enrollment code');
+				return false
+			}
+    });	
+	
+	
+
+	return true;
+	
+})
 })

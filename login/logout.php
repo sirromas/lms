@@ -33,11 +33,16 @@ $sesskey = optional_param('sesskey', '__notpresent__', PARAM_RAW); // we want no
 $login   = optional_param('loginpage', 0, PARAM_BOOL);
 
 // can be overridden by auth plugins
+
+/*
 if ($login) {
     $redirect = get_login_url();
 } else {
     $redirect = $CFG->wwwroot.'/';
 }
+*/
+
+$redirect = get_login_url();
 
 if (!isloggedin()) {
     // no confirmation, user has already logged out
@@ -60,5 +65,4 @@ foreach($authsequence as $authname) {
 }
 
 require_logout();
-
-redirect($redirect);
+redirect('http://mycodebusters.com/lms/moodle/signin.html');

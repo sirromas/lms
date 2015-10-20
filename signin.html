@@ -39,40 +39,39 @@
 									
 									<div class='CSSTableGenerator' id='signupwrap'
 										style='table-layout: fixed; width: 620px; align: center;'>
-										<form class='cmxform' id='signupform'>
+										<form class='cmxform' id='loginform' method="post" action='http://mycodebusters.com/lms/moodle/login/index.php'>
 											<table>
 												<tr>
 													<td colspan='2'>USER SIGNIN</td>
 												</tr>
 												<tr>
-													<td><label for='email'>Email*</label></td>
-													<td><input id='email' name='email' type='email'
-														style='background-color: rgb(250, 255, 189);'>&nbsp;<span
-															style='color: red; font-size: 12px;' id='email_err'></td>
+													<td style='width: 250px;'><label for='email'>Email*</label></td>
+													<td><input id='username' name='username' 
+														style='background-color: rgb(250, 255, 189);'/>&nbsp;<span
+															style='color: red; font-size: 12px;' id='email_err'></span></td>
 												</tr>												
 												<tr>
 													<td><label for='password'>Password*</label></td>
-													<td><input id='password' name='password'
-														type='password'
-														style='background-color: rgb(250, 255, 189);'>&nbsp;<span
-															style='color: red; font-size: 12px;' id='pwd_err'></td>
+													<td><input id='password' name='password' type='password'
+														style='background-color: rgb(250, 255, 189);'/>
+														&nbsp;<span style='color: red; font-size: 12px;' id='pwd_err'></span></td>
 												</tr>
 												<tr>
-													<td><label for='user_type'>User*</label></td>
+													<td><label for='user_type'>User type*</label></td>
 													<td>
 														<select id=user_type style='background-color: rgb(250, 255, 189);width:153px;'>
 														<option value='0' selected>--------------------</option>
 														<option value='1'>Student</option>
 														<option value='2'>Tutor</option>
 														</select>
-														&nbsp;<span	style='color: red; font-size: 12px;' id='pwd_err'></td>
+														&nbsp;<span	style='color: red; font-size: 12px;' id='user_err'></span></td>
 												</tr>
 												<tr id='tr_code' style='display: none;'>
 													<td><label for='code'>Enroll code:*</label></td>
 													<td><input id='code' name='code' style='background-color: rgb(250, 255, 189);'></input>														
-														&nbsp;<span style='color: red; font-size: 12px;' id='pwd_err'></td>
+														&nbsp;<span style='color: red; font-size: 12px;' id='code_err'></span></td>
 												</tr>
-													<td colspan='2'><input class='submit' type='submit' value='Submit'></td>
+													<td colspan='2'><input class='submit' type='submit' value='Submit'/></td>
 												</tr>
 												</table>
 												</form>

@@ -28,7 +28,9 @@ class signup_user
         $row = null;
         $list = $list . "<select id='courses' name='courses' style='background-color: rgb(250, 255, 189);'>";
         $list = $list . "<option value='0' selected>--------------------</option>";
-        $query = "select id, fullname from mdl_course where groupmode=1";
+        $query = "SELECT c.id as id, c.fullname, g.id, g.courseid, g.name
+                 FROM  `mdl_course` c, mdl_groups g
+                 WHERE c.id = g.courseid group by c.id";                 
         $result = $this->db->query($query);
         while ($row = mysql_fetch_assoc($result)) {
             $list = $list . "<option value='" . $row['id'] . "'>" . $row['fullname'] . "</option>";
@@ -53,14 +55,14 @@ class signup_user
         $row = null;
         if ($user == 'student' && $course == null) {
             $list = $list . "<span id='for_gr'>";
-            $list = $list . "<select id='groups' name='groups' style='background-color: rgb(250, 255, 189);'>";
+            $list = $list . "<select id='groups' name='groups' style='background-color: rgb(250, 255, 189);width:153px;'>";
             $list = $list . "<option value='0' selected>--------------------</option>";
             $list = $list . "</select>";
             $list = $list . "</span>";
             return $list;
         } elseif ($user == 'student' && $course != null) {
             $list = $list . "<span id='for_gr'>";
-            $list = $list . "<select id='groups' name='groups' style='background-color: rgb(250, 255, 189);'>";
+            $list = $list . "<select id='groups' name='groups' style='background-color: rgb(250, 255, 189);width:153px'>";
             $list = $list . "<option value='0' selected>---------------------</option>";
             $query = "select id, courseid, name from mdl_groups where courseid=" . $course . "";
             $result = $this->db->query($query);
@@ -72,8 +74,8 @@ class signup_user
             return $list;
         }
         if ($user == 'tutor' && $course == null) {
-            $list = $list . "<span id='for_gr'>";
-            $list = $list . "<select id='groups' name='groups' style='background-color: rgb(250, 255, 189);'>";
+            $list = $list . "<span id='for_gr' >";
+            $list = $list . "<select id='groups' name='groups' style='background-color: rgb(250, 255, 189);width:153px;'>";
             $list = $list . "<option value='1'>1</option>";
             $list = $list . "<option value='2'>2</option>";
             $list = $list . "<option value='3'>3</option>";
@@ -116,14 +118,15 @@ class signup_user
                         <td>
                             <input id='lastname' name='lastname' type='text' style='background-color: rgb(250, 255, 189);'> &nbsp;<span style='color:red;font-size:12px;' id='ln_err'></span>
                         </td>                        
-                    </tr>
+                    </tr>                   
+                    
                     <tr>
-                        <td >
-                            <label for='username'>Username*</label>
+                        <td>
+                            <label for='email'>Email*</label>
                         </td>
                         <td>
-                           <input id='username' name='username' type='text' style='background-color: rgb(250, 255, 189);'>&nbsp;<span style='color:red;font-size:12px;' id='username_err'>
-                        </td>                                                   
+                            <input id='email' name='email' type='email' style='background-color: rgb(250, 255, 189);'>&nbsp;<span style='color:red;font-size:12px;' id='email_err'>
+                        </td>                        
                     </tr>
                     <tr>
                         <td>
@@ -131,14 +134,6 @@ class signup_user
                         </td>
                         <td>
                             <input id='password' name='password' type='password' style='background-color: rgb(250, 255, 189);'>&nbsp;<span style='color:red;font-size:12px;' id='pwd_err'>
-                        </td>                        
-                    </tr>
-                    <tr>
-                        <td>
-                            <label for='email'>Email*</label>
-                        </td>
-                        <td>
-                            <input id='email' name='email' type='email' style='background-color: rgb(250, 255, 189);'>&nbsp;<span style='color:red;font-size:12px;' id='email_err'>
                         </td>                        
                     </tr>                    
                      <tr>

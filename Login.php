@@ -16,15 +16,22 @@ class Login {
     }
     
     function verifyEmail ($email) {
-        
+        $query="select email from mdl_user where email='$email'";
+        //echo $query ."<br/>";            
+        return $this->db->numrows($query);
     }
     
-    function verifyPassword ($password) {
-        
+    function verifyPassword ($password, $fasthash=true) {        
+        require_once('lib/password_compat/lib/password.php');
+        $options = ($fasthash) ? array('cost' => 4) : array();
+        $hash_password = password_hash($password, PASSWORD_DEFAULT, $options);     
+        $query="select password from mdl_user where password='$hash_password'";        
+        return $this->db->numrows($query);
     }
 
     function verifyCode ($code) {
-        
+        // Temporary workaround untill payment system will work
+        return 1;
     }
     
     
