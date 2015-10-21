@@ -17,7 +17,7 @@ class DB
 
     private function __construct()
     {
-        $config_data = file_get_contents('db.xml');
+        $config_data = file_get_contents($_SERVER['DOCUMENT_ROOT'].'/lms/moodle/db.xml');
         $config = new SimpleXMLElement($config_data);
         
         $this->databaseName = $config->db_name;
