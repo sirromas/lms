@@ -41,17 +41,44 @@ if (! $authplugin->can_signup()) {
     print_error('notlocalisederrormessage', 'error', '', 'Sorry, you may not use this page.');
 }
 
+
+
 if ($_POST) {    
     
-    
+    $user=new stdClass(); 
+    $user->type=$_POST['user_type'];
+    $user->username=$_POST['email'];
+    $user->password=$_POST['password'];
+    $user->email=$_POST['email'];
+    $user->email1=$_POST['email'];
+    $user->email2=$_POST['email'];
+    $user->firstname=$_POST['firstname'];
+    $user->lastname=$_POST['lastname'];
+    $user->course=$_POST['course'];
+    $user->group=$_POST['group'];
+    $user->confirmed = 1;
+    $user->lang = current_language();
+    $user->firstaccess = 0;
+    $user->timecreated = time();
+    $user->mnethostid = $CFG->mnet_localhost_id;
+    $user->secret = random_string(15);
+    $user->auth = $CFG->registerauth;
+    // Initialize alternate name fields to empty strings.
+    $namefields = array_diff(get_all_user_name_fields(), useredit_get_required_name_fields());
+    foreach ($namefields as $namefield) {
+        $user->$namefield = '';
+    }    
+    $authplugin->user_signup($user, true);
+        
     if ($_POST['user_type'] == 'student') {
-        $response="Thank you for Signup. Confirmation email is sent to ".$_POST['email']. ". &nbsp;Next step is to get <a href='' style='color: #570101;cursor:pointer;text-decoration:underline;'>enroll key</a>.";        
+        $response="<span style='color:#570101'>Thank you for Signup. Confirmation email is sent to ".$_POST['email']. ". &nbsp;Next step is to get <a href='' style='color: #570101;cursor:pointer;text-decoration:underline;'>enrollment key</a></span>.";        
     }
     else {
-        $response="Thank you for Signup. Confirmation email is sent to ".$_POST['email'];
+        $response="<span style='color:#570101'>Thank you for Signup. Confirmation email is sent to ".$_POST['email']."</span>";
     }
     die($response);
 }
+
 
 // HTTPS is required in this page when $CFG->loginhttps enabled
 $PAGE->https_required();
@@ -82,7 +109,12 @@ $mform_signup = $authplugin->signup_form();
 if ($mform_signup->is_cancelled()) {
     redirect(get_login_url());
 } else 
+    
     if ($user = $mform_signup->get_data()) {
+        
+        
+        print_r($user);
+        die ('Stopped');
         
         $user->confirmed = 0;
         $user->lang = current_language();
@@ -100,6 +132,8 @@ if ($mform_signup->is_cancelled()) {
         $authplugin->user_signup($user, true); // prints notice and link to login/index.php
         exit(); // never reached
     }
+    
+   
 
 // make sure we really are on the https page when https login required
 $PAGE->verify_https_required();

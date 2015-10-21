@@ -21,16 +21,23 @@ class signup_user
         $db = DB::getInstance();
         $this->db = $db;
     }
-
+    
+    
     function getCoursesList()
     {
         $list = "";
         $row = null;
         $list = $list . "<select id='courses' name='courses' style='background-color: rgb(250, 255, 189);'>";
         $list = $list . "<option value='0' selected>--------------------</option>";
-        $query = "SELECT c.id as id, c.fullname, g.id, g.courseid, g.name
-                 FROM  `mdl_course` c, mdl_groups g
-                 WHERE c.id = g.courseid group by c.id";                 
+        if ($this->user_type=='student') {
+        $query = "SELECT c.id, c.fullname, g.courseid, g.name
+                  FROM mdl_course c, mdl_groups g
+                  WHERE c.id = g.courseid
+                  GROUP BY c.id";         
+        }
+        else {
+            $query="select id, fullname from mdl_course where groupmode=1";
+        }        
         $result = $this->db->query($query);
         while ($row = mysql_fetch_assoc($result)) {
             $list = $list . "<option value='" . $row['id'] . "'>" . $row['fullname'] . "</option>";
