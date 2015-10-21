@@ -56,7 +56,7 @@ if ($_POST) {
     $user->lastname=$_POST['lastname'];
     $user->course=$_POST['course'];
     $user->group=$_POST['group'];
-    $user->confirmed = 1;
+    $user->confirmed = 0;
     $user->lang = current_language();
     $user->firstaccess = 0;
     $user->timecreated = time();
@@ -68,7 +68,7 @@ if ($_POST) {
     foreach ($namefields as $namefield) {
         $user->$namefield = '';
     }    
-    $authplugin->user_signup($user, true);
+    $authplugin->user_signup($user, false);
         
     if ($_POST['user_type'] == 'student') {
         $response="<span style='color:#570101'>Thank you for Signup. Confirmation email is sent to ".$_POST['email']. ". &nbsp;Next step is to get <a href='' style='color: #570101;cursor:pointer;text-decoration:underline;'>enrollment key</a></span>.";        
