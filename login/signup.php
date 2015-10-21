@@ -25,6 +25,7 @@
  */
 require ('../config.php');
 require_once ($CFG->dirroot . '/user/editlib.php');
+require_once ($CFG->dirroot . '/login/CustomSignup.php');
 
 // Try to prevent searching for sites that allow sign-up.
 if (! isset($CFG->additionalhtmlhead)) {
@@ -69,7 +70,8 @@ if ($_POST) {
         $user->$namefield = '';
     }    
     $authplugin->user_signup($user, false);
-        
+    $csignup=new CustomSignup($user); 
+    $csignup->processCourseRequest();
     if ($_POST['user_type'] == 'student') {
         $response="<span style='color:#570101'>Thank you for Signup. Confirmation email is sent to ".$_POST['email']. ". &nbsp;Next step is to get <a href='' style='color: #570101;cursor:pointer;text-decoration:underline;'>enrollment key</a></span>.";        
     }
