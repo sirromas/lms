@@ -4,8 +4,9 @@
  * @author sirromas
  * 
  */
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
 require ('../class.database.php');
-
 class CustomSignup
 {
 
@@ -17,8 +18,8 @@ class CustomSignup
 
     function __construct($user)
     {
-        print_r($user);
-        echo "<br/>-------------------------<br/>";
+        // print_r($user);
+        // echo "<br/>-------------------------<br/>";
         $this->user = $user;
         $this->db = DB::getInstance();
         $this->userid = $this->getUserId();
@@ -34,23 +35,11 @@ class CustomSignup
         return $userid;
     }
 
-    function getContextLevel($roleid)
-    {
-        $query = "select id from mdl_role_context_levels
-                wehere roleid='" . $roleid . "'";
-        $result = $this->db->query($query);
-        while ($row = mysql_fetch_assoc($result)) {
-            $contextlevel = $row['id'];
-        }
-        return $contextlevel;
-    }
-
     function getCourseContext($courseid, $roleid)
     {
-        $contextlevel = $this->getContextLevel($roleid);
         $query = "select id from mdl_context
-                     where contextlevel='" . $contextlevel . "'
-                     and instanceid='" . $courseid . "'";
+                     where contextlevel=50
+                     and instanceid='" . $courseid . "' ";
         $result = $this->db->query($query);
         while ($row = mysql_fetch_assoc($result)) {
             $contextid = $row['id'];
@@ -61,7 +50,8 @@ class CustomSignup
     function getEnrolId($courseid)
     {
         $query = "select id from mdl_enrol
-                     where courseid=" . $courseid . " and enrol='self'";
+                     where courseid=" . $courseid . " and enrol='manual'";
+        $result = $this->db->query($query);
         while ($row = mysql_fetch_assoc($result)) {
             $enrolid = $row['id'];
         }
@@ -70,23 +60,39 @@ class CustomSignup
 
     function assignRoles($userid, $courseid, $role)
     {
-        // Insert into mdl_role_assignments
         $roleid = ($role == 'student') ? 5 : 4;
-        $contextid = $this->getCourseContext($courseid, $roleid);
-        $query = "insert into mdl_role_assignments
-                    (roleid,contextid,userid,timemodified,modifierid,component)
-                    values(" . $roleid . ", 
-                            " . $contextid . ",
-                            " . $this->userid . ",
-                            " . time() . ", 2, ' ')";
-        $result = $this->db->query($query);
-        // Insert itno mdl_user_enrolments
         $enrolid = $this->getEnrolId($courseid);
-        $query = "Insert into mdl_user_enrolments
-                          (enrolid, userid)
-                  values (" . $enrolid . ",
-                           " . $userid . ")";
+        $contextid=$this->getCourseContext($courseid, $roleid);       
+        
+        // 1.  Insert into mdl_user_enrolments table
+        $query = "insert into mdl_user_enrolments
+             (enrolid,
+              userid,
+              timestart,
+              modifierid,
+              timecreated,
+              timemodified)
+               values ('" . $enrolid . "',
+                       '" . $userid . "',
+                        '".time()."',   
+                        '2',
+                         '" . time() . "',
+                         '" . time() . "')";        
         $result = $this->db->query($query);
+        
+        // 2. Insert into mdl_role_assignments table
+        $query="insert into mdl_role_assignments
+                  (roleid,
+                   contextid,
+                   userid,
+                   timemodified,
+                   modifierid)                   
+                   values ('".$roleid."',
+                           '".$contextid."',
+                           '".$userid."',
+                           '".time()."',
+                            '2'         )";       
+       $result = $this->db->query($query);        
     }
 
     function setGroupName($courseid, $groupid)

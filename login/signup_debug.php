@@ -11,7 +11,7 @@ $user=new stdClass();
 $user->user_type='tutor';
 $user->username='sirromas@ukr.net';
 $user->email='sirromas@ukr.net';
-$user->course=5;
+$user->course=6;
 $user->group=2;
 
 $enroll=new CustomSignup($user) ;

@@ -25,7 +25,7 @@
  */
 require ('../config.php');
 require_once ($CFG->dirroot . '/user/editlib.php');
-require_once ('CustomSignup.php');
+//require_once ('CustomSignup.php');
 
 // Try to prevent searching for sites that allow sign-up.
 if (! isset($CFG->additionalhtmlhead)) {
