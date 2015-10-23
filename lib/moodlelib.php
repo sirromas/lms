@@ -1246,7 +1246,7 @@ function fix_utf8($value) {
         // Note: this duplicates min_fix_utf8() intentionally.
         static $buggyiconv = null;
         if ($buggyiconv === null) {
-            $buggyiconv = (!function_exists('iconv') or @iconv('UTF-8', 'UTF-8//IGNORE', '100'.chr(130).'€') !== '100€');
+            $buggyiconv = (!function_exists('iconv') or @iconv('UTF-8', 'UTF-8//IGNORE', '100'.chr(130).'â‚¬') !== '100â‚¬');
         }
 
         if ($buggyiconv) {
@@ -3340,7 +3340,7 @@ function fullname($user, $override=false) {
     // This regular expression replacement is to fix problems such as 'James () Kirk' Where 'Tiberius' (middlename) has not been
     // filled in by a user.
     // The special characters are Japanese brackets that are common enough to make allowances for them (not covered by :punct:).
-    $patterns[] = '/[[:punct:]「」]*EMPTY[[:punct:]「」]*/u';
+    $patterns[] = '/[[:punct:]ã€Œã€�]*EMPTY[[:punct:]ã€Œã€�]*/u';
     // This regular expression is to remove any double spaces in the display name.
     $patterns[] = '/\s{2,}/u';
     foreach ($patterns as $pattern) {
@@ -5825,6 +5825,8 @@ function send_confirmation_email($user) {
     $username = urlencode($user->username);
     $username = str_replace('.', '%2E', $username); // Prevent problems with trailing dots.
     $data->link  = $CFG->wwwroot .'/login/confirm.php?data='. $user->secret .'/'. $username;
+    $data->username=$user->username;
+    $data->password=$CFG->purepassword;
     $message     = get_string('emailconfirmation', '', $data);
     $messagehtml = text_to_html(get_string('emailconfirmation', '', $data), false, false, true);
 
@@ -7437,7 +7439,7 @@ function count_words($string) {
     // Replace underscores (which are classed as word characters) with spaces.
     $string = preg_replace('/_/u', ' ', $string);
     // Remove any characters that shouldn't be treated as word boundaries.
-    $string = preg_replace('/[\'’-]/u', '', $string);
+    $string = preg_replace('/[\'â€™-]/u', '', $string);
     // Remove dots and commas from within numbers only.
     $string = preg_replace('/([0-9])[.,]([0-9])/u', '$1$2', $string);
 

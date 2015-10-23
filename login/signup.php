@@ -50,6 +50,7 @@ if ($_POST) {
     $user->type=$_POST['user_type'];
     $user->username=$_POST['email'];
     $user->password=$_POST['password'];
+    $CFG->purepassword=$_POST['password'];
     $user->email=$_POST['email'];
     $user->email1=$_POST['email'];
     $user->email2=$_POST['email'];
