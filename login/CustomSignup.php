@@ -7,18 +7,15 @@
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 require ('../config.php');
-require_once ($CFG->dirroot . '/group/lib.php');
-require_once ($CFG->dirroot . '/enrol/mylocallib.php');
-
 require ('../class.database.php');
+require_once ('../group/lib.php');
 
 class CustomSignup
 {
 
     private $db;
-
     private $user;
-
+    public $user_type;
     public $userid;
 
     function __construct($user)
@@ -66,10 +63,6 @@ class CustomSignup
         $roleid = ($role == 'student') ? 5 : 4;
         $enrolid = $this->getEnrolId($courseid);
         $contextid = $this->getCourseContext($courseid, $roleid);
-        role_assign($roleid, $userid, $contextid);
-        
-        /*
-        
         
         // 1. Insert into mdl_user_enrolments table
         $query = "insert into mdl_user_enrolments
@@ -100,9 +93,6 @@ class CustomSignup
                            '" . time() . "',
                             '2'         )";
         $result = $this->db->query($query);
-        
-        */
-        
     }
 
     function setGroupName($courseid, $groupid)
@@ -110,25 +100,26 @@ class CustomSignup
         $query = "update mdl_groups
                   set idnumber='Group_" . $courseid . "_" . $groupid . "',
                       name='Group_" . $courseid . "_" . $groupid . "'
-                      where id=$groupid";        
+                      where id=$groupid";
         $result = $this->db->query($query);
     }
 
     function getTutorGroups()
     {
-        $query = "select id from mdl_groups 
-            where description='" . $this->user->email . "'";        
+        $query = "select groupid from mdl_tutor_groups
+            where tutor_email='" . $this->user->email . "'";
         $result = $this->db->query($query);
         while ($row = mysql_fetch_assoc($result)) {
-            $groups[] = $row['id'];
+            $groups[] = $row['groupid'];
         }
         return $groups;
     }
 
     function createCourseGroups($courseid, $groups)
-    {        
-        for ($i=1;$i<=$groups;$i++) {
+    {
+        for ($i = 1; $i <= $groups; $i ++) {
             
+            // 1. Insert into mdl_groups
             $query = "insert into mdl_groups
                      (courseid,
                       idnumber,
@@ -143,9 +134,20 @@ class CustomSignup
                               '" . $this->user->email . "',
                               '1',    
                               '" . time() . "',
-                              '" . time() . "')";            
+                              '" . time() . "')";
             $result = $this->db->query($query);
+            $last_insert_id = mysql_insert_id();
             $this->setGroupName($courseid, mysql_insert_id());
+            
+            // 2. Insert into mdl_tutor_groups
+            $query = "insert into mdl_tutor_groups
+                         (courseid, 
+                          groupid,
+                          tutor_email)
+                          values ('" . $courseid . "',
+                                  '" . $last_insert_id . "',
+                                  '" . $this->user->email . "')";
+            $result = $this->db->query($query);
         }
     }
 
@@ -154,22 +156,22 @@ class CustomSignup
         if ($user_type == 'tutor') {
             $groups = $this->getTutorGroups();
             foreach ($groups as $groupid) {
-              groups_add_member($groupid, $userid);         
+                groups_add_member($groupid, $userid);
             }
         } else {
-            groups_add_member($groupid, $userid);            
+            groups_add_member($groupid, $userid);
         }
     }
 
     function processCourseRequest()
     {
-        if ($this->user->user_type == 'tutor') {
-            $this->assignRoles($this->userid, $this->user->course, $this->user->user_type);                       
+        if ($this->user->type == 'tutor') {
+            $this->assignRoles($this->userid, $this->user->course, $this->user->type);
             $this->createCourseGroups($this->user->course, $this->user->group);
-            $this->addUserToGroups($this->userid, $this->user->course, 0, $this->user->user_type);
+            $this->addUserToGroups($this->userid, $this->user->course, 0, $this->user->type);
         } else {
-            $this->assignRoles($this->userid, $this->user->course, $this->user->user_type);
-            $this->addUserToGroups($this->userid, $this->user->course, $this->user->group, $this->user->user_type);
+            $this->assignRoles($this->userid, $this->user->course, $this->user->type);
+            $this->addUserToGroups($this->userid, $this->user->course, $this->user->group, $this->user->type);
         }
     }
 }

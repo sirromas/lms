@@ -23,9 +23,9 @@
  * @copyright 1999 onwards Martin Dougiamas http://dougiamas.com
  * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-require ('../config.php');
+//require ('../config.php');
+require ('CustomSignup.php');
 require_once ($CFG->dirroot . '/user/editlib.php');
-//require_once ('CustomSignup.php');
 
 // Try to prevent searching for sites that allow sign-up.
 if (! isset($CFG->additionalhtmlhead)) {
@@ -57,7 +57,7 @@ if ($_POST) {
     $user->lastname=$_POST['lastname'];
     $user->course=$_POST['course'];
     $user->group=$_POST['group'];
-    $user->confirmed = 0;
+    $user->confirmed = 1;
     $user->lang = current_language();
     $user->firstaccess = 0;
     $user->timecreated = time();
@@ -70,8 +70,8 @@ if ($_POST) {
         $user->$namefield = '';
     }    
     $authplugin->user_signup($user, false);    
-    //$csignup=new CustomSignup($user); 
-    //$csignup->processCourseRequest();    
+    $csignup=new CustomSignup($user); 
+    $csignup->processCourseRequest();    
     if ($_POST['user_type'] == 'student') {
         $response="<span style='color:#570101'>Thank you for Signup. Confirmation email is sent to ".$_POST['email']. ". &nbsp;Next step is to get <a href='' style='color: #570101;cursor:pointer;text-decoration:underline;'>enrollment key</a></span>.";        
     }
