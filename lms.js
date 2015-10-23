@@ -167,8 +167,14 @@ $(document).ready(function() {
 				  group:groups,
 				  address:address};		 
 		}
+		
+		$('.CSSTableGenerator').fadeTo( "slow", 0.33 );
+		$('#spinner').show();
 		$.post(url, query).done(function(data) {
+			$('.CSSTableGenerator').fadeTo( "slow", 1);
+			$('#spinner').hide();	
 			$("#signup_content").html(data);
+		
 	}) 
 	        
 		    return false;
@@ -252,8 +258,6 @@ $('#loginform').on('submit', function() {
 				return false
 			}
     });	
-	
-	
 
 	return true;
 	

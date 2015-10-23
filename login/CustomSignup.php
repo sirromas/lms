@@ -162,9 +162,17 @@ class CustomSignup
             groups_add_member($groupid, $userid);
         }
     }
+    
+    function updateUserAddress () {
+        $query="update mdl_user set 
+             city='".$this->user->address."', country='USA'
+                  where id='".$this->userid."'";
+        $result = $this->db->query($query);
+    }
 
     function processCourseRequest()
-    {
+    {   
+        $this->updateUserAddress();
         if ($this->user->type == 'tutor') {
             $this->assignRoles($this->userid, $this->user->course, $this->user->type);
             $this->createCourseGroups($this->user->course, $this->user->group);

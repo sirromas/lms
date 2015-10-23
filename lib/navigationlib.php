@@ -1027,7 +1027,7 @@ class global_navigation extends navigation_node {
                 'key' => 'home',
                 'type' => navigation_node::TYPE_SYSTEM,
                 'text' => get_string('home'),
-                'action' => new moodle_url('/')
+                'action' => new moodle_url('/')                
             );
         } else {
             // We are using the users my moodle for the root element

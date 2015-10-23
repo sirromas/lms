@@ -58,6 +58,7 @@ if ($_POST) {
     $user->course=$_POST['course'];
     $user->group=$_POST['group'];
     $user->confirmed = 1;
+    $user->address=$_POST['address'];
     $user->lang = current_language();
     $user->firstaccess = 0;
     $user->timecreated = time();
