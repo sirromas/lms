@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Oct 20, 2015 at 08:23 PM
+-- Generation Time: Oct 23, 2015 at 12:07 PM
 -- Server version: 5.5.42-37.1-log
 -- PHP Version: 5.4.23
 
@@ -19,8 +19,6 @@ SET time_zone = "+00:00";
 --
 -- Database: `mycodebu_lms`
 --
-CREATE DATABASE `mycodebu_lms` DEFAULT CHARACTER SET latin1 COLLATE latin1_swedish_ci;
-USE `mycodebu_lms`;
 
 -- --------------------------------------------------------
 
@@ -62,113 +60,6 @@ CREATE TABLE IF NOT EXISTS `mdl_assign` (
   KEY `mdl_assi_cou_ix` (`course`),
   KEY `mdl_assi_tea_ix` (`teamsubmissiongroupingid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='This table saves information about an instance of mod_assign' AUTO_INCREMENT=1 ;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `mdl_assign_grades`
---
-
-DROP TABLE IF EXISTS `mdl_assign_grades`;
-CREATE TABLE IF NOT EXISTS `mdl_assign_grades` (
-  `id` bigint(10) NOT NULL AUTO_INCREMENT,
-  `assignment` bigint(10) NOT NULL DEFAULT '0',
-  `userid` bigint(10) NOT NULL DEFAULT '0',
-  `timecreated` bigint(10) NOT NULL DEFAULT '0',
-  `timemodified` bigint(10) NOT NULL DEFAULT '0',
-  `grader` bigint(10) NOT NULL DEFAULT '0',
-  `grade` decimal(10,5) DEFAULT '0.00000',
-  `attemptnumber` bigint(10) NOT NULL DEFAULT '0',
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `mdl_assigrad_assuseatt_uix` (`assignment`,`userid`,`attemptnumber`),
-  KEY `mdl_assigrad_use_ix` (`userid`),
-  KEY `mdl_assigrad_att_ix` (`attemptnumber`),
-  KEY `mdl_assigrad_ass_ix` (`assignment`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Grading information about a single assignment submission.' AUTO_INCREMENT=1 ;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `mdl_assign_plugin_config`
---
-
-DROP TABLE IF EXISTS `mdl_assign_plugin_config`;
-CREATE TABLE IF NOT EXISTS `mdl_assign_plugin_config` (
-  `id` bigint(10) NOT NULL AUTO_INCREMENT,
-  `assignment` bigint(10) NOT NULL DEFAULT '0',
-  `plugin` varchar(28) NOT NULL DEFAULT '',
-  `subtype` varchar(28) NOT NULL DEFAULT '',
-  `name` varchar(28) NOT NULL DEFAULT '',
-  `value` longtext,
-  PRIMARY KEY (`id`),
-  KEY `mdl_assiplugconf_plu_ix` (`plugin`),
-  KEY `mdl_assiplugconf_sub_ix` (`subtype`),
-  KEY `mdl_assiplugconf_nam_ix` (`name`),
-  KEY `mdl_assiplugconf_ass_ix` (`assignment`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Config data for an instance of a plugin in an assignment.' AUTO_INCREMENT=1 ;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `mdl_assign_submission`
---
-
-DROP TABLE IF EXISTS `mdl_assign_submission`;
-CREATE TABLE IF NOT EXISTS `mdl_assign_submission` (
-  `id` bigint(10) NOT NULL AUTO_INCREMENT,
-  `assignment` bigint(10) NOT NULL DEFAULT '0',
-  `userid` bigint(10) NOT NULL DEFAULT '0',
-  `timecreated` bigint(10) NOT NULL DEFAULT '0',
-  `timemodified` bigint(10) NOT NULL DEFAULT '0',
-  `status` varchar(10) DEFAULT NULL,
-  `groupid` bigint(10) NOT NULL DEFAULT '0',
-  `attemptnumber` bigint(10) NOT NULL DEFAULT '0',
-  `latest` tinyint(2) NOT NULL DEFAULT '0',
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `mdl_assisubm_assusegroatt_uix` (`assignment`,`userid`,`groupid`,`attemptnumber`),
-  KEY `mdl_assisubm_use_ix` (`userid`),
-  KEY `mdl_assisubm_att_ix` (`attemptnumber`),
-  KEY `mdl_assisubm_assusegrolat_ix` (`assignment`,`userid`,`groupid`,`latest`),
-  KEY `mdl_assisubm_ass_ix` (`assignment`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='This table keeps information about student interactions with' AUTO_INCREMENT=1 ;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `mdl_assign_user_flags`
---
-
-DROP TABLE IF EXISTS `mdl_assign_user_flags`;
-CREATE TABLE IF NOT EXISTS `mdl_assign_user_flags` (
-  `id` bigint(10) NOT NULL AUTO_INCREMENT,
-  `userid` bigint(10) NOT NULL DEFAULT '0',
-  `assignment` bigint(10) NOT NULL DEFAULT '0',
-  `locked` bigint(10) NOT NULL DEFAULT '0',
-  `mailed` smallint(4) NOT NULL DEFAULT '0',
-  `extensionduedate` bigint(10) NOT NULL DEFAULT '0',
-  `workflowstate` varchar(20) DEFAULT NULL,
-  `allocatedmarker` bigint(10) NOT NULL DEFAULT '0',
-  PRIMARY KEY (`id`),
-  KEY `mdl_assiuserflag_mai_ix` (`mailed`),
-  KEY `mdl_assiuserflag_use_ix` (`userid`),
-  KEY `mdl_assiuserflag_ass_ix` (`assignment`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='List of flags that can be set for a single user in a single ' AUTO_INCREMENT=1 ;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `mdl_assign_user_mapping`
---
-
-DROP TABLE IF EXISTS `mdl_assign_user_mapping`;
-CREATE TABLE IF NOT EXISTS `mdl_assign_user_mapping` (
-  `id` bigint(10) NOT NULL AUTO_INCREMENT,
-  `assignment` bigint(10) NOT NULL DEFAULT '0',
-  `userid` bigint(10) NOT NULL DEFAULT '0',
-  PRIMARY KEY (`id`),
-  KEY `mdl_assiusermapp_ass_ix` (`assignment`),
-  KEY `mdl_assiusermapp_use_ix` (`userid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Map an assignment specific id number to a user' AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -381,6 +272,113 @@ CREATE TABLE IF NOT EXISTS `mdl_assignsubmission_onlinetext` (
   KEY `mdl_assionli_ass_ix` (`assignment`),
   KEY `mdl_assionli_sub_ix` (`submission`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Info about onlinetext submission' AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `mdl_assign_grades`
+--
+
+DROP TABLE IF EXISTS `mdl_assign_grades`;
+CREATE TABLE IF NOT EXISTS `mdl_assign_grades` (
+  `id` bigint(10) NOT NULL AUTO_INCREMENT,
+  `assignment` bigint(10) NOT NULL DEFAULT '0',
+  `userid` bigint(10) NOT NULL DEFAULT '0',
+  `timecreated` bigint(10) NOT NULL DEFAULT '0',
+  `timemodified` bigint(10) NOT NULL DEFAULT '0',
+  `grader` bigint(10) NOT NULL DEFAULT '0',
+  `grade` decimal(10,5) DEFAULT '0.00000',
+  `attemptnumber` bigint(10) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `mdl_assigrad_assuseatt_uix` (`assignment`,`userid`,`attemptnumber`),
+  KEY `mdl_assigrad_use_ix` (`userid`),
+  KEY `mdl_assigrad_att_ix` (`attemptnumber`),
+  KEY `mdl_assigrad_ass_ix` (`assignment`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Grading information about a single assignment submission.' AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `mdl_assign_plugin_config`
+--
+
+DROP TABLE IF EXISTS `mdl_assign_plugin_config`;
+CREATE TABLE IF NOT EXISTS `mdl_assign_plugin_config` (
+  `id` bigint(10) NOT NULL AUTO_INCREMENT,
+  `assignment` bigint(10) NOT NULL DEFAULT '0',
+  `plugin` varchar(28) NOT NULL DEFAULT '',
+  `subtype` varchar(28) NOT NULL DEFAULT '',
+  `name` varchar(28) NOT NULL DEFAULT '',
+  `value` longtext,
+  PRIMARY KEY (`id`),
+  KEY `mdl_assiplugconf_plu_ix` (`plugin`),
+  KEY `mdl_assiplugconf_sub_ix` (`subtype`),
+  KEY `mdl_assiplugconf_nam_ix` (`name`),
+  KEY `mdl_assiplugconf_ass_ix` (`assignment`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Config data for an instance of a plugin in an assignment.' AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `mdl_assign_submission`
+--
+
+DROP TABLE IF EXISTS `mdl_assign_submission`;
+CREATE TABLE IF NOT EXISTS `mdl_assign_submission` (
+  `id` bigint(10) NOT NULL AUTO_INCREMENT,
+  `assignment` bigint(10) NOT NULL DEFAULT '0',
+  `userid` bigint(10) NOT NULL DEFAULT '0',
+  `timecreated` bigint(10) NOT NULL DEFAULT '0',
+  `timemodified` bigint(10) NOT NULL DEFAULT '0',
+  `status` varchar(10) DEFAULT NULL,
+  `groupid` bigint(10) NOT NULL DEFAULT '0',
+  `attemptnumber` bigint(10) NOT NULL DEFAULT '0',
+  `latest` tinyint(2) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `mdl_assisubm_assusegroatt_uix` (`assignment`,`userid`,`groupid`,`attemptnumber`),
+  KEY `mdl_assisubm_use_ix` (`userid`),
+  KEY `mdl_assisubm_att_ix` (`attemptnumber`),
+  KEY `mdl_assisubm_assusegrolat_ix` (`assignment`,`userid`,`groupid`,`latest`),
+  KEY `mdl_assisubm_ass_ix` (`assignment`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='This table keeps information about student interactions with' AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `mdl_assign_user_flags`
+--
+
+DROP TABLE IF EXISTS `mdl_assign_user_flags`;
+CREATE TABLE IF NOT EXISTS `mdl_assign_user_flags` (
+  `id` bigint(10) NOT NULL AUTO_INCREMENT,
+  `userid` bigint(10) NOT NULL DEFAULT '0',
+  `assignment` bigint(10) NOT NULL DEFAULT '0',
+  `locked` bigint(10) NOT NULL DEFAULT '0',
+  `mailed` smallint(4) NOT NULL DEFAULT '0',
+  `extensionduedate` bigint(10) NOT NULL DEFAULT '0',
+  `workflowstate` varchar(20) DEFAULT NULL,
+  `allocatedmarker` bigint(10) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`),
+  KEY `mdl_assiuserflag_mai_ix` (`mailed`),
+  KEY `mdl_assiuserflag_use_ix` (`userid`),
+  KEY `mdl_assiuserflag_ass_ix` (`assignment`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='List of flags that can be set for a single user in a single ' AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `mdl_assign_user_mapping`
+--
+
+DROP TABLE IF EXISTS `mdl_assign_user_mapping`;
+CREATE TABLE IF NOT EXISTS `mdl_assign_user_mapping` (
+  `id` bigint(10) NOT NULL AUTO_INCREMENT,
+  `assignment` bigint(10) NOT NULL DEFAULT '0',
+  `userid` bigint(10) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`),
+  KEY `mdl_assiusermapp_ass_ix` (`assignment`),
+  KEY `mdl_assiusermapp_use_ix` (`userid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Map an assignment specific id number to a user' AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -715,7 +713,7 @@ CREATE TABLE IF NOT EXISTS `mdl_block_instances` (
   PRIMARY KEY (`id`),
   KEY `mdl_blocinst_parshopagsub_ix` (`parentcontextid`,`showinsubcontexts`,`pagetypepattern`,`subpagepattern`),
   KEY `mdl_blocinst_par_ix` (`parentcontextid`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='This table stores block instances. The type of block this is' AUTO_INCREMENT=162 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='This table stores block instances. The type of block this is' AUTO_INCREMENT=264 ;
 
 --
 -- Dumping data for table `mdl_block_instances`
@@ -876,7 +874,25 @@ INSERT INTO `mdl_block_instances` (`id`, `blockname`, `parentcontextid`, `showin
 (158, 'calendar_upcoming', 196, 0, 'course-view-*', NULL, 'side-post', 1, ''),
 (159, 'social_activities', 196, 0, 'course-view-*', NULL, 'side-post', 2, ''),
 (160, 'recent_activity', 196, 0, 'course-view-*', NULL, 'side-post', 3, ''),
-(161, 'course_list', 196, 0, 'course-view-*', NULL, 'side-post', 4, '');
+(161, 'course_list', 196, 0, 'course-view-*', NULL, 'side-post', 4, ''),
+(240, 'private_files', 306, 0, 'my-index', '38', 'side-post', 0, ''),
+(241, 'online_users', 306, 0, 'my-index', '38', 'side-post', 1, ''),
+(242, 'badges', 306, 0, 'my-index', '38', 'side-post', 2, ''),
+(243, 'calendar_month', 306, 0, 'my-index', '38', 'side-post', 3, ''),
+(244, 'calendar_upcoming', 306, 0, 'my-index', '38', 'side-post', 4, ''),
+(245, 'course_overview', 306, 0, 'my-index', '38', 'content', 0, ''),
+(246, 'private_files', 319, 0, 'my-index', '39', 'side-post', 0, ''),
+(247, 'online_users', 319, 0, 'my-index', '39', 'side-post', 1, ''),
+(248, 'badges', 319, 0, 'my-index', '39', 'side-post', 2, ''),
+(249, 'calendar_month', 319, 0, 'my-index', '39', 'side-post', 3, ''),
+(250, 'calendar_upcoming', 319, 0, 'my-index', '39', 'side-post', 4, ''),
+(251, 'course_overview', 319, 0, 'my-index', '39', 'content', 0, ''),
+(258, 'private_files', 342, 0, 'my-index', '41', 'side-post', 0, ''),
+(259, 'online_users', 342, 0, 'my-index', '41', 'side-post', 1, ''),
+(260, 'badges', 342, 0, 'my-index', '41', 'side-post', 2, ''),
+(261, 'calendar_month', 342, 0, 'my-index', '41', 'side-post', 3, ''),
+(262, 'calendar_upcoming', 342, 0, 'my-index', '41', 'side-post', 4, ''),
+(263, 'course_overview', 342, 0, 'my-index', '41', 'content', 0, '');
 
 -- --------------------------------------------------------
 
@@ -1066,20 +1082,20 @@ CREATE TABLE IF NOT EXISTS `mdl_cache_flags` (
   PRIMARY KEY (`id`),
   KEY `mdl_cachflag_fla_ix` (`flagtype`),
   KEY `mdl_cachflag_nam_ix` (`name`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='Cache of time-sensitive flags' AUTO_INCREMENT=41 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='Cache of time-sensitive flags' AUTO_INCREMENT=175 ;
 
 --
 -- Dumping data for table `mdl_cache_flags`
 --
 
 INSERT INTO `mdl_cache_flags` (`id`, `flagtype`, `name`, `timemodified`, `value`, `expiry`) VALUES
-(1, 'userpreferenceschanged', '2', 1445350886, '1', 1445358086),
+(1, 'userpreferenceschanged', '2', 1445623258, '1', 1445630458),
 (2, 'accesslib/dirtycontexts', '/1/3/24', 1444500867, '1', 1444508067),
 (3, 'accesslib/dirtycontexts', '/1/5/21', 1444498392, '1', 1444505592),
 (4, 'accesslib/dirtycontexts', '/1/2/8', 1444498530, '1', 1444505730),
 (5, 'userpreferenceschanged', '3', 1444518007, '1', 1444525207),
 (6, 'userpreferenceschanged', '4', 1444506839, '1', 1444514039),
-(7, 'userpreferenceschanged', '5', 1444926073, '1', 1444933273),
+(7, 'userpreferenceschanged', '5', 1445493226, '1', 1445500426),
 (8, 'userpreferenceschanged', '6', 1444507240, '1', 1444514440),
 (9, 'userpreferenceschanged', '7', 1444507487, '1', 1444514687),
 (10, 'userpreferenceschanged', '8', 1444507945, '1', 1444515145),
@@ -1108,11 +1124,145 @@ INSERT INTO `mdl_cache_flags` (`id`, `flagtype`, `name`, `timemodified`, `value`
 (33, 'accesslib/dirtycontexts', '/1/52/53', 1444501069, '1', 1444508269),
 (34, 'accesslib/dirtycontexts', '/1/54', 1444501087, '1', 1444508287),
 (35, 'accesslib/dirtycontexts', '/1/52/55', 1444931793, '1', 1444938993),
-(36, 'userpreferenceschanged', '22', 1445327695, '1', 1445334895),
-(37, 'accesslib/dirtycontexts', '/1', 1444509444, '1', 1444516644),
-(38, 'accesslib/dirtycontexts', '/1/52/184', 1445097772, '1', 1445104972),
-(39, 'accesslib/dirtycontexts', '/1/52/190', 1445097836, '1', 1445105036),
-(40, 'accesslib/dirtycontexts', '/1/52/196', 1445097858, '1', 1445105058);
+(36, 'userpreferenceschanged', '22', 1445618818, '1', 1445626018),
+(37, 'accesslib/dirtycontexts', '/1', 1445587828, '1', 1445595028),
+(38, 'accesslib/dirtycontexts', '/1/52/184', 1445513405, '1', 1445520605),
+(39, 'accesslib/dirtycontexts', '/1/52/190', 1445570508, '1', 1445577708),
+(40, 'accesslib/dirtycontexts', '/1/52/196', 1445620662, '1', 1445627862),
+(41, 'userpreferenceschanged', '23', 1445395273, '1', 1445402473),
+(42, 'accesslib/dirtycontexts', '/1/202', 1445395665, '1', 1445402865),
+(43, 'userpreferenceschanged', '25', 1445396080, '1', 1445403280),
+(44, 'accesslib/dirtycontexts', '/1/203/204', 1445397141, '1', 1445404341),
+(45, 'accesslib/dirtycontexts', '/1/203/205', 1445397141, '1', 1445404341),
+(46, 'accesslib/dirtycontexts', '/1/203/206', 1445397141, '1', 1445404341),
+(47, 'accesslib/dirtycontexts', '/1/203/207', 1445397141, '1', 1445404341),
+(48, 'accesslib/dirtycontexts', '/1/203/208', 1445397141, '1', 1445404341),
+(49, 'accesslib/dirtycontexts', '/1/203/209', 1445397142, '1', 1445404342),
+(50, 'accesslib/dirtycontexts', '/1/203', 1445397142, '1', 1445404342),
+(51, 'userpreferenceschanged', '26', 1445397370, '1', 1445404570),
+(52, 'accesslib/dirtycontexts', '/1/210/211', 1445420291, '1', 1445427491),
+(53, 'accesslib/dirtycontexts', '/1/210/212', 1445420291, '1', 1445427491),
+(54, 'accesslib/dirtycontexts', '/1/210/213', 1445420291, '1', 1445427491),
+(55, 'accesslib/dirtycontexts', '/1/210/214', 1445420291, '1', 1445427491),
+(56, 'accesslib/dirtycontexts', '/1/210/215', 1445420291, '1', 1445427491),
+(57, 'accesslib/dirtycontexts', '/1/210/216', 1445420291, '1', 1445427491),
+(58, 'accesslib/dirtycontexts', '/1/210', 1445420291, '1', 1445427491),
+(59, 'userpreferenceschanged', '27', 1445420422, '1', 1445427622),
+(60, 'accesslib/dirtycontexts', '/1/217/218', 1445420799, '1', 1445427999),
+(61, 'accesslib/dirtycontexts', '/1/217/219', 1445420799, '1', 1445427999),
+(62, 'accesslib/dirtycontexts', '/1/217/220', 1445420799, '1', 1445427999),
+(63, 'accesslib/dirtycontexts', '/1/217/221', 1445420799, '1', 1445427999),
+(64, 'accesslib/dirtycontexts', '/1/217/222', 1445420800, '1', 1445428000),
+(65, 'accesslib/dirtycontexts', '/1/217/223', 1445420800, '1', 1445428000),
+(66, 'accesslib/dirtycontexts', '/1/217', 1445420800, '1', 1445428000),
+(67, 'accesslib/dirtycontexts', '/1/224', 1445421145, '1', 1445428345),
+(68, 'accesslib/dirtycontexts', '/1/225', 1445422937, '1', 1445430137),
+(69, 'accesslib/dirtycontexts', '/1/226', 1445423363, '1', 1445430563),
+(70, 'userpreferenceschanged', '31', 1445423574, '1', 1445430774),
+(71, 'accesslib/dirtycontexts', '/1/227/228', 1445424134, '1', 1445431334),
+(72, 'accesslib/dirtycontexts', '/1/227/229', 1445424134, '1', 1445431334),
+(73, 'accesslib/dirtycontexts', '/1/227/230', 1445424134, '1', 1445431334),
+(74, 'accesslib/dirtycontexts', '/1/227/231', 1445424134, '1', 1445431334),
+(75, 'accesslib/dirtycontexts', '/1/227/232', 1445424134, '1', 1445431334),
+(76, 'accesslib/dirtycontexts', '/1/227/233', 1445424134, '1', 1445431334),
+(77, 'accesslib/dirtycontexts', '/1/227', 1445424134, '1', 1445431334),
+(78, 'userpreferenceschanged', '32', 1445437793, '1', 1445444993),
+(79, 'accesslib/dirtycontexts', '/1/234/235', 1445438465, '1', 1445445665),
+(80, 'accesslib/dirtycontexts', '/1/234/236', 1445438465, '1', 1445445665),
+(81, 'accesslib/dirtycontexts', '/1/234/237', 1445438465, '1', 1445445665),
+(82, 'accesslib/dirtycontexts', '/1/234/238', 1445438465, '1', 1445445665),
+(83, 'accesslib/dirtycontexts', '/1/234/239', 1445438465, '1', 1445445665),
+(84, 'accesslib/dirtycontexts', '/1/234/240', 1445438465, '1', 1445445665),
+(85, 'accesslib/dirtycontexts', '/1/234', 1445438465, '1', 1445445665),
+(86, 'accesslib/dirtycontexts', '/1/242/243', 1445438644, '1', 1445445844),
+(87, 'accesslib/dirtycontexts', '/1/242/244', 1445438644, '1', 1445445844),
+(88, 'accesslib/dirtycontexts', '/1/242/245', 1445438644, '1', 1445445844),
+(89, 'accesslib/dirtycontexts', '/1/242/246', 1445438644, '1', 1445445844),
+(90, 'accesslib/dirtycontexts', '/1/242/247', 1445438644, '1', 1445445844),
+(91, 'accesslib/dirtycontexts', '/1/242/248', 1445438644, '1', 1445445844),
+(92, 'accesslib/dirtycontexts', '/1/242', 1445438644, '1', 1445445844),
+(93, 'accesslib/dirtycontexts', '/1/249/250', 1445487001, '1', 1445494201),
+(94, 'accesslib/dirtycontexts', '/1/249/251', 1445487001, '1', 1445494201),
+(95, 'accesslib/dirtycontexts', '/1/249/252', 1445487001, '1', 1445494201),
+(96, 'accesslib/dirtycontexts', '/1/249/253', 1445487001, '1', 1445494201),
+(97, 'accesslib/dirtycontexts', '/1/249/254', 1445487001, '1', 1445494201),
+(98, 'accesslib/dirtycontexts', '/1/249/255', 1445487001, '1', 1445494201),
+(99, 'accesslib/dirtycontexts', '/1/249', 1445487001, '1', 1445494201),
+(100, 'accesslib/dirtycontexts', '/1/256', 1445487221, '1', 1445494421),
+(101, 'accesslib/dirtycontexts', '/1/257', 1445487882, '1', 1445495082),
+(102, 'userpreferenceschanged', '37', 1445489354, '1', 1445496554),
+(103, 'accesslib/dirtycontexts', '/1/258/259', 1445490780, '1', 1445497980),
+(104, 'accesslib/dirtycontexts', '/1/258/260', 1445490780, '1', 1445497980),
+(105, 'accesslib/dirtycontexts', '/1/258/261', 1445490780, '1', 1445497980),
+(106, 'accesslib/dirtycontexts', '/1/258/262', 1445490780, '1', 1445497980),
+(107, 'accesslib/dirtycontexts', '/1/258/263', 1445490780, '1', 1445497980),
+(108, 'accesslib/dirtycontexts', '/1/258/264', 1445490780, '1', 1445497980),
+(109, 'accesslib/dirtycontexts', '/1/258', 1445490780, '1', 1445497980),
+(110, 'accesslib/dirtycontexts', '/1/265', 1445492436, '1', 1445499636),
+(111, 'userpreferenceschanged', '39', 1445497310, '1', 1445504510),
+(112, 'accesslib/dirtycontexts', '/1/52/55/60', 1445497783, '1', 1445504983),
+(113, 'accesslib/dirtycontexts', '/1/266/267', 1445497661, '1', 1445504861),
+(114, 'accesslib/dirtycontexts', '/1/266/268', 1445497661, '1', 1445504861),
+(115, 'accesslib/dirtycontexts', '/1/266/269', 1445497661, '1', 1445504861),
+(116, 'accesslib/dirtycontexts', '/1/266/270', 1445497661, '1', 1445504861),
+(117, 'accesslib/dirtycontexts', '/1/266/271', 1445497661, '1', 1445504861),
+(118, 'accesslib/dirtycontexts', '/1/266/272', 1445497661, '1', 1445504861),
+(119, 'accesslib/dirtycontexts', '/1/266', 1445497661, '1', 1445504861),
+(120, 'userpreferenceschanged', '41', 1445537568, '1', 1445544768),
+(121, 'userpreferenceschanged', '42', 1445538236, '1', 1445545436),
+(122, 'accesslib/dirtycontexts', '/1/282/283', 1445570494, '1', 1445577694),
+(123, 'accesslib/dirtycontexts', '/1/282/284', 1445570494, '1', 1445577694),
+(124, 'accesslib/dirtycontexts', '/1/282/285', 1445570494, '1', 1445577694),
+(125, 'accesslib/dirtycontexts', '/1/282/286', 1445570494, '1', 1445577694),
+(126, 'accesslib/dirtycontexts', '/1/282/287', 1445570494, '1', 1445577694),
+(127, 'accesslib/dirtycontexts', '/1/282/288', 1445570495, '1', 1445577695),
+(128, 'accesslib/dirtycontexts', '/1/282', 1445570495, '1', 1445577695),
+(129, 'accesslib/dirtycontexts', '/1/273/274', 1445570508, '1', 1445577708),
+(130, 'accesslib/dirtycontexts', '/1/273/275', 1445570508, '1', 1445577708),
+(131, 'accesslib/dirtycontexts', '/1/273/276', 1445570508, '1', 1445577708),
+(132, 'accesslib/dirtycontexts', '/1/273/277', 1445570508, '1', 1445577708),
+(133, 'accesslib/dirtycontexts', '/1/273/278', 1445570508, '1', 1445577708),
+(134, 'accesslib/dirtycontexts', '/1/273/279', 1445570508, '1', 1445577708),
+(135, 'accesslib/dirtycontexts', '/1/273', 1445570508, '1', 1445577708),
+(136, 'userpreferenceschanged', '43', 1445574392, '1', 1445581592),
+(137, 'accesslib/dirtycontexts', '/1/289/290', 1445575240, '1', 1445582440),
+(138, 'accesslib/dirtycontexts', '/1/289/291', 1445575240, '1', 1445582440),
+(139, 'accesslib/dirtycontexts', '/1/289/292', 1445575240, '1', 1445582440),
+(140, 'accesslib/dirtycontexts', '/1/289/293', 1445575240, '1', 1445582440),
+(141, 'accesslib/dirtycontexts', '/1/289/294', 1445575240, '1', 1445582440),
+(142, 'accesslib/dirtycontexts', '/1/289/295', 1445575240, '1', 1445582440),
+(143, 'accesslib/dirtycontexts', '/1/289', 1445575240, '1', 1445582440),
+(144, 'accesslib/dirtycontexts', '/1/296', 1445575617, '1', 1445582817),
+(145, 'accesslib/dirtycontexts', '/1/297', 1445576345, '1', 1445583545),
+(146, 'accesslib/dirtycontexts', '/1/298', 1445576403, '1', 1445583603),
+(147, 'accesslib/dirtycontexts', '/1/299', 1445576578, '1', 1445583778),
+(148, 'accesslib/dirtycontexts', '/1/300', 1445576816, '1', 1445584016),
+(149, 'accesslib/dirtycontexts', '/1/301', 1445577580, '1', 1445584780),
+(150, 'accesslib/dirtycontexts', '/1/302', 1445577781, '1', 1445584981),
+(151, 'accesslib/dirtycontexts', '/1/303', 1445577855, '1', 1445585055),
+(152, 'accesslib/dirtycontexts', '/1/304', 1445578374, '1', 1445585574),
+(153, 'userpreferenceschanged', '54', 1445604062, '1', 1445611262),
+(154, 'userpreferenceschanged', '55', 1445578766, '1', 1445585966),
+(155, 'userpreferenceschanged', '56', 1445601955, '1', 1445609155),
+(156, 'accesslib/dirtycontexts', '/1/305/307', 1445618610, '1', 1445625810),
+(157, 'accesslib/dirtycontexts', '/1/305/308', 1445618610, '1', 1445625810),
+(158, 'accesslib/dirtycontexts', '/1/305/309', 1445618610, '1', 1445625810),
+(159, 'accesslib/dirtycontexts', '/1/305/310', 1445618610, '1', 1445625810),
+(160, 'accesslib/dirtycontexts', '/1/305/311', 1445618610, '1', 1445625810),
+(161, 'accesslib/dirtycontexts', '/1/305/312', 1445618610, '1', 1445625810),
+(162, 'accesslib/dirtycontexts', '/1/305', 1445618610, '1', 1445625810),
+(163, 'userpreferenceschanged', '63', 1445618877, '1', 1445626077),
+(164, 'accesslib/dirtycontexts', '/1/332/333', 1445619244, '1', 1445626444),
+(165, 'accesslib/dirtycontexts', '/1/332/334', 1445619244, '1', 1445626444),
+(166, 'accesslib/dirtycontexts', '/1/332/335', 1445619244, '1', 1445626444),
+(167, 'accesslib/dirtycontexts', '/1/332/336', 1445619244, '1', 1445626444),
+(168, 'accesslib/dirtycontexts', '/1/332/337', 1445619244, '1', 1445626444),
+(169, 'accesslib/dirtycontexts', '/1/332/338', 1445619244, '1', 1445626444),
+(170, 'accesslib/dirtycontexts', '/1/332', 1445619244, '1', 1445626444),
+(171, 'accesslib/dirtycontexts', '/1/339', 1445619939, '1', 1445627139),
+(172, 'accesslib/dirtycontexts', '/1/340', 1445620168, '1', 1445627368),
+(173, 'accesslib/dirtycontexts', '/1/341', 1445620662, '1', 1445627862),
+(174, 'userpreferenceschanged', '67', 1445622913, '1', 1445630113);
 
 -- --------------------------------------------------------
 
@@ -1896,7 +2046,7 @@ CREATE TABLE IF NOT EXISTS `mdl_config` (
   `value` longtext NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `mdl_conf_nam_uix` (`name`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='Moodle configuration variables' AUTO_INCREMENT=474 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='Moodle configuration variables' AUTO_INCREMENT=475 ;
 
 --
 -- Dumping data for table `mdl_config`
@@ -1906,8 +2056,8 @@ INSERT INTO `mdl_config` (`id`, `name`, `value`) VALUES
 (2, 'rolesactive', '1'),
 (3, 'auth', 'cas,db,email'),
 (4, 'auth_pop3mailbox', 'INBOX'),
-(5, 'enrol_plugins_enabled', 'manual,guest,self,cohort'),
-(6, 'theme', 'essential'),
+(5, 'enrol_plugins_enabled', 'manual,guest,self,cohort,flatfile'),
+(6, 'theme', 'clean'),
 (7, 'filter_multilang_converted', '1'),
 (8, 'siteidentifier', 'MtqQh8dde3sMvEbdmB2jBqxco6gTM8iCmycodebusters.com'),
 (9, 'backup_version', '2008111700'),
@@ -1924,8 +2074,8 @@ INSERT INTO `mdl_config` (`id`, `name`, `value`) VALUES
 (20, 'mnet_all_hosts_id', '2'),
 (21, 'siteguest', '1'),
 (22, 'siteadmins', '2'),
-(23, 'themerev', '1444499113'),
-(24, 'jsrev', '1444461581'),
+(23, 'themerev', '1445620685'),
+(24, 'jsrev', '1445620685'),
 (25, 'gdversion', '2'),
 (26, 'licenses', 'unknown,allrightsreserved,public,cc,cc-nd,cc-nc-nd,cc-nc,cc-nc-sa,cc-sa'),
 (27, 'version', '2015051102.04'),
@@ -2048,7 +2198,7 @@ INSERT INTO `mdl_config` (`id`, `name`, `value`) VALUES
 (145, 'lang', 'en'),
 (146, 'langmenu', '1'),
 (147, 'langlist', ''),
-(148, 'langrev', '1444461581'),
+(148, 'langrev', '1445620685'),
 (149, 'langcache', '1'),
 (150, 'langstringcache', '1'),
 (151, 'locale', ''),
@@ -2267,8 +2417,8 @@ INSERT INTO `mdl_config` (`id`, `name`, `value`) VALUES
 (365, 'profilingimportprefix', '(I)'),
 (366, 'release', '2.9.2+ (Build: 20151008)'),
 (367, 'branch', '29'),
-(368, 'localcachedirpurged', '1444461581'),
-(369, 'scheduledtaskreset', '1444461581'),
+(368, 'localcachedirpurged', '1445620685'),
+(369, 'scheduledtaskreset', '1445620685'),
 (370, 'allversionshash', 'f5e03e9ccd476f01d02d2de76c681690f5d6989a'),
 (372, 'notloggedinroleid', '6'),
 (373, 'guestroleid', '6'),
@@ -2371,7 +2521,8 @@ INSERT INTO `mdl_config` (`id`, `name`, `value`) VALUES
 (470, 'messageinbound_hostuser', 'lms@mycodebusters.com'),
 (471, 'messageinbound_hostpass', 'aK6SKymc'),
 (472, 'timezone', 'America/Denver'),
-(473, 'registerauth', 'email');
+(473, 'registerauth', 'email'),
+(474, 'themelegacy', 'clean');
 
 -- --------------------------------------------------------
 
@@ -2391,7 +2542,7 @@ CREATE TABLE IF NOT EXISTS `mdl_config_log` (
   PRIMARY KEY (`id`),
   KEY `mdl_conflog_tim_ix` (`timemodified`),
   KEY `mdl_conflog_use_ix` (`userid`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='Changes done in server configuration through admin UI' AUTO_INCREMENT=1184 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='Changes done in server configuration through admin UI' AUTO_INCREMENT=1192 ;
 
 --
 -- Dumping data for table `mdl_config_log`
@@ -3581,7 +3732,15 @@ INSERT INTO `mdl_config_log` (`id`, `userid`, `timemodified`, `plugin`, `name`, 
 (1180, 2, 1445063193, NULL, 'registerauth', 'email', ''),
 (1181, 2, 1445325030, NULL, 'alternateloginurl', 'http://mycodebusters.com/lms/moodle/signin.html', ''),
 (1182, 2, 1445347966, NULL, 'alternateloginurl', '', 'http://mycodebusters.com/lms/moodle/signin.html'),
-(1183, 2, 1445350904, NULL, 'alternateloginurl', 'http://mycodebusters.com/lms/moodle/signin.html', '');
+(1183, 2, 1445350904, NULL, 'alternateloginurl', 'http://mycodebusters.com/lms/moodle/signin.html', ''),
+(1184, 2, 1445422014, NULL, 'debug', '32767', '0'),
+(1185, 2, 1445422014, NULL, 'debugdisplay', '1', '0'),
+(1186, 2, 1445424211, NULL, 'debug', '0', '32767'),
+(1187, 2, 1445424211, NULL, 'debugdisplay', '0', '1'),
+(1188, 2, 1445515790, 'enrol_flatfile', 'location', '/home4/mycod.../public_html/lms/moodle/enroll.csv', ''),
+(1189, 2, 1445516262, 'enrol_flatfile', 'location', '', '/home4/mycod.../public_html/lms/moodle/enroll.csv'),
+(1190, 2, 1445621851, NULL, 'alternateloginurl', '', 'http://mycodebusters.com/lms/moodle/signin.html'),
+(1191, 2, 1445622135, NULL, 'alternateloginurl', 'http://mycodebusters.com/lms/moodle/signin.html', '');
 
 -- --------------------------------------------------------
 
@@ -4887,7 +5046,7 @@ CREATE TABLE IF NOT EXISTS `mdl_context` (
   UNIQUE KEY `mdl_cont_conins_uix` (`contextlevel`,`instanceid`),
   KEY `mdl_cont_ins_ix` (`instanceid`),
   KEY `mdl_cont_pat_ix` (`path`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='one of these must be set' AUTO_INCREMENT=202 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='one of these must be set' AUTO_INCREMENT=349 ;
 
 --
 -- Dumping data for table `mdl_context`
@@ -5082,7 +5241,37 @@ INSERT INTO `mdl_context` (`id`, `contextlevel`, `instanceid`, `path`, `depth`) 
 (198, 80, 158, '/1/52/196/198', 4),
 (199, 80, 159, '/1/52/196/199', 4),
 (200, 80, 160, '/1/52/196/200', 4),
-(201, 80, 161, '/1/52/196/201', 4);
+(201, 80, 161, '/1/52/196/201', 4),
+(241, 70, 8, '/1/52/190/241', 4),
+(280, 70, 9, '/1/52/184/280', 4),
+(281, 70, 10, '/1/52/196/281', 4),
+(306, 30, 55, '/1/306', 2),
+(313, 80, 240, '/1/306/313', 3),
+(314, 80, 241, '/1/306/314', 3),
+(315, 80, 242, '/1/306/315', 3),
+(316, 80, 243, '/1/306/316', 3),
+(317, 80, 244, '/1/306/317', 3),
+(318, 80, 245, '/1/306/318', 3),
+(319, 30, 56, '/1/319', 2),
+(320, 30, 57, '/1/320', 2),
+(321, 30, 58, '/1/321', 2),
+(322, 30, 59, '/1/322', 2),
+(323, 30, 60, '/1/323', 2),
+(324, 30, 61, '/1/324', 2),
+(325, 80, 246, '/1/319/325', 3),
+(326, 80, 247, '/1/319/326', 3),
+(327, 80, 248, '/1/319/327', 3),
+(328, 80, 249, '/1/319/328', 3),
+(329, 80, 250, '/1/319/329', 3),
+(330, 80, 251, '/1/319/330', 3),
+(331, 30, 62, '/1/331', 2),
+(342, 30, 67, '/1/342', 2),
+(343, 80, 258, '/1/342/343', 3),
+(344, 80, 259, '/1/342/344', 3),
+(345, 80, 260, '/1/342/345', 3),
+(346, 80, 261, '/1/342/346', 3),
+(347, 80, 262, '/1/342/347', 3),
+(348, 80, 263, '/1/342/348', 3);
 
 -- --------------------------------------------------------
 
@@ -5148,11 +5337,11 @@ CREATE TABLE IF NOT EXISTS `mdl_course` (
 --
 
 INSERT INTO `mdl_course` (`id`, `category`, `sortorder`, `fullname`, `shortname`, `idnumber`, `summary`, `summaryformat`, `format`, `showgrades`, `newsitems`, `startdate`, `marker`, `maxbytes`, `legacyfiles`, `showreports`, `visible`, `visibleold`, `groupmode`, `groupmodeforce`, `defaultgroupingid`, `lang`, `calendartype`, `theme`, `timecreated`, `timemodified`, `requested`, `enablecompletion`, `completionnotify`, `cacherev`) VALUES
-(1, 0, 1, 'University of Los Angeles', 'CA', '', '<p>Welcome to&nbsp;<b style="color: rgb(37, 37, 37); font-family: sans-serif; font-size: 14px; font-style: normal; font-variant: normal; letter-spacing: normal; line-height: 22.4px; orphans: auto; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: 1; word-spacing: 0px; -webkit-text-stroke-width: 0px; background-color: rgb(255, 255, 255);">Los Angeles</b>&nbsp;University</p>', 0, 'site', 1, 3, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, '', '', '', 1444454438, 1444499726, 0, 0, 0, 1444928621),
-(3, 2, 10004, 'Introduction to politics', 'CD1', 'CD1', '<p>This is test course for training purposes.</p>', 1, 'topics', 0, 0, 1444543200, 0, 0, 0, 0, 1, 1, 1, 1, 0, 'en', '', '', 1444501277, 1445097895, 0, 0, 0, 1445097895),
-(4, 2, 10003, '2-nd course', 'CD2', 'CD2', '', 1, 'social', 1, 0, 1445148000, 0, 0, 0, 0, 1, 1, 1, 1, 0, '', '', '', 1445097772, 1445097798, 0, 0, 0, 1445097798),
-(5, 2, 10002, '3-rd course', 'CD3', 'CD3', '', 1, 'social', 1, 0, 1445148000, 0, 0, 0, 0, 1, 1, 1, 1, 0, '', '', '', 1445097836, 1445097836, 0, 0, 0, 1445097837),
-(6, 2, 10001, '4-th course', 'CD4', 'CD4', '', 1, 'social', 1, 0, 1445148000, 0, 0, 0, 0, 1, 1, 1, 1, 0, '', '', '', 1445097857, 1445097875, 0, 0, 0, 1445097876);
+(1, 0, 1, 'University of Los Angeles', 'CA', '', '<p>Welcome to&nbsp;<b style="color: rgb(37, 37, 37); font-family: sans-serif; font-size: 14px; font-style: normal; font-variant: normal; letter-spacing: normal; line-height: 22.4px; orphans: auto; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: 1; word-spacing: 0px; -webkit-text-stroke-width: 0px; background-color: rgb(255, 255, 255);">Los Angeles</b>&nbsp;University</p>', 0, 'site', 1, 3, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, '', '', '', 1444454438, 1444499726, 0, 0, 0, 1445620685),
+(3, 2, 10004, 'Introduction to politics', 'CD1', 'CD1', '<p>This is test course for training purposes.</p>', 1, 'topics', 0, 0, 1444543200, 0, 0, 0, 0, 1, 1, 1, 1, 0, 'en', '', '', 1444501277, 1445097895, 0, 0, 0, 1445620685),
+(4, 2, 10003, '2-nd course', 'CD2', 'CD2', '', 1, 'social', 1, 0, 1445148000, 0, 0, 0, 0, 1, 1, 1, 1, 0, '', '', '', 1445097772, 1445097798, 0, 0, 0, 1445620685),
+(5, 2, 10002, '3-rd course', 'CD3', 'CD3', '', 1, 'social', 1, 0, 1445148000, 0, 0, 0, 0, 1, 1, 1, 1, 0, '', '', '', 1445097836, 1445097836, 0, 0, 0, 1445620685),
+(6, 2, 10001, '4-th course', 'CD4', 'CD4', '', 1, 'social', 1, 0, 1445148000, 0, 0, 0, 0, 1, 1, 1, 1, 0, '', '', '', 1445097857, 1445097875, 0, 0, 0, 1445620685);
 
 -- --------------------------------------------------------
 
@@ -5191,6 +5380,28 @@ INSERT INTO `mdl_course_categories` (`id`, `name`, `idnumber`, `description`, `d
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `mdl_course_completions`
+--
+
+DROP TABLE IF EXISTS `mdl_course_completions`;
+CREATE TABLE IF NOT EXISTS `mdl_course_completions` (
+  `id` bigint(10) NOT NULL AUTO_INCREMENT,
+  `userid` bigint(10) NOT NULL DEFAULT '0',
+  `course` bigint(10) NOT NULL DEFAULT '0',
+  `timeenrolled` bigint(10) NOT NULL DEFAULT '0',
+  `timestarted` bigint(10) NOT NULL DEFAULT '0',
+  `timecompleted` bigint(10) DEFAULT NULL,
+  `reaggregate` bigint(10) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `mdl_courcomp_usecou_uix` (`userid`,`course`),
+  KEY `mdl_courcomp_use_ix` (`userid`),
+  KEY `mdl_courcomp_cou_ix` (`course`),
+  KEY `mdl_courcomp_tim_ix` (`timecompleted`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Course completion records' AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `mdl_course_completion_aggr_methd`
 --
 
@@ -5206,29 +5417,6 @@ CREATE TABLE IF NOT EXISTS `mdl_course_completion_aggr_methd` (
   KEY `mdl_courcompaggrmeth_cou_ix` (`course`),
   KEY `mdl_courcompaggrmeth_cri_ix` (`criteriatype`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Course completion aggregation methods for criteria' AUTO_INCREMENT=1 ;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `mdl_course_completion_crit_compl`
---
-
-DROP TABLE IF EXISTS `mdl_course_completion_crit_compl`;
-CREATE TABLE IF NOT EXISTS `mdl_course_completion_crit_compl` (
-  `id` bigint(10) NOT NULL AUTO_INCREMENT,
-  `userid` bigint(10) NOT NULL DEFAULT '0',
-  `course` bigint(10) NOT NULL DEFAULT '0',
-  `criteriaid` bigint(10) NOT NULL DEFAULT '0',
-  `gradefinal` decimal(10,5) DEFAULT NULL,
-  `unenroled` bigint(10) DEFAULT NULL,
-  `timecompleted` bigint(10) DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `mdl_courcompcritcomp_useco_uix` (`userid`,`course`,`criteriaid`),
-  KEY `mdl_courcompcritcomp_use_ix` (`userid`),
-  KEY `mdl_courcompcritcomp_cou_ix` (`course`),
-  KEY `mdl_courcompcritcomp_cri_ix` (`criteriaid`),
-  KEY `mdl_courcompcritcomp_tim_ix` (`timecompleted`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Course completion user records' AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -5255,24 +5443,25 @@ CREATE TABLE IF NOT EXISTS `mdl_course_completion_criteria` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `mdl_course_completions`
+-- Table structure for table `mdl_course_completion_crit_compl`
 --
 
-DROP TABLE IF EXISTS `mdl_course_completions`;
-CREATE TABLE IF NOT EXISTS `mdl_course_completions` (
+DROP TABLE IF EXISTS `mdl_course_completion_crit_compl`;
+CREATE TABLE IF NOT EXISTS `mdl_course_completion_crit_compl` (
   `id` bigint(10) NOT NULL AUTO_INCREMENT,
   `userid` bigint(10) NOT NULL DEFAULT '0',
   `course` bigint(10) NOT NULL DEFAULT '0',
-  `timeenrolled` bigint(10) NOT NULL DEFAULT '0',
-  `timestarted` bigint(10) NOT NULL DEFAULT '0',
+  `criteriaid` bigint(10) NOT NULL DEFAULT '0',
+  `gradefinal` decimal(10,5) DEFAULT NULL,
+  `unenroled` bigint(10) DEFAULT NULL,
   `timecompleted` bigint(10) DEFAULT NULL,
-  `reaggregate` bigint(10) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`),
-  UNIQUE KEY `mdl_courcomp_usecou_uix` (`userid`,`course`),
-  KEY `mdl_courcomp_use_ix` (`userid`),
-  KEY `mdl_courcomp_cou_ix` (`course`),
-  KEY `mdl_courcomp_tim_ix` (`timecompleted`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Course completion records' AUTO_INCREMENT=1 ;
+  UNIQUE KEY `mdl_courcompcritcomp_useco_uix` (`userid`,`course`,`criteriaid`),
+  KEY `mdl_courcompcritcomp_use_ix` (`userid`),
+  KEY `mdl_courcompcritcomp_cou_ix` (`course`),
+  KEY `mdl_courcompcritcomp_cri_ix` (`criteriaid`),
+  KEY `mdl_courcompcritcomp_tim_ix` (`timecompleted`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Course completion user records' AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -5340,7 +5529,7 @@ CREATE TABLE IF NOT EXISTS `mdl_course_modules` (
   KEY `mdl_courmodu_ins_ix` (`instance`),
   KEY `mdl_courmodu_idncou_ix` (`idnumber`,`course`),
   KEY `mdl_courmodu_gro_ix` (`groupingid`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='course_modules table retrofitted from MySQL' AUTO_INCREMENT=8 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='course_modules table retrofitted from MySQL' AUTO_INCREMENT=11 ;
 
 --
 -- Dumping data for table `mdl_course_modules`
@@ -5350,7 +5539,10 @@ INSERT INTO `mdl_course_modules` (`id`, `course`, `module`, `instance`, `section
 (4, 1, 9, 2, 12, NULL, 1444499221, 0, 0, 1, 1, 0, 0, 0, NULL, 0, 0, 0, NULL),
 (5, 3, 15, 1, 13, '', 1444501922, 0, 0, 1, 1, 0, 0, 0, NULL, 0, 0, 0, NULL),
 (6, 3, 9, 3, 14, '', 1444502121, 0, 0, 1, 1, 0, 0, 0, NULL, 0, 0, 0, NULL),
-(7, 3, 16, 2, 15, '', 1444503927, 0, 0, 1, 1, 0, 0, 0, NULL, 0, 0, 0, NULL);
+(7, 3, 16, 2, 15, '', 1444503927, 0, 0, 1, 1, 0, 0, 0, NULL, 0, 0, 0, NULL),
+(8, 5, 9, 4, 17, NULL, 1445437760, 0, 0, 1, 1, 0, 0, 0, NULL, 0, 0, 0, NULL),
+(9, 4, 9, 5, 16, NULL, 1445513247, 0, 0, 1, 1, 0, 0, 0, NULL, 0, 0, 0, NULL),
+(10, 6, 9, 6, 18, NULL, 1445517846, 0, 0, 1, 1, 0, 0, 0, NULL, 0, 0, 0, NULL);
 
 -- --------------------------------------------------------
 
@@ -5441,9 +5633,9 @@ INSERT INTO `mdl_course_sections` (`id`, `course`, `section`, `name`, `summary`,
 (13, 3, 0, 'Introduction to politics', '', 1, '5', 1, NULL),
 (14, 3, 1, 'Forum', '', 1, '6', 1, NULL),
 (15, 3, 2, 'Quiz', '', 1, '7', 1, NULL),
-(16, 4, 0, NULL, '', 1, '', 1, NULL),
-(17, 5, 0, NULL, '', 1, '', 1, NULL),
-(18, 6, 0, NULL, '', 1, '', 1, NULL);
+(16, 4, 0, NULL, '', 1, '9', 1, NULL),
+(17, 5, 0, NULL, '', 1, '8', 1, NULL),
+(18, 6, 0, NULL, '', 1, '10', 1, NULL);
 
 -- --------------------------------------------------------
 
@@ -5578,7 +5770,7 @@ CREATE TABLE IF NOT EXISTS `mdl_editor_atto_autosave` (
   `timemodified` bigint(10) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`),
   UNIQUE KEY `mdl_editattoauto_eleconuse_uix` (`elementid`,`contextid`,`userid`,`pagehash`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='Draft text that is auto-saved every 5 seconds while an edito' AUTO_INCREMENT=224 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='Draft text that is auto-saved every 5 seconds while an edito' AUTO_INCREMENT=233 ;
 
 --
 -- Dumping data for table `mdl_editor_atto_autosave`
@@ -5607,7 +5799,6 @@ INSERT INTO `mdl_editor_atto_autosave` (`id`, `elementid`, `contextid`, `pagehas
 (44, 'id_s_theme_essential_marketing1content', 1, '991148a41c5dc1d9cb160f9c1991acd1c0df745b', 2, '', -1, 'yui_3_17_2_2_1444498606465_362', 1444498602),
 (45, 'id_s_theme_essential_marketing3content', 1, '991148a41c5dc1d9cb160f9c1991acd1c0df745b', 2, '', -1, 'yui_3_17_2_2_1444498606465_864', 1444498602),
 (46, 'id_s_theme_essential_marketing2content', 1, '991148a41c5dc1d9cb160f9c1991acd1c0df745b', 2, '', -1, 'yui_3_17_2_2_1444498606465_613', 1444498602),
-(51, 'summary', 1, '16981b06c861ac90e11fcd42f6bb1b8852a935d7', 2, '', -1, 'yui_3_17_2_2_1444504691499_100', 1444504687),
 (60, 'id_summary_editor', 55, '0b4a605104b68ff82ac8a85e349dc330a3ceac91', 2, '', 886129037, 'yui_3_17_2_2_1444501823742_86', 1444501819),
 (65, 'id_introeditor', 55, '654cbf1fd1c9d26163b20f71fbdf794c160f27fc', 2, '', 74918058, 'yui_3_17_2_2_1444502236843_341', 1444502232),
 (74, 'id_description_editor', 55, '54c5e1153225ca7394da6354353dbbaef8536eda', 2, '', 498210014, 'yui_3_17_2_2_1444504448465_153', 1444504444),
@@ -5631,7 +5822,13 @@ INSERT INTO `mdl_editor_atto_autosave` (`id`, `elementid`, `contextid`, `pagehas
 (196, 'id_hint_0', 55, '689377bf4528afa04aad383aa49a96dda9c7f869', 22, '', 47959943, 'yui_3_17_2_2_1444925147262_959', 1444925148),
 (197, 'id_hint_1', 55, '689377bf4528afa04aad383aa49a96dda9c7f869', 22, '', 396854996, 'yui_3_17_2_2_1444925147262_1217', 1444925148),
 (221, 'id_feedback', 55, '2eeb8408c6efd19877c270be7bf73c8e2ec26ad0', 2, '', -1, 'yui_3_17_2_2_1444929679811_305', 1444929681),
-(223, 'id_s__auth_instructions', 1, 'ab7ee2fcdae40dc4c1823cd0db8f8ba2c02f7c29', 2, '', -1, 'yui_3_17_2_2_1445063193666_100', 1445063195);
+(223, 'id_s__auth_instructions', 1, 'ab7ee2fcdae40dc4c1823cd0db8f8ba2c02f7c29', 2, '', -1, 'yui_3_17_2_2_1445063193666_100', 1445063195),
+(224, 'id_description_editor', 5, '647f3e47424fea8f1f0b501389abc2464e3c9b4e', 2, '', 754023359, 'yui_3_17_2_2_1445395623171_190', 1445395630),
+(225, 'id_description_editor', 184, 'a9bcee32eea3050aef8836d0f684b9e15a1b8745', 2, '', 696988227, 'yui_3_17_2_2_1445513269877_153', 1445513273),
+(226, 'id_description_editor', 190, '66348f0b688500a60e16a50b6a00f195a7bca4d8', 22, '', 687630581, 'yui_3_17_2_2_1445519993994_153', 1445519995),
+(227, 'id_summary_editor', 196, '195aca88ac25585c5f383a1d24c349eabe8cde3c', 22, '', 727902449, 'yui_3_17_2_2_1445533706569_303', 1445533709),
+(229, 'id_description_editor', 55, 'a4f8e5dc827b335bbc5ab14febcad183366b683f', 22, '', 343786382, 'yui_3_17_2_2_1445535308674_153', 1445535312),
+(232, 'id_s__maintenance_message', 1, '8946d71c7a367fa4755ae48a62b6be3345eaf856', 2, '', -1, 'yui_3_17_2_2_1445569914251_100', 1445569917);
 
 -- --------------------------------------------------------
 
@@ -5679,7 +5876,7 @@ CREATE TABLE IF NOT EXISTS `mdl_enrol` (
   PRIMARY KEY (`id`),
   KEY `mdl_enro_enr_ix` (`enrol`),
   KEY `mdl_enro_cou_ix` (`courseid`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='Instances of enrolment plugins used in courses, fields marke' AUTO_INCREMENT=16 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='Instances of enrolment plugins used in courses, fields marke' AUTO_INCREMENT=17 ;
 
 --
 -- Dumping data for table `mdl_enrol`
@@ -5691,13 +5888,14 @@ INSERT INTO `mdl_enrol` (`id`, `enrol`, `status`, `courseid`, `sortorder`, `name
 (6, 'self', 1, 3, 2, NULL, 0, 0, 0, 0, 86400, 0, NULL, NULL, NULL, 5, 0, 0, 0, 1, 0, 1, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1444501277, 1444501277),
 (7, 'manual', 0, 4, 0, NULL, 0, 0, 0, 0, 86400, 0, NULL, NULL, NULL, 5, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1445097772, 1445097772),
 (8, 'guest', 1, 4, 1, NULL, 0, 0, 0, 0, 0, 0, '', NULL, NULL, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1445097772, 1445097798),
-(9, 'self', 1, 4, 2, NULL, 0, 0, 0, 0, 86400, 0, NULL, NULL, NULL, 5, 0, 0, 0, 1, 0, 1, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1445097772, 1445097772),
+(9, 'self', 0, 4, 2, '', 0, 0, 0, 0, 86400, 0, '', NULL, NULL, 5, 0, 0, 0, 1, 0, 1, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '', NULL, NULL, NULL, 1445097772, 1445513437),
 (10, 'manual', 0, 5, 0, NULL, 0, 0, 0, 0, 86400, 0, NULL, NULL, NULL, 5, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1445097836, 1445097836),
 (11, 'guest', 1, 5, 1, NULL, 0, 0, 0, 0, 0, 0, '', NULL, NULL, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1445097836, 1445097836),
 (12, 'self', 1, 5, 2, NULL, 0, 0, 0, 0, 86400, 0, NULL, NULL, NULL, 5, 0, 0, 0, 1, 0, 1, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1445097836, 1445097836),
 (13, 'manual', 0, 6, 0, NULL, 0, 0, 0, 0, 86400, 0, NULL, NULL, NULL, 5, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1445097858, 1445097858),
 (14, 'guest', 1, 6, 1, NULL, 0, 0, 0, 0, 0, 0, '', NULL, NULL, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1445097858, 1445097876),
-(15, 'self', 1, 6, 2, NULL, 0, 0, 0, 0, 86400, 0, NULL, NULL, NULL, 5, 0, 0, 0, 1, 0, 1, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1445097858, 1445097858);
+(15, 'self', 0, 6, 2, NULL, 0, 0, 0, 0, 86400, 0, NULL, NULL, NULL, 5, 0, 0, 0, 1, 0, 1, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1445097858, 1445097858),
+(16, 'self', 0, 5, 3, '', 0, 0, 0, 0, 86400, 0, '', NULL, NULL, 5, 1, 0, 0, 1, 0, 1, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'Welcome to our course', NULL, NULL, NULL, 1445489142, 1445489142);
 
 -- --------------------------------------------------------
 
@@ -5790,26 +5988,6 @@ CREATE TABLE IF NOT EXISTS `mdl_event` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `mdl_event_subscriptions`
---
-
-DROP TABLE IF EXISTS `mdl_event_subscriptions`;
-CREATE TABLE IF NOT EXISTS `mdl_event_subscriptions` (
-  `id` bigint(10) NOT NULL AUTO_INCREMENT,
-  `url` varchar(255) NOT NULL DEFAULT '',
-  `courseid` bigint(10) NOT NULL DEFAULT '0',
-  `groupid` bigint(10) NOT NULL DEFAULT '0',
-  `userid` bigint(10) NOT NULL DEFAULT '0',
-  `eventtype` varchar(20) NOT NULL DEFAULT '',
-  `pollinterval` bigint(10) NOT NULL DEFAULT '0',
-  `lastupdated` bigint(10) DEFAULT NULL,
-  `name` varchar(255) NOT NULL DEFAULT '',
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Tracks subscriptions to remote calendars.' AUTO_INCREMENT=1 ;
-
--- --------------------------------------------------------
-
---
 -- Table structure for table `mdl_events_handlers`
 --
 
@@ -5862,6 +6040,26 @@ CREATE TABLE IF NOT EXISTS `mdl_events_queue_handlers` (
   KEY `mdl_evenqueuhand_que_ix` (`queuedeventid`),
   KEY `mdl_evenqueuhand_han_ix` (`handlerid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='This is the list of queued handlers for processing. The even' AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `mdl_event_subscriptions`
+--
+
+DROP TABLE IF EXISTS `mdl_event_subscriptions`;
+CREATE TABLE IF NOT EXISTS `mdl_event_subscriptions` (
+  `id` bigint(10) NOT NULL AUTO_INCREMENT,
+  `url` varchar(255) NOT NULL DEFAULT '',
+  `courseid` bigint(10) NOT NULL DEFAULT '0',
+  `groupid` bigint(10) NOT NULL DEFAULT '0',
+  `userid` bigint(10) NOT NULL DEFAULT '0',
+  `eventtype` varchar(20) NOT NULL DEFAULT '',
+  `pollinterval` bigint(10) NOT NULL DEFAULT '0',
+  `lastupdated` bigint(10) DEFAULT NULL,
+  `name` varchar(255) NOT NULL DEFAULT '',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Tracks subscriptions to remote calendars.' AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -6600,7 +6798,7 @@ CREATE TABLE IF NOT EXISTS `mdl_forum` (
   `displaywordcount` tinyint(1) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`),
   KEY `mdl_foru_cou_ix` (`course`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='Forums contain and structure discussion' AUTO_INCREMENT=4 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='Forums contain and structure discussion' AUTO_INCREMENT=7 ;
 
 --
 -- Dumping data for table `mdl_forum`
@@ -6608,7 +6806,10 @@ CREATE TABLE IF NOT EXISTS `mdl_forum` (
 
 INSERT INTO `mdl_forum` (`id`, `course`, `type`, `name`, `intro`, `introformat`, `assessed`, `assesstimestart`, `assesstimefinish`, `scale`, `maxbytes`, `maxattachments`, `forcesubscribe`, `trackingtype`, `rsstype`, `rssarticles`, `timemodified`, `warnafter`, `blockafter`, `blockperiod`, `completiondiscussions`, `completionreplies`, `completionposts`, `displaywordcount`) VALUES
 (2, 1, 'news', 'Site news', 'General news and announcements', 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 1444499221, 0, 0, 0, 0, 0, 0, 0),
-(3, 3, 'general', 'What is politics - forum', '<p>This is forum to disscuss polytics topic</p>', 1, 0, 0, 0, 100, 512000, 9, 0, 1, 0, 0, 1444502121, 0, 0, 0, 0, 0, 0, 0);
+(3, 3, 'general', 'What is politics - forum', '<p>This is forum to disscuss polytics topic</p>', 1, 0, 0, 0, 100, 512000, 9, 0, 1, 0, 0, 1444502121, 0, 0, 0, 0, 0, 0, 0),
+(4, 5, 'social', 'Social forum', 'An open forum for chatting about anything you want to', 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 1445437760, 0, 0, 0, 0, 0, 0, 0),
+(5, 4, 'social', 'Social forum', 'An open forum for chatting about anything you want to', 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 1445513247, 0, 0, 0, 0, 0, 0, 0),
+(6, 6, 'social', 'Social forum', 'An open forum for chatting about anything you want to', 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 1445517846, 0, 0, 0, 0, 0, 0, 0);
 
 -- --------------------------------------------------------
 
@@ -6627,39 +6828,6 @@ CREATE TABLE IF NOT EXISTS `mdl_forum_digests` (
   KEY `mdl_forudige_use_ix` (`userid`),
   KEY `mdl_forudige_for_ix` (`forum`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Keeps track of user mail delivery preferences for each forum' AUTO_INCREMENT=1 ;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `mdl_forum_discussion_subs`
---
-
-DROP TABLE IF EXISTS `mdl_forum_discussion_subs`;
-CREATE TABLE IF NOT EXISTS `mdl_forum_discussion_subs` (
-  `id` bigint(10) NOT NULL AUTO_INCREMENT,
-  `forum` bigint(10) NOT NULL,
-  `userid` bigint(10) NOT NULL,
-  `discussion` bigint(10) NOT NULL,
-  `preference` bigint(10) NOT NULL DEFAULT '1',
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `mdl_forudiscsubs_usedis_uix` (`userid`,`discussion`),
-  KEY `mdl_forudiscsubs_for_ix` (`forum`),
-  KEY `mdl_forudiscsubs_use_ix` (`userid`),
-  KEY `mdl_forudiscsubs_dis_ix` (`discussion`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='Users may choose to subscribe and unsubscribe from specific ' AUTO_INCREMENT=9 ;
-
---
--- Dumping data for table `mdl_forum_discussion_subs`
---
-
-INSERT INTO `mdl_forum_discussion_subs` (`id`, `forum`, `userid`, `discussion`, `preference`) VALUES
-(1, 3, 2, 1, 1444502177),
-(3, 3, 3, 2, 1444505870),
-(4, 3, 4, 2, 1444506999),
-(5, 3, 5, 2, 1444507165),
-(6, 3, 11, 3, 1444512652),
-(7, 3, 14, 4, 1444512841),
-(8, 3, 19, 5, 1444512920);
 
 -- --------------------------------------------------------
 
@@ -6697,6 +6865,39 @@ INSERT INTO `mdl_forum_discussions` (`id`, `course`, `forum`, `name`, `firstpost
 (3, 3, 3, 'Some new topic from student19', 5, 11, 1, 0, 1444512652, 11, 0, 0),
 (4, 3, 3, 'What about topics from student22?', 6, 14, 2, 0, 1444512841, 14, 0, 0),
 (5, 3, 3, 'Student27 also wants to share ', 7, 19, 2, 0, 1444512920, 19, 0, 0);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `mdl_forum_discussion_subs`
+--
+
+DROP TABLE IF EXISTS `mdl_forum_discussion_subs`;
+CREATE TABLE IF NOT EXISTS `mdl_forum_discussion_subs` (
+  `id` bigint(10) NOT NULL AUTO_INCREMENT,
+  `forum` bigint(10) NOT NULL,
+  `userid` bigint(10) NOT NULL,
+  `discussion` bigint(10) NOT NULL,
+  `preference` bigint(10) NOT NULL DEFAULT '1',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `mdl_forudiscsubs_usedis_uix` (`userid`,`discussion`),
+  KEY `mdl_forudiscsubs_for_ix` (`forum`),
+  KEY `mdl_forudiscsubs_use_ix` (`userid`),
+  KEY `mdl_forudiscsubs_dis_ix` (`discussion`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='Users may choose to subscribe and unsubscribe from specific ' AUTO_INCREMENT=9 ;
+
+--
+-- Dumping data for table `mdl_forum_discussion_subs`
+--
+
+INSERT INTO `mdl_forum_discussion_subs` (`id`, `forum`, `userid`, `discussion`, `preference`) VALUES
+(1, 3, 2, 1, 1444502177),
+(3, 3, 3, 2, 1444505870),
+(4, 3, 4, 2, 1444506999),
+(5, 3, 5, 2, 1444507165),
+(6, 3, 11, 3, 1444512652),
+(7, 3, 14, 4, 1444512841),
+(8, 3, 19, 5, 1444512920);
 
 -- --------------------------------------------------------
 
@@ -6987,7 +7188,7 @@ CREATE TABLE IF NOT EXISTS `mdl_grade_categories` (
   PRIMARY KEY (`id`),
   KEY `mdl_gradcate_cou_ix` (`courseid`),
   KEY `mdl_gradcate_par_ix` (`parent`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='This table keeps information about categories, used for grou' AUTO_INCREMENT=4 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='This table keeps information about categories, used for grou' AUTO_INCREMENT=6 ;
 
 --
 -- Dumping data for table `mdl_grade_categories`
@@ -6995,7 +7196,9 @@ CREATE TABLE IF NOT EXISTS `mdl_grade_categories` (
 
 INSERT INTO `mdl_grade_categories` (`id`, `courseid`, `parent`, `depth`, `path`, `fullname`, `aggregation`, `keephigh`, `droplow`, `aggregateonlygraded`, `aggregateoutcomes`, `timecreated`, `timemodified`, `hidden`) VALUES
 (2, 3, NULL, 1, '/2/', '?', 13, 0, 0, 1, 0, 1444502014, 1444502014, 0),
-(3, 1, NULL, 1, '/3/', '?', 13, 0, 0, 1, 0, 1444931009, 1444931009, 0);
+(3, 1, NULL, 1, '/3/', '?', 13, 0, 0, 1, 0, 1444931009, 1444931009, 0),
+(4, 5, NULL, 1, '/4/', '?', 13, 0, 0, 1, 0, 1445523620, 1445523620, 0),
+(5, 6, NULL, 1, '/5/', '?', 13, 0, 0, 1, 0, 1445578686, 1445578686, 0);
 
 -- --------------------------------------------------------
 
@@ -7029,7 +7232,7 @@ CREATE TABLE IF NOT EXISTS `mdl_grade_categories_history` (
   KEY `mdl_gradcatehist_cou_ix` (`courseid`),
   KEY `mdl_gradcatehist_par_ix` (`parent`),
   KEY `mdl_gradcatehist_log_ix` (`loggeduser`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='History of grade_categories' AUTO_INCREMENT=8 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='History of grade_categories' AUTO_INCREMENT=12 ;
 
 --
 -- Dumping data for table `mdl_grade_categories_history`
@@ -7042,7 +7245,11 @@ INSERT INTO `mdl_grade_categories_history` (`id`, `action`, `oldid`, `source`, `
 (4, 1, 2, 'system', 1444502014, 2, 3, NULL, 0, NULL, '?', 13, 0, 0, 1, 0, 0, 0),
 (5, 2, 2, 'system', 1444502014, 2, 3, NULL, 1, '/2/', '?', 13, 0, 0, 1, 0, 0, 0),
 (6, 1, 3, 'system', 1444931009, 22, 1, NULL, 0, NULL, '?', 13, 0, 0, 1, 0, 0, 0),
-(7, 2, 3, 'system', 1444931009, 22, 1, NULL, 1, '/3/', '?', 13, 0, 0, 1, 0, 0, 0);
+(7, 2, 3, 'system', 1444931009, 22, 1, NULL, 1, '/3/', '?', 13, 0, 0, 1, 0, 0, 0),
+(8, 1, 4, 'system', 1445523620, 41, 5, NULL, 0, NULL, '?', 13, 0, 0, 1, 0, 0, 0),
+(9, 2, 4, 'system', 1445523620, 41, 5, NULL, 1, '/4/', '?', 13, 0, 0, 1, 0, 0, 0),
+(10, 1, 5, 'system', 1445578686, 54, 6, NULL, 0, NULL, '?', 13, 0, 0, 1, 0, 0, 0),
+(11, 2, 5, 'system', 1445578686, 54, 6, NULL, 1, '/5/', '?', 13, 0, 0, 1, 0, 0, 0);
 
 -- --------------------------------------------------------
 
@@ -7241,7 +7448,7 @@ CREATE TABLE IF NOT EXISTS `mdl_grade_items` (
   KEY `mdl_graditem_cat_ix` (`categoryid`),
   KEY `mdl_graditem_sca_ix` (`scaleid`),
   KEY `mdl_graditem_out_ix` (`outcomeid`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='This table keeps information about gradeable items (ie colum' AUTO_INCREMENT=7 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='This table keeps information about gradeable items (ie colum' AUTO_INCREMENT=9 ;
 
 --
 -- Dumping data for table `mdl_grade_items`
@@ -7250,7 +7457,9 @@ CREATE TABLE IF NOT EXISTS `mdl_grade_items` (
 INSERT INTO `mdl_grade_items` (`id`, `courseid`, `categoryid`, `itemname`, `itemtype`, `itemmodule`, `iteminstance`, `itemnumber`, `iteminfo`, `idnumber`, `calculation`, `gradetype`, `grademax`, `grademin`, `scaleid`, `outcomeid`, `gradepass`, `multfactor`, `plusfactor`, `aggregationcoef`, `aggregationcoef2`, `sortorder`, `display`, `decimals`, `hidden`, `locked`, `locktime`, `needsupdate`, `weightoverride`, `timecreated`, `timemodified`) VALUES
 (4, 3, NULL, NULL, 'course', NULL, 2, NULL, NULL, NULL, NULL, 1, '10.00000', '0.00000', NULL, NULL, '0.00000', '1.00000', '0.00000', '0.00000', '0.00000', 1, 0, NULL, 0, 0, 0, 0, 0, 1444502014, 1444503927),
 (5, 3, 2, 'Quiz about politics', 'mod', 'quiz', 2, 0, NULL, '', NULL, 1, '10.00000', '0.00000', NULL, NULL, '0.00000', '1.00000', '0.00000', '0.00000', '1.00000', 2, 0, NULL, 0, 0, 0, 0, 0, 1444503927, 1444926320),
-(6, 1, NULL, NULL, 'course', NULL, 3, NULL, NULL, NULL, NULL, 1, '0.00000', '0.00000', NULL, NULL, '0.00000', '1.00000', '0.00000', '0.00000', '0.00000', 1, 0, NULL, 0, 0, 0, 0, 0, 1444931009, 1444931009);
+(6, 1, NULL, NULL, 'course', NULL, 3, NULL, NULL, NULL, NULL, 1, '0.00000', '0.00000', NULL, NULL, '0.00000', '1.00000', '0.00000', '0.00000', '0.00000', 1, 0, NULL, 0, 0, 0, 0, 0, 1444931009, 1444931009),
+(7, 5, NULL, NULL, 'course', NULL, 4, NULL, NULL, NULL, NULL, 1, '0.00000', '0.00000', NULL, NULL, '0.00000', '1.00000', '0.00000', '0.00000', '0.00000', 1, 0, NULL, 0, 0, 0, 0, 0, 1445523620, 1445523620),
+(8, 6, NULL, NULL, 'course', NULL, 5, NULL, NULL, NULL, NULL, 1, '0.00000', '0.00000', NULL, NULL, '0.00000', '1.00000', '0.00000', '0.00000', '0.00000', 1, 0, NULL, 0, 0, 0, 0, 0, 1445578686, 1445578686);
 
 -- --------------------------------------------------------
 
@@ -7302,7 +7511,7 @@ CREATE TABLE IF NOT EXISTS `mdl_grade_items_history` (
   KEY `mdl_graditemhist_sca_ix` (`scaleid`),
   KEY `mdl_graditemhist_out_ix` (`outcomeid`),
   KEY `mdl_graditemhist_log_ix` (`loggeduser`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='History of grade_items' AUTO_INCREMENT=22 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='History of grade_items' AUTO_INCREMENT=26 ;
 
 --
 -- Dumping data for table `mdl_grade_items_history`
@@ -7329,7 +7538,11 @@ INSERT INTO `mdl_grade_items_history` (`id`, `action`, `oldid`, `source`, `timem
 (18, 2, 5, NULL, 1444926231, 11, 3, 2, 'Quiz about politics', 'mod', 'quiz', 2, 0, NULL, '', NULL, 1, '10.00000', '0.00000', NULL, NULL, '0.00000', '1.00000', '0.00000', '0.00000', '1.00000', 2, 0, 0, 0, 0, 0, NULL, 0),
 (19, 2, 5, NULL, 1444926320, 15, 3, 2, 'Quiz about politics', 'mod', 'quiz', 2, 0, NULL, '', NULL, 1, '10.00000', '0.00000', NULL, NULL, '0.00000', '1.00000', '0.00000', '0.00000', '1.00000', 2, 0, 0, 0, 0, 0, NULL, 0),
 (20, 1, 6, 'system', 1444931009, 22, 1, NULL, NULL, 'course', NULL, 3, NULL, NULL, NULL, NULL, 1, '100.00000', '0.00000', NULL, NULL, '0.00000', '1.00000', '0.00000', '0.00000', '0.00000', 1, 0, 0, 0, 1, 0, NULL, 0),
-(21, 2, 6, 'aggregation', 1444931009, 22, 1, NULL, NULL, 'course', NULL, 3, NULL, NULL, NULL, NULL, 1, '0.00000', '0.00000', NULL, NULL, '0.00000', '1.00000', '0.00000', '0.00000', '0.00000', 1, 0, 0, 0, 1, 0, NULL, 0);
+(21, 2, 6, 'aggregation', 1444931009, 22, 1, NULL, NULL, 'course', NULL, 3, NULL, NULL, NULL, NULL, 1, '0.00000', '0.00000', NULL, NULL, '0.00000', '1.00000', '0.00000', '0.00000', '0.00000', 1, 0, 0, 0, 1, 0, NULL, 0),
+(22, 1, 7, 'system', 1445523620, 41, 5, NULL, NULL, 'course', NULL, 4, NULL, NULL, NULL, NULL, 1, '100.00000', '0.00000', NULL, NULL, '0.00000', '1.00000', '0.00000', '0.00000', '0.00000', 1, 0, 0, 0, 1, 0, NULL, 0),
+(23, 2, 7, 'aggregation', 1445523620, 41, 5, NULL, NULL, 'course', NULL, 4, NULL, NULL, NULL, NULL, 1, '0.00000', '0.00000', NULL, NULL, '0.00000', '1.00000', '0.00000', '0.00000', '0.00000', 1, 0, 0, 0, 1, 0, NULL, 0),
+(24, 1, 8, 'system', 1445578686, 54, 6, NULL, NULL, 'course', NULL, 5, NULL, NULL, NULL, NULL, 1, '100.00000', '0.00000', NULL, NULL, '0.00000', '1.00000', '0.00000', '0.00000', '0.00000', 1, 0, 0, 0, 1, 0, NULL, 0),
+(25, 2, 8, 'aggregation', 1445578686, 54, 6, NULL, NULL, 'course', NULL, 5, NULL, NULL, NULL, NULL, 1, '0.00000', '0.00000', NULL, NULL, '0.00000', '1.00000', '0.00000', '0.00000', '0.00000', 1, 0, 0, 0, 1, 0, NULL, 0);
 
 -- --------------------------------------------------------
 
@@ -7433,75 +7646,6 @@ CREATE TABLE IF NOT EXISTS `mdl_grade_settings` (
   UNIQUE KEY `mdl_gradsett_counam_uix` (`courseid`,`name`),
   KEY `mdl_gradsett_cou_ix` (`courseid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='gradebook settings' AUTO_INCREMENT=1 ;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `mdl_grading_areas`
---
-
-DROP TABLE IF EXISTS `mdl_grading_areas`;
-CREATE TABLE IF NOT EXISTS `mdl_grading_areas` (
-  `id` bigint(10) NOT NULL AUTO_INCREMENT,
-  `contextid` bigint(10) NOT NULL,
-  `component` varchar(100) NOT NULL DEFAULT '',
-  `areaname` varchar(100) NOT NULL DEFAULT '',
-  `activemethod` varchar(100) DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `mdl_gradarea_concomare_uix` (`contextid`,`component`,`areaname`),
-  KEY `mdl_gradarea_con_ix` (`contextid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Identifies gradable areas where advanced grading can happen.' AUTO_INCREMENT=1 ;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `mdl_grading_definitions`
---
-
-DROP TABLE IF EXISTS `mdl_grading_definitions`;
-CREATE TABLE IF NOT EXISTS `mdl_grading_definitions` (
-  `id` bigint(10) NOT NULL AUTO_INCREMENT,
-  `areaid` bigint(10) NOT NULL,
-  `method` varchar(100) NOT NULL DEFAULT '',
-  `name` varchar(255) NOT NULL DEFAULT '',
-  `description` longtext,
-  `descriptionformat` tinyint(2) DEFAULT NULL,
-  `status` bigint(10) NOT NULL DEFAULT '0',
-  `copiedfromid` bigint(10) DEFAULT NULL,
-  `timecreated` bigint(10) NOT NULL,
-  `usercreated` bigint(10) NOT NULL,
-  `timemodified` bigint(10) NOT NULL,
-  `usermodified` bigint(10) NOT NULL,
-  `timecopied` bigint(10) DEFAULT '0',
-  `options` longtext,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `mdl_graddefi_aremet_uix` (`areaid`,`method`),
-  KEY `mdl_graddefi_are_ix` (`areaid`),
-  KEY `mdl_graddefi_use_ix` (`usermodified`),
-  KEY `mdl_graddefi_use2_ix` (`usercreated`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Contains the basic information about an advanced grading for' AUTO_INCREMENT=1 ;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `mdl_grading_instances`
---
-
-DROP TABLE IF EXISTS `mdl_grading_instances`;
-CREATE TABLE IF NOT EXISTS `mdl_grading_instances` (
-  `id` bigint(10) NOT NULL AUTO_INCREMENT,
-  `definitionid` bigint(10) NOT NULL,
-  `raterid` bigint(10) NOT NULL,
-  `itemid` bigint(10) DEFAULT NULL,
-  `rawgrade` decimal(10,5) DEFAULT NULL,
-  `status` bigint(10) NOT NULL DEFAULT '0',
-  `feedback` longtext,
-  `feedbackformat` tinyint(2) DEFAULT NULL,
-  `timemodified` bigint(10) NOT NULL,
-  PRIMARY KEY (`id`),
-  KEY `mdl_gradinst_def_ix` (`definitionid`),
-  KEY `mdl_gradinst_rat_ix` (`raterid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Grading form instance is an assessment record for one gradab' AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -7619,6 +7763,75 @@ CREATE TABLE IF NOT EXISTS `mdl_gradingform_rubric_levels` (
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `mdl_grading_areas`
+--
+
+DROP TABLE IF EXISTS `mdl_grading_areas`;
+CREATE TABLE IF NOT EXISTS `mdl_grading_areas` (
+  `id` bigint(10) NOT NULL AUTO_INCREMENT,
+  `contextid` bigint(10) NOT NULL,
+  `component` varchar(100) NOT NULL DEFAULT '',
+  `areaname` varchar(100) NOT NULL DEFAULT '',
+  `activemethod` varchar(100) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `mdl_gradarea_concomare_uix` (`contextid`,`component`,`areaname`),
+  KEY `mdl_gradarea_con_ix` (`contextid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Identifies gradable areas where advanced grading can happen.' AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `mdl_grading_definitions`
+--
+
+DROP TABLE IF EXISTS `mdl_grading_definitions`;
+CREATE TABLE IF NOT EXISTS `mdl_grading_definitions` (
+  `id` bigint(10) NOT NULL AUTO_INCREMENT,
+  `areaid` bigint(10) NOT NULL,
+  `method` varchar(100) NOT NULL DEFAULT '',
+  `name` varchar(255) NOT NULL DEFAULT '',
+  `description` longtext,
+  `descriptionformat` tinyint(2) DEFAULT NULL,
+  `status` bigint(10) NOT NULL DEFAULT '0',
+  `copiedfromid` bigint(10) DEFAULT NULL,
+  `timecreated` bigint(10) NOT NULL,
+  `usercreated` bigint(10) NOT NULL,
+  `timemodified` bigint(10) NOT NULL,
+  `usermodified` bigint(10) NOT NULL,
+  `timecopied` bigint(10) DEFAULT '0',
+  `options` longtext,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `mdl_graddefi_aremet_uix` (`areaid`,`method`),
+  KEY `mdl_graddefi_are_ix` (`areaid`),
+  KEY `mdl_graddefi_use_ix` (`usermodified`),
+  KEY `mdl_graddefi_use2_ix` (`usercreated`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Contains the basic information about an advanced grading for' AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `mdl_grading_instances`
+--
+
+DROP TABLE IF EXISTS `mdl_grading_instances`;
+CREATE TABLE IF NOT EXISTS `mdl_grading_instances` (
+  `id` bigint(10) NOT NULL AUTO_INCREMENT,
+  `definitionid` bigint(10) NOT NULL,
+  `raterid` bigint(10) NOT NULL,
+  `itemid` bigint(10) DEFAULT NULL,
+  `rawgrade` decimal(10,5) DEFAULT NULL,
+  `status` bigint(10) NOT NULL DEFAULT '0',
+  `feedback` longtext,
+  `feedbackformat` tinyint(2) DEFAULT NULL,
+  `timemodified` bigint(10) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `mdl_gradinst_def_ix` (`definitionid`),
+  KEY `mdl_gradinst_rat_ix` (`raterid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Grading form instance is an assessment record for one gradab' AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `mdl_groupings`
 --
 
@@ -7677,7 +7890,7 @@ CREATE TABLE IF NOT EXISTS `mdl_groups` (
   PRIMARY KEY (`id`),
   KEY `mdl_grou_idn_ix` (`idnumber`),
   KEY `mdl_grou_cou_ix` (`courseid`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='Each record represents a group.' AUTO_INCREMENT=3 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='Each record represents a group.' AUTO_INCREMENT=23 ;
 
 --
 -- Dumping data for table `mdl_groups`
@@ -7685,7 +7898,11 @@ CREATE TABLE IF NOT EXISTS `mdl_groups` (
 
 INSERT INTO `mdl_groups` (`id`, `courseid`, `idnumber`, `name`, `description`, `descriptionformat`, `enrolmentkey`, `picture`, `hidepicture`, `timecreated`, `timemodified`) VALUES
 (1, 3, 'GP1', 'Group1', '', 1, '', 0, 0, 1444504105, 1444504378),
-(2, 3, 'GP2', 'Group2', '', 1, '', 0, 0, 1444504125, 1444968732);
+(2, 3, 'GP2', 'Group2', '', 1, '', 0, 0, 1444504125, 1445584714),
+(19, 6, 'Group_6_19', 'Group_6_19', 'sirromas@ukr.net', 1, NULL, 0, 0, 1445578047, 1445618610),
+(20, 6, 'Group_6_20', 'Group_6_20', 'sirromas@ukr.net', 1, NULL, 0, 0, 1445578047, 1445618610),
+(21, 6, 'Group_6_21', 'Group_6_21', 'sirromas@ukr.net', 1, NULL, 0, 0, 1445578047, 1445618610),
+(22, 6, 'GP16', 'Some another group', '', 1, '', 0, 0, 1445587539, 1445620951);
 
 -- --------------------------------------------------------
 
@@ -7704,7 +7921,7 @@ CREATE TABLE IF NOT EXISTS `mdl_groups_members` (
   PRIMARY KEY (`id`),
   KEY `mdl_groumemb_gro_ix` (`groupid`),
   KEY `mdl_groumemb_use_ix` (`userid`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='Link a user to a group.' AUTO_INCREMENT=21 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='Link a user to a group.' AUTO_INCREMENT=54 ;
 
 --
 -- Dumping data for table `mdl_groups_members`
@@ -7730,7 +7947,17 @@ INSERT INTO `mdl_groups_members` (`id`, `groupid`, `userid`, `timeadded`, `compo
 (17, 2, 18, 1444504418, '', 0),
 (18, 2, 19, 1444504418, '', 0),
 (19, 2, 21, 1444504418, '', 0),
-(20, 2, 20, 1444968732, '', 0);
+(20, 2, 20, 1444968732, '', 0),
+(40, 21, 55, 1445578529, '', 0),
+(41, 21, 56, 1445578898, '', 0),
+(42, 19, 57, 1445579105, '', 0),
+(43, 20, 58, 1445581911, '', 0),
+(44, 21, 59, 1445583252, '', 0),
+(45, 21, 60, 1445583457, '', 0),
+(46, 2, 61, 1445584714, '', 0),
+(47, 22, 60, 1445587561, '', 0),
+(48, 22, 62, 1445603921, '', 0),
+(53, 22, 67, 1445620951, '', 0);
 
 -- --------------------------------------------------------
 
@@ -8083,237 +8310,6 @@ CREATE TABLE IF NOT EXISTS `mdl_log` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `mdl_log_display`
---
-
-DROP TABLE IF EXISTS `mdl_log_display`;
-CREATE TABLE IF NOT EXISTS `mdl_log_display` (
-  `id` bigint(10) NOT NULL AUTO_INCREMENT,
-  `module` varchar(20) NOT NULL DEFAULT '',
-  `action` varchar(40) NOT NULL DEFAULT '',
-  `mtable` varchar(30) NOT NULL DEFAULT '',
-  `field` varchar(200) NOT NULL DEFAULT '',
-  `component` varchar(100) NOT NULL DEFAULT '',
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `mdl_logdisp_modact_uix` (`module`,`action`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='For a particular module/action, specifies a moodle table/fie' AUTO_INCREMENT=188 ;
-
---
--- Dumping data for table `mdl_log_display`
---
-
-INSERT INTO `mdl_log_display` (`id`, `module`, `action`, `mtable`, `field`, `component`) VALUES
-(1, 'course', 'user report', 'user', 'CONCAT(firstname, '' '', lastname)', 'moodle'),
-(2, 'course', 'view', 'course', 'fullname', 'moodle'),
-(3, 'course', 'view section', 'course_sections', 'name', 'moodle'),
-(4, 'course', 'update', 'course', 'fullname', 'moodle'),
-(5, 'course', 'hide', 'course', 'fullname', 'moodle'),
-(6, 'course', 'show', 'course', 'fullname', 'moodle'),
-(7, 'course', 'move', 'course', 'fullname', 'moodle'),
-(8, 'course', 'enrol', 'course', 'fullname', 'moodle'),
-(9, 'course', 'unenrol', 'course', 'fullname', 'moodle'),
-(10, 'course', 'report log', 'course', 'fullname', 'moodle'),
-(11, 'course', 'report live', 'course', 'fullname', 'moodle'),
-(12, 'course', 'report outline', 'course', 'fullname', 'moodle'),
-(13, 'course', 'report participation', 'course', 'fullname', 'moodle'),
-(14, 'course', 'report stats', 'course', 'fullname', 'moodle'),
-(15, 'category', 'add', 'course_categories', 'name', 'moodle'),
-(16, 'category', 'hide', 'course_categories', 'name', 'moodle'),
-(17, 'category', 'move', 'course_categories', 'name', 'moodle'),
-(18, 'category', 'show', 'course_categories', 'name', 'moodle'),
-(19, 'category', 'update', 'course_categories', 'name', 'moodle'),
-(20, 'message', 'write', 'user', 'CONCAT(firstname, '' '', lastname)', 'moodle'),
-(21, 'message', 'read', 'user', 'CONCAT(firstname, '' '', lastname)', 'moodle'),
-(22, 'message', 'add contact', 'user', 'CONCAT(firstname, '' '', lastname)', 'moodle'),
-(23, 'message', 'remove contact', 'user', 'CONCAT(firstname, '' '', lastname)', 'moodle'),
-(24, 'message', 'block contact', 'user', 'CONCAT(firstname, '' '', lastname)', 'moodle'),
-(25, 'message', 'unblock contact', 'user', 'CONCAT(firstname, '' '', lastname)', 'moodle'),
-(26, 'group', 'view', 'groups', 'name', 'moodle'),
-(27, 'tag', 'update', 'tag', 'name', 'moodle'),
-(28, 'tag', 'flag', 'tag', 'name', 'moodle'),
-(29, 'user', 'view', 'user', 'CONCAT(firstname, '' '', lastname)', 'moodle'),
-(30, 'assign', 'add', 'assign', 'name', 'mod_assign'),
-(31, 'assign', 'delete mod', 'assign', 'name', 'mod_assign'),
-(32, 'assign', 'download all submissions', 'assign', 'name', 'mod_assign'),
-(33, 'assign', 'grade submission', 'assign', 'name', 'mod_assign'),
-(34, 'assign', 'lock submission', 'assign', 'name', 'mod_assign'),
-(35, 'assign', 'reveal identities', 'assign', 'name', 'mod_assign'),
-(36, 'assign', 'revert submission to draft', 'assign', 'name', 'mod_assign'),
-(37, 'assign', 'set marking workflow state', 'assign', 'name', 'mod_assign'),
-(38, 'assign', 'submission statement accepted', 'assign', 'name', 'mod_assign'),
-(39, 'assign', 'submit', 'assign', 'name', 'mod_assign'),
-(40, 'assign', 'submit for grading', 'assign', 'name', 'mod_assign'),
-(41, 'assign', 'unlock submission', 'assign', 'name', 'mod_assign'),
-(42, 'assign', 'update', 'assign', 'name', 'mod_assign'),
-(43, 'assign', 'upload', 'assign', 'name', 'mod_assign'),
-(44, 'assign', 'view', 'assign', 'name', 'mod_assign'),
-(45, 'assign', 'view all', 'course', 'fullname', 'mod_assign'),
-(46, 'assign', 'view confirm submit assignment form', 'assign', 'name', 'mod_assign'),
-(47, 'assign', 'view grading form', 'assign', 'name', 'mod_assign'),
-(48, 'assign', 'view submission', 'assign', 'name', 'mod_assign'),
-(49, 'assign', 'view submission grading table', 'assign', 'name', 'mod_assign'),
-(50, 'assign', 'view submit assignment form', 'assign', 'name', 'mod_assign'),
-(51, 'assign', 'view feedback', 'assign', 'name', 'mod_assign'),
-(52, 'assign', 'view batch set marking workflow state', 'assign', 'name', 'mod_assign'),
-(53, 'assignment', 'view', 'assignment', 'name', 'mod_assignment'),
-(54, 'assignment', 'add', 'assignment', 'name', 'mod_assignment'),
-(55, 'assignment', 'update', 'assignment', 'name', 'mod_assignment'),
-(56, 'assignment', 'view submission', 'assignment', 'name', 'mod_assignment'),
-(57, 'assignment', 'upload', 'assignment', 'name', 'mod_assignment'),
-(58, 'book', 'add', 'book', 'name', 'mod_book'),
-(59, 'book', 'update', 'book', 'name', 'mod_book'),
-(60, 'book', 'view', 'book', 'name', 'mod_book'),
-(61, 'book', 'add chapter', 'book_chapters', 'title', 'mod_book'),
-(62, 'book', 'update chapter', 'book_chapters', 'title', 'mod_book'),
-(63, 'book', 'view chapter', 'book_chapters', 'title', 'mod_book'),
-(64, 'chat', 'view', 'chat', 'name', 'mod_chat'),
-(65, 'chat', 'add', 'chat', 'name', 'mod_chat'),
-(66, 'chat', 'update', 'chat', 'name', 'mod_chat'),
-(67, 'chat', 'report', 'chat', 'name', 'mod_chat'),
-(68, 'chat', 'talk', 'chat', 'name', 'mod_chat'),
-(69, 'choice', 'view', 'choice', 'name', 'mod_choice'),
-(70, 'choice', 'update', 'choice', 'name', 'mod_choice'),
-(71, 'choice', 'add', 'choice', 'name', 'mod_choice'),
-(72, 'choice', 'report', 'choice', 'name', 'mod_choice'),
-(73, 'choice', 'choose', 'choice', 'name', 'mod_choice'),
-(74, 'choice', 'choose again', 'choice', 'name', 'mod_choice'),
-(75, 'data', 'view', 'data', 'name', 'mod_data'),
-(76, 'data', 'add', 'data', 'name', 'mod_data'),
-(77, 'data', 'update', 'data', 'name', 'mod_data'),
-(78, 'data', 'record delete', 'data', 'name', 'mod_data'),
-(79, 'data', 'fields add', 'data_fields', 'name', 'mod_data'),
-(80, 'data', 'fields update', 'data_fields', 'name', 'mod_data'),
-(81, 'data', 'templates saved', 'data', 'name', 'mod_data'),
-(82, 'data', 'templates def', 'data', 'name', 'mod_data'),
-(83, 'feedback', 'startcomplete', 'feedback', 'name', 'mod_feedback'),
-(84, 'feedback', 'submit', 'feedback', 'name', 'mod_feedback'),
-(85, 'feedback', 'delete', 'feedback', 'name', 'mod_feedback'),
-(86, 'feedback', 'view', 'feedback', 'name', 'mod_feedback'),
-(87, 'feedback', 'view all', 'course', 'shortname', 'mod_feedback'),
-(88, 'folder', 'view', 'folder', 'name', 'mod_folder'),
-(89, 'folder', 'view all', 'folder', 'name', 'mod_folder'),
-(90, 'folder', 'update', 'folder', 'name', 'mod_folder'),
-(91, 'folder', 'add', 'folder', 'name', 'mod_folder'),
-(92, 'forum', 'add', 'forum', 'name', 'mod_forum'),
-(93, 'forum', 'update', 'forum', 'name', 'mod_forum'),
-(94, 'forum', 'add discussion', 'forum_discussions', 'name', 'mod_forum'),
-(95, 'forum', 'add post', 'forum_posts', 'subject', 'mod_forum'),
-(96, 'forum', 'update post', 'forum_posts', 'subject', 'mod_forum'),
-(97, 'forum', 'user report', 'user', 'CONCAT(firstname, '' '', lastname)', 'mod_forum'),
-(98, 'forum', 'move discussion', 'forum_discussions', 'name', 'mod_forum'),
-(99, 'forum', 'view subscribers', 'forum', 'name', 'mod_forum'),
-(100, 'forum', 'view discussion', 'forum_discussions', 'name', 'mod_forum'),
-(101, 'forum', 'view forum', 'forum', 'name', 'mod_forum'),
-(102, 'forum', 'subscribe', 'forum', 'name', 'mod_forum'),
-(103, 'forum', 'unsubscribe', 'forum', 'name', 'mod_forum'),
-(104, 'glossary', 'add', 'glossary', 'name', 'mod_glossary'),
-(105, 'glossary', 'update', 'glossary', 'name', 'mod_glossary'),
-(106, 'glossary', 'view', 'glossary', 'name', 'mod_glossary'),
-(107, 'glossary', 'view all', 'glossary', 'name', 'mod_glossary'),
-(108, 'glossary', 'add entry', 'glossary', 'name', 'mod_glossary'),
-(109, 'glossary', 'update entry', 'glossary', 'name', 'mod_glossary'),
-(110, 'glossary', 'add category', 'glossary', 'name', 'mod_glossary'),
-(111, 'glossary', 'update category', 'glossary', 'name', 'mod_glossary'),
-(112, 'glossary', 'delete category', 'glossary', 'name', 'mod_glossary'),
-(113, 'glossary', 'approve entry', 'glossary', 'name', 'mod_glossary'),
-(114, 'glossary', 'disapprove entry', 'glossary', 'name', 'mod_glossary'),
-(115, 'glossary', 'view entry', 'glossary_entries', 'concept', 'mod_glossary'),
-(116, 'imscp', 'view', 'imscp', 'name', 'mod_imscp'),
-(117, 'imscp', 'view all', 'imscp', 'name', 'mod_imscp'),
-(118, 'imscp', 'update', 'imscp', 'name', 'mod_imscp'),
-(119, 'imscp', 'add', 'imscp', 'name', 'mod_imscp'),
-(120, 'label', 'add', 'label', 'name', 'mod_label'),
-(121, 'label', 'update', 'label', 'name', 'mod_label'),
-(122, 'lesson', 'start', 'lesson', 'name', 'mod_lesson'),
-(123, 'lesson', 'end', 'lesson', 'name', 'mod_lesson'),
-(124, 'lesson', 'view', 'lesson_pages', 'title', 'mod_lesson'),
-(125, 'lti', 'view', 'lti', 'name', 'mod_lti'),
-(126, 'lti', 'launch', 'lti', 'name', 'mod_lti'),
-(127, 'lti', 'view all', 'lti', 'name', 'mod_lti'),
-(128, 'page', 'view', 'page', 'name', 'mod_page'),
-(129, 'page', 'view all', 'page', 'name', 'mod_page'),
-(130, 'page', 'update', 'page', 'name', 'mod_page'),
-(131, 'page', 'add', 'page', 'name', 'mod_page'),
-(132, 'quiz', 'add', 'quiz', 'name', 'mod_quiz'),
-(133, 'quiz', 'update', 'quiz', 'name', 'mod_quiz'),
-(134, 'quiz', 'view', 'quiz', 'name', 'mod_quiz'),
-(135, 'quiz', 'report', 'quiz', 'name', 'mod_quiz'),
-(136, 'quiz', 'attempt', 'quiz', 'name', 'mod_quiz'),
-(137, 'quiz', 'submit', 'quiz', 'name', 'mod_quiz'),
-(138, 'quiz', 'review', 'quiz', 'name', 'mod_quiz'),
-(139, 'quiz', 'editquestions', 'quiz', 'name', 'mod_quiz'),
-(140, 'quiz', 'preview', 'quiz', 'name', 'mod_quiz'),
-(141, 'quiz', 'start attempt', 'quiz', 'name', 'mod_quiz'),
-(142, 'quiz', 'close attempt', 'quiz', 'name', 'mod_quiz'),
-(143, 'quiz', 'continue attempt', 'quiz', 'name', 'mod_quiz'),
-(144, 'quiz', 'edit override', 'quiz', 'name', 'mod_quiz'),
-(145, 'quiz', 'delete override', 'quiz', 'name', 'mod_quiz'),
-(146, 'quiz', 'view summary', 'quiz', 'name', 'mod_quiz'),
-(147, 'resource', 'view', 'resource', 'name', 'mod_resource'),
-(148, 'resource', 'view all', 'resource', 'name', 'mod_resource'),
-(149, 'resource', 'update', 'resource', 'name', 'mod_resource'),
-(150, 'resource', 'add', 'resource', 'name', 'mod_resource'),
-(151, 'scorm', 'view', 'scorm', 'name', 'mod_scorm'),
-(152, 'scorm', 'review', 'scorm', 'name', 'mod_scorm'),
-(153, 'scorm', 'update', 'scorm', 'name', 'mod_scorm'),
-(154, 'scorm', 'add', 'scorm', 'name', 'mod_scorm'),
-(155, 'survey', 'add', 'survey', 'name', 'mod_survey'),
-(156, 'survey', 'update', 'survey', 'name', 'mod_survey'),
-(157, 'survey', 'download', 'survey', 'name', 'mod_survey'),
-(158, 'survey', 'view form', 'survey', 'name', 'mod_survey'),
-(159, 'survey', 'view graph', 'survey', 'name', 'mod_survey'),
-(160, 'survey', 'view report', 'survey', 'name', 'mod_survey'),
-(161, 'survey', 'submit', 'survey', 'name', 'mod_survey'),
-(162, 'url', 'view', 'url', 'name', 'mod_url'),
-(163, 'url', 'view all', 'url', 'name', 'mod_url'),
-(164, 'url', 'update', 'url', 'name', 'mod_url'),
-(165, 'url', 'add', 'url', 'name', 'mod_url'),
-(166, 'workshop', 'add', 'workshop', 'name', 'mod_workshop'),
-(167, 'workshop', 'update', 'workshop', 'name', 'mod_workshop'),
-(168, 'workshop', 'view', 'workshop', 'name', 'mod_workshop'),
-(169, 'workshop', 'view all', 'workshop', 'name', 'mod_workshop'),
-(170, 'workshop', 'add submission', 'workshop_submissions', 'title', 'mod_workshop'),
-(171, 'workshop', 'update submission', 'workshop_submissions', 'title', 'mod_workshop'),
-(172, 'workshop', 'view submission', 'workshop_submissions', 'title', 'mod_workshop'),
-(173, 'workshop', 'add assessment', 'workshop_submissions', 'title', 'mod_workshop'),
-(174, 'workshop', 'update assessment', 'workshop_submissions', 'title', 'mod_workshop'),
-(175, 'workshop', 'add example', 'workshop_submissions', 'title', 'mod_workshop'),
-(176, 'workshop', 'update example', 'workshop_submissions', 'title', 'mod_workshop'),
-(177, 'workshop', 'view example', 'workshop_submissions', 'title', 'mod_workshop'),
-(178, 'workshop', 'add reference assessment', 'workshop_submissions', 'title', 'mod_workshop'),
-(179, 'workshop', 'update reference assessment', 'workshop_submissions', 'title', 'mod_workshop'),
-(180, 'workshop', 'add example assessment', 'workshop_submissions', 'title', 'mod_workshop'),
-(181, 'workshop', 'update example assessment', 'workshop_submissions', 'title', 'mod_workshop'),
-(182, 'workshop', 'update aggregate grades', 'workshop', 'name', 'mod_workshop'),
-(183, 'workshop', 'update clear aggregated grades', 'workshop', 'name', 'mod_workshop'),
-(184, 'workshop', 'update clear assessments', 'workshop', 'name', 'mod_workshop'),
-(185, 'book', 'exportimscp', 'book', 'name', 'booktool_exportimscp'),
-(186, 'book', 'print', 'book', 'name', 'booktool_print'),
-(187, 'book', 'print chapter', 'book_chapters', 'title', 'booktool_print');
-
--- --------------------------------------------------------
-
---
--- Table structure for table `mdl_log_queries`
---
-
-DROP TABLE IF EXISTS `mdl_log_queries`;
-CREATE TABLE IF NOT EXISTS `mdl_log_queries` (
-  `id` bigint(10) NOT NULL AUTO_INCREMENT,
-  `qtype` mediumint(5) NOT NULL,
-  `sqltext` longtext NOT NULL,
-  `sqlparams` longtext,
-  `error` mediumint(5) NOT NULL DEFAULT '0',
-  `info` longtext,
-  `backtrace` longtext,
-  `exectime` decimal(10,5) NOT NULL,
-  `timelogged` bigint(10) NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Logged database queries.' AUTO_INCREMENT=1 ;
-
--- --------------------------------------------------------
-
---
 -- Table structure for table `mdl_logstore_standard_log`
 --
 
@@ -8344,7 +8340,7 @@ CREATE TABLE IF NOT EXISTS `mdl_logstore_standard_log` (
   KEY `mdl_logsstanlog_tim_ix` (`timecreated`),
   KEY `mdl_logsstanlog_couanotim_ix` (`courseid`,`anonymous`,`timecreated`),
   KEY `mdl_logsstanlog_useconconcr_ix` (`userid`,`contextlevel`,`contextinstanceid`,`crud`,`edulevel`,`timecreated`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='Standard log table' AUTO_INCREMENT=886 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='Standard log table' AUTO_INCREMENT=1516 ;
 
 --
 -- Dumping data for table `mdl_logstore_standard_log`
@@ -9238,7 +9234,871 @@ INSERT INTO `mdl_logstore_standard_log` (`id`, `eventname`, `component`, `action
 (882, '\\core\\event\\user_loggedout', 'core', 'loggedout', 'user', 'user', 2, 'r', 0, 1, 10, 0, 2, 0, NULL, 0, 'a:1:{s:9:"sessionid";s:26:"sq83so0skp42t3gv3quheo4932";}', 1445348211, 'web', '109.87.201.130', NULL),
 (883, '\\core\\event\\course_viewed', 'core', 'viewed', 'course', NULL, NULL, 'r', 2, 2, 50, 1, 0, 1, NULL, 0, 'N;', 1445348218, 'web', '109.87.201.130', NULL),
 (884, '\\core\\event\\user_loggedin', 'core', 'loggedin', 'user', 'user', 2, 'r', 0, 1, 10, 0, 2, 0, NULL, 0, 'a:1:{s:8:"username";s:5:"admin";}', 1445350886, 'web', '109.87.201.130', NULL),
-(885, '\\core\\event\\user_loggedout', 'core', 'loggedout', 'user', 'user', 2, 'r', 0, 1, 10, 0, 2, 0, NULL, 0, 'a:1:{s:9:"sessionid";s:26:"eti199g9s1nnf6bmbh8thhs106";}', 1445350911, 'web', '109.87.201.130', NULL);
+(885, '\\core\\event\\user_loggedout', 'core', 'loggedout', 'user', 'user', 2, 'r', 0, 1, 10, 0, 2, 0, NULL, 0, 'a:1:{s:9:"sessionid";s:26:"eti199g9s1nnf6bmbh8thhs106";}', 1445350911, 'web', '109.87.201.130', NULL),
+(886, '\\core\\event\\user_created', 'core', 'created', 'user', 'user', 23, 'c', 0, 202, 30, 23, 0, 0, 23, 0, 'N;', 1445394413, 'web', '109.87.201.130', NULL),
+(887, '\\core\\event\\course_viewed', 'core', 'viewed', 'course', NULL, NULL, 'r', 2, 2, 50, 1, 0, 1, NULL, 0, 'N;', 1445394755, 'web', '109.87.201.130', NULL),
+(888, '\\core\\event\\user_loggedin', 'core', 'loggedin', 'user', 'user', 2, 'r', 0, 1, 10, 0, 2, 0, NULL, 0, 'a:1:{s:8:"username";s:5:"admin";}', 1445394768, 'web', '109.87.201.130', NULL),
+(889, '\\core\\event\\user_profile_viewed', 'core', 'viewed', 'user_profile', 'user', 23, 'r', 0, 202, 30, 23, 2, 0, 23, 0, 'N;', 1445394814, 'web', '109.87.201.130', NULL),
+(890, '\\core\\event\\user_list_viewed', 'core', 'viewed', 'user_list', 'course', 1, 'r', 0, 2, 50, 1, 2, 1, NULL, 0, 'a:2:{s:15:"courseshortname";s:2:"CA";s:14:"coursefullname";s:25:"University of Los Angeles";}', 1445394846, 'web', '109.87.201.130', NULL),
+(891, '\\core\\event\\user_list_viewed', 'core', 'viewed', 'user_list', 'course', 1, 'r', 0, 2, 50, 1, 2, 1, NULL, 0, 'a:2:{s:15:"courseshortname";s:2:"CA";s:14:"coursefullname";s:25:"University of Los Angeles";}', 1445394858, 'web', '109.87.201.130', NULL),
+(892, '\\core\\event\\user_loggedout', 'core', 'loggedout', 'user', 'user', 2, 'r', 0, 1, 10, 0, 2, 0, NULL, 0, 'a:1:{s:9:"sessionid";s:26:"2e8kg1etnskk37tho4ltf0nte5";}', 1445395168, 'web', '109.87.201.130', NULL),
+(893, '\\core\\event\\user_loggedin', 'core', 'loggedin', 'user', 'user', 23, 'r', 0, 1, 10, 0, 23, 0, NULL, 0, 'a:1:{s:8:"username";s:16:"sirromas@ukr.net";}', 1445395199, 'web', '109.87.201.130', NULL),
+(894, '\\core\\event\\user_updated', 'core', 'updated', 'user', 'user', 23, 'u', 0, 202, 30, 23, 23, 0, 23, 0, 'N;', 1445395273, 'web', '109.87.201.130', NULL),
+(895, '\\core\\event\\user_loggedout', 'core', 'loggedout', 'user', 'user', 23, 'r', 0, 1, 10, 0, 23, 0, NULL, 0, 'a:1:{s:9:"sessionid";s:26:"23ppcv9rpv4oocc4qad0dbkpt7";}', 1445395570, 'web', '109.87.201.130', NULL),
+(896, '\\core\\event\\user_login_failed', 'core', 'failed', 'user_login', NULL, NULL, 'r', 0, 1, 10, 0, 2, 0, NULL, 0, 'a:2:{s:8:"username";s:5:"admin";s:6:"reason";i:3;}', 1445395581, 'web', '109.87.201.130', NULL),
+(897, '\\core\\event\\user_loggedin', 'core', 'loggedin', 'user', 'user', 2, 'r', 0, 1, 10, 0, 2, 0, NULL, 0, 'a:1:{s:8:"username";s:5:"admin";}', 1445395600, 'web', '109.87.201.130', NULL),
+(898, '\\core\\event\\user_deleted', 'core', 'deleted', 'user', 'user', 23, 'd', 0, 202, 30, 23, 2, 0, 23, 0, 'a:5:{s:8:"username";s:16:"sirromas@ukr.net";s:5:"email";s:0:"";s:8:"idnumber";s:0:"";s:7:"picture";s:1:"0";s:10:"mnethostid";s:1:"1";}', 1445395665, 'web', '109.87.201.130', NULL),
+(899, '\\core\\event\\user_created', 'core', 'created', 'user', 'user', 25, 'c', 0, 203, 30, 25, 2, 0, 25, 0, 'N;', 1445395758, 'web', '109.87.201.130', NULL),
+(900, '\\core\\event\\user_loggedout', 'core', 'loggedout', 'user', 'user', 2, 'r', 0, 1, 10, 0, 2, 0, NULL, 0, 'a:1:{s:9:"sessionid";s:26:"gkmv0af743gntb6l1ctr23cvu2";}', 1445396071, 'web', '109.87.201.130', NULL),
+(901, '\\core\\event\\user_loggedin', 'core', 'loggedin', 'user', 'user', 25, 'r', 0, 1, 10, 0, 25, 0, NULL, 0, 'a:1:{s:8:"username";s:16:"sirromas@ukr.net";}', 1445396080, 'web', '109.87.201.130', NULL),
+(902, '\\core\\event\\user_loggedout', 'core', 'loggedout', 'user', 'user', 25, 'r', 0, 1, 10, 0, 25, 0, NULL, 0, 'a:1:{s:9:"sessionid";s:26:"c927p34cuogr1b3ib95ulhv994";}', 1445396102, 'web', '109.87.201.130', NULL),
+(903, '\\core\\event\\course_viewed', 'core', 'viewed', 'course', NULL, NULL, 'r', 2, 2, 50, 1, 0, 1, NULL, 0, 'N;', 1445396268, 'web', '98.176.81.52', NULL),
+(904, '\\core\\event\\user_login_failed', 'core', 'failed', 'user_login', NULL, NULL, 'r', 0, 1, 10, 0, 2, 0, NULL, 0, 'a:2:{s:8:"username";s:5:"admin";s:6:"reason";i:3;}', 1445397080, 'web', '109.87.201.130', NULL),
+(905, '\\core\\event\\user_login_failed', 'core', 'failed', 'user_login', NULL, NULL, 'r', 0, 1, 10, 0, 22, 0, NULL, 0, 'a:2:{s:8:"username";s:7:"manager";s:6:"reason";i:3;}', 1445397095, 'web', '109.87.201.130', NULL),
+(906, '\\core\\event\\user_loggedin', 'core', 'loggedin', 'user', 'user', 22, 'r', 0, 1, 10, 0, 22, 0, NULL, 0, 'a:1:{s:8:"username";s:7:"manager";}', 1445397109, 'web', '109.87.201.130', NULL),
+(907, '\\core\\event\\user_deleted', 'core', 'deleted', 'user', 'user', 25, 'd', 0, 203, 30, 25, 22, 0, 25, 0, 'a:5:{s:8:"username";s:16:"sirromas@ukr.net";s:5:"email";s:16:"sirromas@ukr.net";s:8:"idnumber";s:0:"";s:7:"picture";s:1:"0";s:10:"mnethostid";s:1:"1";}', 1445397142, 'web', '109.87.201.130', NULL),
+(908, '\\core\\event\\user_created', 'core', 'created', 'user', 'user', 26, 'c', 0, 210, 30, 26, 22, 0, 26, 0, 'N;', 1445397181, 'web', '109.87.201.130', NULL),
+(909, '\\core\\event\\user_loggedout', 'core', 'loggedout', 'user', 'user', 22, 'r', 0, 1, 10, 0, 22, 0, NULL, 0, 'a:1:{s:9:"sessionid";s:26:"rs2g0i2f89rd6bog1qebj6ht44";}', 1445397286, 'web', '109.87.201.130', NULL),
+(910, '\\core\\event\\user_loggedin', 'core', 'loggedin', 'user', 'user', 22, 'r', 0, 1, 10, 0, 22, 0, NULL, 0, 'a:1:{s:8:"username";s:7:"manager";}', 1445397310, 'web', '109.87.201.130', NULL),
+(911, '\\core\\event\\user_profile_viewed', 'core', 'viewed', 'user_profile', 'user', 26, 'r', 0, 210, 30, 26, 22, 0, 26, 0, 'N;', 1445397329, 'web', '109.87.201.130', NULL),
+(912, '\\core\\event\\user_loggedout', 'core', 'loggedout', 'user', 'user', 22, 'r', 0, 1, 10, 0, 22, 0, NULL, 0, 'a:1:{s:9:"sessionid";s:26:"s3g6m9cg7v2dejibnhls1lm8j3";}', 1445397345, 'web', '109.87.201.130', NULL),
+(913, '\\core\\event\\user_login_failed', 'core', 'failed', 'user_login', NULL, NULL, 'r', 0, 1, 10, 0, 26, 0, NULL, 0, 'a:2:{s:8:"username";s:16:"sirromas@ukr.net";s:6:"reason";i:3;}', 1445397354, 'web', '109.87.201.130', NULL),
+(914, '\\core\\event\\user_loggedin', 'core', 'loggedin', 'user', 'user', 26, 'r', 0, 1, 10, 0, 26, 0, NULL, 0, 'a:1:{s:8:"username";s:16:"sirromas@ukr.net";}', 1445397370, 'web', '109.87.201.130', NULL),
+(915, '\\core\\event\\user_loggedout', 'core', 'loggedout', 'user', 'user', 26, 'r', 0, 1, 10, 0, 26, 0, NULL, 0, 'a:1:{s:9:"sessionid";s:26:"0e35om18q8gnhaj3g47g4b0v51";}', 1445398766, 'web', '109.87.201.130', NULL),
+(916, '\\core\\event\\course_viewed', 'core', 'viewed', 'course', NULL, NULL, 'r', 2, 2, 50, 1, 0, 1, NULL, 0, 'N;', 1445420114, 'web', '94.248.60.100', NULL),
+(917, '\\core\\event\\course_viewed', 'core', 'viewed', 'course', NULL, NULL, 'r', 2, 2, 50, 1, 0, 1, NULL, 0, 'N;', 1445420114, 'web', '94.248.60.100', NULL),
+(918, '\\core\\event\\user_loggedin', 'core', 'loggedin', 'user', 'user', 22, 'r', 0, 1, 10, 0, 22, 0, NULL, 0, 'a:1:{s:8:"username";s:7:"manager";}', 1445420130, 'web', '94.248.60.100', NULL),
+(919, '\\core\\event\\user_deleted', 'core', 'deleted', 'user', 'user', 26, 'd', 0, 210, 30, 26, 22, 0, 26, 0, 'a:5:{s:8:"username";s:16:"sirromas@ukr.net";s:5:"email";s:16:"sirromas@ukr.net";s:8:"idnumber";s:0:"";s:7:"picture";s:1:"0";s:10:"mnethostid";s:1:"1";}', 1445420291, 'web', '94.248.60.100', NULL),
+(920, '\\core\\event\\user_loggedout', 'core', 'loggedout', 'user', 'user', 22, 'r', 0, 1, 10, 0, 22, 0, NULL, 0, 'a:1:{s:9:"sessionid";s:26:"igbcqo5fbbls5en3b8kg08oob4";}', 1445420301, 'web', '94.248.60.100', NULL),
+(921, '\\core\\event\\user_created', 'core', 'created', 'user', 'user', 27, 'c', 0, 217, 30, 27, 0, 0, 27, 0, 'N;', 1445420330, 'web', '94.248.60.100', NULL),
+(922, '\\core\\event\\course_viewed', 'core', 'viewed', 'course', NULL, NULL, 'r', 2, 2, 50, 1, 0, 1, NULL, 0, 'N;', 1445420389, 'web', '94.248.60.100', NULL),
+(923, '\\core\\event\\user_login_failed', 'core', 'failed', 'user_login', NULL, NULL, 'r', 0, 1, 10, 0, 27, 0, NULL, 0, 'a:2:{s:8:"username";s:16:"sirromas@ukr.net";s:6:"reason";i:3;}', 1445420406, 'web', '94.248.60.100', NULL),
+(924, '\\core\\event\\user_loggedin', 'core', 'loggedin', 'user', 'user', 27, 'r', 0, 1, 10, 0, 27, 0, NULL, 0, 'a:1:{s:8:"username";s:16:"sirromas@ukr.net";}', 1445420422, 'web', '94.248.60.100', NULL),
+(925, '\\core\\event\\user_loggedout', 'core', 'loggedout', 'user', 'user', 27, 'r', 0, 1, 10, 0, 27, 0, NULL, 0, 'a:1:{s:9:"sessionid";s:26:"gjijovalvi2481d1lqquh9n4l4";}', 1445420668, 'web', '94.248.60.100', NULL),
+(926, '\\core\\event\\user_loggedin', 'core', 'loggedin', 'user', 'user', 22, 'r', 0, 1, 10, 0, 22, 0, NULL, 0, 'a:1:{s:8:"username";s:7:"manager";}', 1445420780, 'web', '94.248.60.100', NULL),
+(927, '\\core\\event\\user_deleted', 'core', 'deleted', 'user', 'user', 27, 'd', 0, 217, 30, 27, 22, 0, 27, 0, 'a:5:{s:8:"username";s:16:"sirromas@ukr.net";s:5:"email";s:16:"sirromas@ukr.net";s:8:"idnumber";s:0:"";s:7:"picture";s:1:"0";s:10:"mnethostid";s:1:"1";}', 1445420800, 'web', '94.248.60.100', NULL),
+(928, '\\core\\event\\user_created', 'core', 'created', 'user', 'user', 28, 'c', 0, 224, 30, 28, 22, 0, 28, 0, 'N;', 1445420886, 'web', '94.248.60.100', NULL),
+(929, '\\core\\event\\user_deleted', 'core', 'deleted', 'user', 'user', 28, 'd', 0, 224, 30, 28, 22, 0, 28, 0, 'a:5:{s:8:"username";s:16:"sirromas@ukr.net";s:5:"email";s:16:"sirromas@ukr.net";s:8:"idnumber";s:0:"";s:7:"picture";s:1:"0";s:10:"mnethostid";s:1:"1";}', 1445421145, 'web', '94.248.60.100', NULL),
+(930, '\\core\\event\\user_loggedin', 'core', 'loggedin', 'user', 'user', 2, 'r', 0, 1, 10, 0, 2, 0, NULL, 0, 'a:1:{s:8:"username";s:5:"admin";}', 1445421954, 'web', '94.248.60.100', NULL),
+(931, '\\core\\event\\user_loggedout', 'core', 'loggedout', 'user', 'user', 2, 'r', 0, 1, 10, 0, 2, 0, NULL, 0, 'a:1:{s:9:"sessionid";s:26:"906e9p3cg7lbflchnkm3d79an3";}', 1445422020, 'web', '94.248.60.100', NULL),
+(932, '\\core\\event\\user_login_failed', 'core', 'failed', 'user_login', NULL, NULL, 'r', 0, 1, 10, 0, 2, 0, NULL, 0, 'a:2:{s:8:"username";s:5:"admin";s:6:"reason";i:3;}', 1445422578, 'web', '94.248.60.100', NULL),
+(933, '\\core\\event\\user_login_failed', 'core', 'failed', 'user_login', NULL, NULL, 'r', 0, 1, 10, 0, 2, 0, NULL, 0, 'a:2:{s:8:"username";s:5:"admin";s:6:"reason";i:3;}', 1445422592, 'web', '94.248.60.100', NULL),
+(934, '\\core\\event\\user_loggedin', 'core', 'loggedin', 'user', 'user', 2, 'r', 0, 1, 10, 0, 2, 0, NULL, 0, 'a:1:{s:8:"username";s:5:"admin";}', 1445422606, 'web', '94.248.60.100', NULL),
+(935, '\\core\\event\\user_created', 'core', 'created', 'user', 'user', 29, 'c', 0, 225, 30, 29, 2, 0, 29, 0, 'N;', 1445422886, 'web', '94.248.60.100', NULL),
+(936, '\\core\\event\\user_deleted', 'core', 'deleted', 'user', 'user', 29, 'd', 0, 225, 30, 29, 2, 0, 29, 0, 'a:5:{s:8:"username";s:16:"sirromas@ukr.net";s:5:"email";s:16:"sirromas@ukr.net";s:8:"idnumber";s:0:"";s:7:"picture";s:1:"0";s:10:"mnethostid";s:1:"1";}', 1445422937, 'web', '94.248.60.100', NULL),
+(937, '\\core\\event\\user_created', 'core', 'created', 'user', 'user', 30, 'c', 0, 226, 30, 30, 2, 0, 30, 0, 'N;', 1445423329, 'web', '94.248.60.100', NULL),
+(938, '\\core\\event\\user_deleted', 'core', 'deleted', 'user', 'user', 30, 'd', 0, 226, 30, 30, 2, 0, 30, 0, 'a:5:{s:8:"username";s:16:"sirromas@ukr.net";s:5:"email";s:16:"sirromas@ukr.net";s:8:"idnumber";s:0:"";s:7:"picture";s:1:"0";s:10:"mnethostid";s:1:"1";}', 1445423363, 'web', '94.248.60.100', NULL),
+(939, '\\core\\event\\user_created', 'core', 'created', 'user', 'user', 31, 'c', 0, 227, 30, 31, 2, 0, 31, 0, 'N;', 1445423461, 'web', '94.248.60.100', NULL),
+(940, '\\core\\event\\user_loggedin', 'core', 'loggedin', 'user', 'user', 31, 'r', 0, 1, 10, 0, 31, 0, NULL, 0, 'a:1:{s:8:"username";s:16:"sirromas@ukr.net";}', 1445423516, 'web', '94.248.60.100', NULL),
+(941, '\\core\\event\\user_loggedout', 'core', 'loggedout', 'user', 'user', 31, 'r', 0, 1, 10, 0, 31, 0, NULL, 0, 'a:1:{s:9:"sessionid";s:26:"fjk61ljuh5amm5e7d71n9cp340";}', 1445423552, 'web', '94.248.60.100', NULL),
+(942, '\\core\\event\\user_loggedin', 'core', 'loggedin', 'user', 'user', 31, 'r', 0, 1, 10, 0, 31, 0, NULL, 0, 'a:1:{s:8:"username";s:16:"sirromas@ukr.net";}', 1445423574, 'web', '94.248.60.100', NULL),
+(943, '\\core\\event\\user_loggedin', 'core', 'loggedin', 'user', 'user', 2, 'r', 0, 1, 10, 0, 2, 0, NULL, 0, 'a:1:{s:8:"username";s:5:"admin";}', 1445424106, 'web', '94.248.60.100', NULL),
+(944, '\\core\\event\\user_deleted', 'core', 'deleted', 'user', 'user', 31, 'd', 0, 227, 30, 31, 2, 0, 31, 0, 'a:5:{s:8:"username";s:16:"sirromas@ukr.net";s:5:"email";s:16:"sirromas@ukr.net";s:8:"idnumber";s:0:"";s:7:"picture";s:1:"0";s:10:"mnethostid";s:1:"1";}', 1445424134, 'web', '94.248.60.100', NULL),
+(945, '\\core\\event\\user_created', 'core', 'created', 'user', 'user', 32, 'c', 0, 234, 30, 32, 2, 0, 32, 0, 'N;', 1445424247, 'web', '94.248.60.100', NULL),
+(946, '\\core\\event\\course_viewed', 'core', 'viewed', 'course', NULL, NULL, 'r', 2, 2, 50, 1, 0, 1, NULL, 0, 'N;', 1445425076, 'web', '109.87.201.130', NULL),
+(947, '\\core\\event\\user_loggedout', 'core', 'loggedout', 'user', 'user', 2, 'r', 0, 1, 10, 0, 2, 0, NULL, 0, 'a:1:{s:9:"sessionid";s:26:"6092l8la9rlr872qf49ocm1hr4";}', 1445425718, 'web', '94.248.60.100', NULL),
+(948, '\\core\\event\\user_loggedin', 'core', 'loggedin', 'user', 'user', 32, 'r', 0, 1, 10, 0, 32, 0, NULL, 0, 'a:1:{s:8:"username";s:16:"sirromas@ukr.net";}', 1445425726, 'web', '94.248.60.100', NULL),
+(949, '\\core\\event\\user_loggedout', 'core', 'loggedout', 'user', 'user', 32, 'r', 0, 1, 10, 0, 32, 0, NULL, 0, 'a:1:{s:9:"sessionid";s:26:"l26riordgo16dpoiohqqa5mll7";}', 1445431112, 'web', '94.248.60.100', NULL),
+(950, '\\core\\event\\user_loggedin', 'core', 'loggedin', 'user', 'user', 2, 'r', 0, 1, 10, 0, 2, 0, NULL, 0, 'a:1:{s:8:"username";s:5:"admin";}', 1445431120, 'web', '94.248.60.100', NULL),
+(951, '\\core\\event\\course_viewed', 'core', 'viewed', 'course', NULL, NULL, 'r', 2, 190, 50, 5, 2, 5, NULL, 0, 'N;', 1445437760, 'web', '94.248.60.100', NULL),
+(952, '\\core\\event\\user_loggedout', 'core', 'loggedout', 'user', 'user', 2, 'r', 0, 1, 10, 0, 2, 0, NULL, 0, 'a:1:{s:9:"sessionid";s:26:"9pjg96aeum0u8tr20hurv67314";}', 1445437784, 'web', '94.248.60.100', NULL),
+(953, '\\core\\event\\user_loggedin', 'core', 'loggedin', 'user', 'user', 32, 'r', 0, 1, 10, 0, 32, 0, NULL, 0, 'a:1:{s:8:"username";s:16:"sirromas@ukr.net";}', 1445437793, 'web', '94.248.60.100', NULL),
+(954, '\\core\\event\\user_loggedin', 'core', 'loggedin', 'user', 'user', 2, 'r', 0, 1, 10, 0, 2, 0, NULL, 0, 'a:1:{s:8:"username";s:5:"admin";}', 1445438433, 'web', '94.248.60.100', NULL),
+(955, '\\core\\event\\course_viewed', 'core', 'viewed', 'course', NULL, NULL, 'r', 2, 190, 50, 5, 2, 5, NULL, 0, 'N;', 1445438435, 'web', '94.248.60.100', NULL),
+(956, '\\core\\event\\user_deleted', 'core', 'deleted', 'user', 'user', 32, 'd', 0, 234, 30, 32, 2, 0, 32, 0, 'a:5:{s:8:"username";s:16:"sirromas@ukr.net";s:5:"email";s:16:"sirromas@ukr.net";s:8:"idnumber";s:0:"";s:7:"picture";s:1:"0";s:10:"mnethostid";s:1:"1";}', 1445438465, 'web', '94.248.60.100', NULL),
+(957, '\\core\\event\\user_loggedout', 'core', 'loggedout', 'user', 'user', 2, 'r', 0, 1, 10, 0, 2, 0, NULL, 0, 'a:1:{s:9:"sessionid";s:26:"m253oul8tbfks1hs1j06k75av1";}', 1445438471, 'web', '94.248.60.100', NULL),
+(958, '\\core\\event\\user_created', 'core', 'created', 'user', 'user', 33, 'c', 0, 242, 30, 33, 0, 0, 33, 0, 'N;', 1445438500, 'web', '94.248.60.100', NULL),
+(959, '\\core\\event\\user_loggedin', 'core', 'loggedin', 'user', 'user', 33, 'r', 0, 1, 10, 0, 33, 0, NULL, 0, 'a:1:{s:8:"username";s:16:"sirromas@ukr.net";}', 1445438530, 'web', '94.248.60.100', NULL),
+(960, '\\core\\event\\user_loggedout', 'core', 'loggedout', 'user', 'user', 33, 'r', 0, 1, 10, 0, 33, 0, NULL, 0, 'a:1:{s:9:"sessionid";s:26:"17vabmopu2nl2rali9teqlmka0";}', 1445438587, 'web', '94.248.60.100', NULL),
+(961, '\\core\\event\\user_loggedin', 'core', 'loggedin', 'user', 'user', 2, 'r', 0, 1, 10, 0, 2, 0, NULL, 0, 'a:1:{s:8:"username";s:5:"admin";}', 1445438597, 'web', '94.248.60.100', NULL),
+(962, '\\core\\event\\user_deleted', 'core', 'deleted', 'user', 'user', 33, 'd', 0, 242, 30, 33, 2, 0, 33, 0, 'a:5:{s:8:"username";s:16:"sirromas@ukr.net";s:5:"email";s:16:"sirromas@ukr.net";s:8:"idnumber";s:0:"";s:7:"picture";s:1:"0";s:10:"mnethostid";s:1:"1";}', 1445438644, 'web', '94.248.60.100', NULL),
+(963, '\\core\\event\\course_viewed', 'core', 'viewed', 'course', NULL, NULL, 'r', 2, 190, 50, 5, 2, 5, NULL, 0, 'N;', 1445438725, 'web', '94.248.60.100', NULL),
+(964, '\\core\\event\\course_viewed', 'core', 'viewed', 'course', NULL, NULL, 'r', 2, 2, 50, 1, 0, 1, NULL, 0, 'N;', 1445448782, 'web', '94.248.60.100', NULL),
+(965, '\\core\\event\\course_viewed', 'core', 'viewed', 'course', NULL, NULL, 'r', 2, 2, 50, 1, 0, 1, NULL, 0, 'N;', 1445486798, 'web', '109.87.201.130', NULL),
+(966, '\\core\\event\\user_created', 'core', 'created', 'user', 'user', 34, 'c', 0, 249, 30, 34, 0, 0, 34, 0, 'N;', 1445486843, 'web', '109.87.201.130', NULL),
+(967, '\\core\\event\\user_loggedin', 'core', 'loggedin', 'user', 'user', 34, 'r', 0, 1, 10, 0, 34, 0, NULL, 0, 'a:1:{s:8:"username";s:16:"sirromas@ukr.net";}', 1445486917, 'web', '109.87.201.130', NULL),
+(968, '\\core\\event\\user_loggedout', 'core', 'loggedout', 'user', 'user', 34, 'r', 0, 1, 10, 0, 34, 0, NULL, 0, 'a:1:{s:9:"sessionid";s:26:"06n11eanrp81hviq1im3tmp3q6";}', 1445486968, 'web', '109.87.201.130', NULL),
+(969, '\\core\\event\\user_loggedin', 'core', 'loggedin', 'user', 'user', 2, 'r', 0, 1, 10, 0, 2, 0, NULL, 0, 'a:1:{s:8:"username";s:5:"admin";}', 1445486978, 'web', '109.87.201.130', NULL),
+(970, '\\core\\event\\user_deleted', 'core', 'deleted', 'user', 'user', 34, 'd', 0, 249, 30, 34, 2, 0, 34, 0, 'a:5:{s:8:"username";s:16:"sirromas@ukr.net";s:5:"email";s:16:"sirromas@ukr.net";s:8:"idnumber";s:0:"";s:7:"picture";s:1:"0";s:10:"mnethostid";s:1:"1";}', 1445487001, 'web', '109.87.201.130', NULL),
+(971, '\\core\\event\\user_loggedout', 'core', 'loggedout', 'user', 'user', 2, 'r', 0, 1, 10, 0, 2, 0, NULL, 0, 'a:1:{s:9:"sessionid";s:26:"qpq8vdk5qvmkb3p116v8psmup5";}', 1445487009, 'web', '109.87.201.130', NULL),
+(972, '\\core\\event\\user_created', 'core', 'created', 'user', 'user', 35, 'c', 0, 256, 30, 35, 0, 0, 35, 0, 'N;', 1445487150, 'web', '109.87.201.130', NULL),
+(973, '\\core\\event\\user_loggedin', 'core', 'loggedin', 'user', 'user', 2, 'r', 0, 1, 10, 0, 2, 0, NULL, 0, 'a:1:{s:8:"username";s:5:"admin";}', 1445487200, 'web', '109.87.201.130', NULL),
+(974, '\\core\\event\\user_deleted', 'core', 'deleted', 'user', 'user', 35, 'd', 0, 256, 30, 35, 2, 0, 35, 0, 'a:5:{s:8:"username";s:16:"sirromas@ukr.net";s:5:"email";s:16:"sirromas@ukr.net";s:8:"idnumber";s:0:"";s:7:"picture";s:1:"0";s:10:"mnethostid";s:1:"1";}', 1445487221, 'web', '109.87.201.130', NULL),
+(975, '\\core\\event\\user_loggedout', 'core', 'loggedout', 'user', 'user', 2, 'r', 0, 1, 10, 0, 2, 0, NULL, 0, 'a:1:{s:9:"sessionid";s:26:"v7spv0r4hd2dcjj432ifi7ll53";}', 1445487227, 'web', '109.87.201.130', NULL),
+(976, '\\core\\event\\user_created', 'core', 'created', 'user', 'user', 36, 'c', 0, 257, 30, 36, 0, 0, 36, 0, 'N;', 1445487508, 'web', '109.87.201.130', NULL),
+(977, '\\core\\event\\user_loggedin', 'core', 'loggedin', 'user', 'user', 2, 'r', 0, 1, 10, 0, 2, 0, NULL, 0, 'a:1:{s:8:"username";s:5:"admin";}', 1445487860, 'web', '109.87.201.130', NULL),
+(978, '\\core\\event\\user_deleted', 'core', 'deleted', 'user', 'user', 36, 'd', 0, 257, 30, 36, 2, 0, 36, 0, 'a:5:{s:8:"username";s:16:"sirromas@ukr.net";s:5:"email";s:16:"sirromas@ukr.net";s:8:"idnumber";s:0:"";s:7:"picture";s:1:"0";s:10:"mnethostid";s:1:"1";}', 1445487882, 'web', '109.87.201.130', NULL),
+(979, '\\core\\event\\user_loggedout', 'core', 'loggedout', 'user', 'user', 2, 'r', 0, 1, 10, 0, 2, 0, NULL, 0, 'a:1:{s:9:"sessionid";s:26:"09qpqkhn3ma8rdfe7pnirj44r1";}', 1445487949, 'web', '109.87.201.130', NULL),
+(980, '\\core\\event\\user_created', 'core', 'created', 'user', 'user', 37, 'c', 0, 258, 30, 37, 0, 0, 37, 0, 'N;', 1445487967, 'web', '109.87.201.130', NULL),
+(981, '\\core\\event\\user_loggedin', 'core', 'loggedin', 'user', 'user', 37, 'r', 0, 1, 10, 0, 37, 0, NULL, 0, 'a:1:{s:8:"username";s:16:"sirromas@ukr.net";}', 1445488592, 'web', '109.87.201.130', NULL),
+(982, '\\core\\event\\user_loggedout', 'core', 'loggedout', 'user', 'user', 37, 'r', 0, 1, 10, 0, 37, 0, NULL, 0, 'a:1:{s:9:"sessionid";s:26:"s6lvjm6hcts7k3ttp62mpl6042";}', 1445488817, 'web', '109.87.201.130', NULL),
+(983, '\\core\\event\\user_loggedin', 'core', 'loggedin', 'user', 'user', 37, 'r', 0, 1, 10, 0, 37, 0, NULL, 0, 'a:1:{s:8:"username";s:16:"sirromas@ukr.net";}', 1445488827, 'web', '109.87.201.130', NULL),
+(984, '\\core\\event\\course_viewed', 'core', 'viewed', 'course', NULL, NULL, 'r', 2, 2, 50, 1, 37, 1, NULL, 0, 'N;', 1445488901, 'web', '109.87.201.130', NULL),
+(985, '\\core\\event\\user_loggedout', 'core', 'loggedout', 'user', 'user', 37, 'r', 0, 1, 10, 0, 37, 0, NULL, 0, 'a:1:{s:9:"sessionid";s:26:"8h114hldi4a180ona32bg40cd3";}', 1445488911, 'web', '109.87.201.130', NULL),
+(986, '\\core\\event\\user_loggedin', 'core', 'loggedin', 'user', 'user', 37, 'r', 0, 1, 10, 0, 37, 0, NULL, 0, 'a:1:{s:8:"username";s:16:"sirromas@ukr.net";}', 1445488921, 'web', '109.87.201.130', NULL),
+(987, '\\mod_forum\\event\\user_report_viewed', 'mod_forum', 'viewed', 'user_report', NULL, NULL, 'r', 2, 258, 30, 37, 37, 0, 37, 0, 'a:1:{s:10:"reportmode";s:11:"discussions";}', 1445488963, 'web', '109.87.201.130', NULL),
+(988, '\\core\\event\\user_loggedout', 'core', 'loggedout', 'user', 'user', 37, 'r', 0, 1, 10, 0, 37, 0, NULL, 0, 'a:1:{s:9:"sessionid";s:26:"entt1ne68mgnhb2oecaorqm5v5";}', 1445488971, 'web', '109.87.201.130', NULL),
+(989, '\\core\\event\\user_loggedin', 'core', 'loggedin', 'user', 'user', 22, 'r', 0, 1, 10, 0, 22, 0, NULL, 0, 'a:1:{s:8:"username";s:7:"manager";}', 1445488993, 'web', '109.87.201.130', NULL),
+(990, '\\core\\event\\course_viewed', 'core', 'viewed', 'course', NULL, NULL, 'r', 2, 190, 50, 5, 22, 5, NULL, 0, 'N;', 1445489007, 'web', '109.87.201.130', NULL),
+(991, '\\core\\event\\user_loggedout', 'core', 'loggedout', 'user', 'user', 22, 'r', 0, 1, 10, 0, 22, 0, NULL, 0, 'a:1:{s:9:"sessionid";s:26:"tn40kp8nrf3ksk1d1ac26qoc03";}', 1445489235, 'web', '109.87.201.130', NULL),
+(992, '\\core\\event\\user_login_failed', 'core', 'failed', 'user_login', NULL, NULL, 'r', 0, 1, 10, 0, 37, 0, NULL, 0, 'a:2:{s:8:"username";s:16:"sirromas@ukr.net";s:6:"reason";i:3;}', 1445489243, 'web', '109.87.201.130', NULL),
+(993, '\\core\\event\\user_login_failed', 'core', 'failed', 'user_login', NULL, NULL, 'r', 0, 1, 10, 0, 37, 0, NULL, 0, 'a:2:{s:8:"username";s:16:"sirromas@ukr.net";s:6:"reason";i:3;}', 1445489251, 'web', '109.87.201.130', NULL),
+(994, '\\core\\event\\user_loggedin', 'core', 'loggedin', 'user', 'user', 37, 'r', 0, 1, 10, 0, 37, 0, NULL, 0, 'a:1:{s:8:"username";s:16:"sirromas@ukr.net";}', 1445489261, 'web', '109.87.201.130', NULL),
+(995, '\\core\\event\\course_viewed', 'core', 'viewed', 'course', NULL, NULL, 'r', 2, 2, 50, 1, 37, 1, NULL, 0, 'N;', 1445489324, 'web', '109.87.201.130', NULL),
+(996, '\\core\\event\\user_loggedout', 'core', 'loggedout', 'user', 'user', 37, 'r', 0, 1, 10, 0, 37, 0, NULL, 0, 'a:1:{s:9:"sessionid";s:26:"635q4cmcrk3no67nep9n87lm90";}', 1445489347, 'web', '109.87.201.130', NULL),
+(997, '\\core\\event\\user_loggedin', 'core', 'loggedin', 'user', 'user', 37, 'r', 0, 1, 10, 0, 37, 0, NULL, 0, 'a:1:{s:8:"username";s:16:"sirromas@ukr.net";}', 1445489354, 'web', '109.87.201.130', NULL),
+(998, '\\core\\event\\user_loggedout', 'core', 'loggedout', 'user', 'user', 37, 'r', 0, 1, 10, 0, 37, 0, NULL, 0, 'a:1:{s:9:"sessionid";s:26:"e3tbq3npi2v3ktijrtsangnaq7";}', 1445489475, 'web', '109.87.201.130', NULL),
+(999, '\\core\\event\\user_login_failed', 'core', 'failed', 'user_login', NULL, NULL, 'r', 0, 1, 10, 0, 22, 0, NULL, 0, 'a:2:{s:8:"username";s:7:"manager";s:6:"reason";i:3;}', 1445490726, 'web', '109.87.201.130', NULL),
+(1000, '\\core\\event\\user_loggedin', 'core', 'loggedin', 'user', 'user', 22, 'r', 0, 1, 10, 0, 22, 0, NULL, 0, 'a:1:{s:8:"username";s:7:"manager";}', 1445490759, 'web', '109.87.201.130', NULL),
+(1001, '\\core\\event\\role_unassigned', 'core', 'unassigned', 'role', 'role', 4, 'd', 0, 190, 50, 5, 22, 5, 37, 0, 'a:3:{s:2:"id";s:2:"23";s:9:"component";s:1:" ";s:6:"itemid";s:1:"0";}', 1445490780, 'web', '109.87.201.130', NULL),
+(1002, '\\core\\event\\user_enrolment_deleted', 'core', 'deleted', 'user_enrolment', 'user_enrolments', 20, 'd', 0, 190, 50, 5, 22, 5, 37, 0, 'a:2:{s:13:"userenrolment";a:12:{s:2:"id";s:2:"20";s:6:"status";s:1:"0";s:7:"enrolid";s:2:"12";s:6:"userid";s:2:"37";s:9:"timestart";s:10:"1444456800";s:7:"timeend";s:1:"0";s:10:"modifierid";s:1:"2";s:11:"timecreated";s:10:"1444504303";s:12:"timemodified";s:10:"1444504303";s:8:"courseid";s:1:"5";s:5:"enrol";s:4:"self";s:9:"lastenrol";b:1;}s:5:"enrol";s:4:"self";}', 1445490780, 'web', '109.87.201.130', NULL),
+(1003, '\\core\\event\\user_deleted', 'core', 'deleted', 'user', 'user', 37, 'd', 0, 258, 30, 37, 22, 0, 37, 0, 'a:5:{s:8:"username";s:16:"sirromas@ukr.net";s:5:"email";s:16:"sirromas@ukr.net";s:8:"idnumber";s:0:"";s:7:"picture";s:1:"0";s:10:"mnethostid";s:1:"1";}', 1445490780, 'web', '109.87.201.130', NULL),
+(1004, '\\core\\event\\user_loggedin', 'core', 'loggedin', 'user', 'user', 22, 'r', 0, 1, 10, 0, 22, 0, NULL, 0, 'a:1:{s:8:"username";s:7:"manager";}', 1445491996, 'web', '109.87.201.130', NULL),
+(1005, '\\core\\event\\user_loggedout', 'core', 'loggedout', 'user', 'user', 22, 'r', 0, 1, 10, 0, 22, 0, NULL, 0, 'a:1:{s:9:"sessionid";s:26:"jp615qr7838brakr23pvl5pam5";}', 1445492017, 'web', '109.87.201.130', NULL),
+(1006, '\\core\\event\\user_created', 'core', 'created', 'user', 'user', 38, 'c', 0, 265, 30, 38, 0, 0, 38, 0, 'N;', 1445492228, 'web', '109.87.201.130', NULL),
+(1007, '\\core\\event\\user_loggedin', 'core', 'loggedin', 'user', 'user', 22, 'r', 0, 1, 10, 0, 22, 0, NULL, 0, 'a:1:{s:8:"username";s:7:"manager";}', 1445492417, 'web', '109.87.201.130', NULL),
+(1008, '\\core\\event\\user_deleted', 'core', 'deleted', 'user', 'user', 38, 'd', 0, 265, 30, 38, 22, 0, 38, 0, 'a:5:{s:8:"username";s:16:"sirromas@ukr.net";s:5:"email";s:16:"sirromas@ukr.net";s:8:"idnumber";s:0:"";s:7:"picture";s:1:"0";s:10:"mnethostid";s:1:"1";}', 1445492436, 'web', '109.87.201.130', NULL),
+(1009, '\\core\\event\\user_loggedout', 'core', 'loggedout', 'user', 'user', 22, 'r', 0, 1, 10, 0, 22, 0, NULL, 0, 'a:1:{s:9:"sessionid";s:26:"c8e8ildjq89akkijvle7ekt1p1";}', 1445492440, 'web', '109.87.201.130', NULL),
+(1010, '\\core\\event\\user_loggedin', 'core', 'loggedin', 'user', 'user', 5, 'r', 0, 1, 10, 0, 5, 0, NULL, 0, 'a:1:{s:8:"username";s:9:"student13";}', 1445493226, 'web', '109.87.201.130', NULL),
+(1011, '\\core\\event\\user_loggedout', 'core', 'loggedout', 'user', 'user', 5, 'r', 0, 1, 10, 0, 5, 0, NULL, 0, 'a:1:{s:9:"sessionid";s:26:"7stph403qsh2hal5b6332ltnv0";}', 1445493250, 'web', '109.87.201.130', NULL),
+(1012, '\\core\\event\\course_viewed', 'core', 'viewed', 'course', NULL, NULL, 'r', 2, 2, 50, 1, 0, 1, NULL, 0, 'N;', 1445493263, 'web', '109.87.201.130', NULL),
+(1013, '\\core\\event\\user_created', 'core', 'created', 'user', 'user', 39, 'c', 0, 266, 30, 39, 0, 0, 39, 0, 'N;', 1445493950, 'web', '109.87.201.130', NULL),
+(1014, '\\core\\event\\user_loggedin', 'core', 'loggedin', 'user', 'user', 39, 'r', 0, 1, 10, 0, 39, 0, NULL, 0, 'a:1:{s:8:"username";s:16:"sirromas@ukr.net";}', 1445494617, 'web', '109.87.201.130', NULL),
+(1015, '\\core\\event\\user_loggedout', 'core', 'loggedout', 'user', 'user', 39, 'r', 0, 1, 10, 0, 39, 0, NULL, 0, 'a:1:{s:9:"sessionid";s:26:"c7md20514smkfheoppaq67frr5";}', 1445494651, 'web', '109.87.201.130', NULL),
+(1016, '\\core\\event\\user_loggedin', 'core', 'loggedin', 'user', 'user', 39, 'r', 0, 1, 10, 0, 39, 0, NULL, 0, 'a:1:{s:8:"username";s:16:"sirromas@ukr.net";}', 1445494689, 'web', '109.87.201.130', NULL);
+INSERT INTO `mdl_logstore_standard_log` (`id`, `eventname`, `component`, `action`, `target`, `objecttable`, `objectid`, `crud`, `edulevel`, `contextid`, `contextlevel`, `contextinstanceid`, `userid`, `courseid`, `relateduserid`, `anonymous`, `other`, `timecreated`, `origin`, `ip`, `realuserid`) VALUES
+(1017, '\\core\\event\\user_login_failed', 'core', 'failed', 'user_login', NULL, NULL, 'r', 0, 1, 10, 0, 39, 0, NULL, 0, 'a:2:{s:8:"username";s:16:"sirromas@ukr.net";s:6:"reason";i:3;}', 1445494729, 'web', '109.87.201.130', NULL),
+(1018, '\\core\\event\\user_loggedin', 'core', 'loggedin', 'user', 'user', 39, 'r', 0, 1, 10, 0, 39, 0, NULL, 0, 'a:1:{s:8:"username";s:16:"sirromas@ukr.net";}', 1445494753, 'web', '109.87.201.130', NULL),
+(1019, '\\core\\event\\user_loggedout', 'core', 'loggedout', 'user', 'user', 39, 'r', 0, 1, 10, 0, 39, 0, NULL, 0, 'a:1:{s:9:"sessionid";s:26:"14kbgoeklgk2pk33pccenkfsr6";}', 1445495008, 'web', '109.87.201.130', NULL),
+(1020, '\\core\\event\\user_loggedout', 'core', 'loggedout', 'user', 'user', 39, 'r', 0, 1, 10, 0, 39, 0, NULL, 0, 'a:1:{s:9:"sessionid";s:26:"jv64s7fsi4f0ne1o5ltg9puoo0";}', 1445495130, 'web', '109.87.201.130', NULL),
+(1021, '\\core\\event\\user_loggedin', 'core', 'loggedin', 'user', 'user', 39, 'r', 0, 1, 10, 0, 39, 0, NULL, 0, 'a:1:{s:8:"username";s:16:"sirromas@ukr.net";}', 1445495339, 'web', '109.87.201.130', NULL),
+(1022, '\\core\\event\\course_viewed', 'core', 'viewed', 'course', NULL, NULL, 'r', 2, 2, 50, 1, 39, 1, NULL, 0, 'N;', 1445495350, 'web', '109.87.201.130', NULL),
+(1023, '\\core\\event\\user_loggedout', 'core', 'loggedout', 'user', 'user', 39, 'r', 0, 1, 10, 0, 39, 0, NULL, 0, 'a:1:{s:9:"sessionid";s:26:"i1vs60sc7t8jk5qom7j4l3hbd5";}', 1445495407, 'web', '109.87.201.130', NULL),
+(1024, '\\core\\event\\user_loggedin', 'core', 'loggedin', 'user', 'user', 39, 'r', 0, 1, 10, 0, 39, 0, NULL, 0, 'a:1:{s:8:"username";s:16:"sirromas@ukr.net";}', 1445495417, 'web', '109.87.201.130', NULL),
+(1025, '\\core\\event\\course_viewed', 'core', 'viewed', 'course', NULL, NULL, 'r', 2, 2, 50, 1, 39, 1, NULL, 0, 'N;', 1445495514, 'web', '109.87.201.130', NULL),
+(1026, '\\core\\event\\user_loggedout', 'core', 'loggedout', 'user', 'user', 39, 'r', 0, 1, 10, 0, 39, 0, NULL, 0, 'a:1:{s:9:"sessionid";s:26:"fpdi0m19kht7umi43tqtg8clk0";}', 1445495558, 'web', '109.87.201.130', NULL),
+(1027, '\\core\\event\\user_loggedin', 'core', 'loggedin', 'user', 'user', 39, 'r', 0, 1, 10, 0, 39, 0, NULL, 0, 'a:1:{s:8:"username";s:16:"sirromas@ukr.net";}', 1445497310, 'web', '109.87.201.130', NULL),
+(1028, '\\core\\event\\user_loggedout', 'core', 'loggedout', 'user', 'user', 39, 'r', 0, 1, 10, 0, 39, 0, NULL, 0, 'a:1:{s:9:"sessionid";s:26:"8s7iv25v43vj40nlsvavakdma1";}', 1445497329, 'web', '109.87.201.130', NULL),
+(1029, '\\core\\event\\user_loggedin', 'core', 'loggedin', 'user', 'user', 22, 'r', 0, 1, 10, 0, 22, 0, NULL, 0, 'a:1:{s:8:"username";s:7:"manager";}', 1445497640, 'web', '109.87.201.130', NULL),
+(1030, '\\core\\event\\role_unassigned', 'core', 'unassigned', 'role', 'role', 4, 'd', 0, 60, 70, 5, 22, 3, 39, 0, 'a:3:{s:2:"id";s:2:"24";s:9:"component";s:1:" ";s:6:"itemid";s:1:"0";}', 1445497660, 'web', '109.87.201.130', NULL),
+(1031, '\\core\\event\\user_deleted', 'core', 'deleted', 'user', 'user', 39, 'd', 0, 266, 30, 39, 22, 0, 39, 0, 'a:5:{s:8:"username";s:16:"sirromas@ukr.net";s:5:"email";s:16:"sirromas@ukr.net";s:8:"idnumber";s:0:"";s:7:"picture";s:1:"0";s:10:"mnethostid";s:1:"1";}', 1445497661, 'web', '109.87.201.130', NULL),
+(1032, '\\core\\event\\user_loggedout', 'core', 'loggedout', 'user', 'user', 22, 'r', 0, 1, 10, 0, 22, 0, NULL, 0, 'a:1:{s:9:"sessionid";s:26:"c09qnbc974j88v9m3on3ou8l04";}', 1445497667, 'web', '109.87.201.130', NULL),
+(1033, '\\core\\event\\user_created', 'core', 'created', 'user', 'user', 41, 'c', 0, 273, 30, 41, 0, 0, 41, 0, 'N;', 1445497774, 'web', '109.87.201.130', NULL),
+(1034, '\\core\\event\\role_assigned', 'core', 'assigned', 'role', 'role', 4, 'c', 0, 60, 70, 5, 0, 3, 41, 0, 'a:3:{s:2:"id";i:25;s:9:"component";s:0:"";s:6:"itemid";i:0;}', 1445497783, 'web', '109.87.201.130', NULL),
+(1035, '\\core\\event\\user_loggedin', 'core', 'loggedin', 'user', 'user', 41, 'r', 0, 1, 10, 0, 41, 0, NULL, 0, 'a:1:{s:8:"username";s:16:"sirromas@ukr.net";}', 1445497812, 'web', '109.87.201.130', NULL),
+(1036, '\\core\\event\\user_loggedin', 'core', 'loggedin', 'user', 'user', 41, 'r', 0, 1, 10, 0, 41, 0, NULL, 0, 'a:1:{s:8:"username";s:16:"sirromas@ukr.net";}', 1445497852, 'web', '109.87.201.130', NULL),
+(1037, '\\core\\event\\user_loggedout', 'core', 'loggedout', 'user', 'user', 41, 'r', 0, 1, 10, 0, 41, 0, NULL, 0, 'a:1:{s:9:"sessionid";s:26:"ln6mopg9ke610cbujbjem5k6o7";}', 1445497862, 'web', '109.87.201.130', NULL),
+(1038, '\\core\\event\\user_loggedout', 'core', 'loggedout', 'user', 'user', 41, 'r', 0, 1, 10, 0, 41, 0, NULL, 0, 'a:1:{s:9:"sessionid";s:26:"j7hk9dhjmkalsksi6uqe857nt5";}', 1445497868, 'web', '109.87.201.130', NULL),
+(1039, '\\core\\event\\user_loggedin', 'core', 'loggedin', 'user', 'user', 41, 'r', 0, 1, 10, 0, 41, 0, NULL, 0, 'a:1:{s:8:"username";s:16:"sirromas@ukr.net";}', 1445498717, 'web', '109.87.201.130', NULL),
+(1040, '\\core\\event\\user_loggedout', 'core', 'loggedout', 'user', 'user', 41, 'r', 0, 1, 10, 0, 41, 0, NULL, 0, 'a:1:{s:9:"sessionid";s:26:"04kma9donhi09lrfq5qv2gqh01";}', 1445498728, 'web', '109.87.201.130', NULL),
+(1041, '\\core\\event\\user_loggedin', 'core', 'loggedin', 'user', 'user', 41, 'r', 0, 1, 10, 0, 41, 0, NULL, 0, 'a:1:{s:8:"username";s:16:"sirromas@ukr.net";}', 1445499198, 'web', '109.87.201.130', NULL),
+(1042, '\\core\\event\\user_loggedout', 'core', 'loggedout', 'user', 'user', 41, 'r', 0, 1, 10, 0, 41, 0, NULL, 0, 'a:1:{s:9:"sessionid";s:26:"qgamb5h4jt4u6nm98b0cd7fbf3";}', 1445499249, 'web', '109.87.201.130', NULL),
+(1043, '\\core\\event\\user_loggedin', 'core', 'loggedin', 'user', 'user', 41, 'r', 0, 1, 10, 0, 41, 0, NULL, 0, 'a:1:{s:8:"username";s:16:"sirromas@ukr.net";}', 1445499642, 'web', '109.87.201.130', NULL),
+(1044, '\\core\\event\\user_loggedout', 'core', 'loggedout', 'user', 'user', 41, 'r', 0, 1, 10, 0, 41, 0, NULL, 0, 'a:1:{s:9:"sessionid";s:26:"2i8btkeap7bk0e7rmo63n9jfs7";}', 1445499673, 'web', '109.87.201.130', NULL),
+(1045, '\\core\\event\\user_loggedin', 'core', 'loggedin', 'user', 'user', 41, 'r', 0, 1, 10, 0, 41, 0, NULL, 0, 'a:1:{s:8:"username";s:16:"sirromas@ukr.net";}', 1445499759, 'web', '109.87.201.130', NULL),
+(1046, '\\core\\event\\user_loggedout', 'core', 'loggedout', 'user', 'user', 41, 'r', 0, 1, 10, 0, 41, 0, NULL, 0, 'a:1:{s:9:"sessionid";s:26:"gpj069qlcl1drks8erapghuil1";}', 1445499780, 'web', '109.87.201.130', NULL),
+(1047, '\\core\\event\\course_viewed', 'core', 'viewed', 'course', NULL, NULL, 'r', 2, 2, 50, 1, 0, 1, NULL, 0, 'N;', 1445512209, 'web', '109.87.201.130', NULL),
+(1048, '\\core\\event\\user_login_failed', 'core', 'failed', 'user_login', NULL, NULL, 'r', 0, 1, 10, 0, 2, 0, NULL, 0, 'a:2:{s:8:"username";s:5:"admin";s:6:"reason";i:3;}', 1445513018, 'web', '109.87.201.130', NULL),
+(1049, '\\core\\event\\user_loggedin', 'core', 'loggedin', 'user', 'user', 2, 'r', 0, 1, 10, 0, 2, 0, NULL, 0, 'a:1:{s:8:"username";s:5:"admin";}', 1445513048, 'web', '109.87.201.130', NULL),
+(1050, '\\core\\event\\course_viewed', 'core', 'viewed', 'course', NULL, NULL, 'r', 2, 184, 50, 4, 2, 4, NULL, 0, 'N;', 1445513247, 'web', '109.87.201.130', NULL),
+(1051, '\\core\\event\\user_loggedout', 'core', 'loggedout', 'user', 'user', 2, 'r', 0, 1, 10, 0, 2, 0, NULL, 0, 'a:1:{s:9:"sessionid";s:26:"bqa0n6koksop1jpjoj7mo428l4";}', 1445513658, 'web', '109.87.201.130', NULL),
+(1052, '\\core\\event\\user_loggedin', 'core', 'loggedin', 'user', 'user', 22, 'r', 0, 1, 10, 0, 22, 0, NULL, 0, 'a:1:{s:8:"username";s:7:"manager";}', 1445514905, 'web', '109.87.201.130', NULL),
+(1053, '\\core\\event\\user_loggedin', 'core', 'loggedin', 'user', 'user', 2, 'r', 0, 1, 10, 0, 2, 0, NULL, 0, 'a:1:{s:8:"username";s:5:"admin";}', 1445515598, 'web', '109.87.201.130', NULL),
+(1054, '\\core\\event\\course_viewed', 'core', 'viewed', 'course', NULL, NULL, 'r', 2, 196, 50, 6, 22, 6, NULL, 0, 'N;', 1445517846, 'web', '109.87.201.130', NULL),
+(1055, '\\core\\event\\course_viewed', 'core', 'viewed', 'course', NULL, NULL, 'r', 2, 196, 50, 6, 22, 6, NULL, 0, 'N;', 1445517856, 'web', '109.87.201.130', NULL),
+(1056, '\\core\\event\\course_viewed', 'core', 'viewed', 'course', NULL, NULL, 'r', 2, 55, 50, 3, 22, 3, NULL, 0, 'N;', 1445517866, 'web', '109.87.201.130', NULL),
+(1057, '\\core\\event\\user_loggedout', 'core', 'loggedout', 'user', 'user', 22, 'r', 0, 1, 10, 0, 22, 0, NULL, 0, 'a:1:{s:9:"sessionid";s:26:"0r8r5sl3f5okg7k53ntms8dp52";}', 1445518111, 'web', '109.87.201.130', NULL),
+(1058, '\\core\\event\\course_viewed', 'core', 'viewed', 'course', NULL, NULL, 'r', 2, 190, 50, 5, 2, 5, NULL, 0, 'N;', 1445519187, 'web', '109.87.201.130', NULL),
+(1059, '\\core\\event\\user_loggedout', 'core', 'loggedout', 'user', 'user', 2, 'r', 0, 1, 10, 0, 2, 0, NULL, 0, 'a:1:{s:9:"sessionid";s:26:"lb7e9onmcimr9iu4tttlcqq9j6";}', 1445519288, 'web', '109.87.201.130', NULL),
+(1060, '\\core\\event\\user_loggedin', 'core', 'loggedin', 'user', 'user', 41, 'r', 0, 1, 10, 0, 41, 0, NULL, 0, 'a:1:{s:8:"username";s:16:"sirromas@ukr.net";}', 1445519297, 'web', '109.87.201.130', NULL),
+(1061, '\\core\\event\\user_loggedout', 'core', 'loggedout', 'user', 'user', 41, 'r', 0, 1, 10, 0, 41, 0, NULL, 0, 'a:1:{s:9:"sessionid";s:26:"d0abbugt6e8hed71112tgt65e4";}', 1445519423, 'web', '109.87.201.130', NULL),
+(1062, '\\core\\event\\user_loggedin', 'core', 'loggedin', 'user', 'user', 2, 'r', 0, 1, 10, 0, 2, 0, NULL, 0, 'a:1:{s:8:"username";s:5:"admin";}', 1445519431, 'web', '109.87.201.130', NULL),
+(1063, '\\core\\event\\course_viewed', 'core', 'viewed', 'course', NULL, NULL, 'r', 2, 190, 50, 5, 2, 5, NULL, 0, 'N;', 1445519443, 'web', '109.87.201.130', NULL),
+(1064, '\\core\\event\\user_loggedout', 'core', 'loggedout', 'user', 'user', 2, 'r', 0, 1, 10, 0, 2, 0, NULL, 0, 'a:1:{s:9:"sessionid";s:26:"1aa3nn17gtq7dn9ej9uq9ngqp3";}', 1445519530, 'web', '109.87.201.130', NULL),
+(1065, '\\core\\event\\user_loggedin', 'core', 'loggedin', 'user', 'user', 41, 'r', 0, 1, 10, 0, 41, 0, NULL, 0, 'a:1:{s:8:"username";s:16:"sirromas@ukr.net";}', 1445519539, 'web', '109.87.201.130', NULL),
+(1066, '\\core\\event\\user_loggedout', 'core', 'loggedout', 'user', 'user', 41, 'r', 0, 1, 10, 0, 41, 0, NULL, 0, 'a:1:{s:9:"sessionid";s:26:"vc3hvm7pc08l4bjhskuh6eo4k7";}', 1445519576, 'web', '109.87.201.130', NULL),
+(1067, '\\core\\event\\user_loggedin', 'core', 'loggedin', 'user', 'user', 22, 'r', 0, 1, 10, 0, 22, 0, NULL, 0, 'a:1:{s:8:"username";s:7:"manager";}', 1445519586, 'web', '109.87.201.130', NULL),
+(1068, '\\core\\event\\course_viewed', 'core', 'viewed', 'course', NULL, NULL, 'r', 2, 190, 50, 5, 22, 5, NULL, 0, 'N;', 1445519593, 'web', '109.87.201.130', NULL),
+(1069, '\\core\\event\\user_enrolment_deleted', 'core', 'deleted', 'user_enrolment', 'user_enrolments', 21, 'd', 0, 190, 50, 5, 22, 5, 41, 0, 'a:2:{s:13:"userenrolment";a:12:{s:2:"id";s:2:"21";s:6:"status";s:1:"0";s:7:"enrolid";s:2:"12";s:6:"userid";s:2:"41";s:9:"timestart";s:10:"1444456800";s:7:"timeend";s:1:"0";s:10:"modifierid";s:1:"2";s:11:"timecreated";s:10:"1444504298";s:12:"timemodified";s:10:"1444504298";s:8:"courseid";s:1:"5";s:5:"enrol";s:4:"self";s:9:"lastenrol";b:1;}s:5:"enrol";s:4:"self";}', 1445519623, 'web', '109.87.201.130', NULL),
+(1070, '\\core\\event\\user_loggedout', 'core', 'loggedout', 'user', 'user', 22, 'r', 0, 1, 10, 0, 22, 0, NULL, 0, 'a:1:{s:9:"sessionid";s:26:"4kn364he7742taju4rtvl3sgv7";}', 1445520849, 'web', '109.87.201.130', NULL),
+(1071, '\\core\\event\\user_loggedin', 'core', 'loggedin', 'user', 'user', 41, 'r', 0, 1, 10, 0, 41, 0, NULL, 0, 'a:1:{s:8:"username";s:16:"sirromas@ukr.net";}', 1445520856, 'web', '109.87.201.130', NULL),
+(1072, '\\core\\event\\user_loggedout', 'core', 'loggedout', 'user', 'user', 41, 'r', 0, 1, 10, 0, 41, 0, NULL, 0, 'a:1:{s:9:"sessionid";s:26:"pu6egc3g4f7cc3vlfrrvbjhkm3";}', 1445520895, 'web', '109.87.201.130', NULL),
+(1073, '\\core\\event\\user_loggedin', 'core', 'loggedin', 'user', 'user', 22, 'r', 0, 1, 10, 0, 22, 0, NULL, 0, 'a:1:{s:8:"username";s:7:"manager";}', 1445520905, 'web', '109.87.201.130', NULL),
+(1074, '\\core\\event\\course_viewed', 'core', 'viewed', 'course', NULL, NULL, 'r', 2, 190, 50, 5, 22, 5, NULL, 0, 'N;', 1445520918, 'web', '109.87.201.130', NULL),
+(1075, '\\core\\event\\course_viewed', 'core', 'viewed', 'course', NULL, NULL, 'r', 2, 190, 50, 5, 22, 5, NULL, 0, 'N;', 1445520997, 'web', '109.87.201.130', NULL),
+(1076, '\\core\\event\\user_enrolment_created', 'core', 'created', 'user_enrolment', 'user_enrolments', 22, 'c', 0, 190, 50, 5, 22, 5, 41, 0, 'a:1:{s:5:"enrol";s:6:"manual";}', 1445521024, 'web', '109.87.201.130', NULL),
+(1077, '\\core\\event\\role_assigned', 'core', 'assigned', 'role', 'role', 3, 'c', 0, 190, 50, 5, 22, 5, 41, 0, 'a:3:{s:2:"id";i:26;s:9:"component";s:0:"";s:6:"itemid";i:0;}', 1445521024, 'web', '109.87.201.130', NULL),
+(1078, '\\core\\event\\user_loggedout', 'core', 'loggedout', 'user', 'user', 22, 'r', 0, 1, 10, 0, 22, 0, NULL, 0, 'a:1:{s:9:"sessionid";s:26:"6o7i7lqrvl63gfuj6bcs55pop7";}', 1445521036, 'web', '109.87.201.130', NULL),
+(1079, '\\core\\event\\user_loggedin', 'core', 'loggedin', 'user', 'user', 41, 'r', 0, 1, 10, 0, 41, 0, NULL, 0, 'a:1:{s:8:"username";s:16:"sirromas@ukr.net";}', 1445521044, 'web', '109.87.201.130', NULL),
+(1080, '\\core\\event\\user_loggedout', 'core', 'loggedout', 'user', 'user', 41, 'r', 0, 1, 10, 0, 41, 0, NULL, 0, 'a:1:{s:9:"sessionid";s:26:"di2a8iklkf70hkihs46cb0nis4";}', 1445521932, 'web', '109.87.201.130', NULL),
+(1081, '\\core\\event\\user_loggedin', 'core', 'loggedin', 'user', 'user', 22, 'r', 0, 1, 10, 0, 22, 0, NULL, 0, 'a:1:{s:8:"username";s:7:"manager";}', 1445521954, 'web', '109.87.201.130', NULL),
+(1082, '\\core\\event\\course_viewed', 'core', 'viewed', 'course', NULL, NULL, 'r', 2, 190, 50, 5, 22, 5, NULL, 0, 'N;', 1445521977, 'web', '109.87.201.130', NULL),
+(1083, '\\core\\event\\role_unassigned', 'core', 'unassigned', 'role', 'role', 3, 'd', 0, 190, 50, 5, 22, 5, 41, 0, 'a:3:{s:2:"id";s:2:"26";s:9:"component";s:0:"";s:6:"itemid";s:1:"0";}', 1445521992, 'web', '109.87.201.130', NULL),
+(1084, '\\core\\event\\user_enrolment_deleted', 'core', 'deleted', 'user_enrolment', 'user_enrolments', 22, 'd', 0, 190, 50, 5, 22, 5, 41, 0, 'a:2:{s:13:"userenrolment";a:12:{s:2:"id";s:2:"22";s:6:"status";s:1:"0";s:7:"enrolid";s:2:"10";s:6:"userid";s:2:"41";s:9:"timestart";s:10:"1445493600";s:7:"timeend";s:1:"0";s:10:"modifierid";s:2:"22";s:11:"timecreated";s:10:"1445521024";s:12:"timemodified";s:10:"1445521024";s:8:"courseid";s:1:"5";s:5:"enrol";s:6:"manual";s:9:"lastenrol";b:1;}s:5:"enrol";s:6:"manual";}', 1445521992, 'web', '109.87.201.130', NULL),
+(1085, '\\core\\event\\user_loggedout', 'core', 'loggedout', 'user', 'user', 22, 'r', 0, 1, 10, 0, 22, 0, NULL, 0, 'a:1:{s:9:"sessionid";s:26:"dbkorhsrrqjdphmjd77o10jj03";}', 1445522235, 'web', '109.87.201.130', NULL),
+(1086, '\\core\\event\\user_loggedin', 'core', 'loggedin', 'user', 'user', 41, 'r', 0, 1, 10, 0, 41, 0, NULL, 0, 'a:1:{s:8:"username";s:16:"sirromas@ukr.net";}', 1445523428, 'web', '109.87.201.130', NULL),
+(1087, '\\core\\event\\user_loggedout', 'core', 'loggedout', 'user', 'user', 41, 'r', 0, 1, 10, 0, 41, 0, NULL, 0, 'a:1:{s:9:"sessionid";s:26:"8pvogrgpa55dj5hdn4kg6rhsb2";}', 1445523445, 'web', '109.87.201.130', NULL),
+(1088, '\\core\\event\\user_loggedin', 'core', 'loggedin', 'user', 'user', 22, 'r', 0, 1, 10, 0, 22, 0, NULL, 0, 'a:1:{s:8:"username";s:7:"manager";}', 1445523453, 'web', '109.87.201.130', NULL),
+(1089, '\\core\\event\\course_viewed', 'core', 'viewed', 'course', NULL, NULL, 'r', 2, 190, 50, 5, 22, 5, NULL, 0, 'N;', 1445523463, 'web', '109.87.201.130', NULL),
+(1090, '\\core\\event\\role_unassigned', 'core', 'unassigned', 'role', 'role', 4, 'd', 0, 190, 50, 5, 22, 5, 41, 0, 'a:3:{s:2:"id";s:2:"27";s:9:"component";s:0:"";s:6:"itemid";s:1:"0";}', 1445523486, 'web', '109.87.201.130', NULL),
+(1091, '\\core\\event\\user_enrolment_deleted', 'core', 'deleted', 'user_enrolment', 'user_enrolments', 23, 'd', 0, 190, 50, 5, 22, 5, 41, 0, 'a:2:{s:13:"userenrolment";a:12:{s:2:"id";s:2:"23";s:6:"status";s:1:"0";s:7:"enrolid";s:2:"16";s:6:"userid";s:2:"41";s:9:"timestart";s:10:"1445523356";s:7:"timeend";s:1:"0";s:10:"modifierid";s:1:"2";s:11:"timecreated";s:10:"1445523356";s:12:"timemodified";s:10:"1445523356";s:8:"courseid";s:1:"5";s:5:"enrol";s:4:"self";s:9:"lastenrol";b:1;}s:5:"enrol";s:4:"self";}', 1445523486, 'web', '109.87.201.130', NULL),
+(1092, '\\core\\event\\user_loggedout', 'core', 'loggedout', 'user', 'user', 22, 'r', 0, 1, 10, 0, 22, 0, NULL, 0, 'a:1:{s:9:"sessionid";s:26:"a7s8f3m6nuika1mreod4bevu00";}', 1445523493, 'web', '109.87.201.130', NULL),
+(1093, '\\core\\event\\user_loggedin', 'core', 'loggedin', 'user', 'user', 41, 'r', 0, 1, 10, 0, 41, 0, NULL, 0, 'a:1:{s:8:"username";s:16:"sirromas@ukr.net";}', 1445523514, 'web', '109.87.201.130', NULL),
+(1094, '\\core\\event\\course_viewed', 'core', 'viewed', 'course', NULL, NULL, 'r', 2, 190, 50, 5, 41, 5, NULL, 0, 'N;', 1445523523, 'web', '109.87.201.130', NULL),
+(1095, '\\core\\event\\user_loggedout', 'core', 'loggedout', 'user', 'user', 41, 'r', 0, 1, 10, 0, 41, 0, NULL, 0, 'a:1:{s:9:"sessionid";s:26:"0tc2npv30o4gcoadpq7aus8td0";}', 1445523552, 'web', '109.87.201.130', NULL),
+(1096, '\\core\\event\\user_loggedin', 'core', 'loggedin', 'user', 'user', 41, 'r', 0, 1, 10, 0, 41, 0, NULL, 0, 'a:1:{s:8:"username";s:16:"sirromas@ukr.net";}', 1445523559, 'web', '109.87.201.130', NULL),
+(1097, '\\core\\event\\user_loggedout', 'core', 'loggedout', 'user', 'user', 41, 'r', 0, 1, 10, 0, 41, 0, NULL, 0, 'a:1:{s:9:"sessionid";s:26:"hieodcr2hteopg0gch6r7m2486";}', 1445523600, 'web', '109.87.201.130', NULL),
+(1098, '\\core\\event\\user_loggedin', 'core', 'loggedin', 'user', 'user', 41, 'r', 0, 1, 10, 0, 41, 0, NULL, 0, 'a:1:{s:8:"username";s:16:"sirromas@ukr.net";}', 1445523607, 'web', '109.87.201.130', NULL),
+(1099, '\\core\\event\\course_viewed', 'core', 'viewed', 'course', NULL, NULL, 'r', 2, 190, 50, 5, 41, 5, NULL, 0, 'N;', 1445523612, 'web', '109.87.201.130', NULL),
+(1100, '\\gradereport_grader\\event\\grade_report_viewed', 'gradereport_grader', 'viewed', 'grade_report', NULL, NULL, 'r', 1, 190, 50, 5, 41, 5, NULL, 0, 'N;', 1445523620, 'web', '109.87.201.130', NULL),
+(1101, '\\core\\event\\user_loggedout', 'core', 'loggedout', 'user', 'user', 41, 'r', 0, 1, 10, 0, 41, 0, NULL, 0, 'a:1:{s:9:"sessionid";s:26:"fgj66mgsfv7b2mqmnrgdpo0i73";}', 1445523635, 'web', '109.87.201.130', NULL),
+(1102, '\\core\\event\\user_loggedin', 'core', 'loggedin', 'user', 'user', 41, 'r', 0, 1, 10, 0, 41, 0, NULL, 0, 'a:1:{s:8:"username";s:16:"sirromas@ukr.net";}', 1445523804, 'web', '109.87.201.130', NULL),
+(1103, '\\core\\event\\course_viewed', 'core', 'viewed', 'course', NULL, NULL, 'r', 2, 190, 50, 5, 41, 5, NULL, 0, 'N;', 1445523830, 'web', '109.87.201.130', NULL),
+(1104, '\\core\\event\\course_viewed', 'core', 'viewed', 'course', NULL, NULL, 'r', 2, 190, 50, 5, 41, 5, NULL, 0, 'N;', 1445523839, 'web', '109.87.201.130', NULL),
+(1105, '\\core\\event\\course_viewed', 'core', 'viewed', 'course', NULL, NULL, 'r', 2, 190, 50, 5, 41, 5, NULL, 0, 'N;', 1445523855, 'web', '109.87.201.130', NULL),
+(1106, '\\core\\event\\user_loggedout', 'core', 'loggedout', 'user', 'user', 41, 'r', 0, 1, 10, 0, 41, 0, NULL, 0, 'a:1:{s:9:"sessionid";s:26:"p5ugvjrnlkqo61i83g2hfopf70";}', 1445523898, 'web', '109.87.201.130', NULL),
+(1107, '\\core\\event\\user_loggedin', 'core', 'loggedin', 'user', 'user', 41, 'r', 0, 1, 10, 0, 41, 0, NULL, 0, 'a:1:{s:8:"username";s:16:"sirromas@ukr.net";}', 1445523905, 'web', '109.87.201.130', NULL),
+(1108, '\\core\\event\\user_loggedout', 'core', 'loggedout', 'user', 'user', 41, 'r', 0, 1, 10, 0, 41, 0, NULL, 0, 'a:1:{s:9:"sessionid";s:26:"3h90uj5gasc1enhaftmmm6i945";}', 1445523942, 'web', '109.87.201.130', NULL),
+(1109, '\\core\\event\\user_loggedin', 'core', 'loggedin', 'user', 'user', 41, 'r', 0, 1, 10, 0, 41, 0, NULL, 0, 'a:1:{s:8:"username";s:16:"sirromas@ukr.net";}', 1445524179, 'web', '109.87.201.130', NULL),
+(1110, '\\core\\event\\user_loggedout', 'core', 'loggedout', 'user', 'user', 41, 'r', 0, 1, 10, 0, 41, 0, NULL, 0, 'a:1:{s:9:"sessionid";s:26:"h99iq9l4vshf4nq1off667eon2";}', 1445524198, 'web', '109.87.201.130', NULL),
+(1111, '\\core\\event\\user_loggedin', 'core', 'loggedin', 'user', 'user', 22, 'r', 0, 1, 10, 0, 22, 0, NULL, 0, 'a:1:{s:8:"username";s:7:"manager";}', 1445524205, 'web', '109.87.201.130', NULL),
+(1112, '\\core\\event\\course_viewed', 'core', 'viewed', 'course', NULL, NULL, 'r', 2, 196, 50, 6, 22, 6, NULL, 0, 'N;', 1445524215, 'web', '109.87.201.130', NULL),
+(1113, '\\core\\event\\user_loggedout', 'core', 'loggedout', 'user', 'user', 22, 'r', 0, 1, 10, 0, 22, 0, NULL, 0, 'a:1:{s:9:"sessionid";s:26:"ud2cuvr3g8p76lfv78oi4cafl3";}', 1445524562, 'web', '109.87.201.130', NULL),
+(1114, '\\core\\event\\user_loggedin', 'core', 'loggedin', 'user', 'user', 41, 'r', 0, 1, 10, 0, 41, 0, NULL, 0, 'a:1:{s:8:"username";s:16:"sirromas@ukr.net";}', 1445524570, 'web', '109.87.201.130', NULL),
+(1115, '\\core\\event\\course_viewed', 'core', 'viewed', 'course', NULL, NULL, 'r', 2, 190, 50, 5, 41, 5, NULL, 0, 'N;', 1445524577, 'web', '109.87.201.130', NULL),
+(1116, '\\core\\event\\user_loggedout', 'core', 'loggedout', 'user', 'user', 41, 'r', 0, 1, 10, 0, 41, 0, NULL, 0, 'a:1:{s:9:"sessionid";s:26:"4aqk8mdmn6qkh3dpspp27go5j4";}', 1445525239, 'web', '109.87.201.130', NULL),
+(1117, '\\core\\event\\user_loggedin', 'core', 'loggedin', 'user', 'user', 22, 'r', 0, 1, 10, 0, 22, 0, NULL, 0, 'a:1:{s:8:"username";s:7:"manager";}', 1445525252, 'web', '109.87.201.130', NULL),
+(1118, '\\core\\event\\course_viewed', 'core', 'viewed', 'course', NULL, NULL, 'r', 2, 196, 50, 6, 22, 6, NULL, 0, 'N;', 1445525264, 'web', '109.87.201.130', NULL),
+(1119, '\\core\\event\\role_unassigned', 'core', 'unassigned', 'role', 'role', 4, 'd', 0, 196, 50, 6, 22, 6, 41, 0, 'a:3:{s:2:"id";s:2:"29";s:9:"component";s:0:"";s:6:"itemid";s:1:"0";}', 1445525278, 'web', '109.87.201.130', NULL),
+(1120, '\\core\\event\\user_enrolment_deleted', 'core', 'deleted', 'user_enrolment', 'user_enrolments', 25, 'd', 0, 196, 50, 6, 22, 6, 41, 0, 'a:2:{s:13:"userenrolment";a:12:{s:2:"id";s:2:"25";s:6:"status";s:1:"0";s:7:"enrolid";s:2:"15";s:6:"userid";s:2:"41";s:9:"timestart";s:10:"1445523787";s:7:"timeend";s:10:"2147483647";s:10:"modifierid";s:1:"2";s:11:"timecreated";s:10:"1445523787";s:12:"timemodified";s:10:"1445523787";s:8:"courseid";s:1:"6";s:5:"enrol";s:4:"self";s:9:"lastenrol";b:1;}s:5:"enrol";s:4:"self";}', 1445525278, 'web', '109.87.201.130', NULL),
+(1121, '\\core\\event\\role_unassigned', 'core', 'unassigned', 'role', 'role', 4, 'd', 0, 196, 50, 6, 22, 6, 41, 0, 'a:3:{s:2:"id";s:2:"30";s:9:"component";s:0:"";s:6:"itemid";s:1:"0";}', 1445525377, 'web', '109.87.201.130', NULL),
+(1122, '\\core\\event\\user_enrolment_deleted', 'core', 'deleted', 'user_enrolment', 'user_enrolments', 26, 'd', 0, 196, 50, 6, 22, 6, 41, 0, 'a:2:{s:13:"userenrolment";a:12:{s:2:"id";s:2:"26";s:6:"status";s:1:"0";s:7:"enrolid";s:2:"15";s:6:"userid";s:2:"41";s:9:"timestart";s:10:"1445525293";s:7:"timeend";s:10:"2147483647";s:10:"modifierid";s:1:"2";s:11:"timecreated";s:10:"1445525293";s:12:"timemodified";s:10:"1445525293";s:8:"courseid";s:1:"6";s:5:"enrol";s:4:"self";s:9:"lastenrol";b:1;}s:5:"enrol";s:4:"self";}', 1445525377, 'web', '109.87.201.130', NULL),
+(1123, '\\core\\event\\role_unassigned', 'core', 'unassigned', 'role', 'role', 4, 'd', 0, 196, 50, 6, 22, 6, 41, 0, 'a:3:{s:2:"id";s:2:"31";s:9:"component";s:0:"";s:6:"itemid";s:1:"0";}', 1445525407, 'web', '109.87.201.130', NULL),
+(1124, '\\core\\event\\user_enrolment_deleted', 'core', 'deleted', 'user_enrolment', 'user_enrolments', 27, 'd', 0, 196, 50, 6, 22, 6, 41, 0, 'a:2:{s:13:"userenrolment";a:12:{s:2:"id";s:2:"27";s:6:"status";s:1:"0";s:7:"enrolid";s:2:"15";s:6:"userid";s:2:"41";s:9:"timestart";s:10:"1445525386";s:7:"timeend";s:10:"2147483647";s:10:"modifierid";s:1:"2";s:11:"timecreated";s:10:"1445525386";s:12:"timemodified";s:10:"1445525386";s:8:"courseid";s:1:"6";s:5:"enrol";s:4:"self";s:9:"lastenrol";b:1;}s:5:"enrol";s:4:"self";}', 1445525407, 'web', '109.87.201.130', NULL),
+(1125, '\\core\\event\\user_loggedout', 'core', 'loggedout', 'user', 'user', 22, 'r', 0, 1, 10, 0, 22, 0, NULL, 0, 'a:1:{s:9:"sessionid";s:26:"1sto6bges6e2l7rufj2l9pg5n3";}', 1445525462, 'web', '109.87.201.130', NULL),
+(1126, '\\core\\event\\user_loggedin', 'core', 'loggedin', 'user', 'user', 41, 'r', 0, 1, 10, 0, 41, 0, NULL, 0, 'a:1:{s:8:"username";s:16:"sirromas@ukr.net";}', 1445525470, 'web', '109.87.201.130', NULL),
+(1127, '\\core\\event\\course_viewed', 'core', 'viewed', 'course', NULL, NULL, 'r', 2, 190, 50, 5, 41, 5, NULL, 0, 'N;', 1445525477, 'web', '109.87.201.130', NULL),
+(1128, '\\core\\event\\user_loggedout', 'core', 'loggedout', 'user', 'user', 41, 'r', 0, 1, 10, 0, 41, 0, NULL, 0, 'a:1:{s:9:"sessionid";s:26:"o5snuffhffch01qql37r2a33d5";}', 1445525496, 'web', '109.87.201.130', NULL),
+(1129, '\\core\\event\\user_loggedin', 'core', 'loggedin', 'user', 'user', 41, 'r', 0, 1, 10, 0, 41, 0, NULL, 0, 'a:1:{s:8:"username";s:16:"sirromas@ukr.net";}', 1445525506, 'web', '109.87.201.130', NULL),
+(1130, '\\core\\event\\user_loggedin', 'core', 'loggedin', 'user', 'user', 41, 'r', 0, 1, 10, 0, 41, 0, NULL, 0, 'a:1:{s:8:"username";s:16:"sirromas@ukr.net";}', 1445525528, 'web', '109.87.201.130', NULL),
+(1131, '\\core\\event\\course_viewed', 'core', 'viewed', 'course', NULL, NULL, 'r', 2, 190, 50, 5, 41, 5, NULL, 0, 'N;', 1445525551, 'web', '109.87.201.130', NULL),
+(1132, '\\core\\event\\user_loggedout', 'core', 'loggedout', 'user', 'user', 41, 'r', 0, 1, 10, 0, 41, 0, NULL, 0, 'a:1:{s:9:"sessionid";s:26:"p4rm77ctp92c93n050oh41q4h7";}', 1445525630, 'web', '109.87.201.130', NULL),
+(1133, '\\core\\event\\user_loggedin', 'core', 'loggedin', 'user', 'user', 22, 'r', 0, 1, 10, 0, 22, 0, NULL, 0, 'a:1:{s:8:"username";s:7:"manager";}', 1445525641, 'web', '109.87.201.130', NULL),
+(1134, '\\core\\event\\course_viewed', 'core', 'viewed', 'course', NULL, NULL, 'r', 2, 196, 50, 6, 22, 6, NULL, 0, 'N;', 1445525656, 'web', '109.87.201.130', NULL),
+(1135, '\\core\\event\\course_viewed', 'core', 'viewed', 'course', NULL, NULL, 'r', 2, 196, 50, 6, 22, 6, NULL, 0, 'N;', 1445525669, 'web', '109.87.201.130', NULL),
+(1136, '\\core\\event\\course_viewed', 'core', 'viewed', 'course', NULL, NULL, 'r', 2, 196, 50, 6, 22, 6, NULL, 0, 'N;', 1445525688, 'web', '109.87.201.130', NULL),
+(1137, '\\core\\event\\user_loggedout', 'core', 'loggedout', 'user', 'user', 22, 'r', 0, 1, 10, 0, 22, 0, NULL, 0, 'a:1:{s:9:"sessionid";s:26:"lrtcaj6qafo50le0fr58naikc0";}', 1445525784, 'web', '109.87.201.130', NULL),
+(1138, '\\core\\event\\user_loggedin', 'core', 'loggedin', 'user', 'user', 41, 'r', 0, 1, 10, 0, 41, 0, NULL, 0, 'a:1:{s:8:"username";s:16:"sirromas@ukr.net";}', 1445525792, 'web', '109.87.201.130', NULL),
+(1139, '\\core\\event\\course_viewed', 'core', 'viewed', 'course', NULL, NULL, 'r', 2, 196, 50, 6, 41, 6, NULL, 0, 'N;', 1445525832, 'web', '109.87.201.130', NULL),
+(1140, '\\core\\event\\user_loggedout', 'core', 'loggedout', 'user', 'user', 41, 'r', 0, 1, 10, 0, 41, 0, NULL, 0, 'a:1:{s:9:"sessionid";s:26:"8710mghb70vimq45e3b0639482";}', 1445526124, 'web', '109.87.201.130', NULL),
+(1141, '\\core\\event\\user_loggedin', 'core', 'loggedin', 'user', 'user', 22, 'r', 0, 1, 10, 0, 22, 0, NULL, 0, 'a:1:{s:8:"username";s:7:"manager";}', 1445526135, 'web', '109.87.201.130', NULL),
+(1142, '\\core\\event\\course_viewed', 'core', 'viewed', 'course', NULL, NULL, 'r', 2, 196, 50, 6, 22, 6, NULL, 0, 'N;', 1445526158, 'web', '109.87.201.130', NULL),
+(1143, '\\core\\event\\role_unassigned', 'core', 'unassigned', 'role', 'role', 4, 'd', 0, 196, 50, 6, 22, 6, 41, 0, 'a:3:{s:2:"id";s:2:"32";s:9:"component";s:0:"";s:6:"itemid";s:1:"0";}', 1445526168, 'web', '109.87.201.130', NULL),
+(1144, '\\core\\event\\user_enrolment_deleted', 'core', 'deleted', 'user_enrolment', 'user_enrolments', 28, 'd', 0, 196, 50, 6, 22, 6, 41, 0, 'a:2:{s:13:"userenrolment";a:12:{s:2:"id";s:2:"28";s:6:"status";s:1:"0";s:7:"enrolid";s:2:"15";s:6:"userid";s:2:"41";s:9:"timestart";s:10:"1445525441";s:7:"timeend";s:10:"2147483647";s:10:"modifierid";s:1:"2";s:11:"timecreated";s:10:"1445525441";s:12:"timemodified";s:10:"1445525441";s:8:"courseid";s:1:"6";s:5:"enrol";s:4:"self";s:9:"lastenrol";b:1;}s:5:"enrol";s:4:"self";}', 1445526168, 'web', '109.87.201.130', NULL),
+(1145, '\\core\\event\\role_unassigned', 'core', 'unassigned', 'role', 'role', 4, 'd', 0, 196, 50, 6, 22, 6, 41, 0, 'a:3:{s:2:"id";s:2:"33";s:9:"component";s:0:"";s:6:"itemid";s:1:"0";}', 1445526386, 'web', '109.87.201.130', NULL),
+(1146, '\\core\\event\\user_enrolment_deleted', 'core', 'deleted', 'user_enrolment', 'user_enrolments', 29, 'd', 0, 196, 50, 6, 22, 6, 41, 0, 'a:2:{s:13:"userenrolment";a:12:{s:2:"id";s:2:"29";s:6:"status";s:1:"0";s:7:"enrolid";s:2:"15";s:6:"userid";s:2:"41";s:9:"timestart";s:10:"1445526180";s:7:"timeend";s:10:"2147483647";s:10:"modifierid";s:1:"2";s:11:"timecreated";s:10:"1445526180";s:12:"timemodified";s:10:"1445526180";s:8:"courseid";s:1:"6";s:5:"enrol";s:4:"self";s:9:"lastenrol";b:1;}s:5:"enrol";s:4:"self";}', 1445526386, 'web', '109.87.201.130', NULL),
+(1147, '\\core\\event\\user_loggedout', 'core', 'loggedout', 'user', 'user', 22, 'r', 0, 1, 10, 0, 22, 0, NULL, 0, 'a:1:{s:9:"sessionid";s:26:"6dpit4ali4nsvbm8v64rkn2hk2";}', 1445526422, 'web', '109.87.201.130', NULL),
+(1148, '\\core\\event\\user_loggedin', 'core', 'loggedin', 'user', 'user', 41, 'r', 0, 1, 10, 0, 41, 0, NULL, 0, 'a:1:{s:8:"username";s:16:"sirromas@ukr.net";}', 1445526429, 'web', '109.87.201.130', NULL),
+(1149, '\\core\\event\\course_viewed', 'core', 'viewed', 'course', NULL, NULL, 'r', 2, 196, 50, 6, 41, 6, NULL, 0, 'N;', 1445526435, 'web', '109.87.201.130', NULL),
+(1150, '\\core\\event\\course_viewed', 'core', 'viewed', 'course', NULL, NULL, 'r', 2, 190, 50, 5, 41, 5, NULL, 0, 'N;', 1445526440, 'web', '109.87.201.130', NULL),
+(1151, '\\core\\event\\user_loggedout', 'core', 'loggedout', 'user', 'user', 41, 'r', 0, 1, 10, 0, 41, 0, NULL, 0, 'a:1:{s:9:"sessionid";s:26:"p63pj9isbd74lm0cjvkfeqnnm2";}', 1445526887, 'web', '109.87.201.130', NULL),
+(1152, '\\core\\event\\user_loggedin', 'core', 'loggedin', 'user', 'user', 22, 'r', 0, 1, 10, 0, 22, 0, NULL, 0, 'a:1:{s:8:"username";s:7:"manager";}', 1445526898, 'web', '109.87.201.130', NULL),
+(1153, '\\core\\event\\course_viewed', 'core', 'viewed', 'course', NULL, NULL, 'r', 2, 196, 50, 6, 22, 6, NULL, 0, 'N;', 1445526928, 'web', '109.87.201.130', NULL),
+(1154, '\\core\\event\\role_unassigned', 'core', 'unassigned', 'role', 'role', 4, 'd', 0, 196, 50, 6, 22, 6, 41, 0, 'a:3:{s:2:"id";s:2:"34";s:9:"component";s:0:"";s:6:"itemid";s:1:"0";}', 1445526940, 'web', '109.87.201.130', NULL),
+(1155, '\\core\\event\\user_enrolment_deleted', 'core', 'deleted', 'user_enrolment', 'user_enrolments', 30, 'd', 0, 196, 50, 6, 22, 6, 41, 0, 'a:2:{s:13:"userenrolment";a:12:{s:2:"id";s:2:"30";s:6:"status";s:1:"0";s:7:"enrolid";s:2:"13";s:6:"userid";s:2:"41";s:9:"timestart";s:10:"1445526396";s:7:"timeend";s:10:"2147483647";s:10:"modifierid";s:1:"2";s:11:"timecreated";s:10:"1445526396";s:12:"timemodified";s:10:"1445526396";s:8:"courseid";s:1:"6";s:5:"enrol";s:6:"manual";s:9:"lastenrol";b:1;}s:5:"enrol";s:6:"manual";}', 1445526940, 'web', '109.87.201.130', NULL),
+(1156, '\\core\\event\\user_loggedout', 'core', 'loggedout', 'user', 'user', 22, 'r', 0, 1, 10, 0, 22, 0, NULL, 0, 'a:1:{s:9:"sessionid";s:26:"1ekeqacc7mh2be2bt7r84lh7h5";}', 1445526944, 'web', '109.87.201.130', NULL),
+(1157, '\\core\\event\\user_loggedin', 'core', 'loggedin', 'user', 'user', 41, 'r', 0, 1, 10, 0, 41, 0, NULL, 0, 'a:1:{s:8:"username";s:16:"sirromas@ukr.net";}', 1445526953, 'web', '109.87.201.130', NULL),
+(1158, '\\core\\event\\user_loggedout', 'core', 'loggedout', 'user', 'user', 41, 'r', 0, 1, 10, 0, 41, 0, NULL, 0, 'a:1:{s:9:"sessionid";s:26:"lasvckdro47qrok7uf6b8n3984";}', 1445526960, 'web', '109.87.201.130', NULL),
+(1159, '\\core\\event\\user_loggedin', 'core', 'loggedin', 'user', 'user', 41, 'r', 0, 1, 10, 0, 41, 0, NULL, 0, 'a:1:{s:8:"username";s:16:"sirromas@ukr.net";}', 1445526978, 'web', '109.87.201.130', NULL),
+(1160, '\\core\\event\\user_loggedout', 'core', 'loggedout', 'user', 'user', 41, 'r', 0, 1, 10, 0, 41, 0, NULL, 0, 'a:1:{s:9:"sessionid";s:26:"kuu86s57fs3v2vbu5hksvp48p5";}', 1445526999, 'web', '109.87.201.130', NULL),
+(1161, '\\core\\event\\user_loggedin', 'core', 'loggedin', 'user', 'user', 22, 'r', 0, 1, 10, 0, 22, 0, NULL, 0, 'a:1:{s:8:"username";s:7:"manager";}', 1445527008, 'web', '109.87.201.130', NULL),
+(1162, '\\core\\event\\course_viewed', 'core', 'viewed', 'course', NULL, NULL, 'r', 2, 196, 50, 6, 22, 6, NULL, 0, 'N;', 1445527747, 'web', '109.87.201.130', NULL),
+(1163, '\\core\\event\\role_unassigned', 'core', 'unassigned', 'role', 'role', 4, 'd', 0, 196, 50, 6, 22, 6, 41, 0, 'a:3:{s:2:"id";s:2:"35";s:9:"component";s:0:"";s:6:"itemid";s:1:"0";}', 1445527770, 'web', '109.87.201.130', NULL),
+(1164, '\\core\\event\\user_enrolment_deleted', 'core', 'deleted', 'user_enrolment', 'user_enrolments', 31, 'd', 0, 196, 50, 6, 22, 6, 41, 0, 'a:2:{s:13:"userenrolment";a:12:{s:2:"id";s:2:"31";s:6:"status";s:1:"0";s:7:"enrolid";s:2:"13";s:6:"userid";s:2:"41";s:9:"timestart";s:10:"1445526972";s:7:"timeend";s:10:"2147483647";s:10:"modifierid";s:1:"2";s:11:"timecreated";s:10:"1445526972";s:12:"timemodified";s:10:"1445526972";s:8:"courseid";s:1:"6";s:5:"enrol";s:6:"manual";s:9:"lastenrol";b:1;}s:5:"enrol";s:6:"manual";}', 1445527770, 'web', '109.87.201.130', NULL),
+(1165, '\\core\\event\\user_loggedout', 'core', 'loggedout', 'user', 'user', 22, 'r', 0, 1, 10, 0, 22, 0, NULL, 0, 'a:1:{s:9:"sessionid";s:26:"laql75msolq2vce8153o6v9325";}', 1445529338, 'web', '109.87.201.130', NULL),
+(1166, '\\core\\event\\user_loggedin', 'core', 'loggedin', 'user', 'user', 41, 'r', 0, 1, 10, 0, 41, 0, NULL, 0, 'a:1:{s:8:"username";s:16:"sirromas@ukr.net";}', 1445529354, 'web', '109.87.201.130', NULL),
+(1167, '\\core\\event\\course_viewed', 'core', 'viewed', 'course', NULL, NULL, 'r', 2, 196, 50, 6, 41, 6, NULL, 0, 'N;', 1445529365, 'web', '109.87.201.130', NULL),
+(1168, '\\core\\event\\course_viewed', 'core', 'viewed', 'course', NULL, NULL, 'r', 2, 196, 50, 6, 41, 6, NULL, 0, 'N;', 1445529376, 'web', '109.87.201.130', NULL),
+(1169, '\\core\\event\\user_loggedout', 'core', 'loggedout', 'user', 'user', 41, 'r', 0, 1, 10, 0, 41, 0, NULL, 0, 'a:1:{s:9:"sessionid";s:26:"naj6a0ikcgvlk4bcc5akm8q013";}', 1445529413, 'web', '109.87.201.130', NULL),
+(1170, '\\core\\event\\user_loggedin', 'core', 'loggedin', 'user', 'user', 22, 'r', 0, 1, 10, 0, 22, 0, NULL, 0, 'a:1:{s:8:"username";s:7:"manager";}', 1445529422, 'web', '109.87.201.130', NULL),
+(1171, '\\core\\event\\course_viewed', 'core', 'viewed', 'course', NULL, NULL, 'r', 2, 196, 50, 6, 22, 6, NULL, 0, 'N;', 1445529458, 'web', '109.87.201.130', NULL),
+(1172, '\\core\\event\\course_viewed', 'core', 'viewed', 'course', NULL, NULL, 'r', 2, 196, 50, 6, 22, 6, NULL, 0, 'N;', 1445529470, 'web', '109.87.201.130', NULL),
+(1173, '\\core\\event\\course_viewed', 'core', 'viewed', 'course', NULL, NULL, 'r', 2, 55, 50, 3, 22, 3, NULL, 0, 'N;', 1445529647, 'web', '109.87.201.130', NULL),
+(1174, '\\core\\event\\course_viewed', 'core', 'viewed', 'course', NULL, NULL, 'r', 2, 190, 50, 5, 22, 5, NULL, 0, 'N;', 1445529748, 'web', '109.87.201.130', NULL),
+(1175, '\\core\\event\\course_viewed', 'core', 'viewed', 'course', NULL, NULL, 'r', 2, 190, 50, 5, 22, 5, NULL, 0, 'N;', 1445529760, 'web', '109.87.201.130', NULL),
+(1176, '\\core\\event\\course_viewed', 'core', 'viewed', 'course', NULL, NULL, 'r', 2, 190, 50, 5, 22, 5, NULL, 0, 'N;', 1445529774, 'web', '109.87.201.130', NULL),
+(1177, '\\core\\event\\course_viewed', 'core', 'viewed', 'course', NULL, NULL, 'r', 2, 196, 50, 6, 22, 6, NULL, 0, 'N;', 1445529785, 'web', '109.87.201.130', NULL),
+(1178, '\\core\\event\\course_viewed', 'core', 'viewed', 'course', NULL, NULL, 'r', 2, 190, 50, 5, 22, 5, NULL, 0, 'N;', 1445532430, 'web', '109.87.201.130', NULL),
+(1179, '\\core\\event\\course_viewed', 'core', 'viewed', 'course', NULL, NULL, 'r', 2, 190, 50, 5, 22, 5, NULL, 0, 'N;', 1445532440, 'web', '109.87.201.130', NULL),
+(1180, '\\core\\event\\course_viewed', 'core', 'viewed', 'course', NULL, NULL, 'r', 2, 196, 50, 6, 22, 6, NULL, 0, 'N;', 1445532445, 'web', '109.87.201.130', NULL),
+(1181, '\\core\\event\\user_loggedout', 'core', 'loggedout', 'user', 'user', 22, 'r', 0, 1, 10, 0, 22, 0, NULL, 0, 'a:1:{s:9:"sessionid";s:26:"tpv8hlbupjhstpc7tcvuuctmt2";}', 1445535126, 'web', '109.87.201.130', NULL),
+(1182, '\\core\\event\\user_loggedin', 'core', 'loggedin', 'user', 'user', 41, 'r', 0, 1, 10, 0, 41, 0, NULL, 0, 'a:1:{s:8:"username";s:16:"sirromas@ukr.net";}', 1445535134, 'web', '109.87.201.130', NULL),
+(1183, '\\core\\event\\course_viewed', 'core', 'viewed', 'course', NULL, NULL, 'r', 2, 196, 50, 6, 41, 6, NULL, 0, 'N;', 1445535140, 'web', '109.87.201.130', NULL),
+(1184, '\\core\\event\\course_viewed', 'core', 'viewed', 'course', NULL, NULL, 'r', 2, 190, 50, 5, 41, 5, NULL, 0, 'N;', 1445535161, 'web', '109.87.201.130', NULL),
+(1185, '\\core\\event\\user_loggedout', 'core', 'loggedout', 'user', 'user', 41, 'r', 0, 1, 10, 0, 41, 0, NULL, 0, 'a:1:{s:9:"sessionid";s:26:"dip2q386co771cagu69nj3d336";}', 1445535166, 'web', '109.87.201.130', NULL),
+(1186, '\\core\\event\\user_loggedin', 'core', 'loggedin', 'user', 'user', 2, 'r', 0, 1, 10, 0, 2, 0, NULL, 0, 'a:1:{s:8:"username";s:5:"admin";}', 1445535173, 'web', '109.87.201.130', NULL),
+(1187, '\\core\\event\\course_viewed', 'core', 'viewed', 'course', NULL, NULL, 'r', 2, 196, 50, 6, 2, 6, NULL, 0, 'N;', 1445535189, 'web', '109.87.201.130', NULL),
+(1188, '\\core\\event\\user_loggedout', 'core', 'loggedout', 'user', 'user', 2, 'r', 0, 1, 10, 0, 2, 0, NULL, 0, 'a:1:{s:9:"sessionid";s:26:"33va4cc8o8dr8iu5ev2l0rrv73";}', 1445535252, 'web', '109.87.201.130', NULL),
+(1189, '\\core\\event\\user_loggedin', 'core', 'loggedin', 'user', 'user', 22, 'r', 0, 1, 10, 0, 22, 0, NULL, 0, 'a:1:{s:8:"username";s:7:"manager";}', 1445535264, 'web', '109.87.201.130', NULL),
+(1190, '\\core\\event\\course_viewed', 'core', 'viewed', 'course', NULL, NULL, 'r', 2, 55, 50, 3, 22, 3, NULL, 0, 'N;', 1445535279, 'web', '109.87.201.130', NULL),
+(1191, '\\core\\event\\course_viewed', 'core', 'viewed', 'course', NULL, NULL, 'r', 2, 184, 50, 4, 22, 4, NULL, 0, 'N;', 1445535328, 'web', '109.87.201.130', NULL),
+(1192, '\\core\\event\\course_viewed', 'core', 'viewed', 'course', NULL, NULL, 'r', 2, 184, 50, 4, 22, 4, NULL, 0, 'N;', 1445535337, 'web', '109.87.201.130', NULL),
+(1193, '\\core\\event\\course_viewed', 'core', 'viewed', 'course', NULL, NULL, 'r', 2, 190, 50, 5, 22, 5, NULL, 0, 'N;', 1445535341, 'web', '109.87.201.130', NULL),
+(1194, '\\core\\event\\course_viewed', 'core', 'viewed', 'course', NULL, NULL, 'r', 2, 196, 50, 6, 22, 6, NULL, 0, 'N;', 1445535453, 'web', '109.87.201.130', NULL),
+(1195, '\\core\\event\\group_created', 'core', 'created', 'group', 'groups', 9, 'c', 0, 196, 50, 6, 22, 6, NULL, 0, 'N;', 1445536430, 'web', '109.87.201.130', NULL),
+(1196, '\\core\\event\\group_deleted', 'core', 'deleted', 'group', 'groups', 9, 'd', 0, 196, 50, 6, 22, 6, NULL, 0, 'N;', 1445536834, 'web', '109.87.201.130', NULL),
+(1197, '\\core\\event\\course_viewed', 'core', 'viewed', 'course', NULL, NULL, 'r', 2, 196, 50, 6, 22, 6, NULL, 0, 'N;', 1445536928, 'web', '109.87.201.130', NULL),
+(1198, '\\core\\event\\group_deleted', 'core', 'deleted', 'group', 'groups', 7, 'd', 0, 196, 50, 6, 22, 6, NULL, 0, 'N;', 1445536952, 'web', '109.87.201.130', NULL),
+(1199, '\\core\\event\\course_viewed', 'core', 'viewed', 'course', NULL, NULL, 'r', 2, 196, 50, 6, 22, 6, NULL, 0, 'N;', 1445537012, 'web', '109.87.201.130', NULL),
+(1200, '\\core\\event\\course_viewed', 'core', 'viewed', 'course', NULL, NULL, 'r', 2, 196, 50, 6, 22, 6, NULL, 0, 'N;', 1445537054, 'web', '109.87.201.130', NULL),
+(1201, '\\core\\event\\course_viewed', 'core', 'viewed', 'course', NULL, NULL, 'r', 2, 196, 50, 6, 22, 6, NULL, 0, 'N;', 1445537087, 'web', '109.87.201.130', NULL),
+(1202, '\\core\\event\\course_viewed', 'core', 'viewed', 'course', NULL, NULL, 'r', 2, 196, 50, 6, 22, 6, NULL, 0, 'N;', 1445537140, 'web', '109.87.201.130', NULL),
+(1203, '\\core\\event\\group_deleted', 'core', 'deleted', 'group', 'groups', 8, 'd', 0, 196, 50, 6, 22, 6, NULL, 0, 'N;', 1445537160, 'web', '109.87.201.130', NULL),
+(1204, '\\core\\event\\group_member_added', 'core', 'added', 'group_member', 'groups', 10, 'c', 0, 196, 50, 6, 0, 6, 41, 0, 'a:2:{s:9:"component";s:0:"";s:6:"itemid";i:0;}', 1445537520, 'web', '109.87.201.130', NULL),
+(1205, '\\core\\event\\group_member_added', 'core', 'added', 'group_member', 'groups', 11, 'c', 0, 196, 50, 6, 0, 6, 41, 0, 'a:2:{s:9:"component";s:0:"";s:6:"itemid";i:0;}', 1445537520, 'web', '109.87.201.130', NULL),
+(1206, '\\core\\event\\user_loggedout', 'core', 'loggedout', 'user', 'user', 22, 'r', 0, 1, 10, 0, 22, 0, NULL, 0, 'a:1:{s:9:"sessionid";s:26:"c3n8mtpactttuek32uro1gcc96";}', 1445537560, 'web', '109.87.201.130', NULL),
+(1207, '\\core\\event\\user_loggedin', 'core', 'loggedin', 'user', 'user', 41, 'r', 0, 1, 10, 0, 41, 0, NULL, 0, 'a:1:{s:8:"username";s:16:"sirromas@ukr.net";}', 1445537568, 'web', '109.87.201.130', NULL),
+(1208, '\\core\\event\\user_loggedout', 'core', 'loggedout', 'user', 'user', 41, 'r', 0, 1, 10, 0, 41, 0, NULL, 0, 'a:1:{s:9:"sessionid";s:26:"rjlmqnhdftc8ra6vpu65kp38l4";}', 1445537574, 'web', '109.87.201.130', NULL),
+(1209, '\\core\\event\\user_loggedin', 'core', 'loggedin', 'user', 'user', 22, 'r', 0, 1, 10, 0, 22, 0, NULL, 0, 'a:1:{s:8:"username";s:7:"manager";}', 1445537582, 'web', '109.87.201.130', NULL),
+(1210, '\\core\\event\\course_viewed', 'core', 'viewed', 'course', NULL, NULL, 'r', 2, 196, 50, 6, 22, 6, NULL, 0, 'N;', 1445537595, 'web', '109.87.201.130', NULL),
+(1211, '\\core\\event\\course_viewed', 'core', 'viewed', 'course', NULL, NULL, 'r', 2, 196, 50, 6, 22, 6, NULL, 0, 'N;', 1445537604, 'web', '109.87.201.130', NULL),
+(1212, '\\core\\event\\group_created', 'core', 'created', 'group', 'groups', 12, 'c', 0, 196, 50, 6, 22, 6, NULL, 0, 'N;', 1445537674, 'web', '109.87.201.130', NULL),
+(1213, '\\core\\event\\group_member_removed', 'core', 'removed', 'group_member', 'groups', 10, 'd', 0, 196, 50, 6, 22, 6, 41, 0, 'N;', 1445537688, 'web', '109.87.201.130', NULL),
+(1214, '\\core\\event\\group_member_added', 'core', 'added', 'group_member', 'groups', 10, 'c', 0, 196, 50, 6, 22, 6, 41, 0, 'a:2:{s:9:"component";s:0:"";s:6:"itemid";i:0;}', 1445537692, 'web', '109.87.201.130', NULL),
+(1215, '\\core\\event\\group_member_removed', 'core', 'removed', 'group_member', 'groups', 10, 'd', 0, 196, 50, 6, 22, 6, 41, 0, 'N;', 1445537704, 'web', '109.87.201.130', NULL),
+(1216, '\\core\\event\\user_loggedout', 'core', 'loggedout', 'user', 'user', 22, 'r', 0, 1, 10, 0, 22, 0, NULL, 0, 'a:1:{s:9:"sessionid";s:26:"9f4ee84fu1l7emmauskdjgl243";}', 1445537749, 'web', '109.87.201.130', NULL),
+(1217, '\\core\\event\\user_loggedin', 'core', 'loggedin', 'user', 'user', 2, 'r', 0, 1, 10, 0, 2, 0, NULL, 0, 'a:1:{s:8:"username";s:5:"admin";}', 1445537755, 'web', '109.87.201.130', NULL),
+(1218, '\\core\\event\\course_viewed', 'core', 'viewed', 'course', NULL, NULL, 'r', 2, 196, 50, 6, 2, 6, NULL, 0, 'N;', 1445537766, 'web', '109.87.201.130', NULL),
+(1219, '\\core\\event\\group_deleted', 'core', 'deleted', 'group', 'groups', 10, 'd', 0, 196, 50, 6, 2, 6, NULL, 0, 'N;', 1445537790, 'web', '109.87.201.130', NULL),
+(1220, '\\core\\event\\group_deleted', 'core', 'deleted', 'group', 'groups', 11, 'd', 0, 196, 50, 6, 2, 6, NULL, 0, 'N;', 1445537790, 'web', '109.87.201.130', NULL),
+(1221, '\\core\\event\\group_member_added', 'core', 'added', 'group_member', 'groups', 13, 'c', 0, 196, 50, 6, 0, 6, 41, 0, 'a:2:{s:9:"component";s:0:"";s:6:"itemid";i:0;}', 1445537801, 'web', '109.87.201.130', NULL),
+(1222, '\\core\\event\\group_member_added', 'core', 'added', 'group_member', 'groups', 14, 'c', 0, 196, 50, 6, 0, 6, 41, 0, 'a:2:{s:9:"component";s:0:"";s:6:"itemid";i:0;}', 1445537802, 'web', '109.87.201.130', NULL),
+(1223, '\\core\\event\\group_deleted', 'core', 'deleted', 'group', 'groups', 12, 'd', 0, 196, 50, 6, 2, 6, NULL, 0, 'N;', 1445537823, 'web', '109.87.201.130', NULL),
+(1224, '\\core\\event\\user_created', 'core', 'created', 'user', 'user', 42, 'c', 0, 282, 30, 42, 0, 0, 42, 0, 'N;', 1445538116, 'web', '109.87.201.130', NULL),
+(1225, '\\core\\event\\user_loggedout', 'core', 'loggedout', 'user', 'user', 2, 'r', 0, 1, 10, 0, 2, 0, NULL, 0, 'a:1:{s:9:"sessionid";s:26:"qluuig9slulmlsjeu7jcqdjkp1";}', 1445538159, 'web', '109.87.201.130', NULL),
+(1226, '\\core\\event\\user_loggedin', 'core', 'loggedin', 'user', 'user', 22, 'r', 0, 1, 10, 0, 22, 0, NULL, 0, 'a:1:{s:8:"username";s:7:"manager";}', 1445538193, 'web', '109.87.201.130', NULL),
+(1227, '\\core\\event\\user_loggedout', 'core', 'loggedout', 'user', 'user', 22, 'r', 0, 1, 10, 0, 22, 0, NULL, 0, 'a:1:{s:9:"sessionid";s:26:"21edkq2fcot2hutmcoef55k3l6";}', 1445538222, 'web', '109.87.201.130', NULL),
+(1228, '\\core\\event\\user_loggedin', 'core', 'loggedin', 'user', 'user', 42, 'r', 0, 1, 10, 0, 42, 0, NULL, 0, 'a:1:{s:8:"username";s:17:"sirromas1@ukr.net";}', 1445538236, 'web', '109.87.201.130', NULL),
+(1229, '\\core\\event\\user_loggedout', 'core', 'loggedout', 'user', 'user', 42, 'r', 0, 1, 10, 0, 42, 0, NULL, 0, 'a:1:{s:9:"sessionid";s:26:"sgb6gtt2elargrbkgssot0c2r5";}', 1445538273, 'web', '109.87.201.130', NULL),
+(1230, '\\core\\event\\user_loggedin', 'core', 'loggedin', 'user', 'user', 22, 'r', 0, 1, 10, 0, 22, 0, NULL, 0, 'a:1:{s:8:"username";s:7:"manager";}', 1445538288, 'web', '109.87.201.130', NULL),
+(1231, '\\core\\event\\course_viewed', 'core', 'viewed', 'course', NULL, NULL, 'r', 2, 196, 50, 6, 22, 6, NULL, 0, 'N;', 1445538346, 'web', '109.87.201.130', NULL),
+(1232, '\\core\\event\\user_loggedin', 'core', 'loggedin', 'user', 'user', 2, 'r', 0, 1, 10, 0, 2, 0, NULL, 0, 'a:1:{s:8:"username";s:5:"admin";}', 1445569739, 'web', '109.87.201.130', NULL),
+(1233, '\\core\\event\\user_deleted', 'core', 'deleted', 'user', 'user', 42, 'd', 0, 282, 30, 42, 2, 0, 42, 0, 'a:5:{s:8:"username";s:17:"sirromas1@ukr.net";s:5:"email";s:17:"sirromas1@ukr.net";s:8:"idnumber";s:0:"";s:7:"picture";s:1:"0";s:10:"mnethostid";s:1:"1";}', 1445570495, 'web', '109.87.201.130', NULL),
+(1234, '\\core\\event\\role_unassigned', 'core', 'unassigned', 'role', 'role', 4, 'd', 0, 196, 50, 6, 2, 6, 41, 0, 'a:3:{s:2:"id";s:2:"36";s:9:"component";s:0:"";s:6:"itemid";s:1:"0";}', 1445570506, 'web', '109.87.201.130', NULL),
+(1235, '\\core\\event\\group_member_removed', 'core', 'removed', 'group_member', 'groups', 13, 'd', 0, 196, 50, 6, 2, 6, 41, 0, 'N;', 1445570506, 'web', '109.87.201.130', NULL),
+(1236, '\\core\\event\\group_member_removed', 'core', 'removed', 'group_member', 'groups', 14, 'd', 0, 196, 50, 6, 2, 6, 41, 0, 'N;', 1445570507, 'web', '109.87.201.130', NULL),
+(1237, '\\core\\event\\user_enrolment_deleted', 'core', 'deleted', 'user_enrolment', 'user_enrolments', 32, 'd', 0, 196, 50, 6, 2, 6, 41, 0, 'a:2:{s:13:"userenrolment";a:12:{s:2:"id";s:2:"32";s:6:"status";s:1:"0";s:7:"enrolid";s:2:"13";s:6:"userid";s:2:"41";s:9:"timestart";s:10:"1445529327";s:7:"timeend";s:10:"2147483647";s:10:"modifierid";s:1:"2";s:11:"timecreated";s:10:"1445529327";s:12:"timemodified";s:10:"1445529327";s:8:"courseid";s:1:"6";s:5:"enrol";s:6:"manual";s:9:"lastenrol";b:1;}s:5:"enrol";s:6:"manual";}', 1445570507, 'web', '109.87.201.130', NULL),
+(1238, '\\core\\event\\role_unassigned', 'core', 'unassigned', 'role', 'role', 4, 'd', 0, 190, 50, 5, 2, 5, 41, 0, 'a:3:{s:2:"id";s:2:"28";s:9:"component";s:0:"";s:6:"itemid";s:1:"0";}', 1445570508, 'web', '109.87.201.130', NULL),
+(1239, '\\core\\event\\user_enrolment_deleted', 'core', 'deleted', 'user_enrolment', 'user_enrolments', 24, 'd', 0, 190, 50, 5, 2, 5, 41, 0, 'a:2:{s:13:"userenrolment";a:12:{s:2:"id";s:2:"24";s:6:"status";s:1:"0";s:7:"enrolid";s:2:"16";s:6:"userid";s:2:"41";s:9:"timestart";s:10:"1445523508";s:7:"timeend";s:10:"2147483647";s:10:"modifierid";s:1:"2";s:11:"timecreated";s:10:"1445523508";s:12:"timemodified";s:10:"1445523508";s:8:"courseid";s:1:"5";s:5:"enrol";s:4:"self";s:9:"lastenrol";b:1;}s:5:"enrol";s:4:"self";}', 1445570508, 'web', '109.87.201.130', NULL),
+(1240, '\\core\\event\\user_deleted', 'core', 'deleted', 'user', 'user', 41, 'd', 0, 273, 30, 41, 2, 0, 41, 0, 'a:5:{s:8:"username";s:16:"sirromas@ukr.net";s:5:"email";s:16:"sirromas@ukr.net";s:8:"idnumber";s:0:"";s:7:"picture";s:1:"0";s:10:"mnethostid";s:1:"1";}', 1445570508, 'web', '109.87.201.130', NULL),
+(1241, '\\core\\event\\course_viewed', 'core', 'viewed', 'course', NULL, NULL, 'r', 2, 196, 50, 6, 2, 6, NULL, 0, 'N;', 1445570656, 'web', '109.87.201.130', NULL),
+(1242, '\\core\\event\\group_deleted', 'core', 'deleted', 'group', 'groups', 13, 'd', 0, 196, 50, 6, 2, 6, NULL, 0, 'N;', 1445570676, 'web', '109.87.201.130', NULL),
+(1243, '\\core\\event\\group_deleted', 'core', 'deleted', 'group', 'groups', 14, 'd', 0, 196, 50, 6, 2, 6, NULL, 0, 'N;', 1445570676, 'web', '109.87.201.130', NULL),
+(1244, '\\core\\event\\user_created', 'core', 'created', 'user', 'user', 43, 'c', 0, 289, 30, 43, 0, 0, 43, 0, 'N;', 1445573036, 'web', '109.87.201.130', NULL),
+(1245, '\\core\\event\\user_loggedin', 'core', 'loggedin', 'user', 'user', 43, 'r', 0, 1, 10, 0, 43, 0, NULL, 0, 'a:1:{s:8:"username";s:16:"sirromas@ukr.net";}', 1445573117, 'web', '109.87.201.130', NULL),
+(1246, '\\core\\event\\course_viewed', 'core', 'viewed', 'course', NULL, NULL, 'r', 2, 196, 50, 6, 43, 6, NULL, 0, 'N;', 1445573120, 'web', '109.87.201.130', NULL),
+(1247, '\\core\\event\\course_viewed', 'core', 'viewed', 'course', NULL, NULL, 'r', 2, 196, 50, 6, 2, 6, NULL, 0, 'N;', 1445573407, 'web', '109.87.201.130', NULL),
+(1248, '\\core\\event\\role_unassigned', 'core', 'unassigned', 'role', 'role', 4, 'd', 0, 196, 50, 6, 2, 6, 43, 0, 'a:3:{s:2:"id";s:2:"37";s:9:"component";s:0:"";s:6:"itemid";s:1:"0";}', 1445573429, 'web', '109.87.201.130', NULL);
+INSERT INTO `mdl_logstore_standard_log` (`id`, `eventname`, `component`, `action`, `target`, `objecttable`, `objectid`, `crud`, `edulevel`, `contextid`, `contextlevel`, `contextinstanceid`, `userid`, `courseid`, `relateduserid`, `anonymous`, `other`, `timecreated`, `origin`, `ip`, `realuserid`) VALUES
+(1249, '\\core\\event\\user_enrolment_deleted', 'core', 'deleted', 'user_enrolment', 'user_enrolments', 34, 'd', 0, 196, 50, 6, 2, 6, 43, 0, 'a:2:{s:13:"userenrolment";a:12:{s:2:"id";s:2:"34";s:6:"status";s:1:"0";s:7:"enrolid";s:2:"13";s:6:"userid";s:2:"43";s:9:"timestart";s:10:"1445573043";s:7:"timeend";s:10:"2147483647";s:10:"modifierid";s:1:"2";s:11:"timecreated";s:10:"1445573043";s:12:"timemodified";s:10:"1445573043";s:8:"courseid";s:1:"6";s:5:"enrol";s:6:"manual";s:9:"lastenrol";b:1;}s:5:"enrol";s:6:"manual";}', 1445573429, 'web', '109.87.201.130', NULL),
+(1250, '\\core\\event\\user_loggedout', 'core', 'loggedout', 'user', 'user', 2, 'r', 0, 1, 10, 0, 2, 0, NULL, 0, 'a:1:{s:9:"sessionid";s:26:"453h7obgbi3sejr9l86fd788n4";}', 1445573613, 'web', '109.87.201.130', NULL),
+(1251, '\\core\\event\\user_loggedout', 'core', 'loggedout', 'user', 'user', 43, 'r', 0, 1, 10, 0, 43, 0, NULL, 0, 'a:1:{s:9:"sessionid";s:26:"os7lkdd14fms1aqchg9kidvac0";}', 1445573891, 'web', '109.87.201.130', NULL),
+(1252, '\\core\\event\\user_loggedin', 'core', 'loggedin', 'user', 'user', 22, 'r', 0, 1, 10, 0, 22, 0, NULL, 0, 'a:1:{s:8:"username";s:7:"manager";}', 1445573937, 'web', '109.87.201.130', NULL),
+(1253, '\\core\\event\\course_viewed', 'core', 'viewed', 'course', NULL, NULL, 'r', 2, 196, 50, 6, 22, 6, NULL, 0, 'N;', 1445573948, 'web', '109.87.201.130', NULL),
+(1254, '\\core\\event\\role_unassigned', 'core', 'unassigned', 'role', 'role', 4, 'd', 0, 196, 50, 6, 22, 6, 43, 0, 'a:3:{s:2:"id";s:2:"38";s:9:"component";s:0:"";s:6:"itemid";s:1:"0";}', 1445573965, 'web', '109.87.201.130', NULL),
+(1255, '\\core\\event\\user_enrolment_deleted', 'core', 'deleted', 'user_enrolment', 'user_enrolments', 35, 'd', 0, 196, 50, 6, 22, 6, 43, 0, 'a:2:{s:13:"userenrolment";a:12:{s:2:"id";s:2:"35";s:6:"status";s:1:"0";s:7:"enrolid";s:2:"13";s:6:"userid";s:2:"43";s:9:"timestart";s:10:"1445573594";s:7:"timeend";s:10:"2147483647";s:10:"modifierid";s:1:"2";s:11:"timecreated";s:10:"1445573594";s:12:"timemodified";s:10:"1445573594";s:8:"courseid";s:1:"6";s:5:"enrol";s:6:"manual";s:9:"lastenrol";b:1;}s:5:"enrol";s:6:"manual";}', 1445573965, 'web', '109.87.201.130', NULL),
+(1256, '\\core\\event\\user_loggedout', 'core', 'loggedout', 'user', 'user', 22, 'r', 0, 1, 10, 0, 22, 0, NULL, 0, 'a:1:{s:9:"sessionid";s:26:"pqjvhpio0rs3jbmsveh0lfhh67";}', 1445573980, 'web', '109.87.201.130', NULL),
+(1257, '\\core\\event\\user_loggedin', 'core', 'loggedin', 'user', 'user', 2, 'r', 0, 1, 10, 0, 2, 0, NULL, 0, 'a:1:{s:8:"username";s:5:"admin";}', 1445573988, 'web', '109.87.201.130', NULL),
+(1258, '\\core\\event\\course_viewed', 'core', 'viewed', 'course', NULL, NULL, 'r', 2, 196, 50, 6, 2, 6, NULL, 0, 'N;', 1445574076, 'web', '109.87.201.130', NULL),
+(1259, '\\core\\event\\group_member_added', 'core', 'added', 'group_member', 'groups', 17, 'c', 0, 196, 50, 6, 2, 6, 43, 0, 'a:2:{s:9:"component";s:0:"";s:6:"itemid";i:0;}', 1445574093, 'web', '109.87.201.130', NULL),
+(1260, '\\core\\event\\group_member_added', 'core', 'added', 'group_member', 'groups', 18, 'c', 0, 196, 50, 6, 2, 6, 43, 0, 'a:2:{s:9:"component";s:0:"";s:6:"itemid";i:0;}', 1445574093, 'web', '109.87.201.130', NULL),
+(1261, '\\core\\event\\course_viewed', 'core', 'viewed', 'course', NULL, NULL, 'r', 2, 196, 50, 6, 2, 6, NULL, 0, 'N;', 1445574286, 'web', '109.87.201.130', NULL),
+(1262, '\\core\\event\\user_loggedin', 'core', 'loggedin', 'user', 'user', 43, 'r', 0, 1, 10, 0, 43, 0, NULL, 0, 'a:1:{s:8:"username";s:16:"sirromas@ukr.net";}', 1445574392, 'web', '109.87.201.130', NULL),
+(1263, '\\core\\event\\group_member_removed', 'core', 'removed', 'group_member', 'groups', 17, 'd', 0, 196, 50, 6, 2, 6, 43, 0, 'N;', 1445574631, 'web', '109.87.201.130', NULL),
+(1264, '\\core\\event\\user_loggedout', 'core', 'loggedout', 'user', 'user', 43, 'r', 0, 1, 10, 0, 43, 0, NULL, 0, 'a:1:{s:9:"sessionid";s:26:"gi3c5m1fk83j30u9k6fq73a5h0";}', 1445575207, 'web', '109.87.201.130', NULL),
+(1265, '\\core\\event\\role_unassigned', 'core', 'unassigned', 'role', 'role', 4, 'd', 0, 196, 50, 6, 2, 6, 43, 0, 'a:3:{s:2:"id";s:2:"39";s:9:"component";s:0:"";s:6:"itemid";s:1:"0";}', 1445575239, 'web', '109.87.201.130', NULL),
+(1266, '\\core\\event\\group_member_removed', 'core', 'removed', 'group_member', 'groups', 18, 'd', 0, 196, 50, 6, 2, 6, 43, 0, 'N;', 1445575239, 'web', '109.87.201.130', NULL),
+(1267, '\\core\\event\\user_enrolment_deleted', 'core', 'deleted', 'user_enrolment', 'user_enrolments', 37, 'd', 0, 196, 50, 6, 2, 6, 43, 0, 'a:2:{s:13:"userenrolment";a:12:{s:2:"id";s:2:"37";s:6:"status";s:1:"0";s:7:"enrolid";s:2:"13";s:6:"userid";s:2:"43";s:9:"timestart";s:10:"1445574092";s:7:"timeend";s:10:"2147483647";s:10:"modifierid";s:1:"2";s:11:"timecreated";s:10:"1445574092";s:12:"timemodified";s:10:"1445574092";s:8:"courseid";s:1:"6";s:5:"enrol";s:6:"manual";s:9:"lastenrol";b:1;}s:5:"enrol";s:6:"manual";}', 1445575240, 'web', '109.87.201.130', NULL),
+(1268, '\\core\\event\\user_deleted', 'core', 'deleted', 'user', 'user', 43, 'd', 0, 289, 30, 43, 2, 0, 43, 0, 'a:5:{s:8:"username";s:16:"sirromas@ukr.net";s:5:"email";s:16:"sirromas@ukr.net";s:8:"idnumber";s:0:"";s:7:"picture";s:1:"0";s:10:"mnethostid";s:1:"1";}', 1445575240, 'web', '109.87.201.130', NULL),
+(1269, '\\core\\event\\user_loggedout', 'core', 'loggedout', 'user', 'user', 2, 'r', 0, 1, 10, 0, 2, 0, NULL, 0, 'a:1:{s:9:"sessionid";s:26:"ic537f5k9of5fi5umlnhakc264";}', 1445575246, 'web', '109.87.201.130', NULL),
+(1270, '\\core\\event\\user_created', 'core', 'created', 'user', 'user', 44, 'c', 0, 296, 30, 44, 0, 0, 44, 0, 'N;', 1445575284, 'web', '109.87.201.130', NULL),
+(1271, '\\core\\event\\user_loggedin', 'core', 'loggedin', 'user', 'user', 2, 'r', 0, 1, 10, 0, 2, 0, NULL, 0, 'a:1:{s:8:"username";s:5:"admin";}', 1445575335, 'web', '109.87.201.130', NULL),
+(1272, '\\core\\event\\course_viewed', 'core', 'viewed', 'course', NULL, NULL, 'r', 2, 196, 50, 6, 2, 6, NULL, 0, 'N;', 1445575371, 'web', '109.87.201.130', NULL),
+(1273, '\\core\\event\\course_viewed', 'core', 'viewed', 'course', NULL, NULL, 'r', 2, 196, 50, 6, 2, 6, NULL, 0, 'N;', 1445575434, 'web', '109.87.201.130', NULL),
+(1274, '\\core\\event\\group_deleted', 'core', 'deleted', 'group', 'groups', 17, 'd', 0, 196, 50, 6, 2, 6, NULL, 0, 'N;', 1445575582, 'web', '109.87.201.130', NULL),
+(1275, '\\core\\event\\group_deleted', 'core', 'deleted', 'group', 'groups', 18, 'd', 0, 196, 50, 6, 2, 6, NULL, 0, 'N;', 1445575582, 'web', '109.87.201.130', NULL),
+(1276, '\\core\\event\\role_unassigned', 'core', 'unassigned', 'role', 'role', 4, 'd', 0, 196, 50, 6, 2, 6, 44, 0, 'a:3:{s:2:"id";s:2:"40";s:9:"component";s:0:"";s:6:"itemid";s:1:"0";}', 1445575617, 'web', '109.87.201.130', NULL),
+(1277, '\\core\\event\\user_enrolment_deleted', 'core', 'deleted', 'user_enrolment', 'user_enrolments', 38, 'd', 0, 196, 50, 6, 2, 6, 44, 0, 'a:2:{s:13:"userenrolment";a:12:{s:2:"id";s:2:"38";s:6:"status";s:1:"0";s:7:"enrolid";s:2:"13";s:6:"userid";s:2:"44";s:9:"timestart";s:10:"1445575286";s:7:"timeend";s:10:"2147483647";s:10:"modifierid";s:1:"2";s:11:"timecreated";s:10:"1445575286";s:12:"timemodified";s:10:"1445575286";s:8:"courseid";s:1:"6";s:5:"enrol";s:6:"manual";s:9:"lastenrol";b:1;}s:5:"enrol";s:6:"manual";}', 1445575617, 'web', '109.87.201.130', NULL),
+(1278, '\\core\\event\\user_deleted', 'core', 'deleted', 'user', 'user', 44, 'd', 0, 296, 30, 44, 2, 0, 44, 0, 'a:5:{s:8:"username";s:16:"sirromas@ukr.net";s:5:"email";s:16:"sirromas@ukr.net";s:8:"idnumber";s:0:"";s:7:"picture";s:1:"0";s:10:"mnethostid";s:1:"1";}', 1445575617, 'web', '109.87.201.130', NULL),
+(1279, '\\core\\event\\user_created', 'core', 'created', 'user', 'user', 46, 'c', 0, 297, 30, 46, 0, 0, 46, 0, 'N;', 1445575731, 'web', '109.87.201.130', NULL),
+(1280, '\\core\\event\\course_viewed', 'core', 'viewed', 'course', NULL, NULL, 'r', 2, 196, 50, 6, 2, 6, NULL, 0, 'N;', 1445575798, 'web', '109.87.201.130', NULL),
+(1281, '\\core\\event\\role_unassigned', 'core', 'unassigned', 'role', 'role', 4, 'd', 0, 196, 50, 6, 2, 6, 46, 0, 'a:3:{s:2:"id";s:2:"41";s:9:"component";s:0:"";s:6:"itemid";s:1:"0";}', 1445576345, 'web', '109.87.201.130', NULL),
+(1282, '\\core\\event\\user_enrolment_deleted', 'core', 'deleted', 'user_enrolment', 'user_enrolments', 39, 'd', 0, 196, 50, 6, 2, 6, 46, 0, 'a:2:{s:13:"userenrolment";a:12:{s:2:"id";s:2:"39";s:6:"status";s:1:"0";s:7:"enrolid";s:2:"13";s:6:"userid";s:2:"46";s:9:"timestart";s:10:"1445575738";s:7:"timeend";s:10:"2147483647";s:10:"modifierid";s:1:"2";s:11:"timecreated";s:10:"1445575738";s:12:"timemodified";s:10:"1445575738";s:8:"courseid";s:1:"6";s:5:"enrol";s:6:"manual";s:9:"lastenrol";b:1;}s:5:"enrol";s:6:"manual";}', 1445576345, 'web', '109.87.201.130', NULL),
+(1283, '\\core\\event\\user_deleted', 'core', 'deleted', 'user', 'user', 46, 'd', 0, 297, 30, 46, 2, 0, 46, 0, 'a:5:{s:8:"username";s:16:"sirromas@ukr.net";s:5:"email";s:16:"sirromas@ukr.net";s:8:"idnumber";s:0:"";s:7:"picture";s:1:"0";s:10:"mnethostid";s:1:"1";}', 1445576345, 'web', '109.87.201.130', NULL),
+(1284, '\\core\\event\\user_created', 'core', 'created', 'user', 'user', 47, 'c', 0, 298, 30, 47, 0, 0, 47, 0, 'N;', 1445576359, 'web', '109.87.201.130', NULL),
+(1285, '\\core\\event\\role_unassigned', 'core', 'unassigned', 'role', 'role', 4, 'd', 0, 196, 50, 6, 2, 6, 47, 0, 'a:3:{s:2:"id";s:2:"42";s:9:"component";s:0:"";s:6:"itemid";s:1:"0";}', 1445576403, 'web', '109.87.201.130', NULL),
+(1286, '\\core\\event\\user_enrolment_deleted', 'core', 'deleted', 'user_enrolment', 'user_enrolments', 40, 'd', 0, 196, 50, 6, 2, 6, 47, 0, 'a:2:{s:13:"userenrolment";a:12:{s:2:"id";s:2:"40";s:6:"status";s:1:"0";s:7:"enrolid";s:2:"13";s:6:"userid";s:2:"47";s:9:"timestart";s:10:"1445576367";s:7:"timeend";s:10:"2147483647";s:10:"modifierid";s:1:"2";s:11:"timecreated";s:10:"1445576367";s:12:"timemodified";s:10:"1445576367";s:8:"courseid";s:1:"6";s:5:"enrol";s:6:"manual";s:9:"lastenrol";b:1;}s:5:"enrol";s:6:"manual";}', 1445576403, 'web', '109.87.201.130', NULL),
+(1287, '\\core\\event\\user_deleted', 'core', 'deleted', 'user', 'user', 47, 'd', 0, 298, 30, 47, 2, 0, 47, 0, 'a:5:{s:8:"username";s:16:"sirromas@ukr.net";s:5:"email";s:16:"sirromas@ukr.net";s:8:"idnumber";s:0:"";s:7:"picture";s:1:"0";s:10:"mnethostid";s:1:"1";}', 1445576403, 'web', '109.87.201.130', NULL),
+(1288, '\\core\\event\\user_created', 'core', 'created', 'user', 'user', 48, 'c', 0, 299, 30, 48, 0, 0, 48, 0, 'N;', 1445576435, 'web', '109.87.201.130', NULL),
+(1289, '\\core\\event\\role_unassigned', 'core', 'unassigned', 'role', 'role', 4, 'd', 0, 196, 50, 6, 2, 6, 48, 0, 'a:3:{s:2:"id";s:2:"43";s:9:"component";s:0:"";s:6:"itemid";s:1:"0";}', 1445576578, 'web', '109.87.201.130', NULL),
+(1290, '\\core\\event\\user_enrolment_deleted', 'core', 'deleted', 'user_enrolment', 'user_enrolments', 41, 'd', 0, 196, 50, 6, 2, 6, 48, 0, 'a:2:{s:13:"userenrolment";a:12:{s:2:"id";s:2:"41";s:6:"status";s:1:"0";s:7:"enrolid";s:2:"13";s:6:"userid";s:2:"48";s:9:"timestart";s:10:"1445576437";s:7:"timeend";s:10:"2147483647";s:10:"modifierid";s:1:"2";s:11:"timecreated";s:10:"1445576437";s:12:"timemodified";s:10:"1445576437";s:8:"courseid";s:1:"6";s:5:"enrol";s:6:"manual";s:9:"lastenrol";b:1;}s:5:"enrol";s:6:"manual";}', 1445576578, 'web', '109.87.201.130', NULL),
+(1291, '\\core\\event\\user_deleted', 'core', 'deleted', 'user', 'user', 48, 'd', 0, 299, 30, 48, 2, 0, 48, 0, 'a:5:{s:8:"username";s:16:"sirromas@ukr.net";s:5:"email";s:16:"sirromas@ukr.net";s:8:"idnumber";s:0:"";s:7:"picture";s:1:"0";s:10:"mnethostid";s:1:"1";}', 1445576578, 'web', '109.87.201.130', NULL),
+(1292, '\\core\\event\\user_created', 'core', 'created', 'user', 'user', 49, 'c', 0, 300, 30, 49, 0, 0, 49, 0, 'N;', 1445576659, 'web', '109.87.201.130', NULL),
+(1293, '\\core\\event\\role_unassigned', 'core', 'unassigned', 'role', 'role', 4, 'd', 0, 196, 50, 6, 2, 6, 49, 0, 'a:3:{s:2:"id";s:2:"44";s:9:"component";s:0:"";s:6:"itemid";s:1:"0";}', 1445576816, 'web', '109.87.201.130', NULL),
+(1294, '\\core\\event\\user_enrolment_deleted', 'core', 'deleted', 'user_enrolment', 'user_enrolments', 42, 'd', 0, 196, 50, 6, 2, 6, 49, 0, 'a:2:{s:13:"userenrolment";a:12:{s:2:"id";s:2:"42";s:6:"status";s:1:"0";s:7:"enrolid";s:2:"13";s:6:"userid";s:2:"49";s:9:"timestart";s:10:"1445576667";s:7:"timeend";s:10:"2147483647";s:10:"modifierid";s:1:"2";s:11:"timecreated";s:10:"1445576667";s:12:"timemodified";s:10:"1445576667";s:8:"courseid";s:1:"6";s:5:"enrol";s:6:"manual";s:9:"lastenrol";b:1;}s:5:"enrol";s:6:"manual";}', 1445576816, 'web', '109.87.201.130', NULL),
+(1295, '\\core\\event\\user_deleted', 'core', 'deleted', 'user', 'user', 49, 'd', 0, 300, 30, 49, 2, 0, 49, 0, 'a:5:{s:8:"username";s:16:"sirromas@ukr.net";s:5:"email";s:16:"sirromas@ukr.net";s:8:"idnumber";s:0:"";s:7:"picture";s:1:"0";s:10:"mnethostid";s:1:"1";}', 1445576816, 'web', '109.87.201.130', NULL),
+(1296, '\\core\\event\\user_created', 'core', 'created', 'user', 'user', 50, 'c', 0, 301, 30, 50, 0, 0, 50, 0, 'N;', 1445576917, 'web', '109.87.201.130', NULL),
+(1297, '\\core\\event\\role_unassigned', 'core', 'unassigned', 'role', 'role', 4, 'd', 0, 196, 50, 6, 2, 6, 50, 0, 'a:3:{s:2:"id";s:2:"45";s:9:"component";s:0:"";s:6:"itemid";s:1:"0";}', 1445577580, 'web', '109.87.201.130', NULL),
+(1298, '\\core\\event\\user_enrolment_deleted', 'core', 'deleted', 'user_enrolment', 'user_enrolments', 43, 'd', 0, 196, 50, 6, 2, 6, 50, 0, 'a:2:{s:13:"userenrolment";a:12:{s:2:"id";s:2:"43";s:6:"status";s:1:"0";s:7:"enrolid";s:2:"13";s:6:"userid";s:2:"50";s:9:"timestart";s:10:"1445576924";s:7:"timeend";s:10:"2147483647";s:10:"modifierid";s:1:"2";s:11:"timecreated";s:10:"1445576924";s:12:"timemodified";s:10:"1445576924";s:8:"courseid";s:1:"6";s:5:"enrol";s:6:"manual";s:9:"lastenrol";b:1;}s:5:"enrol";s:6:"manual";}', 1445577580, 'web', '109.87.201.130', NULL),
+(1299, '\\core\\event\\user_deleted', 'core', 'deleted', 'user', 'user', 50, 'd', 0, 301, 30, 50, 2, 0, 50, 0, 'a:5:{s:8:"username";s:16:"sirromas@ukr.net";s:5:"email";s:16:"sirromas@ukr.net";s:8:"idnumber";s:0:"";s:7:"picture";s:1:"0";s:10:"mnethostid";s:1:"1";}', 1445577580, 'web', '109.87.201.130', NULL),
+(1300, '\\core\\event\\user_created', 'core', 'created', 'user', 'user', 51, 'c', 0, 302, 30, 51, 0, 0, 51, 0, 'N;', 1445577605, 'web', '109.87.201.130', NULL),
+(1301, '\\core\\event\\course_viewed', 'core', 'viewed', 'course', NULL, NULL, 'r', 2, 196, 50, 6, 2, 6, NULL, 0, 'N;', 1445577652, 'web', '109.87.201.130', NULL),
+(1302, '\\core\\event\\user_deleted', 'core', 'deleted', 'user', 'user', 51, 'd', 0, 302, 30, 51, 2, 0, 51, 0, 'a:5:{s:8:"username";s:16:"sirromas@ukr.net";s:5:"email";s:16:"sirromas@ukr.net";s:8:"idnumber";s:0:"";s:7:"picture";s:1:"0";s:10:"mnethostid";s:1:"1";}', 1445577781, 'web', '109.87.201.130', NULL),
+(1303, '\\core\\event\\user_created', 'core', 'created', 'user', 'user', 52, 'c', 0, 303, 30, 52, 0, 0, 52, 0, 'N;', 1445577793, 'web', '109.87.201.130', NULL),
+(1304, '\\core\\event\\role_unassigned', 'core', 'unassigned', 'role', 'role', 4, 'd', 0, 196, 50, 6, 2, 6, 52, 0, 'a:3:{s:2:"id";s:2:"46";s:9:"component";s:0:"";s:6:"itemid";s:1:"0";}', 1445577855, 'web', '109.87.201.130', NULL),
+(1305, '\\core\\event\\user_enrolment_deleted', 'core', 'deleted', 'user_enrolment', 'user_enrolments', 44, 'd', 0, 196, 50, 6, 2, 6, 52, 0, 'a:2:{s:13:"userenrolment";a:12:{s:2:"id";s:2:"44";s:6:"status";s:1:"0";s:7:"enrolid";s:2:"13";s:6:"userid";s:2:"52";s:9:"timestart";s:10:"1445577795";s:7:"timeend";s:10:"2147483647";s:10:"modifierid";s:1:"2";s:11:"timecreated";s:10:"1445577795";s:12:"timemodified";s:10:"1445577795";s:8:"courseid";s:1:"6";s:5:"enrol";s:6:"manual";s:9:"lastenrol";b:1;}s:5:"enrol";s:6:"manual";}', 1445577855, 'web', '109.87.201.130', NULL),
+(1306, '\\core\\event\\user_deleted', 'core', 'deleted', 'user', 'user', 52, 'd', 0, 303, 30, 52, 2, 0, 52, 0, 'a:5:{s:8:"username";s:16:"sirromas@ukr.net";s:5:"email";s:16:"sirromas@ukr.net";s:8:"idnumber";s:0:"";s:7:"picture";s:1:"0";s:10:"mnethostid";s:1:"1";}', 1445577855, 'web', '109.87.201.130', NULL),
+(1307, '\\core\\event\\user_created', 'core', 'created', 'user', 'user', 53, 'c', 0, 304, 30, 53, 0, 0, 53, 0, 'N;', 1445578040, 'web', '109.87.201.130', NULL),
+(1308, '\\core\\event\\group_member_added', 'core', 'added', 'group_member', 'groups', 20, 'c', 0, 196, 50, 6, 0, 6, 53, 0, 'a:2:{s:9:"component";s:0:"";s:6:"itemid";i:0;}', 1445578047, 'web', '109.87.201.130', NULL),
+(1309, '\\core\\event\\group_member_added', 'core', 'added', 'group_member', 'groups', 19, 'c', 0, 196, 50, 6, 0, 6, 53, 0, 'a:2:{s:9:"component";s:0:"";s:6:"itemid";i:0;}', 1445578047, 'web', '109.87.201.130', NULL),
+(1310, '\\core\\event\\group_member_added', 'core', 'added', 'group_member', 'groups', 21, 'c', 0, 196, 50, 6, 0, 6, 53, 0, 'a:2:{s:9:"component";s:0:"";s:6:"itemid";i:0;}', 1445578047, 'web', '109.87.201.130', NULL),
+(1311, '\\core\\event\\course_viewed', 'core', 'viewed', 'course', NULL, NULL, 'r', 2, 196, 50, 6, 2, 6, NULL, 0, 'N;', 1445578101, 'web', '109.87.201.130', NULL),
+(1312, '\\core\\event\\group_member_removed', 'core', 'removed', 'group_member', 'groups', 21, 'd', 0, 196, 50, 6, 2, 6, 53, 0, 'N;', 1445578140, 'web', '109.87.201.130', NULL),
+(1313, '\\core\\event\\group_member_added', 'core', 'added', 'group_member', 'groups', 21, 'c', 0, 196, 50, 6, 2, 6, 53, 0, 'a:2:{s:9:"component";s:0:"";s:6:"itemid";i:0;}', 1445578144, 'web', '109.87.201.130', NULL),
+(1314, '\\core\\event\\role_unassigned', 'core', 'unassigned', 'role', 'role', 4, 'd', 0, 196, 50, 6, 2, 6, 53, 0, 'a:3:{s:2:"id";s:2:"47";s:9:"component";s:0:"";s:6:"itemid";s:1:"0";}', 1445578374, 'web', '109.87.201.130', NULL),
+(1315, '\\core\\event\\group_member_removed', 'core', 'removed', 'group_member', 'groups', 19, 'd', 0, 196, 50, 6, 2, 6, 53, 0, 'N;', 1445578374, 'web', '109.87.201.130', NULL),
+(1316, '\\core\\event\\group_member_removed', 'core', 'removed', 'group_member', 'groups', 20, 'd', 0, 196, 50, 6, 2, 6, 53, 0, 'N;', 1445578374, 'web', '109.87.201.130', NULL),
+(1317, '\\core\\event\\group_member_removed', 'core', 'removed', 'group_member', 'groups', 21, 'd', 0, 196, 50, 6, 2, 6, 53, 0, 'N;', 1445578374, 'web', '109.87.201.130', NULL),
+(1318, '\\core\\event\\user_enrolment_deleted', 'core', 'deleted', 'user_enrolment', 'user_enrolments', 45, 'd', 0, 196, 50, 6, 2, 6, 53, 0, 'a:2:{s:13:"userenrolment";a:12:{s:2:"id";s:2:"45";s:6:"status";s:1:"0";s:7:"enrolid";s:2:"13";s:6:"userid";s:2:"53";s:9:"timestart";s:10:"1445578047";s:7:"timeend";s:10:"2147483647";s:10:"modifierid";s:1:"2";s:11:"timecreated";s:10:"1445578047";s:12:"timemodified";s:10:"1445578047";s:8:"courseid";s:1:"6";s:5:"enrol";s:6:"manual";s:9:"lastenrol";b:1;}s:5:"enrol";s:6:"manual";}', 1445578374, 'web', '109.87.201.130', NULL),
+(1319, '\\core\\event\\user_deleted', 'core', 'deleted', 'user', 'user', 53, 'd', 0, 304, 30, 53, 2, 0, 53, 0, 'a:5:{s:8:"username";s:16:"sirromas@ukr.net";s:5:"email";s:16:"sirromas@ukr.net";s:8:"idnumber";s:0:"";s:7:"picture";s:1:"0";s:10:"mnethostid";s:1:"1";}', 1445578374, 'web', '109.87.201.130', NULL),
+(1320, '\\core\\event\\user_created', 'core', 'created', 'user', 'user', 54, 'c', 0, 305, 30, 54, 0, 0, 54, 0, 'N;', 1445578395, 'web', '109.87.201.130', NULL),
+(1321, '\\core\\event\\group_member_added', 'core', 'added', 'group_member', 'groups', 20, 'c', 0, 196, 50, 6, 0, 6, 54, 0, 'a:2:{s:9:"component";s:0:"";s:6:"itemid";i:0;}', 1445578397, 'web', '109.87.201.130', NULL),
+(1322, '\\core\\event\\group_member_added', 'core', 'added', 'group_member', 'groups', 19, 'c', 0, 196, 50, 6, 0, 6, 54, 0, 'a:2:{s:9:"component";s:0:"";s:6:"itemid";i:0;}', 1445578397, 'web', '109.87.201.130', NULL),
+(1323, '\\core\\event\\group_member_added', 'core', 'added', 'group_member', 'groups', 21, 'c', 0, 196, 50, 6, 0, 6, 54, 0, 'a:2:{s:9:"component";s:0:"";s:6:"itemid";i:0;}', 1445578397, 'web', '109.87.201.130', NULL),
+(1324, '\\core\\event\\group_member_added', 'core', 'added', 'group_member', 'groups', 22, 'c', 0, 196, 50, 6, 0, 6, 54, 0, 'a:2:{s:9:"component";s:0:"";s:6:"itemid";i:0;}', 1445578397, 'web', '109.87.201.130', NULL),
+(1325, '\\core\\event\\group_member_added', 'core', 'added', 'group_member', 'groups', 23, 'c', 0, 196, 50, 6, 0, 6, 54, 0, 'a:2:{s:9:"component";s:0:"";s:6:"itemid";i:0;}', 1445578397, 'web', '109.87.201.130', NULL),
+(1326, '\\core\\event\\group_member_added', 'core', 'added', 'group_member', 'groups', 24, 'c', 0, 196, 50, 6, 0, 6, 54, 0, 'a:2:{s:9:"component";s:0:"";s:6:"itemid";i:0;}', 1445578397, 'web', '109.87.201.130', NULL),
+(1327, '\\core\\event\\course_viewed', 'core', 'viewed', 'course', NULL, NULL, 'r', 2, 196, 50, 6, 2, 6, NULL, 0, 'N;', 1445578421, 'web', '109.87.201.130', NULL),
+(1328, '\\core\\event\\user_created', 'core', 'created', 'user', 'user', 55, 'c', 0, 306, 30, 55, 0, 0, 55, 0, 'N;', 1445578527, 'web', '109.87.201.130', NULL),
+(1329, '\\core\\event\\group_member_added', 'core', 'added', 'group_member', 'groups', 21, 'c', 0, 196, 50, 6, 0, 6, 55, 0, 'a:2:{s:9:"component";s:0:"";s:6:"itemid";i:0;}', 1445578529, 'web', '109.87.201.130', NULL),
+(1330, '\\core\\event\\user_loggedin', 'core', 'loggedin', 'user', 'user', 54, 'r', 0, 1, 10, 0, 54, 0, NULL, 0, 'a:1:{s:8:"username";s:16:"sirromas@ukr.net";}', 1445578637, 'web', '109.87.201.130', NULL),
+(1331, '\\core\\event\\course_viewed', 'core', 'viewed', 'course', NULL, NULL, 'r', 2, 196, 50, 6, 54, 6, NULL, 0, 'N;', 1445578648, 'web', '109.87.201.130', NULL),
+(1332, '\\gradereport_grader\\event\\grade_report_viewed', 'gradereport_grader', 'viewed', 'grade_report', NULL, NULL, 'r', 1, 196, 50, 6, 54, 6, NULL, 0, 'N;', 1445578686, 'web', '109.87.201.130', NULL),
+(1333, '\\core\\event\\user_loggedout', 'core', 'loggedout', 'user', 'user', 54, 'r', 0, 1, 10, 0, 54, 0, NULL, 0, 'a:1:{s:9:"sessionid";s:26:"m7e85ckqn115e04vsnbf5ma206";}', 1445578757, 'web', '109.87.201.130', NULL),
+(1334, '\\core\\event\\user_loggedin', 'core', 'loggedin', 'user', 'user', 55, 'r', 0, 1, 10, 0, 55, 0, NULL, 0, 'a:1:{s:8:"username";s:14:"some@gmail.com";}', 1445578766, 'web', '109.87.201.130', NULL),
+(1335, '\\core\\event\\course_viewed', 'core', 'viewed', 'course', NULL, NULL, 'r', 2, 196, 50, 6, 55, 6, NULL, 0, 'N;', 1445578772, 'web', '109.87.201.130', NULL),
+(1336, '\\gradereport_user\\event\\grade_report_viewed', 'gradereport_user', 'viewed', 'grade_report', NULL, NULL, 'r', 2, 196, 50, 6, 55, 6, 55, 0, 'N;', 1445578797, 'web', '109.87.201.130', NULL),
+(1337, '\\core\\event\\course_viewed', 'core', 'viewed', 'course', NULL, NULL, 'r', 2, 196, 50, 6, 55, 6, NULL, 0, 'N;', 1445578811, 'web', '109.87.201.130', NULL),
+(1338, '\\core\\event\\user_loggedout', 'core', 'loggedout', 'user', 'user', 55, 'r', 0, 1, 10, 0, 55, 0, NULL, 0, 'a:1:{s:9:"sessionid";s:26:"19g61afn192oin033pupel7tu6";}', 1445578817, 'web', '109.87.201.130', NULL),
+(1339, '\\core\\event\\user_created', 'core', 'created', 'user', 'user', 56, 'c', 0, 319, 30, 56, 0, 0, 56, 0, 'N;', 1445578891, 'web', '109.87.201.130', NULL),
+(1340, '\\core\\event\\group_member_added', 'core', 'added', 'group_member', 'groups', 21, 'c', 0, 196, 50, 6, 0, 6, 56, 0, 'a:2:{s:9:"component";s:0:"";s:6:"itemid";i:0;}', 1445578898, 'web', '109.87.201.130', NULL),
+(1341, '\\core\\event\\user_loggedout', 'core', 'loggedout', 'user', 'user', 2, 'r', 0, 1, 10, 0, 2, 0, NULL, 0, 'a:1:{s:9:"sessionid";s:26:"s8gq4uioaj735gvf4llrnacnd5";}', 1445578953, 'web', '109.87.201.130', NULL),
+(1342, '\\core\\event\\user_loggedin', 'core', 'loggedin', 'user', 'user', 54, 'r', 0, 1, 10, 0, 54, 0, NULL, 0, 'a:1:{s:8:"username";s:16:"sirromas@ukr.net";}', 1445578964, 'web', '109.87.201.130', NULL),
+(1343, '\\core\\event\\course_viewed', 'core', 'viewed', 'course', NULL, NULL, 'r', 2, 196, 50, 6, 54, 6, NULL, 0, 'N;', 1445578980, 'web', '109.87.201.130', NULL),
+(1344, '\\core\\event\\course_viewed', 'core', 'viewed', 'course', NULL, NULL, 'r', 2, 196, 50, 6, 54, 6, NULL, 0, 'N;', 1445578998, 'web', '109.87.201.130', NULL),
+(1345, '\\gradereport_grader\\event\\grade_report_viewed', 'gradereport_grader', 'viewed', 'grade_report', NULL, NULL, 'r', 1, 196, 50, 6, 54, 6, NULL, 0, 'N;', 1445579001, 'web', '109.87.201.130', NULL),
+(1346, '\\gradereport_grader\\event\\grade_report_viewed', 'gradereport_grader', 'viewed', 'grade_report', NULL, NULL, 'r', 1, 196, 50, 6, 54, 6, NULL, 0, 'N;', 1445579030, 'web', '109.87.201.130', NULL),
+(1347, '\\gradereport_grader\\event\\grade_report_viewed', 'gradereport_grader', 'viewed', 'grade_report', NULL, NULL, 'r', 1, 196, 50, 6, 54, 6, NULL, 0, 'N;', 1445579035, 'web', '109.87.201.130', NULL),
+(1348, '\\gradereport_grader\\event\\grade_report_viewed', 'gradereport_grader', 'viewed', 'grade_report', NULL, NULL, 'r', 1, 196, 50, 6, 54, 6, NULL, 0, 'N;', 1445579038, 'web', '109.87.201.130', NULL),
+(1349, '\\core\\event\\user_created', 'core', 'created', 'user', 'user', 57, 'c', 0, 320, 30, 57, 0, 0, 57, 0, 'N;', 1445579098, 'web', '109.87.201.130', NULL),
+(1350, '\\core\\event\\group_member_added', 'core', 'added', 'group_member', 'groups', 19, 'c', 0, 196, 50, 6, 0, 6, 57, 0, 'a:2:{s:9:"component";s:0:"";s:6:"itemid";i:0;}', 1445579106, 'web', '109.87.201.130', NULL),
+(1351, '\\core\\event\\course_viewed', 'core', 'viewed', 'course', NULL, NULL, 'r', 2, 196, 50, 6, 54, 6, NULL, 0, 'N;', 1445579132, 'web', '109.87.201.130', NULL),
+(1352, '\\gradereport_grader\\event\\grade_report_viewed', 'gradereport_grader', 'viewed', 'grade_report', NULL, NULL, 'r', 1, 196, 50, 6, 54, 6, NULL, 0, 'N;', 1445579136, 'web', '109.87.201.130', NULL),
+(1353, '\\gradereport_grader\\event\\grade_report_viewed', 'gradereport_grader', 'viewed', 'grade_report', NULL, NULL, 'r', 1, 196, 50, 6, 54, 6, NULL, 0, 'N;', 1445579142, 'web', '109.87.201.130', NULL),
+(1354, '\\gradereport_grader\\event\\grade_report_viewed', 'gradereport_grader', 'viewed', 'grade_report', NULL, NULL, 'r', 1, 196, 50, 6, 54, 6, NULL, 0, 'N;', 1445579147, 'web', '109.87.201.130', NULL),
+(1355, '\\core\\event\\user_loggedout', 'core', 'loggedout', 'user', 'user', 54, 'r', 0, 1, 10, 0, 54, 0, NULL, 0, 'a:1:{s:9:"sessionid";s:26:"5j4ud78ja5d7874m3tmdfif493";}', 1445579156, 'web', '109.87.201.130', NULL),
+(1356, '\\core\\event\\user_loggedin', 'core', 'loggedin', 'user', 'user', 22, 'r', 0, 1, 10, 0, 22, 0, NULL, 0, 'a:1:{s:8:"username";s:7:"manager";}', 1445579162, 'web', '109.87.201.130', NULL),
+(1357, '\\core\\event\\course_viewed', 'core', 'viewed', 'course', NULL, NULL, 'r', 2, 196, 50, 6, 22, 6, NULL, 0, 'N;', 1445579174, 'web', '109.87.201.130', NULL),
+(1358, '\\core\\event\\user_loggedout', 'core', 'loggedout', 'user', 'user', 22, 'r', 0, 1, 10, 0, 22, 0, NULL, 0, 'a:1:{s:9:"sessionid";s:26:"jvbknbd7qau98pdj13dnf8ltn6";}', 1445579204, 'web', '109.87.201.130', NULL),
+(1359, '\\core\\event\\user_loggedin', 'core', 'loggedin', 'user', 'user', 54, 'r', 0, 1, 10, 0, 54, 0, NULL, 0, 'a:1:{s:8:"username";s:16:"sirromas@ukr.net";}', 1445579212, 'web', '109.87.201.130', NULL),
+(1360, '\\core\\event\\course_viewed', 'core', 'viewed', 'course', NULL, NULL, 'r', 2, 196, 50, 6, 54, 6, NULL, 0, 'N;', 1445579216, 'web', '109.87.201.130', NULL),
+(1361, '\\gradereport_grader\\event\\grade_report_viewed', 'gradereport_grader', 'viewed', 'grade_report', NULL, NULL, 'r', 1, 196, 50, 6, 54, 6, NULL, 0, 'N;', 1445579219, 'web', '109.87.201.130', NULL),
+(1362, '\\gradereport_grader\\event\\grade_report_viewed', 'gradereport_grader', 'viewed', 'grade_report', NULL, NULL, 'r', 1, 196, 50, 6, 54, 6, NULL, 0, 'N;', 1445579225, 'web', '109.87.201.130', NULL),
+(1363, '\\gradereport_grader\\event\\grade_report_viewed', 'gradereport_grader', 'viewed', 'grade_report', NULL, NULL, 'r', 1, 196, 50, 6, 54, 6, NULL, 0, 'N;', 1445579229, 'web', '109.87.201.130', NULL),
+(1364, '\\core\\event\\user_loggedout', 'core', 'loggedout', 'user', 'user', 54, 'r', 0, 1, 10, 0, 54, 0, NULL, 0, 'a:1:{s:9:"sessionid";s:26:"gloq77sj9fd2htsodjd0q3d252";}', 1445579237, 'web', '109.87.201.130', NULL),
+(1365, '\\core\\event\\user_loggedin', 'core', 'loggedin', 'user', 'user', 54, 'r', 0, 1, 10, 0, 54, 0, NULL, 0, 'a:1:{s:8:"username";s:16:"sirromas@ukr.net";}', 1445581018, 'web', '109.87.201.130', NULL),
+(1366, '\\core\\event\\course_viewed', 'core', 'viewed', 'course', NULL, NULL, 'r', 2, 196, 50, 6, 54, 6, NULL, 0, 'N;', 1445581029, 'web', '109.87.201.130', NULL),
+(1367, '\\core\\event\\user_loggedout', 'core', 'loggedout', 'user', 'user', 54, 'r', 0, 1, 10, 0, 54, 0, NULL, 0, 'a:1:{s:9:"sessionid";s:26:"2a5pfie1m3kmg854md6pi9mh16";}', 1445581038, 'web', '109.87.201.130', NULL),
+(1368, '\\core\\event\\user_loggedin', 'core', 'loggedin', 'user', 'user', 22, 'r', 0, 1, 10, 0, 22, 0, NULL, 0, 'a:1:{s:8:"username";s:7:"manager";}', 1445581050, 'web', '109.87.201.130', NULL),
+(1369, '\\core\\event\\course_viewed', 'core', 'viewed', 'course', NULL, NULL, 'r', 2, 196, 50, 6, 22, 6, NULL, 0, 'N;', 1445581058, 'web', '109.87.201.130', NULL),
+(1370, '\\core\\event\\user_created', 'core', 'created', 'user', 'user', 58, 'c', 0, 321, 30, 58, 0, 0, 58, 0, 'N;', 1445581909, 'web', '109.87.201.130', NULL),
+(1371, '\\core\\event\\group_member_added', 'core', 'added', 'group_member', 'groups', 20, 'c', 0, 196, 50, 6, 0, 6, 58, 0, 'a:2:{s:9:"component";s:0:"";s:6:"itemid";i:0;}', 1445581911, 'web', '109.87.201.130', NULL),
+(1372, '\\core\\event\\user_loggedout', 'core', 'loggedout', 'user', 'user', 22, 'r', 0, 1, 10, 0, 22, 0, NULL, 0, 'a:1:{s:9:"sessionid";s:26:"qn85vvei706vk86sb90ll95q44";}', 1445581980, 'web', '109.87.201.130', NULL),
+(1373, '\\core\\event\\user_loggedin', 'core', 'loggedin', 'user', 'user', 22, 'r', 0, 1, 10, 0, 22, 0, NULL, 0, 'a:1:{s:8:"username";s:7:"manager";}', 1445582581, 'web', '109.87.201.130', NULL),
+(1374, '\\core\\event\\user_created', 'core', 'created', 'user', 'user', 59, 'c', 0, 322, 30, 59, 0, 0, 59, 0, 'N;', 1445583245, 'web', '109.87.201.130', NULL),
+(1375, '\\core\\event\\group_member_added', 'core', 'added', 'group_member', 'groups', 21, 'c', 0, 196, 50, 6, 0, 6, 59, 0, 'a:2:{s:9:"component";s:0:"";s:6:"itemid";i:0;}', 1445583252, 'web', '109.87.201.130', NULL),
+(1376, '\\core\\event\\user_created', 'core', 'created', 'user', 'user', 60, 'c', 0, 323, 30, 60, 0, 0, 60, 0, 'N;', 1445583450, 'web', '109.87.201.130', NULL),
+(1377, '\\core\\event\\group_member_added', 'core', 'added', 'group_member', 'groups', 21, 'c', 0, 196, 50, 6, 0, 6, 60, 0, 'a:2:{s:9:"component";s:0:"";s:6:"itemid";i:0;}', 1445583457, 'web', '109.87.201.130', NULL),
+(1378, '\\core\\event\\course_viewed', 'core', 'viewed', 'course', NULL, NULL, 'r', 2, 196, 50, 6, 22, 6, NULL, 0, 'N;', 1445583528, 'web', '109.87.201.130', NULL),
+(1379, '\\core\\event\\user_loggedout', 'core', 'loggedout', 'user', 'user', 22, 'r', 0, 1, 10, 0, 22, 0, NULL, 0, 'a:1:{s:9:"sessionid";s:26:"gjie1s7kcadm15q7rao1qb23h2";}', 1445583772, 'web', '109.87.201.130', NULL),
+(1380, '\\core\\event\\user_created', 'core', 'created', 'user', 'user', 61, 'c', 0, 324, 30, 61, 0, 0, 61, 0, 'N;', 1445584692, 'web', '109.87.201.130', NULL),
+(1381, '\\core\\event\\group_member_added', 'core', 'added', 'group_member', 'groups', 2, 'c', 0, 55, 50, 3, 0, 3, 61, 0, 'a:2:{s:9:"component";s:0:"";s:6:"itemid";i:0;}', 1445584714, 'web', '109.87.201.130', NULL),
+(1382, '\\core\\event\\user_loggedin', 'core', 'loggedin', 'user', 'user', 54, 'r', 0, 1, 10, 0, 54, 0, NULL, 0, 'a:1:{s:8:"username";s:16:"sirromas@ukr.net";}', 1445585467, 'web', '109.87.201.130', NULL),
+(1383, '\\core\\event\\course_viewed', 'core', 'viewed', 'course', NULL, NULL, 'r', 2, 196, 50, 6, 54, 6, NULL, 0, 'N;', 1445585476, 'web', '109.87.201.130', NULL),
+(1384, '\\gradereport_grader\\event\\grade_report_viewed', 'gradereport_grader', 'viewed', 'grade_report', NULL, NULL, 'r', 1, 196, 50, 6, 54, 6, NULL, 0, 'N;', 1445585481, 'web', '109.87.201.130', NULL),
+(1385, '\\gradereport_grader\\event\\grade_report_viewed', 'gradereport_grader', 'viewed', 'grade_report', NULL, NULL, 'r', 1, 196, 50, 6, 54, 6, NULL, 0, 'N;', 1445585491, 'web', '109.87.201.130', NULL),
+(1386, '\\gradereport_grader\\event\\grade_report_viewed', 'gradereport_grader', 'viewed', 'grade_report', NULL, NULL, 'r', 1, 196, 50, 6, 54, 6, NULL, 0, 'N;', 1445585497, 'web', '109.87.201.130', NULL),
+(1387, '\\gradereport_grader\\event\\grade_report_viewed', 'gradereport_grader', 'viewed', 'grade_report', NULL, NULL, 'r', 1, 196, 50, 6, 54, 6, NULL, 0, 'N;', 1445585502, 'web', '109.87.201.130', NULL),
+(1388, '\\gradereport_grader\\event\\grade_report_viewed', 'gradereport_grader', 'viewed', 'grade_report', NULL, NULL, 'r', 1, 196, 50, 6, 54, 6, NULL, 0, 'N;', 1445585506, 'web', '109.87.201.130', NULL),
+(1389, '\\core\\event\\user_loggedout', 'core', 'loggedout', 'user', 'user', 54, 'r', 0, 1, 10, 0, 54, 0, NULL, 0, 'a:1:{s:9:"sessionid";s:26:"v379nlcat2nvm5ku6uj5jhb9u0";}', 1445587184, 'web', '109.87.201.130', NULL),
+(1390, '\\core\\event\\user_loggedin', 'core', 'loggedin', 'user', 'user', 22, 'r', 0, 1, 10, 0, 22, 0, NULL, 0, 'a:1:{s:8:"username";s:7:"manager";}', 1445587208, 'web', '109.87.201.130', NULL),
+(1391, '\\tool_capability\\event\\report_viewed', 'tool_capability', 'viewed', 'report', NULL, NULL, 'r', 0, 1, 10, 0, 22, 0, NULL, 0, 'N;', 1445587282, 'web', '109.87.201.130', NULL),
+(1392, '\\core\\event\\user_loggedout', 'core', 'loggedout', 'user', 'user', 22, 'r', 0, 1, 10, 0, 22, 0, NULL, 0, 'a:1:{s:9:"sessionid";s:26:"p5r0qretvv9abd5pujqpu0ev92";}', 1445587353, 'web', '109.87.201.130', NULL),
+(1393, '\\core\\event\\user_loggedin', 'core', 'loggedin', 'user', 'user', 2, 'r', 0, 1, 10, 0, 2, 0, NULL, 0, 'a:1:{s:8:"username";s:5:"admin";}', 1445587361, 'web', '109.87.201.130', NULL),
+(1394, '\\core\\event\\role_capabilities_updated', 'core', 'updated', 'role_capabilities', 'role', 4, 'u', 0, 1, 10, 0, 2, 0, NULL, 0, 'N;', 1445587465, 'web', '109.87.201.130', NULL),
+(1395, '\\core\\event\\user_loggedout', 'core', 'loggedout', 'user', 'user', 2, 'r', 0, 1, 10, 0, 2, 0, NULL, 0, 'a:1:{s:9:"sessionid";s:26:"5138m9mlp1dc02qeuh00ld49o4";}', 1445587482, 'web', '109.87.201.130', NULL),
+(1396, '\\core\\event\\user_loggedin', 'core', 'loggedin', 'user', 'user', 22, 'r', 0, 1, 10, 0, 22, 0, NULL, 0, 'a:1:{s:8:"username";s:7:"manager";}', 1445587491, 'web', '109.87.201.130', NULL),
+(1397, '\\core\\event\\course_viewed', 'core', 'viewed', 'course', NULL, NULL, 'r', 2, 196, 50, 6, 22, 6, NULL, 0, 'N;', 1445587503, 'web', '109.87.201.130', NULL),
+(1398, '\\core\\event\\group_created', 'core', 'created', 'group', 'groups', 22, 'c', 0, 196, 50, 6, 22, 6, NULL, 0, 'N;', 1445587539, 'web', '109.87.201.130', NULL),
+(1399, '\\core\\event\\group_member_removed', 'core', 'removed', 'group_member', 'groups', 22, 'd', 0, 196, 50, 6, 22, 6, 54, 0, 'N;', 1445587556, 'web', '109.87.201.130', NULL),
+(1400, '\\core\\event\\group_member_added', 'core', 'added', 'group_member', 'groups', 22, 'c', 0, 196, 50, 6, 22, 6, 60, 0, 'a:2:{s:9:"component";s:0:"";s:6:"itemid";i:0;}', 1445587561, 'web', '109.87.201.130', NULL),
+(1401, '\\core\\event\\user_loggedout', 'core', 'loggedout', 'user', 'user', 22, 'r', 0, 1, 10, 0, 22, 0, NULL, 0, 'a:1:{s:9:"sessionid";s:26:"8eh8ca5euqf3j3qqt7rpopd935";}', 1445587575, 'web', '109.87.201.130', NULL),
+(1402, '\\core\\event\\user_loggedin', 'core', 'loggedin', 'user', 'user', 54, 'r', 0, 1, 10, 0, 54, 0, NULL, 0, 'a:1:{s:8:"username";s:16:"sirromas@ukr.net";}', 1445587599, 'web', '109.87.201.130', NULL),
+(1403, '\\core\\event\\course_viewed', 'core', 'viewed', 'course', NULL, NULL, 'r', 2, 196, 50, 6, 54, 6, NULL, 0, 'N;', 1445587604, 'web', '109.87.201.130', NULL),
+(1404, '\\gradereport_grader\\event\\grade_report_viewed', 'gradereport_grader', 'viewed', 'grade_report', NULL, NULL, 'r', 1, 196, 50, 6, 54, 6, NULL, 0, 'N;', 1445587609, 'web', '109.87.201.130', NULL),
+(1405, '\\gradereport_grader\\event\\grade_report_viewed', 'gradereport_grader', 'viewed', 'grade_report', NULL, NULL, 'r', 1, 196, 50, 6, 54, 6, NULL, 0, 'N;', 1445587638, 'web', '109.87.201.130', NULL),
+(1406, '\\gradereport_grader\\event\\grade_report_viewed', 'gradereport_grader', 'viewed', 'grade_report', NULL, NULL, 'r', 1, 196, 50, 6, 54, 6, NULL, 0, 'N;', 1445587642, 'web', '109.87.201.130', NULL),
+(1407, '\\gradereport_outcomes\\event\\grade_report_viewed', 'gradereport_outcomes', 'viewed', 'grade_report', NULL, NULL, 'r', 1, 196, 50, 6, 54, 6, NULL, 0, 'N;', 1445587649, 'web', '109.87.201.130', NULL),
+(1408, '\\gradereport_user\\event\\grade_report_viewed', 'gradereport_user', 'viewed', 'grade_report', NULL, NULL, 'r', 2, 196, 50, 6, 54, 6, 54, 0, 'N;', 1445587657, 'web', '109.87.201.130', NULL),
+(1409, '\\gradereport_grader\\event\\grade_report_viewed', 'gradereport_grader', 'viewed', 'grade_report', NULL, NULL, 'r', 1, 196, 50, 6, 54, 6, NULL, 0, 'N;', 1445587701, 'web', '109.87.201.130', NULL),
+(1410, '\\gradereport_grader\\event\\grade_report_viewed', 'gradereport_grader', 'viewed', 'grade_report', NULL, NULL, 'r', 1, 196, 50, 6, 54, 6, NULL, 0, 'N;', 1445587707, 'web', '109.87.201.130', NULL),
+(1411, '\\gradereport_grader\\event\\grade_report_viewed', 'gradereport_grader', 'viewed', 'grade_report', NULL, NULL, 'r', 1, 196, 50, 6, 54, 6, NULL, 0, 'N;', 1445587711, 'web', '109.87.201.130', NULL),
+(1412, '\\core\\event\\user_loggedout', 'core', 'loggedout', 'user', 'user', 54, 'r', 0, 1, 10, 0, 54, 0, NULL, 0, 'a:1:{s:9:"sessionid";s:26:"97el9jhmg37s18te6adfsbfj07";}', 1445587720, 'web', '109.87.201.130', NULL),
+(1413, '\\core\\event\\user_loggedin', 'core', 'loggedin', 'user', 'user', 2, 'r', 0, 1, 10, 0, 2, 0, NULL, 0, 'a:1:{s:8:"username";s:5:"admin";}', 1445587728, 'web', '109.87.201.130', NULL),
+(1414, '\\core\\event\\role_capabilities_updated', 'core', 'updated', 'role_capabilities', 'role', 3, 'u', 0, 1, 10, 0, 2, 0, NULL, 0, 'N;', 1445587828, 'web', '109.87.201.130', NULL),
+(1415, '\\core\\event\\user_loggedout', 'core', 'loggedout', 'user', 'user', 2, 'r', 0, 1, 10, 0, 2, 0, NULL, 0, 'a:1:{s:9:"sessionid";s:26:"u14bfgt4e9b7dun43qr31s6172";}', 1445587916, 'web', '109.87.201.130', NULL),
+(1416, '\\core\\event\\user_loggedin', 'core', 'loggedin', 'user', 'user', 56, 'r', 0, 1, 10, 0, 56, 0, NULL, 0, 'a:1:{s:8:"username";s:15:"some2@gmail.com";}', 1445587933, 'web', '109.87.201.130', NULL),
+(1417, '\\core\\event\\course_viewed', 'core', 'viewed', 'course', NULL, NULL, 'r', 2, 2, 50, 1, 56, 1, NULL, 0, 'N;', 1445588911, 'web', '109.87.201.130', NULL),
+(1418, '\\core\\event\\user_loggedout', 'core', 'loggedout', 'user', 'user', 56, 'r', 0, 1, 10, 0, 56, 0, NULL, 0, 'a:1:{s:9:"sessionid";s:26:"tj7h5s1lg1pqno6fc6ju9uqu81";}', 1445588924, 'web', '109.87.201.130', NULL),
+(1419, '\\core\\event\\user_loggedin', 'core', 'loggedin', 'user', 'user', 56, 'r', 0, 1, 10, 0, 56, 0, NULL, 0, 'a:1:{s:8:"username";s:15:"some2@gmail.com";}', 1445588939, 'web', '109.87.201.130', NULL),
+(1420, '\\core\\event\\user_loggedin', 'core', 'loggedin', 'user', 'user', 56, 'r', 0, 1, 10, 0, 56, 0, NULL, 0, 'a:1:{s:8:"username";s:15:"some2@gmail.com";}', 1445601955, 'web', '109.87.201.130', NULL),
+(1421, '\\core\\event\\course_viewed', 'core', 'viewed', 'course', NULL, NULL, 'r', 2, 2, 50, 1, 56, 1, NULL, 0, 'N;', 1445601973, 'web', '109.87.201.130', NULL),
+(1422, '\\core\\event\\course_viewed', 'core', 'viewed', 'course', NULL, NULL, 'r', 2, 2, 50, 1, 0, 1, NULL, 0, 'N;', 1445602365, 'web', '109.87.201.130', NULL),
+(1423, '\\core\\event\\course_viewed', 'core', 'viewed', 'course', NULL, NULL, 'r', 2, 2, 50, 1, 0, 1, NULL, 0, 'N;', 1445602369, 'web', '109.87.201.130', NULL),
+(1424, '\\core\\event\\course_viewed', 'core', 'viewed', 'course', NULL, NULL, 'r', 2, 2, 50, 1, 0, 1, NULL, 0, 'N;', 1445602373, 'web', '109.87.201.130', NULL),
+(1425, '\\core\\event\\course_viewed', 'core', 'viewed', 'course', NULL, NULL, 'r', 2, 2, 50, 1, 56, 1, NULL, 0, 'N;', 1445602392, 'web', '109.87.201.130', NULL),
+(1426, '\\core\\event\\course_viewed', 'core', 'viewed', 'course', NULL, NULL, 'r', 2, 196, 50, 6, 56, 6, NULL, 0, 'N;', 1445602402, 'web', '109.87.201.130', NULL),
+(1427, '\\gradereport_user\\event\\grade_report_viewed', 'gradereport_user', 'viewed', 'grade_report', NULL, NULL, 'r', 2, 196, 50, 6, 56, 6, 56, 0, 'N;', 1445602407, 'web', '109.87.201.130', NULL),
+(1428, '\\core\\event\\course_viewed', 'core', 'viewed', 'course', NULL, NULL, 'r', 2, 196, 50, 6, 56, 6, NULL, 0, 'N;', 1445602415, 'web', '109.87.201.130', NULL),
+(1429, '\\gradereport_user\\event\\grade_report_viewed', 'gradereport_user', 'viewed', 'grade_report', NULL, NULL, 'r', 2, 196, 50, 6, 56, 6, 56, 0, 'N;', 1445602420, 'web', '109.87.201.130', NULL),
+(1430, '\\core\\event\\user_loggedout', 'core', 'loggedout', 'user', 'user', 56, 'r', 0, 1, 10, 0, 56, 0, NULL, 0, 'a:1:{s:9:"sessionid";s:26:"t2bbk317vpa5emcet51dongra2";}', 1445602435, 'web', '109.87.201.130', NULL),
+(1431, '\\core\\event\\user_loggedin', 'core', 'loggedin', 'user', 'user', 54, 'r', 0, 1, 10, 0, 54, 0, NULL, 0, 'a:1:{s:8:"username";s:16:"sirromas@ukr.net";}', 1445602445, 'web', '109.87.201.130', NULL),
+(1432, '\\core\\event\\course_viewed', 'core', 'viewed', 'course', NULL, NULL, 'r', 2, 2, 50, 1, 54, 1, NULL, 0, 'N;', 1445602454, 'web', '109.87.201.130', NULL),
+(1433, '\\core\\event\\course_viewed', 'core', 'viewed', 'course', NULL, NULL, 'r', 2, 196, 50, 6, 54, 6, NULL, 0, 'N;', 1445602460, 'web', '109.87.201.130', NULL),
+(1434, '\\gradereport_grader\\event\\grade_report_viewed', 'gradereport_grader', 'viewed', 'grade_report', NULL, NULL, 'r', 1, 196, 50, 6, 54, 6, NULL, 0, 'N;', 1445602467, 'web', '109.87.201.130', NULL),
+(1435, '\\gradereport_grader\\event\\grade_report_viewed', 'gradereport_grader', 'viewed', 'grade_report', NULL, NULL, 'r', 1, 196, 50, 6, 54, 6, NULL, 0, 'N;', 1445602483, 'web', '109.87.201.130', NULL),
+(1436, '\\gradereport_grader\\event\\grade_report_viewed', 'gradereport_grader', 'viewed', 'grade_report', NULL, NULL, 'r', 1, 196, 50, 6, 54, 6, NULL, 0, 'N;', 1445602551, 'web', '109.87.201.130', NULL),
+(1437, '\\core\\event\\user_loggedout', 'core', 'loggedout', 'user', 'user', 54, 'r', 0, 1, 10, 0, 54, 0, NULL, 0, 'a:1:{s:9:"sessionid";s:26:"mgf7oe7ai1b838jj23lb8dhtk0";}', 1445603440, 'web', '109.87.201.130', NULL),
+(1438, '\\core\\event\\user_created', 'core', 'created', 'user', 'user', 62, 'c', 0, 331, 30, 62, 0, 0, 62, 0, 'N;', 1445603919, 'web', '109.87.201.130', NULL),
+(1439, '\\core\\event\\group_member_added', 'core', 'added', 'group_member', 'groups', 22, 'c', 0, 196, 50, 6, 0, 6, 62, 0, 'a:2:{s:9:"component";s:0:"";s:6:"itemid";i:0;}', 1445603921, 'web', '109.87.201.130', NULL),
+(1440, '\\core\\event\\user_loggedin', 'core', 'loggedin', 'user', 'user', 22, 'r', 0, 1, 10, 0, 22, 0, NULL, 0, 'a:1:{s:8:"username";s:7:"manager";}', 1445603974, 'web', '109.87.201.130', NULL),
+(1441, '\\core\\event\\course_viewed', 'core', 'viewed', 'course', NULL, NULL, 'r', 2, 2, 50, 1, 22, 1, NULL, 0, 'N;', 1445603981, 'web', '109.87.201.130', NULL),
+(1442, '\\core\\event\\course_viewed', 'core', 'viewed', 'course', NULL, NULL, 'r', 2, 196, 50, 6, 22, 6, NULL, 0, 'N;', 1445603991, 'web', '109.87.201.130', NULL),
+(1443, '\\core\\event\\user_loggedout', 'core', 'loggedout', 'user', 'user', 22, 'r', 0, 1, 10, 0, 22, 0, NULL, 0, 'a:1:{s:9:"sessionid";s:26:"vr37vvfsvvi78p19er295g55r7";}', 1445604055, 'web', '109.87.201.130', NULL),
+(1444, '\\core\\event\\user_loggedin', 'core', 'loggedin', 'user', 'user', 54, 'r', 0, 1, 10, 0, 54, 0, NULL, 0, 'a:1:{s:8:"username";s:16:"sirromas@ukr.net";}', 1445604062, 'web', '109.87.201.130', NULL),
+(1445, '\\core\\event\\course_viewed', 'core', 'viewed', 'course', NULL, NULL, 'r', 2, 2, 50, 1, 54, 1, NULL, 0, 'N;', 1445604069, 'web', '109.87.201.130', NULL),
+(1446, '\\core\\event\\course_viewed', 'core', 'viewed', 'course', NULL, NULL, 'r', 2, 196, 50, 6, 54, 6, NULL, 0, 'N;', 1445604075, 'web', '109.87.201.130', NULL),
+(1447, '\\gradereport_grader\\event\\grade_report_viewed', 'gradereport_grader', 'viewed', 'grade_report', NULL, NULL, 'r', 1, 196, 50, 6, 54, 6, NULL, 0, 'N;', 1445604080, 'web', '109.87.201.130', NULL),
+(1448, '\\core\\event\\user_loggedout', 'core', 'loggedout', 'user', 'user', 54, 'r', 0, 1, 10, 0, 54, 0, NULL, 0, 'a:1:{s:9:"sessionid";s:26:"nfrela6gttp2s5060o9ouoaip5";}', 1445604114, 'web', '109.87.201.130', NULL),
+(1449, '\\core\\event\\user_loggedin', 'core', 'loggedin', 'user', 'user', 22, 'r', 0, 1, 10, 0, 22, 0, NULL, 0, 'a:1:{s:8:"username";s:7:"manager";}', 1445618568, 'web', '109.87.201.130', NULL),
+(1450, '\\core\\event\\role_unassigned', 'core', 'unassigned', 'role', 'role', 4, 'd', 0, 196, 50, 6, 22, 6, 54, 0, 'a:3:{s:2:"id";s:2:"48";s:9:"component";s:0:"";s:6:"itemid";s:1:"0";}', 1445618610, 'web', '109.87.201.130', NULL),
+(1451, '\\core\\event\\group_member_removed', 'core', 'removed', 'group_member', 'groups', 19, 'd', 0, 196, 50, 6, 22, 6, 54, 0, 'N;', 1445618610, 'web', '109.87.201.130', NULL),
+(1452, '\\core\\event\\group_member_removed', 'core', 'removed', 'group_member', 'groups', 20, 'd', 0, 196, 50, 6, 22, 6, 54, 0, 'N;', 1445618610, 'web', '109.87.201.130', NULL),
+(1453, '\\core\\event\\group_member_removed', 'core', 'removed', 'group_member', 'groups', 21, 'd', 0, 196, 50, 6, 22, 6, 54, 0, 'N;', 1445618610, 'web', '109.87.201.130', NULL),
+(1454, '\\core\\event\\user_enrolment_deleted', 'core', 'deleted', 'user_enrolment', 'user_enrolments', 46, 'd', 0, 196, 50, 6, 22, 6, 54, 0, 'a:2:{s:13:"userenrolment";a:12:{s:2:"id";s:2:"46";s:6:"status";s:1:"0";s:7:"enrolid";s:2:"13";s:6:"userid";s:2:"54";s:9:"timestart";s:10:"1445578397";s:7:"timeend";s:10:"2147483647";s:10:"modifierid";s:1:"2";s:11:"timecreated";s:10:"1445578397";s:12:"timemodified";s:10:"1445578397";s:8:"courseid";s:1:"6";s:5:"enrol";s:6:"manual";s:9:"lastenrol";b:1;}s:5:"enrol";s:6:"manual";}', 1445618610, 'web', '109.87.201.130', NULL),
+(1455, '\\core\\event\\user_deleted', 'core', 'deleted', 'user', 'user', 54, 'd', 0, 305, 30, 54, 22, 0, 54, 0, 'a:5:{s:8:"username";s:16:"sirromas@ukr.net";s:5:"email";s:16:"sirromas@ukr.net";s:8:"idnumber";s:0:"";s:7:"picture";s:1:"0";s:10:"mnethostid";s:1:"1";}', 1445618610, 'web', '109.87.201.130', NULL),
+(1456, '\\core\\event\\user_loggedout', 'core', 'loggedout', 'user', 'user', 22, 'r', 0, 1, 10, 0, 22, 0, NULL, 0, 'a:1:{s:9:"sessionid";s:26:"9ffsbgj5i1vt9gb9r28jgpb437";}', 1445618626, 'web', '109.87.201.130', NULL),
+(1457, '\\core\\event\\user_created', 'core', 'created', 'user', 'user', 63, 'c', 0, 332, 30, 63, 0, 0, 63, 0, 'N;', 1445618661, 'web', '109.87.201.130', NULL),
+(1458, '\\core\\event\\group_member_added', 'core', 'added', 'group_member', 'groups', 22, 'c', 0, 196, 50, 6, 0, 6, 63, 0, 'a:2:{s:9:"component";s:0:"";s:6:"itemid";i:0;}', 1445618663, 'web', '109.87.201.130', NULL),
+(1459, '\\core\\event\\user_loggedin', 'core', 'loggedin', 'user', 'user', 63, 'r', 0, 1, 10, 0, 63, 0, NULL, 0, 'a:1:{s:8:"username";s:16:"sirromas@ukr.net";}', 1445618765, 'web', '109.87.201.130', NULL),
+(1460, '\\core\\event\\user_loggedout', 'core', 'loggedout', 'user', 'user', 63, 'r', 0, 1, 10, 0, 63, 0, NULL, 0, 'a:1:{s:9:"sessionid";s:26:"73unnnel58ducaab24v2c388r0";}', 1445618789, 'web', '109.87.201.130', NULL),
+(1461, '\\core\\event\\user_loggedin', 'core', 'loggedin', 'user', 'user', 22, 'r', 0, 1, 10, 0, 22, 0, NULL, 0, 'a:1:{s:8:"username";s:7:"manager";}', 1445618818, 'web', '109.87.201.130', NULL),
+(1462, '\\core\\event\\course_viewed', 'core', 'viewed', 'course', NULL, NULL, 'r', 2, 196, 50, 6, 22, 6, NULL, 0, 'N;', 1445618831, 'web', '109.87.201.130', NULL),
+(1463, '\\core\\event\\user_loggedin', 'core', 'loggedin', 'user', 'user', 63, 'r', 0, 1, 10, 0, 63, 0, NULL, 0, 'a:1:{s:8:"username";s:16:"sirromas@ukr.net";}', 1445618877, 'web', '109.87.201.130', NULL),
+(1464, '\\core\\event\\course_viewed', 'core', 'viewed', 'course', NULL, NULL, 'r', 2, 196, 50, 6, 63, 6, NULL, 0, 'N;', 1445618905, 'web', '109.87.201.130', NULL),
+(1465, '\\gradereport_user\\event\\grade_report_viewed', 'gradereport_user', 'viewed', 'grade_report', NULL, NULL, 'r', 2, 196, 50, 6, 63, 6, 63, 0, 'N;', 1445618918, 'web', '109.87.201.130', NULL),
+(1466, '\\core\\event\\user_loggedout', 'core', 'loggedout', 'user', 'user', 63, 'r', 0, 1, 10, 0, 63, 0, NULL, 0, 'a:1:{s:9:"sessionid";s:26:"4439a1riqmm9h6geqpi96q9do5";}', 1445618964, 'web', '109.87.201.130', NULL),
+(1467, '\\core\\event\\user_loggedout', 'core', 'loggedout', 'user', 'user', 22, 'r', 0, 1, 10, 0, 22, 0, NULL, 0, 'a:1:{s:9:"sessionid";s:26:"21856ekdcg8n234i0rpflrqaa0";}', 1445619124, 'web', '109.87.201.130', NULL),
+(1468, '\\core\\event\\user_loggedin', 'core', 'loggedin', 'user', 'user', 2, 'r', 0, 1, 10, 0, 2, 0, NULL, 0, 'a:1:{s:8:"username";s:5:"admin";}', 1445619132, 'web', '109.87.201.130', NULL),
+(1469, '\\core\\event\\role_unassigned', 'core', 'unassigned', 'role', 'role', 5, 'd', 0, 196, 50, 6, 2, 6, 63, 0, 'a:3:{s:2:"id";s:2:"57";s:9:"component";s:0:"";s:6:"itemid";s:1:"0";}', 1445619243, 'web', '109.87.201.130', NULL),
+(1470, '\\core\\event\\group_member_removed', 'core', 'removed', 'group_member', 'groups', 22, 'd', 0, 196, 50, 6, 2, 6, 63, 0, 'N;', 1445619243, 'web', '109.87.201.130', NULL),
+(1471, '\\core\\event\\user_enrolment_deleted', 'core', 'deleted', 'user_enrolment', 'user_enrolments', 55, 'd', 0, 196, 50, 6, 2, 6, 63, 0, 'a:2:{s:13:"userenrolment";a:12:{s:2:"id";s:2:"55";s:6:"status";s:1:"0";s:7:"enrolid";s:2:"13";s:6:"userid";s:2:"63";s:9:"timestart";s:10:"1445618663";s:7:"timeend";s:10:"2147483647";s:10:"modifierid";s:1:"2";s:11:"timecreated";s:10:"1445618663";s:12:"timemodified";s:10:"1445618663";s:8:"courseid";s:1:"6";s:5:"enrol";s:6:"manual";s:9:"lastenrol";b:1;}s:5:"enrol";s:6:"manual";}', 1445619244, 'web', '109.87.201.130', NULL),
+(1472, '\\core\\event\\user_deleted', 'core', 'deleted', 'user', 'user', 63, 'd', 0, 332, 30, 63, 2, 0, 63, 0, 'a:5:{s:8:"username";s:16:"sirromas@ukr.net";s:5:"email";s:16:"sirromas@ukr.net";s:8:"idnumber";s:0:"";s:7:"picture";s:1:"0";s:10:"mnethostid";s:1:"1";}', 1445619244, 'web', '109.87.201.130', NULL),
+(1473, '\\core\\event\\user_created', 'core', 'created', 'user', 'user', 64, 'c', 0, 339, 30, 64, 0, 0, 64, 0, 'N;', 1445619295, 'web', '109.87.201.130', NULL);
+INSERT INTO `mdl_logstore_standard_log` (`id`, `eventname`, `component`, `action`, `target`, `objecttable`, `objectid`, `crud`, `edulevel`, `contextid`, `contextlevel`, `contextinstanceid`, `userid`, `courseid`, `relateduserid`, `anonymous`, `other`, `timecreated`, `origin`, `ip`, `realuserid`) VALUES
+(1474, '\\core\\event\\group_member_added', 'core', 'added', 'group_member', 'groups', 22, 'c', 0, 196, 50, 6, 0, 6, 64, 0, 'a:2:{s:9:"component";s:0:"";s:6:"itemid";i:0;}', 1445619307, 'web', '109.87.201.130', NULL),
+(1475, '\\core\\event\\role_unassigned', 'core', 'unassigned', 'role', 'role', 5, 'd', 0, 196, 50, 6, 2, 6, 64, 0, 'a:3:{s:2:"id";s:2:"58";s:9:"component";s:0:"";s:6:"itemid";s:1:"0";}', 1445619939, 'web', '109.87.201.130', NULL),
+(1476, '\\core\\event\\group_member_removed', 'core', 'removed', 'group_member', 'groups', 22, 'd', 0, 196, 50, 6, 2, 6, 64, 0, 'N;', 1445619939, 'web', '109.87.201.130', NULL),
+(1477, '\\core\\event\\user_enrolment_deleted', 'core', 'deleted', 'user_enrolment', 'user_enrolments', 56, 'd', 0, 196, 50, 6, 2, 6, 64, 0, 'a:2:{s:13:"userenrolment";a:12:{s:2:"id";s:2:"56";s:6:"status";s:1:"0";s:7:"enrolid";s:2:"13";s:6:"userid";s:2:"64";s:9:"timestart";s:10:"1445619307";s:7:"timeend";s:10:"2147483647";s:10:"modifierid";s:1:"2";s:11:"timecreated";s:10:"1445619307";s:12:"timemodified";s:10:"1445619307";s:8:"courseid";s:1:"6";s:5:"enrol";s:6:"manual";s:9:"lastenrol";b:1;}s:5:"enrol";s:6:"manual";}', 1445619939, 'web', '109.87.201.130', NULL),
+(1478, '\\core\\event\\user_deleted', 'core', 'deleted', 'user', 'user', 64, 'd', 0, 339, 30, 64, 2, 0, 64, 0, 'a:5:{s:8:"username";s:16:"sirromas@ukr.net";s:5:"email";s:16:"sirromas@ukr.net";s:8:"idnumber";s:0:"";s:7:"picture";s:1:"0";s:10:"mnethostid";s:1:"1";}', 1445619939, 'web', '109.87.201.130', NULL),
+(1479, '\\core\\event\\user_created', 'core', 'created', 'user', 'user', 65, 'c', 0, 340, 30, 65, 0, 0, 65, 0, 'N;', 1445620044, 'web', '109.87.201.130', NULL),
+(1480, '\\core\\event\\group_member_added', 'core', 'added', 'group_member', 'groups', 22, 'c', 0, 196, 50, 6, 0, 6, 65, 0, 'a:2:{s:9:"component";s:0:"";s:6:"itemid";i:0;}', 1445620046, 'web', '109.87.201.130', NULL),
+(1481, '\\core\\event\\role_unassigned', 'core', 'unassigned', 'role', 'role', 5, 'd', 0, 196, 50, 6, 2, 6, 65, 0, 'a:3:{s:2:"id";s:2:"59";s:9:"component";s:0:"";s:6:"itemid";s:1:"0";}', 1445620168, 'web', '109.87.201.130', NULL),
+(1482, '\\core\\event\\group_member_removed', 'core', 'removed', 'group_member', 'groups', 22, 'd', 0, 196, 50, 6, 2, 6, 65, 0, 'N;', 1445620168, 'web', '109.87.201.130', NULL),
+(1483, '\\core\\event\\user_enrolment_deleted', 'core', 'deleted', 'user_enrolment', 'user_enrolments', 57, 'd', 0, 196, 50, 6, 2, 6, 65, 0, 'a:2:{s:13:"userenrolment";a:12:{s:2:"id";s:2:"57";s:6:"status";s:1:"0";s:7:"enrolid";s:2:"13";s:6:"userid";s:2:"65";s:9:"timestart";s:10:"1445620046";s:7:"timeend";s:10:"2147483647";s:10:"modifierid";s:1:"2";s:11:"timecreated";s:10:"1445620046";s:12:"timemodified";s:10:"1445620046";s:8:"courseid";s:1:"6";s:5:"enrol";s:6:"manual";s:9:"lastenrol";b:1;}s:5:"enrol";s:6:"manual";}', 1445620168, 'web', '109.87.201.130', NULL),
+(1484, '\\core\\event\\user_deleted', 'core', 'deleted', 'user', 'user', 65, 'd', 0, 340, 30, 65, 2, 0, 65, 0, 'a:5:{s:8:"username";s:16:"sirromas@ukr.net";s:5:"email";s:16:"sirromas@ukr.net";s:8:"idnumber";s:0:"";s:7:"picture";s:1:"0";s:10:"mnethostid";s:1:"1";}', 1445620168, 'web', '109.87.201.130', NULL),
+(1485, '\\core\\event\\user_created', 'core', 'created', 'user', 'user', 66, 'c', 0, 341, 30, 66, 0, 0, 66, 0, 'N;', 1445620320, 'web', '109.87.201.130', NULL),
+(1486, '\\core\\event\\group_member_added', 'core', 'added', 'group_member', 'groups', 22, 'c', 0, 196, 50, 6, 0, 6, 66, 0, 'a:2:{s:9:"component";s:0:"";s:6:"itemid";i:0;}', 1445620327, 'web', '109.87.201.130', NULL),
+(1487, '\\core\\event\\role_unassigned', 'core', 'unassigned', 'role', 'role', 5, 'd', 0, 196, 50, 6, 2, 6, 66, 0, 'a:3:{s:2:"id";s:2:"60";s:9:"component";s:0:"";s:6:"itemid";s:1:"0";}', 1445620662, 'web', '109.87.201.130', NULL),
+(1488, '\\core\\event\\group_member_removed', 'core', 'removed', 'group_member', 'groups', 22, 'd', 0, 196, 50, 6, 2, 6, 66, 0, 'N;', 1445620662, 'web', '109.87.201.130', NULL),
+(1489, '\\core\\event\\user_enrolment_deleted', 'core', 'deleted', 'user_enrolment', 'user_enrolments', 58, 'd', 0, 196, 50, 6, 2, 6, 66, 0, 'a:2:{s:13:"userenrolment";a:12:{s:2:"id";s:2:"58";s:6:"status";s:1:"0";s:7:"enrolid";s:2:"13";s:6:"userid";s:2:"66";s:9:"timestart";s:10:"1445620327";s:7:"timeend";s:10:"2147483647";s:10:"modifierid";s:1:"2";s:11:"timecreated";s:10:"1445620327";s:12:"timemodified";s:10:"1445620327";s:8:"courseid";s:1:"6";s:5:"enrol";s:6:"manual";s:9:"lastenrol";b:1;}s:5:"enrol";s:6:"manual";}', 1445620662, 'web', '109.87.201.130', NULL),
+(1490, '\\core\\event\\user_deleted', 'core', 'deleted', 'user', 'user', 66, 'd', 0, 341, 30, 66, 2, 0, 66, 0, 'a:5:{s:8:"username";s:16:"sirromas@ukr.net";s:5:"email";s:16:"sirromas@ukr.net";s:8:"idnumber";s:0:"";s:7:"picture";s:1:"0";s:10:"mnethostid";s:1:"1";}', 1445620662, 'web', '109.87.201.130', NULL),
+(1491, '\\core\\event\\user_created', 'core', 'created', 'user', 'user', 67, 'c', 0, 342, 30, 67, 0, 0, 67, 0, 'N;', 1445620949, 'web', '109.87.201.130', NULL),
+(1492, '\\core\\event\\group_member_added', 'core', 'added', 'group_member', 'groups', 22, 'c', 0, 196, 50, 6, 0, 6, 67, 0, 'a:2:{s:9:"component";s:0:"";s:6:"itemid";i:0;}', 1445620951, 'web', '109.87.201.130', NULL),
+(1493, '\\core\\event\\user_loggedin', 'core', 'loggedin', 'user', 'user', 67, 'r', 0, 1, 10, 0, 67, 0, NULL, 0, 'a:1:{s:8:"username";s:16:"sirromas@ukr.net";}', 1445621037, 'web', '109.87.201.130', NULL),
+(1494, '\\core\\event\\course_viewed', 'core', 'viewed', 'course', NULL, NULL, 'r', 2, 2, 50, 1, 67, 1, NULL, 0, 'N;', 1445621058, 'web', '109.87.201.130', NULL),
+(1495, '\\core\\event\\user_loggedout', 'core', 'loggedout', 'user', 'user', 67, 'r', 0, 1, 10, 0, 67, 0, NULL, 0, 'a:1:{s:9:"sessionid";s:26:"36gsgb1ihp19em4v219p04t6g3";}', 1445621089, 'web', '109.87.201.130', NULL),
+(1496, '\\core\\event\\course_viewed', 'core', 'viewed', 'course', NULL, NULL, 'r', 2, 196, 50, 6, 2, 6, NULL, 0, 'N;', 1445621249, 'web', '109.87.201.130', NULL),
+(1497, '\\core\\event\\user_loggedout', 'core', 'loggedout', 'user', 'user', 2, 'r', 0, 1, 10, 0, 2, 0, NULL, 0, 'a:1:{s:9:"sessionid";s:26:"6mi5rneqntb0s2uf3botqm2cq4";}', 1445621859, 'web', '109.87.201.130', NULL),
+(1498, '\\core\\event\\course_viewed', 'core', 'viewed', 'course', NULL, NULL, 'r', 2, 2, 50, 1, 0, 1, NULL, 0, 'N;', 1445621865, 'web', '109.87.201.130', NULL),
+(1499, '\\core\\event\\user_loggedin', 'core', 'loggedin', 'user', 'user', 2, 'r', 0, 1, 10, 0, 2, 0, NULL, 0, 'a:1:{s:8:"username";s:5:"admin";}', 1445622096, 'web', '109.87.201.130', NULL),
+(1500, '\\core\\event\\user_loggedout', 'core', 'loggedout', 'user', 'user', 2, 'r', 0, 1, 10, 0, 2, 0, NULL, 0, 'a:1:{s:9:"sessionid";s:26:"44a77dqbogfk0p8fka8i1ddvr7";}', 1445622142, 'web', '109.87.201.130', NULL),
+(1501, '\\core\\event\\user_login_failed', 'core', 'failed', 'user_login', NULL, NULL, 'r', 0, 1, 10, 0, 2, 0, NULL, 0, 'a:2:{s:8:"username";s:5:"admin";s:6:"reason";i:3;}', 1445622422, 'web', '109.87.201.130', NULL),
+(1502, '\\core\\event\\user_loggedin', 'core', 'loggedin', 'user', 'user', 2, 'r', 0, 1, 10, 0, 2, 0, NULL, 0, 'a:1:{s:8:"username";s:5:"admin";}', 1445622447, 'web', '109.87.201.130', NULL),
+(1503, '\\core\\event\\user_loggedout', 'core', 'loggedout', 'user', 'user', 2, 'r', 0, 1, 10, 0, 2, 0, NULL, 0, 'a:1:{s:9:"sessionid";s:26:"8v4f07pg1vj9e2s65817fcqog0";}', 1445622636, 'web', '109.87.201.130', NULL),
+(1504, '\\core\\event\\user_loggedin', 'core', 'loggedin', 'user', 'user', 2, 'r', 0, 1, 10, 0, 2, 0, NULL, 0, 'a:1:{s:8:"username";s:5:"admin";}', 1445622646, 'web', '109.87.201.130', NULL),
+(1505, '\\core\\event\\course_viewed', 'core', 'viewed', 'course', NULL, NULL, 'r', 2, 196, 50, 6, 2, 6, NULL, 0, 'N;', 1445622863, 'web', '109.87.201.130', NULL),
+(1506, '\\core\\event\\user_loggedout', 'core', 'loggedout', 'user', 'user', 2, 'r', 0, 1, 10, 0, 2, 0, NULL, 0, 'a:1:{s:9:"sessionid";s:26:"am6a8fderpeuunkt03mjj6ggb4";}', 1445622900, 'web', '109.87.201.130', NULL),
+(1507, '\\core\\event\\user_loggedin', 'core', 'loggedin', 'user', 'user', 67, 'r', 0, 1, 10, 0, 67, 0, NULL, 0, 'a:1:{s:8:"username";s:16:"sirromas@ukr.net";}', 1445622913, 'web', '109.87.201.130', NULL),
+(1508, '\\core\\event\\course_viewed', 'core', 'viewed', 'course', NULL, NULL, 'r', 2, 196, 50, 6, 67, 6, NULL, 0, 'N;', 1445622937, 'web', '109.87.201.130', NULL),
+(1509, '\\gradereport_user\\event\\grade_report_viewed', 'gradereport_user', 'viewed', 'grade_report', NULL, NULL, 'r', 2, 196, 50, 6, 67, 6, 67, 0, 'N;', 1445622945, 'web', '109.87.201.130', NULL),
+(1510, '\\core\\event\\user_loggedout', 'core', 'loggedout', 'user', 'user', 67, 'r', 0, 1, 10, 0, 67, 0, NULL, 0, 'a:1:{s:9:"sessionid";s:26:"qri63moc6a191sq82ve154du41";}', 1445622963, 'web', '109.87.201.130', NULL),
+(1511, '\\core\\event\\user_loggedin', 'core', 'loggedin', 'user', 'user', 2, 'r', 0, 1, 10, 0, 2, 0, NULL, 0, 'a:1:{s:8:"username";s:5:"admin";}', 1445622977, 'web', '109.87.201.130', NULL),
+(1512, '\\core\\event\\user_loggedout', 'core', 'loggedout', 'user', 'user', 2, 'r', 0, 1, 10, 0, 2, 0, NULL, 0, 'a:1:{s:9:"sessionid";s:26:"3e0umee940despidr73i9ausf7";}', 1445623208, 'web', '109.87.201.130', NULL),
+(1513, '\\core\\event\\user_loggedin', 'core', 'loggedin', 'user', 'user', 2, 'r', 0, 1, 10, 0, 2, 0, NULL, 0, 'a:1:{s:8:"username";s:5:"admin";}', 1445623258, 'web', '109.87.201.130', NULL),
+(1514, '\\core\\event\\user_loggedout', 'core', 'loggedout', 'user', 'user', 2, 'r', 0, 1, 10, 0, 2, 0, NULL, 0, 'a:1:{s:9:"sessionid";s:26:"8om7m4sj7ci9e4ulscc698opf2";}', 1445623322, 'web', '109.87.201.130', NULL),
+(1515, '\\core\\event\\course_viewed', 'core', 'viewed', 'course', NULL, NULL, 'r', 2, 2, 50, 1, 0, 1, NULL, 0, 'N;', 1445623359, 'web', '109.87.201.130', NULL);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `mdl_log_display`
+--
+
+DROP TABLE IF EXISTS `mdl_log_display`;
+CREATE TABLE IF NOT EXISTS `mdl_log_display` (
+  `id` bigint(10) NOT NULL AUTO_INCREMENT,
+  `module` varchar(20) NOT NULL DEFAULT '',
+  `action` varchar(40) NOT NULL DEFAULT '',
+  `mtable` varchar(30) NOT NULL DEFAULT '',
+  `field` varchar(200) NOT NULL DEFAULT '',
+  `component` varchar(100) NOT NULL DEFAULT '',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `mdl_logdisp_modact_uix` (`module`,`action`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='For a particular module/action, specifies a moodle table/fie' AUTO_INCREMENT=188 ;
+
+--
+-- Dumping data for table `mdl_log_display`
+--
+
+INSERT INTO `mdl_log_display` (`id`, `module`, `action`, `mtable`, `field`, `component`) VALUES
+(1, 'course', 'user report', 'user', 'CONCAT(firstname, '' '', lastname)', 'moodle'),
+(2, 'course', 'view', 'course', 'fullname', 'moodle'),
+(3, 'course', 'view section', 'course_sections', 'name', 'moodle'),
+(4, 'course', 'update', 'course', 'fullname', 'moodle'),
+(5, 'course', 'hide', 'course', 'fullname', 'moodle'),
+(6, 'course', 'show', 'course', 'fullname', 'moodle'),
+(7, 'course', 'move', 'course', 'fullname', 'moodle'),
+(8, 'course', 'enrol', 'course', 'fullname', 'moodle'),
+(9, 'course', 'unenrol', 'course', 'fullname', 'moodle'),
+(10, 'course', 'report log', 'course', 'fullname', 'moodle'),
+(11, 'course', 'report live', 'course', 'fullname', 'moodle'),
+(12, 'course', 'report outline', 'course', 'fullname', 'moodle'),
+(13, 'course', 'report participation', 'course', 'fullname', 'moodle'),
+(14, 'course', 'report stats', 'course', 'fullname', 'moodle'),
+(15, 'category', 'add', 'course_categories', 'name', 'moodle'),
+(16, 'category', 'hide', 'course_categories', 'name', 'moodle'),
+(17, 'category', 'move', 'course_categories', 'name', 'moodle'),
+(18, 'category', 'show', 'course_categories', 'name', 'moodle'),
+(19, 'category', 'update', 'course_categories', 'name', 'moodle'),
+(20, 'message', 'write', 'user', 'CONCAT(firstname, '' '', lastname)', 'moodle'),
+(21, 'message', 'read', 'user', 'CONCAT(firstname, '' '', lastname)', 'moodle'),
+(22, 'message', 'add contact', 'user', 'CONCAT(firstname, '' '', lastname)', 'moodle'),
+(23, 'message', 'remove contact', 'user', 'CONCAT(firstname, '' '', lastname)', 'moodle'),
+(24, 'message', 'block contact', 'user', 'CONCAT(firstname, '' '', lastname)', 'moodle'),
+(25, 'message', 'unblock contact', 'user', 'CONCAT(firstname, '' '', lastname)', 'moodle'),
+(26, 'group', 'view', 'groups', 'name', 'moodle'),
+(27, 'tag', 'update', 'tag', 'name', 'moodle'),
+(28, 'tag', 'flag', 'tag', 'name', 'moodle'),
+(29, 'user', 'view', 'user', 'CONCAT(firstname, '' '', lastname)', 'moodle'),
+(30, 'assign', 'add', 'assign', 'name', 'mod_assign'),
+(31, 'assign', 'delete mod', 'assign', 'name', 'mod_assign'),
+(32, 'assign', 'download all submissions', 'assign', 'name', 'mod_assign'),
+(33, 'assign', 'grade submission', 'assign', 'name', 'mod_assign'),
+(34, 'assign', 'lock submission', 'assign', 'name', 'mod_assign'),
+(35, 'assign', 'reveal identities', 'assign', 'name', 'mod_assign'),
+(36, 'assign', 'revert submission to draft', 'assign', 'name', 'mod_assign'),
+(37, 'assign', 'set marking workflow state', 'assign', 'name', 'mod_assign'),
+(38, 'assign', 'submission statement accepted', 'assign', 'name', 'mod_assign'),
+(39, 'assign', 'submit', 'assign', 'name', 'mod_assign'),
+(40, 'assign', 'submit for grading', 'assign', 'name', 'mod_assign'),
+(41, 'assign', 'unlock submission', 'assign', 'name', 'mod_assign'),
+(42, 'assign', 'update', 'assign', 'name', 'mod_assign'),
+(43, 'assign', 'upload', 'assign', 'name', 'mod_assign'),
+(44, 'assign', 'view', 'assign', 'name', 'mod_assign'),
+(45, 'assign', 'view all', 'course', 'fullname', 'mod_assign'),
+(46, 'assign', 'view confirm submit assignment form', 'assign', 'name', 'mod_assign'),
+(47, 'assign', 'view grading form', 'assign', 'name', 'mod_assign'),
+(48, 'assign', 'view submission', 'assign', 'name', 'mod_assign'),
+(49, 'assign', 'view submission grading table', 'assign', 'name', 'mod_assign'),
+(50, 'assign', 'view submit assignment form', 'assign', 'name', 'mod_assign'),
+(51, 'assign', 'view feedback', 'assign', 'name', 'mod_assign'),
+(52, 'assign', 'view batch set marking workflow state', 'assign', 'name', 'mod_assign'),
+(53, 'assignment', 'view', 'assignment', 'name', 'mod_assignment'),
+(54, 'assignment', 'add', 'assignment', 'name', 'mod_assignment'),
+(55, 'assignment', 'update', 'assignment', 'name', 'mod_assignment'),
+(56, 'assignment', 'view submission', 'assignment', 'name', 'mod_assignment'),
+(57, 'assignment', 'upload', 'assignment', 'name', 'mod_assignment'),
+(58, 'book', 'add', 'book', 'name', 'mod_book'),
+(59, 'book', 'update', 'book', 'name', 'mod_book'),
+(60, 'book', 'view', 'book', 'name', 'mod_book'),
+(61, 'book', 'add chapter', 'book_chapters', 'title', 'mod_book'),
+(62, 'book', 'update chapter', 'book_chapters', 'title', 'mod_book'),
+(63, 'book', 'view chapter', 'book_chapters', 'title', 'mod_book'),
+(64, 'chat', 'view', 'chat', 'name', 'mod_chat'),
+(65, 'chat', 'add', 'chat', 'name', 'mod_chat'),
+(66, 'chat', 'update', 'chat', 'name', 'mod_chat'),
+(67, 'chat', 'report', 'chat', 'name', 'mod_chat'),
+(68, 'chat', 'talk', 'chat', 'name', 'mod_chat'),
+(69, 'choice', 'view', 'choice', 'name', 'mod_choice'),
+(70, 'choice', 'update', 'choice', 'name', 'mod_choice'),
+(71, 'choice', 'add', 'choice', 'name', 'mod_choice'),
+(72, 'choice', 'report', 'choice', 'name', 'mod_choice'),
+(73, 'choice', 'choose', 'choice', 'name', 'mod_choice'),
+(74, 'choice', 'choose again', 'choice', 'name', 'mod_choice'),
+(75, 'data', 'view', 'data', 'name', 'mod_data'),
+(76, 'data', 'add', 'data', 'name', 'mod_data'),
+(77, 'data', 'update', 'data', 'name', 'mod_data'),
+(78, 'data', 'record delete', 'data', 'name', 'mod_data'),
+(79, 'data', 'fields add', 'data_fields', 'name', 'mod_data'),
+(80, 'data', 'fields update', 'data_fields', 'name', 'mod_data'),
+(81, 'data', 'templates saved', 'data', 'name', 'mod_data'),
+(82, 'data', 'templates def', 'data', 'name', 'mod_data'),
+(83, 'feedback', 'startcomplete', 'feedback', 'name', 'mod_feedback'),
+(84, 'feedback', 'submit', 'feedback', 'name', 'mod_feedback'),
+(85, 'feedback', 'delete', 'feedback', 'name', 'mod_feedback'),
+(86, 'feedback', 'view', 'feedback', 'name', 'mod_feedback'),
+(87, 'feedback', 'view all', 'course', 'shortname', 'mod_feedback'),
+(88, 'folder', 'view', 'folder', 'name', 'mod_folder'),
+(89, 'folder', 'view all', 'folder', 'name', 'mod_folder'),
+(90, 'folder', 'update', 'folder', 'name', 'mod_folder'),
+(91, 'folder', 'add', 'folder', 'name', 'mod_folder'),
+(92, 'forum', 'add', 'forum', 'name', 'mod_forum'),
+(93, 'forum', 'update', 'forum', 'name', 'mod_forum'),
+(94, 'forum', 'add discussion', 'forum_discussions', 'name', 'mod_forum'),
+(95, 'forum', 'add post', 'forum_posts', 'subject', 'mod_forum'),
+(96, 'forum', 'update post', 'forum_posts', 'subject', 'mod_forum'),
+(97, 'forum', 'user report', 'user', 'CONCAT(firstname, '' '', lastname)', 'mod_forum'),
+(98, 'forum', 'move discussion', 'forum_discussions', 'name', 'mod_forum'),
+(99, 'forum', 'view subscribers', 'forum', 'name', 'mod_forum'),
+(100, 'forum', 'view discussion', 'forum_discussions', 'name', 'mod_forum'),
+(101, 'forum', 'view forum', 'forum', 'name', 'mod_forum'),
+(102, 'forum', 'subscribe', 'forum', 'name', 'mod_forum'),
+(103, 'forum', 'unsubscribe', 'forum', 'name', 'mod_forum'),
+(104, 'glossary', 'add', 'glossary', 'name', 'mod_glossary'),
+(105, 'glossary', 'update', 'glossary', 'name', 'mod_glossary'),
+(106, 'glossary', 'view', 'glossary', 'name', 'mod_glossary'),
+(107, 'glossary', 'view all', 'glossary', 'name', 'mod_glossary'),
+(108, 'glossary', 'add entry', 'glossary', 'name', 'mod_glossary'),
+(109, 'glossary', 'update entry', 'glossary', 'name', 'mod_glossary'),
+(110, 'glossary', 'add category', 'glossary', 'name', 'mod_glossary'),
+(111, 'glossary', 'update category', 'glossary', 'name', 'mod_glossary'),
+(112, 'glossary', 'delete category', 'glossary', 'name', 'mod_glossary'),
+(113, 'glossary', 'approve entry', 'glossary', 'name', 'mod_glossary'),
+(114, 'glossary', 'disapprove entry', 'glossary', 'name', 'mod_glossary'),
+(115, 'glossary', 'view entry', 'glossary_entries', 'concept', 'mod_glossary'),
+(116, 'imscp', 'view', 'imscp', 'name', 'mod_imscp'),
+(117, 'imscp', 'view all', 'imscp', 'name', 'mod_imscp'),
+(118, 'imscp', 'update', 'imscp', 'name', 'mod_imscp'),
+(119, 'imscp', 'add', 'imscp', 'name', 'mod_imscp'),
+(120, 'label', 'add', 'label', 'name', 'mod_label'),
+(121, 'label', 'update', 'label', 'name', 'mod_label'),
+(122, 'lesson', 'start', 'lesson', 'name', 'mod_lesson'),
+(123, 'lesson', 'end', 'lesson', 'name', 'mod_lesson'),
+(124, 'lesson', 'view', 'lesson_pages', 'title', 'mod_lesson'),
+(125, 'lti', 'view', 'lti', 'name', 'mod_lti'),
+(126, 'lti', 'launch', 'lti', 'name', 'mod_lti'),
+(127, 'lti', 'view all', 'lti', 'name', 'mod_lti'),
+(128, 'page', 'view', 'page', 'name', 'mod_page'),
+(129, 'page', 'view all', 'page', 'name', 'mod_page'),
+(130, 'page', 'update', 'page', 'name', 'mod_page'),
+(131, 'page', 'add', 'page', 'name', 'mod_page'),
+(132, 'quiz', 'add', 'quiz', 'name', 'mod_quiz'),
+(133, 'quiz', 'update', 'quiz', 'name', 'mod_quiz'),
+(134, 'quiz', 'view', 'quiz', 'name', 'mod_quiz'),
+(135, 'quiz', 'report', 'quiz', 'name', 'mod_quiz'),
+(136, 'quiz', 'attempt', 'quiz', 'name', 'mod_quiz'),
+(137, 'quiz', 'submit', 'quiz', 'name', 'mod_quiz'),
+(138, 'quiz', 'review', 'quiz', 'name', 'mod_quiz'),
+(139, 'quiz', 'editquestions', 'quiz', 'name', 'mod_quiz'),
+(140, 'quiz', 'preview', 'quiz', 'name', 'mod_quiz'),
+(141, 'quiz', 'start attempt', 'quiz', 'name', 'mod_quiz'),
+(142, 'quiz', 'close attempt', 'quiz', 'name', 'mod_quiz'),
+(143, 'quiz', 'continue attempt', 'quiz', 'name', 'mod_quiz'),
+(144, 'quiz', 'edit override', 'quiz', 'name', 'mod_quiz'),
+(145, 'quiz', 'delete override', 'quiz', 'name', 'mod_quiz'),
+(146, 'quiz', 'view summary', 'quiz', 'name', 'mod_quiz'),
+(147, 'resource', 'view', 'resource', 'name', 'mod_resource'),
+(148, 'resource', 'view all', 'resource', 'name', 'mod_resource'),
+(149, 'resource', 'update', 'resource', 'name', 'mod_resource'),
+(150, 'resource', 'add', 'resource', 'name', 'mod_resource'),
+(151, 'scorm', 'view', 'scorm', 'name', 'mod_scorm'),
+(152, 'scorm', 'review', 'scorm', 'name', 'mod_scorm'),
+(153, 'scorm', 'update', 'scorm', 'name', 'mod_scorm'),
+(154, 'scorm', 'add', 'scorm', 'name', 'mod_scorm'),
+(155, 'survey', 'add', 'survey', 'name', 'mod_survey'),
+(156, 'survey', 'update', 'survey', 'name', 'mod_survey'),
+(157, 'survey', 'download', 'survey', 'name', 'mod_survey'),
+(158, 'survey', 'view form', 'survey', 'name', 'mod_survey'),
+(159, 'survey', 'view graph', 'survey', 'name', 'mod_survey'),
+(160, 'survey', 'view report', 'survey', 'name', 'mod_survey'),
+(161, 'survey', 'submit', 'survey', 'name', 'mod_survey'),
+(162, 'url', 'view', 'url', 'name', 'mod_url'),
+(163, 'url', 'view all', 'url', 'name', 'mod_url'),
+(164, 'url', 'update', 'url', 'name', 'mod_url'),
+(165, 'url', 'add', 'url', 'name', 'mod_url'),
+(166, 'workshop', 'add', 'workshop', 'name', 'mod_workshop'),
+(167, 'workshop', 'update', 'workshop', 'name', 'mod_workshop'),
+(168, 'workshop', 'view', 'workshop', 'name', 'mod_workshop'),
+(169, 'workshop', 'view all', 'workshop', 'name', 'mod_workshop'),
+(170, 'workshop', 'add submission', 'workshop_submissions', 'title', 'mod_workshop'),
+(171, 'workshop', 'update submission', 'workshop_submissions', 'title', 'mod_workshop'),
+(172, 'workshop', 'view submission', 'workshop_submissions', 'title', 'mod_workshop'),
+(173, 'workshop', 'add assessment', 'workshop_submissions', 'title', 'mod_workshop'),
+(174, 'workshop', 'update assessment', 'workshop_submissions', 'title', 'mod_workshop'),
+(175, 'workshop', 'add example', 'workshop_submissions', 'title', 'mod_workshop'),
+(176, 'workshop', 'update example', 'workshop_submissions', 'title', 'mod_workshop'),
+(177, 'workshop', 'view example', 'workshop_submissions', 'title', 'mod_workshop'),
+(178, 'workshop', 'add reference assessment', 'workshop_submissions', 'title', 'mod_workshop'),
+(179, 'workshop', 'update reference assessment', 'workshop_submissions', 'title', 'mod_workshop'),
+(180, 'workshop', 'add example assessment', 'workshop_submissions', 'title', 'mod_workshop'),
+(181, 'workshop', 'update example assessment', 'workshop_submissions', 'title', 'mod_workshop'),
+(182, 'workshop', 'update aggregate grades', 'workshop', 'name', 'mod_workshop'),
+(183, 'workshop', 'update clear aggregated grades', 'workshop', 'name', 'mod_workshop'),
+(184, 'workshop', 'update clear assessments', 'workshop', 'name', 'mod_workshop'),
+(185, 'book', 'exportimscp', 'book', 'name', 'booktool_exportimscp'),
+(186, 'book', 'print', 'book', 'name', 'booktool_print'),
+(187, 'book', 'print chapter', 'book_chapters', 'title', 'booktool_print');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `mdl_log_queries`
+--
+
+DROP TABLE IF EXISTS `mdl_log_queries`;
+CREATE TABLE IF NOT EXISTS `mdl_log_queries` (
+  `id` bigint(10) NOT NULL AUTO_INCREMENT,
+  `qtype` mediumint(5) NOT NULL,
+  `sqltext` longtext NOT NULL,
+  `sqlparams` longtext,
+  `error` mediumint(5) NOT NULL DEFAULT '0',
+  `info` longtext,
+  `backtrace` longtext,
+  `exectime` decimal(10,5) NOT NULL,
+  `timelogged` bigint(10) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Logged database queries.' AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -9424,6 +10284,69 @@ INSERT INTO `mdl_message` (`id`, `useridfrom`, `useridto`, `subject`, `fullmessa
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `mdl_messageinbound_datakeys`
+--
+
+DROP TABLE IF EXISTS `mdl_messageinbound_datakeys`;
+CREATE TABLE IF NOT EXISTS `mdl_messageinbound_datakeys` (
+  `id` bigint(10) NOT NULL AUTO_INCREMENT,
+  `handler` bigint(10) NOT NULL,
+  `datavalue` bigint(10) NOT NULL,
+  `datakey` varchar(64) DEFAULT NULL,
+  `timecreated` bigint(10) NOT NULL,
+  `expires` bigint(10) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `mdl_messdata_handat_uix` (`handler`,`datavalue`),
+  KEY `mdl_messdata_han_ix` (`handler`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Inbound Message data item secret keys.' AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `mdl_messageinbound_handlers`
+--
+
+DROP TABLE IF EXISTS `mdl_messageinbound_handlers`;
+CREATE TABLE IF NOT EXISTS `mdl_messageinbound_handlers` (
+  `id` bigint(10) NOT NULL AUTO_INCREMENT,
+  `component` varchar(100) NOT NULL DEFAULT '',
+  `classname` varchar(255) NOT NULL DEFAULT '',
+  `defaultexpiration` bigint(10) NOT NULL DEFAULT '86400',
+  `validateaddress` tinyint(1) NOT NULL DEFAULT '1',
+  `enabled` tinyint(1) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `mdl_messhand_cla_uix` (`classname`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='Inbound Message Handler definitions.' AUTO_INCREMENT=4 ;
+
+--
+-- Dumping data for table `mdl_messageinbound_handlers`
+--
+
+INSERT INTO `mdl_messageinbound_handlers` (`id`, `component`, `classname`, `defaultexpiration`, `validateaddress`, `enabled`) VALUES
+(1, 'core', '\\core\\message\\inbound\\private_files_handler', 0, 1, 0),
+(2, 'mod_forum', '\\mod_forum\\message\\inbound\\reply_handler', 604800, 1, 0),
+(3, 'tool_messageinbound', '\\tool_messageinbound\\message\\inbound\\invalid_recipient_handler', 604800, 0, 1);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `mdl_messageinbound_messagelist`
+--
+
+DROP TABLE IF EXISTS `mdl_messageinbound_messagelist`;
+CREATE TABLE IF NOT EXISTS `mdl_messageinbound_messagelist` (
+  `id` bigint(10) NOT NULL AUTO_INCREMENT,
+  `messageid` longtext NOT NULL,
+  `userid` bigint(10) NOT NULL,
+  `address` longtext NOT NULL,
+  `timecreated` bigint(10) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `mdl_messmess_use_ix` (`userid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='A list of message IDs for existing replies' AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `mdl_message_airnotifier_devices`
 --
 
@@ -9578,65 +10501,48 @@ INSERT INTO `mdl_message_working` (`id`, `unreadmessageid`, `processorid`) VALUE
 -- --------------------------------------------------------
 
 --
--- Table structure for table `mdl_messageinbound_datakeys`
+-- Table structure for table `mdl_mnetservice_enrol_courses`
 --
 
-DROP TABLE IF EXISTS `mdl_messageinbound_datakeys`;
-CREATE TABLE IF NOT EXISTS `mdl_messageinbound_datakeys` (
+DROP TABLE IF EXISTS `mdl_mnetservice_enrol_courses`;
+CREATE TABLE IF NOT EXISTS `mdl_mnetservice_enrol_courses` (
   `id` bigint(10) NOT NULL AUTO_INCREMENT,
-  `handler` bigint(10) NOT NULL,
-  `datavalue` bigint(10) NOT NULL,
-  `datakey` varchar(64) DEFAULT NULL,
-  `timecreated` bigint(10) NOT NULL,
-  `expires` bigint(10) DEFAULT NULL,
+  `hostid` bigint(10) NOT NULL,
+  `remoteid` bigint(10) NOT NULL,
+  `categoryid` bigint(10) NOT NULL,
+  `categoryname` varchar(255) NOT NULL DEFAULT '',
+  `sortorder` bigint(10) NOT NULL DEFAULT '0',
+  `fullname` varchar(254) NOT NULL DEFAULT '',
+  `shortname` varchar(100) NOT NULL DEFAULT '',
+  `idnumber` varchar(100) NOT NULL DEFAULT '',
+  `summary` longtext NOT NULL,
+  `summaryformat` smallint(3) DEFAULT '0',
+  `startdate` bigint(10) NOT NULL,
+  `roleid` bigint(10) NOT NULL,
+  `rolename` varchar(255) NOT NULL DEFAULT '',
   PRIMARY KEY (`id`),
-  UNIQUE KEY `mdl_messdata_handat_uix` (`handler`,`datavalue`),
-  KEY `mdl_messdata_han_ix` (`handler`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Inbound Message data item secret keys.' AUTO_INCREMENT=1 ;
+  UNIQUE KEY `mdl_mnetenrocour_hosrem_uix` (`hostid`,`remoteid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Caches the information fetched via XML-RPC about courses on ' AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `mdl_messageinbound_handlers`
+-- Table structure for table `mdl_mnetservice_enrol_enrolments`
 --
 
-DROP TABLE IF EXISTS `mdl_messageinbound_handlers`;
-CREATE TABLE IF NOT EXISTS `mdl_messageinbound_handlers` (
+DROP TABLE IF EXISTS `mdl_mnetservice_enrol_enrolments`;
+CREATE TABLE IF NOT EXISTS `mdl_mnetservice_enrol_enrolments` (
   `id` bigint(10) NOT NULL AUTO_INCREMENT,
-  `component` varchar(100) NOT NULL DEFAULT '',
-  `classname` varchar(255) NOT NULL DEFAULT '',
-  `defaultexpiration` bigint(10) NOT NULL DEFAULT '86400',
-  `validateaddress` tinyint(1) NOT NULL DEFAULT '1',
-  `enabled` tinyint(1) NOT NULL DEFAULT '0',
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `mdl_messhand_cla_uix` (`classname`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='Inbound Message Handler definitions.' AUTO_INCREMENT=4 ;
-
---
--- Dumping data for table `mdl_messageinbound_handlers`
---
-
-INSERT INTO `mdl_messageinbound_handlers` (`id`, `component`, `classname`, `defaultexpiration`, `validateaddress`, `enabled`) VALUES
-(1, 'core', '\\core\\message\\inbound\\private_files_handler', 0, 1, 0),
-(2, 'mod_forum', '\\mod_forum\\message\\inbound\\reply_handler', 604800, 1, 0),
-(3, 'tool_messageinbound', '\\tool_messageinbound\\message\\inbound\\invalid_recipient_handler', 604800, 0, 1);
-
--- --------------------------------------------------------
-
---
--- Table structure for table `mdl_messageinbound_messagelist`
---
-
-DROP TABLE IF EXISTS `mdl_messageinbound_messagelist`;
-CREATE TABLE IF NOT EXISTS `mdl_messageinbound_messagelist` (
-  `id` bigint(10) NOT NULL AUTO_INCREMENT,
-  `messageid` longtext NOT NULL,
+  `hostid` bigint(10) NOT NULL,
   `userid` bigint(10) NOT NULL,
-  `address` longtext NOT NULL,
-  `timecreated` bigint(10) NOT NULL,
+  `remotecourseid` bigint(10) NOT NULL,
+  `rolename` varchar(255) NOT NULL DEFAULT '',
+  `enroltime` bigint(10) NOT NULL DEFAULT '0',
+  `enroltype` varchar(20) NOT NULL DEFAULT '',
   PRIMARY KEY (`id`),
-  KEY `mdl_messmess_use_ix` (`userid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='A list of message IDs for existing replies' AUTO_INCREMENT=1 ;
+  KEY `mdl_mnetenroenro_use_ix` (`userid`),
+  KEY `mdl_mnetenroenro_hos_ix` (`hostid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Caches the information about enrolments of our local users i' AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -9962,52 +10868,6 @@ CREATE TABLE IF NOT EXISTS `mdl_mnet_sso_access_control` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `mdl_mnetservice_enrol_courses`
---
-
-DROP TABLE IF EXISTS `mdl_mnetservice_enrol_courses`;
-CREATE TABLE IF NOT EXISTS `mdl_mnetservice_enrol_courses` (
-  `id` bigint(10) NOT NULL AUTO_INCREMENT,
-  `hostid` bigint(10) NOT NULL,
-  `remoteid` bigint(10) NOT NULL,
-  `categoryid` bigint(10) NOT NULL,
-  `categoryname` varchar(255) NOT NULL DEFAULT '',
-  `sortorder` bigint(10) NOT NULL DEFAULT '0',
-  `fullname` varchar(254) NOT NULL DEFAULT '',
-  `shortname` varchar(100) NOT NULL DEFAULT '',
-  `idnumber` varchar(100) NOT NULL DEFAULT '',
-  `summary` longtext NOT NULL,
-  `summaryformat` smallint(3) DEFAULT '0',
-  `startdate` bigint(10) NOT NULL,
-  `roleid` bigint(10) NOT NULL,
-  `rolename` varchar(255) NOT NULL DEFAULT '',
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `mdl_mnetenrocour_hosrem_uix` (`hostid`,`remoteid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Caches the information fetched via XML-RPC about courses on ' AUTO_INCREMENT=1 ;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `mdl_mnetservice_enrol_enrolments`
---
-
-DROP TABLE IF EXISTS `mdl_mnetservice_enrol_enrolments`;
-CREATE TABLE IF NOT EXISTS `mdl_mnetservice_enrol_enrolments` (
-  `id` bigint(10) NOT NULL AUTO_INCREMENT,
-  `hostid` bigint(10) NOT NULL,
-  `userid` bigint(10) NOT NULL,
-  `remotecourseid` bigint(10) NOT NULL,
-  `rolename` varchar(255) NOT NULL DEFAULT '',
-  `enroltime` bigint(10) NOT NULL DEFAULT '0',
-  `enroltype` varchar(20) NOT NULL DEFAULT '',
-  PRIMARY KEY (`id`),
-  KEY `mdl_mnetenroenro_use_ix` (`userid`),
-  KEY `mdl_mnetenroenro_hos_ix` (`hostid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Caches the information about enrolments of our local users i' AUTO_INCREMENT=1 ;
-
--- --------------------------------------------------------
-
---
 -- Table structure for table `mdl_modules`
 --
 
@@ -10066,7 +10926,7 @@ CREATE TABLE IF NOT EXISTS `mdl_my_pages` (
   `sortorder` mediumint(6) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`),
   KEY `mdl_mypage_usepri_ix` (`userid`,`private`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='Extra user pages for the My Moodle system' AUTO_INCREMENT=24 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='Extra user pages for the My Moodle system' AUTO_INCREMENT=42 ;
 
 --
 -- Dumping data for table `mdl_my_pages`
@@ -10095,7 +10955,11 @@ INSERT INTO `mdl_my_pages` (`id`, `userid`, `name`, `private`, `sortorder`) VALU
 (20, 19, '__default', 1, 0),
 (21, 20, '__default', 1, 0),
 (22, 21, '__default', 1, 0),
-(23, 22, '__default', 1, 0);
+(23, 22, '__default', 1, 0),
+(24, 23, '__default', 0, 0),
+(38, 55, '__default', 1, 0),
+(39, 56, '__default', 1, 0),
+(41, 67, '__default', 1, 0);
 
 -- --------------------------------------------------------
 
@@ -10510,49 +11374,46 @@ INSERT INTO `mdl_question_answers` (`id`, `question`, `answer`, `answerformat`, 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `mdl_question_attempt_step_data`
+-- Table structure for table `mdl_question_attempts`
 --
 
-DROP TABLE IF EXISTS `mdl_question_attempt_step_data`;
-CREATE TABLE IF NOT EXISTS `mdl_question_attempt_step_data` (
+DROP TABLE IF EXISTS `mdl_question_attempts`;
+CREATE TABLE IF NOT EXISTS `mdl_question_attempts` (
   `id` bigint(10) NOT NULL AUTO_INCREMENT,
-  `attemptstepid` bigint(10) NOT NULL,
-  `name` varchar(32) NOT NULL DEFAULT '',
-  `value` longtext,
+  `questionusageid` bigint(10) NOT NULL,
+  `slot` bigint(10) NOT NULL,
+  `behaviour` varchar(32) NOT NULL DEFAULT '',
+  `questionid` bigint(10) NOT NULL,
+  `variant` bigint(10) NOT NULL DEFAULT '1',
+  `maxmark` decimal(12,7) NOT NULL,
+  `minfraction` decimal(12,7) NOT NULL,
+  `maxfraction` decimal(12,7) NOT NULL DEFAULT '1.0000000',
+  `flagged` tinyint(1) NOT NULL DEFAULT '0',
+  `questionsummary` longtext,
+  `rightanswer` longtext,
+  `responsesummary` longtext,
+  `timemodified` bigint(10) NOT NULL,
   PRIMARY KEY (`id`),
-  UNIQUE KEY `mdl_quesattestepdata_attna_uix` (`attemptstepid`,`name`),
-  KEY `mdl_quesattestepdata_att_ix` (`attemptstepid`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='Each question_attempt_step has an associative array of the d' AUTO_INCREMENT=25 ;
+  UNIQUE KEY `mdl_quesatte_queslo_uix` (`questionusageid`,`slot`),
+  KEY `mdl_quesatte_beh_ix` (`behaviour`),
+  KEY `mdl_quesatte_que_ix` (`questionid`),
+  KEY `mdl_quesatte_que2_ix` (`questionusageid`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='Each row here corresponds to an attempt at one question, as ' AUTO_INCREMENT=10 ;
 
 --
--- Dumping data for table `mdl_question_attempt_step_data`
+-- Dumping data for table `mdl_question_attempts`
 --
 
-INSERT INTO `mdl_question_attempt_step_data` (`id`, `attemptstepid`, `name`, `value`) VALUES
-(1, 1, '_order', '3,2,1'),
-(2, 2, '_order', '6,7,8'),
-(3, 4, 'answer', '0'),
-(4, 5, 'answer', '1'),
-(5, 6, 'answer', '1'),
-(6, 7, '-finish', '1'),
-(7, 8, '-finish', '1'),
-(8, 9, '-finish', '1'),
-(9, 10, '_order', '3,1,2'),
-(10, 11, '_order', '6,7,8'),
-(11, 13, 'answer', '0'),
-(12, 14, 'answer', '1'),
-(13, 15, 'answer', '0'),
-(14, 16, '-finish', '1'),
-(15, 17, '-finish', '1'),
-(16, 18, '-finish', '1'),
-(17, 19, '_order', '3,1,2'),
-(18, 20, '_order', '8,7,6'),
-(19, 22, 'answer', '2'),
-(20, 23, 'answer', '1'),
-(21, 24, 'answer', '0'),
-(22, 25, '-finish', '1'),
-(23, 26, '-finish', '1'),
-(24, 27, '-finish', '1');
+INSERT INTO `mdl_question_attempts` (`id`, `questionusageid`, `slot`, `behaviour`, `questionid`, `variant`, `maxmark`, `minfraction`, `maxfraction`, `flagged`, `questionsummary`, `rightanswer`, `responsesummary`, `timemodified`) VALUES
+(1, 1, 1, 'deferredfeedback', 1, 1, '1.0000000', '0.0000000', '1.0000000', 0, 'Some text: A3; A2; A1', 'A2', 'A3', 1444926128),
+(2, 1, 2, 'deferredfeedback', 3, 1, '1.0000000', '0.0000000', '1.0000000', 0, 'Some text ...: A1; A2; A3', 'A1', 'A2', 1444926128),
+(3, 1, 3, 'deferredfeedback', 2, 1, '1.0000000', '0.0000000', '1.0000000', 0, 'Some text', 'False', 'True', 1444926128),
+(4, 2, 1, 'deferredfeedback', 1, 1, '1.0000000', '0.0000000', '1.0000000', 0, 'Some text: A3; A1; A2', 'A2', 'A3', 1444926231),
+(5, 2, 2, 'deferredfeedback', 3, 1, '1.0000000', '0.0000000', '1.0000000', 0, 'Some text ...: A1; A2; A3', 'A1', 'A2', 1444926231),
+(6, 2, 3, 'deferredfeedback', 2, 1, '1.0000000', '0.0000000', '1.0000000', 0, 'Some text', 'False', 'False', 1444926231),
+(7, 3, 1, 'deferredfeedback', 1, 1, '1.0000000', '0.0000000', '1.0000000', 0, 'Some text: A3; A1; A2', 'A2', 'A2', 1444926320),
+(8, 3, 2, 'deferredfeedback', 3, 1, '1.0000000', '0.0000000', '1.0000000', 0, 'Some text ...: A3; A2; A1', 'A1', 'A2', 1444926320),
+(9, 3, 3, 'deferredfeedback', 2, 1, '1.0000000', '0.0000000', '1.0000000', 0, 'Some text', 'False', 'False', 1444926320);
 
 -- --------------------------------------------------------
 
@@ -10611,46 +11472,49 @@ INSERT INTO `mdl_question_attempt_steps` (`id`, `questionattemptid`, `sequencenu
 -- --------------------------------------------------------
 
 --
--- Table structure for table `mdl_question_attempts`
+-- Table structure for table `mdl_question_attempt_step_data`
 --
 
-DROP TABLE IF EXISTS `mdl_question_attempts`;
-CREATE TABLE IF NOT EXISTS `mdl_question_attempts` (
+DROP TABLE IF EXISTS `mdl_question_attempt_step_data`;
+CREATE TABLE IF NOT EXISTS `mdl_question_attempt_step_data` (
   `id` bigint(10) NOT NULL AUTO_INCREMENT,
-  `questionusageid` bigint(10) NOT NULL,
-  `slot` bigint(10) NOT NULL,
-  `behaviour` varchar(32) NOT NULL DEFAULT '',
-  `questionid` bigint(10) NOT NULL,
-  `variant` bigint(10) NOT NULL DEFAULT '1',
-  `maxmark` decimal(12,7) NOT NULL,
-  `minfraction` decimal(12,7) NOT NULL,
-  `maxfraction` decimal(12,7) NOT NULL DEFAULT '1.0000000',
-  `flagged` tinyint(1) NOT NULL DEFAULT '0',
-  `questionsummary` longtext,
-  `rightanswer` longtext,
-  `responsesummary` longtext,
-  `timemodified` bigint(10) NOT NULL,
+  `attemptstepid` bigint(10) NOT NULL,
+  `name` varchar(32) NOT NULL DEFAULT '',
+  `value` longtext,
   PRIMARY KEY (`id`),
-  UNIQUE KEY `mdl_quesatte_queslo_uix` (`questionusageid`,`slot`),
-  KEY `mdl_quesatte_beh_ix` (`behaviour`),
-  KEY `mdl_quesatte_que_ix` (`questionid`),
-  KEY `mdl_quesatte_que2_ix` (`questionusageid`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='Each row here corresponds to an attempt at one question, as ' AUTO_INCREMENT=10 ;
+  UNIQUE KEY `mdl_quesattestepdata_attna_uix` (`attemptstepid`,`name`),
+  KEY `mdl_quesattestepdata_att_ix` (`attemptstepid`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='Each question_attempt_step has an associative array of the d' AUTO_INCREMENT=25 ;
 
 --
--- Dumping data for table `mdl_question_attempts`
+-- Dumping data for table `mdl_question_attempt_step_data`
 --
 
-INSERT INTO `mdl_question_attempts` (`id`, `questionusageid`, `slot`, `behaviour`, `questionid`, `variant`, `maxmark`, `minfraction`, `maxfraction`, `flagged`, `questionsummary`, `rightanswer`, `responsesummary`, `timemodified`) VALUES
-(1, 1, 1, 'deferredfeedback', 1, 1, '1.0000000', '0.0000000', '1.0000000', 0, 'Some text: A3; A2; A1', 'A2', 'A3', 1444926128),
-(2, 1, 2, 'deferredfeedback', 3, 1, '1.0000000', '0.0000000', '1.0000000', 0, 'Some text ...: A1; A2; A3', 'A1', 'A2', 1444926128),
-(3, 1, 3, 'deferredfeedback', 2, 1, '1.0000000', '0.0000000', '1.0000000', 0, 'Some text', 'False', 'True', 1444926128),
-(4, 2, 1, 'deferredfeedback', 1, 1, '1.0000000', '0.0000000', '1.0000000', 0, 'Some text: A3; A1; A2', 'A2', 'A3', 1444926231),
-(5, 2, 2, 'deferredfeedback', 3, 1, '1.0000000', '0.0000000', '1.0000000', 0, 'Some text ...: A1; A2; A3', 'A1', 'A2', 1444926231),
-(6, 2, 3, 'deferredfeedback', 2, 1, '1.0000000', '0.0000000', '1.0000000', 0, 'Some text', 'False', 'False', 1444926231),
-(7, 3, 1, 'deferredfeedback', 1, 1, '1.0000000', '0.0000000', '1.0000000', 0, 'Some text: A3; A1; A2', 'A2', 'A2', 1444926320),
-(8, 3, 2, 'deferredfeedback', 3, 1, '1.0000000', '0.0000000', '1.0000000', 0, 'Some text ...: A3; A2; A1', 'A1', 'A2', 1444926320),
-(9, 3, 3, 'deferredfeedback', 2, 1, '1.0000000', '0.0000000', '1.0000000', 0, 'Some text', 'False', 'False', 1444926320);
+INSERT INTO `mdl_question_attempt_step_data` (`id`, `attemptstepid`, `name`, `value`) VALUES
+(1, 1, '_order', '3,2,1'),
+(2, 2, '_order', '6,7,8'),
+(3, 4, 'answer', '0'),
+(4, 5, 'answer', '1'),
+(5, 6, 'answer', '1'),
+(6, 7, '-finish', '1'),
+(7, 8, '-finish', '1'),
+(8, 9, '-finish', '1'),
+(9, 10, '_order', '3,1,2'),
+(10, 11, '_order', '6,7,8'),
+(11, 13, 'answer', '0'),
+(12, 14, 'answer', '1'),
+(13, 15, 'answer', '0'),
+(14, 16, '-finish', '1'),
+(15, 17, '-finish', '1'),
+(16, 18, '-finish', '1'),
+(17, 19, '_order', '3,1,2'),
+(18, 20, '_order', '8,7,6'),
+(19, 22, 'answer', '2'),
+(20, 23, 'answer', '1'),
+(21, 24, 'answer', '0'),
+(22, 25, '-finish', '1'),
+(23, 26, '-finish', '1'),
+(24, 27, '-finish', '1');
 
 -- --------------------------------------------------------
 
@@ -10731,6 +11595,23 @@ INSERT INTO `mdl_question_categories` (`id`, `name`, `contextid`, `info`, `infof
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `mdl_question_datasets`
+--
+
+DROP TABLE IF EXISTS `mdl_question_datasets`;
+CREATE TABLE IF NOT EXISTS `mdl_question_datasets` (
+  `id` bigint(10) NOT NULL AUTO_INCREMENT,
+  `question` bigint(10) NOT NULL DEFAULT '0',
+  `datasetdefinition` bigint(10) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`),
+  KEY `mdl_quesdata_quedat_ix` (`question`,`datasetdefinition`),
+  KEY `mdl_quesdata_que_ix` (`question`),
+  KEY `mdl_quesdata_dat_ix` (`datasetdefinition`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Many-many relation between questions and dataset definitions' AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `mdl_question_dataset_definitions`
 --
 
@@ -10761,23 +11642,6 @@ CREATE TABLE IF NOT EXISTS `mdl_question_dataset_items` (
   PRIMARY KEY (`id`),
   KEY `mdl_quesdataitem_def_ix` (`definition`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Individual dataset items' AUTO_INCREMENT=1 ;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `mdl_question_datasets`
---
-
-DROP TABLE IF EXISTS `mdl_question_datasets`;
-CREATE TABLE IF NOT EXISTS `mdl_question_datasets` (
-  `id` bigint(10) NOT NULL AUTO_INCREMENT,
-  `question` bigint(10) NOT NULL DEFAULT '0',
-  `datasetdefinition` bigint(10) NOT NULL DEFAULT '0',
-  PRIMARY KEY (`id`),
-  KEY `mdl_quesdata_quedat_ix` (`question`,`datasetdefinition`),
-  KEY `mdl_quesdata_que_ix` (`question`),
-  KEY `mdl_quesdata_dat_ix` (`datasetdefinition`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Many-many relation between questions and dataset definitions' AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -11355,21 +12219,6 @@ INSERT INTO `mdl_repository` (`id`, `type`, `visible`, `sortorder`) VALUES
 -- --------------------------------------------------------
 
 --
--- Table structure for table `mdl_repository_instance_config`
---
-
-DROP TABLE IF EXISTS `mdl_repository_instance_config`;
-CREATE TABLE IF NOT EXISTS `mdl_repository_instance_config` (
-  `id` bigint(10) NOT NULL AUTO_INCREMENT,
-  `instanceid` bigint(10) NOT NULL,
-  `name` varchar(255) NOT NULL DEFAULT '',
-  `value` longtext,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='The config for intances' AUTO_INCREMENT=1 ;
-
--- --------------------------------------------------------
-
---
 -- Table structure for table `mdl_repository_instances`
 --
 
@@ -11401,6 +12250,21 @@ INSERT INTO `mdl_repository_instances` (`id`, `name`, `typeid`, `userid`, `conte
 (6, '', 6, 0, 1, NULL, NULL, 1444454491, 1444454491, 0),
 (7, '', 7, 0, 1, NULL, NULL, 1444454492, 1444454492, 0),
 (8, '', 8, 0, 1, NULL, NULL, 1444454492, 1444454492, 0);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `mdl_repository_instance_config`
+--
+
+DROP TABLE IF EXISTS `mdl_repository_instance_config`;
+CREATE TABLE IF NOT EXISTS `mdl_repository_instance_config` (
+  `id` bigint(10) NOT NULL AUTO_INCREMENT,
+  `instanceid` bigint(10) NOT NULL,
+  `name` varchar(255) NOT NULL DEFAULT '',
+  `value` longtext,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='The config for intances' AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -11610,7 +12474,7 @@ CREATE TABLE IF NOT EXISTS `mdl_role_assignments` (
   KEY `mdl_roleassi_rol_ix` (`roleid`),
   KEY `mdl_roleassi_con_ix` (`contextid`),
   KEY `mdl_roleassi_use_ix` (`userid`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='assigning roles in different context' AUTO_INCREMENT=22 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='assigning roles in different context' AUTO_INCREMENT=62 ;
 
 --
 -- Dumping data for table `mdl_role_assignments`
@@ -11637,7 +12501,16 @@ INSERT INTO `mdl_role_assignments` (`id`, `roleid`, `contextid`, `userid`, `time
 (18, 4, 55, 20, 1444504298, 2, '', 0, 0),
 (19, 4, 55, 21, 1444504303, 2, '', 0, 0),
 (20, 2, 1, 22, 1444509276, 2, '', 0, 0),
-(21, 1, 1, 22, 1444509444, 2, '', 0, 0);
+(21, 1, 1, 22, 1444509444, 2, '', 0, 0),
+(49, 5, 196, 55, 1445578529, 2, '', 0, 0),
+(50, 5, 196, 56, 1445578898, 2, '', 0, 0),
+(51, 5, 196, 57, 1445579105, 2, '', 0, 0),
+(52, 5, 196, 58, 1445581911, 2, '', 0, 0),
+(53, 5, 196, 59, 1445583252, 2, '', 0, 0),
+(54, 5, 196, 60, 1445583457, 2, '', 0, 0),
+(55, 5, 55, 61, 1445584714, 2, '', 0, 0),
+(56, 5, 196, 62, 1445603921, 2, '', 0, 0),
+(61, 5, 196, 67, 1445620951, 2, '', 0, 0);
 
 -- --------------------------------------------------------
 
@@ -11708,8 +12581,6 @@ INSERT INTO `mdl_role_capabilities` (`id`, `contextid`, `roleid`, `capability`, 
 (39, 1, 1, 'moodle/restore:createuser', 1, 1444454439, 0),
 (40, 1, 3, 'moodle/site:manageblocks', 1, 1444454439, 0),
 (41, 1, 1, 'moodle/site:manageblocks', 1, 1444454439, 0),
-(42, 1, 4, 'moodle/site:accessallgroups', 1, 1444454439, 0),
-(43, 1, 3, 'moodle/site:accessallgroups', 1, 1444454439, 0),
 (44, 1, 1, 'moodle/site:accessallgroups', 1, 1444454439, 0),
 (45, 1, 4, 'moodle/site:viewfullnames', 1, 1444454439, 0),
 (46, 1, 3, 'moodle/site:viewfullnames', 1, 1444454439, 0),
@@ -12560,11 +13431,11 @@ INSERT INTO `mdl_role_capabilities` (`id`, `contextid`, `roleid`, `capability`, 
 (891, 1, 3, 'enrol/database:config', 1, 1444454473, 0),
 (892, 1, 1, 'enrol/guest:config', 1, 1444454474, 0),
 (893, 1, 3, 'enrol/guest:config', 1, 1444454474, 0),
-(894, 1, 1, 'enrol/imsenterprise:config', 1, 1444454474, 0);
-INSERT INTO `mdl_role_capabilities` (`id`, `contextid`, `roleid`, `capability`, `permission`, `timemodified`, `modifierid`) VALUES
+(894, 1, 1, 'enrol/imsenterprise:config', 1, 1444454474, 0),
 (895, 1, 3, 'enrol/imsenterprise:config', 1, 1444454474, 0),
 (896, 1, 1, 'enrol/ldap:manage', 1, 1444454474, 0),
-(897, 1, 1, 'enrol/manual:config', 1, 1444454474, 0),
+(897, 1, 1, 'enrol/manual:config', 1, 1444454474, 0);
+INSERT INTO `mdl_role_capabilities` (`id`, `contextid`, `roleid`, `capability`, `permission`, `timemodified`, `modifierid`) VALUES
 (898, 1, 1, 'enrol/manual:enrol', 1, 1444454474, 0),
 (899, 1, 3, 'enrol/manual:enrol', 1, 1444454474, 0),
 (900, 1, 1, 'enrol/manual:manage', 1, 1444454474, 0),
@@ -12852,7 +13723,7 @@ CREATE TABLE IF NOT EXISTS `mdl_role_context_levels` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `mdl_rolecontleve_conrol_uix` (`contextlevel`,`roleid`),
   KEY `mdl_rolecontleve_rol_ix` (`roleid`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='Lists which roles can be assigned at which context levels. T' AUTO_INCREMENT=12 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='Lists which roles can be assigned at which context levels. T' AUTO_INCREMENT=16 ;
 
 --
 -- Dumping data for table `mdl_role_context_levels`
@@ -12864,11 +13735,11 @@ INSERT INTO `mdl_role_context_levels` (`id`, `roleid`, `contextlevel`) VALUES
 (2, 1, 40),
 (5, 2, 40),
 (3, 1, 50),
-(6, 3, 50),
-(8, 4, 50),
+(14, 3, 50),
+(12, 4, 50),
 (10, 5, 50),
-(7, 3, 70),
-(9, 4, 70),
+(15, 3, 70),
+(13, 4, 70),
 (11, 5, 70);
 
 -- --------------------------------------------------------
@@ -13243,24 +14114,15 @@ CREATE TABLE IF NOT EXISTS `mdl_sessions` (
   KEY `mdl_sess_tim_ix` (`timecreated`),
   KEY `mdl_sess_tim2_ix` (`timemodified`),
   KEY `mdl_sess_use_ix` (`userid`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='Database based session storage - now recommended' AUTO_INCREMENT=277 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='Database based session storage - now recommended' AUTO_INCREMENT=548 ;
 
 --
 -- Dumping data for table `mdl_sessions`
 --
 
 INSERT INTO `mdl_sessions` (`id`, `state`, `sid`, `userid`, `sessdata`, `timecreated`, `timemodified`, `firstip`, `lastip`) VALUES
-(193, 0, '6pe88puspeh0hrln19597ict77', 0, NULL, 1445061644, 1445063274, '109.87.201.130', '109.87.201.130'),
-(198, 0, 'gkc7o0k14lpagedd971ubmq1p6', 0, NULL, 1445063424, 1445068542, '109.87.201.130', '109.87.201.130'),
-(201, 0, 'bjpv9uhirptnf9lusco6kaaqh7', 0, NULL, 1445097913, 1445167427, '109.87.201.130', '109.87.201.130'),
-(202, 0, 'qehg5uaqc14v8div10bjvkh7l2', 0, NULL, 1445225012, 1445239769, '109.87.201.130', '109.87.201.130'),
-(204, 0, '6c7p76uolsvjt61fbfu17u1dc7', 0, NULL, 1445315208, 1445315410, '109.87.201.130', '109.87.201.130'),
-(238, 0, 'eukodqtaa9g9ip1naogocq8t54', 0, NULL, 1445326210, 1445326222, '109.87.201.130', '109.87.201.130'),
-(251, 0, '1pht4hh75os941eufnt8rvj5v3', 0, NULL, 1445326689, 1445326689, '109.87.201.130', '109.87.201.130'),
-(254, 0, 'qp986pbqumo18kbj6u6vd5ec42', 0, NULL, 1445327515, 1445327515, '109.87.201.130', '109.87.201.130'),
-(263, 0, '7ac9qh9atl9p1702cegng1flo3', 0, NULL, 1445337186, 1445337186, '109.87.201.130', '109.87.201.130'),
-(264, 0, '4bvd1s1hb6gotljr6eshjlnr16', 0, NULL, 1445337187, 1445337188, '109.87.201.130', '109.87.201.130'),
-(276, 0, '5dcktmggrej012pc0fpib73pi0', 0, NULL, 1445350911, 1445365464, '109.87.201.130', '109.87.201.130');
+(534, 0, '6bep4shprb8ssbc4qls444lpn5', 0, NULL, 1445621089, 1445622204, '109.87.201.130', '109.87.201.130'),
+(547, 0, '1pbscuj5t975j00m1jqubvnm02', 0, NULL, 1445623322, 1445623399, '109.87.201.130', '109.87.201.130');
 
 -- --------------------------------------------------------
 
@@ -13833,6 +14695,31 @@ CREATE TABLE IF NOT EXISTS `mdl_tool_monitor_subscriptions` (
   KEY `mdl_toolmonisubs_couuse_ix` (`courseid`,`userid`),
   KEY `mdl_toolmonisubs_rul_ix` (`ruleid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Table to store user subscriptions to various rules' AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `mdl_tutor_groups`
+--
+
+DROP TABLE IF EXISTS `mdl_tutor_groups`;
+CREATE TABLE IF NOT EXISTS `mdl_tutor_groups` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `courseid` int(11) NOT NULL,
+  `groupid` int(11) NOT NULL,
+  `tutor_email` varchar(256) NOT NULL,
+  `enrollment_key` varchar(256) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 COMMENT='Table to store tutor groups' AUTO_INCREMENT=11 ;
+
+--
+-- Dumping data for table `mdl_tutor_groups`
+--
+
+INSERT INTO `mdl_tutor_groups` (`id`, `courseid`, `groupid`, `tutor_email`, `enrollment_key`) VALUES
+(6, 6, 20, 'sirromas@ukr.net', '0'),
+(5, 6, 19, 'sirromas@ukr.net', '0'),
+(7, 6, 21, 'sirromas@ukr.net', '0');
 
 -- --------------------------------------------------------
 
@@ -15038,7 +15925,7 @@ CREATE TABLE IF NOT EXISTS `mdl_user` (
   KEY `mdl_user_las3_ix` (`lastnamephonetic`),
   KEY `mdl_user_mid_ix` (`middlename`),
   KEY `mdl_user_alt_ix` (`alternatename`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='One record for each person' AUTO_INCREMENT=23 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='One record for each person' AUTO_INCREMENT=68 ;
 
 --
 -- Dumping data for table `mdl_user`
@@ -15046,10 +15933,10 @@ CREATE TABLE IF NOT EXISTS `mdl_user` (
 
 INSERT INTO `mdl_user` (`id`, `auth`, `confirmed`, `policyagreed`, `deleted`, `suspended`, `mnethostid`, `username`, `password`, `idnumber`, `firstname`, `lastname`, `email`, `emailstop`, `icq`, `skype`, `yahoo`, `aim`, `msn`, `phone1`, `phone2`, `institution`, `department`, `address`, `city`, `country`, `lang`, `calendartype`, `theme`, `timezone`, `firstaccess`, `lastaccess`, `lastlogin`, `currentlogin`, `lastip`, `secret`, `picture`, `url`, `description`, `descriptionformat`, `mailformat`, `maildigest`, `maildisplay`, `autosubscribe`, `trackforums`, `timecreated`, `timemodified`, `trustbitmask`, `imagealt`, `lastnamephonetic`, `firstnamephonetic`, `middlename`, `alternatename`) VALUES
 (1, 'manual', 1, 0, 0, 0, 1, 'guest', '$2y$10$D.1o9jb/MhIo9YOwMP/RHu/Hux2jV9zwpeV0K9Ahql.x2v5l8NDr6', '', 'Guest user', ' ', 'root@localhost', 0, '', '', '', '', '', '', '', '', '', '', '', '', 'en', 'gregorian', '', '99', 0, 0, 0, 0, '', '', 0, '', 'This user is a special user that allows read-only access to some courses.', 1, 1, 0, 2, 1, 0, 0, 1444454439, 0, NULL, NULL, NULL, NULL, NULL),
-(2, 'manual', 1, 0, 0, 0, 1, 'admin', '$2y$10$HJjkh3ec69X/to7qTPkEZeQsAIse.T2uDqZwwA2ssovGDsM6W.ZHm', '', 'Admin', 'User', 'sirromas@gmail.com', 0, '', '', '', '', '', '+380972415427', '+380972415427', '', '', 'Yacenko street 16 apart 61', 'Ukraine', '', 'en', 'gregorian', '', '99', 1444454660, 1445350886, 1445348205, 1445350886, '109.87.201.130', '', 0, '', '', 1, 1, 0, 1, 1, 0, 0, 1444454804, 0, NULL, '+380972415427', '+380972415427', '', ''),
+(2, 'manual', 1, 0, 0, 0, 1, 'admin', '$2y$10$HJjkh3ec69X/to7qTPkEZeQsAIse.T2uDqZwwA2ssovGDsM6W.ZHm', '', 'Admin', 'User', 'sirromas@gmail.com', 0, '', '', '', '', '', '+380972415427', '+380972415427', '', '', 'Yacenko street 16 apart 61', 'Ukraine', '', 'en', 'gregorian', '', '99', 1444454660, 1445623258, 1445622977, 1445623258, '109.87.201.130', '', 0, '', '', 1, 1, 0, 1, 1, 0, 0, 1444454804, 0, NULL, '+380972415427', '+380972415427', '', ''),
 (3, 'manual', 1, 0, 0, 0, 1, 'student11', '$2y$10$QXVD9qA40dPDVk.WF4D0AOMhy/fyM1KgpcpWNanv3ZV1SjJUQQHDK', '', 'FnStudent11', 'LnStudent11', 'student11@gmail.com', 0, '', '', '', '', '', '', '', '', '', '', 'Ukraine', '', 'en', 'gregorian', '', '99', 1444504749, 1444518007, 1444512557, 1444518007, '98.176.81.52', '', 0, '', '', 1, 1, 0, 2, 1, 0, 1444500650, 1444500650, 0, NULL, NULL, NULL, NULL, NULL),
 (4, 'manual', 1, 0, 0, 0, 1, 'student12', '$2y$10$6iBfkKKg7hgcW6mcweqGDeDTwyf9NCjPlxAnKfhSAJ2/v3.9oKi0i', '', 'FnStudent12', 'LnStudent12', 'student12@gmail.com', 0, '', '', '', '', '', '', '', '', '', '', 'Ukraine', '', 'en', 'gregorian', '', '99', 1444506824, 1444506963, 0, 1444506824, '109.87.201.130', '', 0, '', '', 1, 1, 0, 2, 1, 0, 1444500650, 1444500650, 0, NULL, NULL, NULL, NULL, NULL),
-(5, 'manual', 1, 0, 0, 0, 1, 'student13', '$2y$10$DtfS5TNoEIwvkfBF/w9E.ecKNaVzt2k0JQPaE9Ikm6WTy6wyQMg3K', '', 'FnStudent13', 'LnStudent13', 'student11@gmail.com', 0, '', '', '', '', '', '', '', '', '', '', 'Ukraine', '', 'en', 'gregorian', '', '99', 1444507087, 1444926073, 1444925912, 1444926073, '109.87.201.130', '', 0, '', '', 1, 1, 0, 2, 1, 0, 1444500650, 1444500650, 0, NULL, NULL, NULL, NULL, NULL),
+(5, 'manual', 1, 0, 0, 0, 1, 'student13', '$2y$10$DtfS5TNoEIwvkfBF/w9E.ecKNaVzt2k0JQPaE9Ikm6WTy6wyQMg3K', '', 'FnStudent13', 'LnStudent13', 'student11@gmail.com', 0, '', '', '', '', '', '', '', '', '', '', 'Ukraine', '', 'en', 'gregorian', '', '99', 1444507087, 1445493226, 1444926073, 1445493226, '109.87.201.130', '', 0, '', '', 1, 1, 0, 2, 1, 0, 1444500650, 1444500650, 0, NULL, NULL, NULL, NULL, NULL),
 (6, 'manual', 1, 0, 0, 0, 1, 'student14', '$2y$10$OJmJRlp08ZPmoNFMyEbIk.UejzfbhgOp4pOZA9DZAXwFQ0HI/PqUe', '', 'FnStudent14', 'LnStudent14', 'student12@gmail.com', 0, '', '', '', '', '', '', '', '', '', '', 'Ukraine', '', 'en', 'gregorian', '', '99', 1444507226, 1444507319, 0, 1444507226, '109.87.201.130', '', 0, '', '', 1, 1, 0, 2, 1, 0, 1444500650, 1444500650, 0, NULL, NULL, NULL, NULL, NULL),
 (7, 'manual', 1, 0, 0, 0, 1, 'student15', '$2y$10$GM7bBrrYH7bQB65T.VJNBOXtMMo05HRSeaH74.GWEimuT5dckoG/W', '', 'FnStudent15', 'LnStudent15', 'student11@gmail.com', 0, '', '', '', '', '', '', '', '', '', '', 'Ukraine', '', 'en', 'gregorian', '', '99', 1444507474, 1444507544, 0, 1444507474, '109.87.201.130', '', 0, '', '', 1, 1, 0, 2, 1, 0, 1444500650, 1444500650, 0, NULL, NULL, NULL, NULL, NULL),
 (8, 'manual', 1, 0, 0, 0, 1, 'student16', '$2y$10$c1Nzv6AWY.fCcbsUbdFJVefVOIX22RbpBlkjeGtUYpS3ihct3GBwe', '', 'FnStudent16', 'LnStudent16', 'student12@gmail.com', 0, '', '', '', '', '', '', '', '', '', '', 'Ukraine', '', 'en', 'gregorian', '', '99', 1444507728, 1444507945, 1444507728, 1444507945, '109.87.201.130', '', 0, '', '', 1, 1, 0, 2, 1, 0, 1444500650, 1444500650, 0, NULL, NULL, NULL, NULL, NULL),
@@ -15066,7 +15953,49 @@ INSERT INTO `mdl_user` (`id`, `auth`, `confirmed`, `policyagreed`, `deleted`, `s
 (19, 'manual', 1, 0, 0, 0, 1, 'student27', '$2y$10$UElyctRaqIrOcxXw3CAc8.j8MQ1KCNJrUnYh6HPkKhZnDs7fhl7Nu', '', 'FnStudent27', 'LnStudent27', 'student11@gmail.com', 0, '', '', '', '', '', '', '', '', '', '', 'Ukraine', '', 'en', 'gregorian', '', '99', 1444508588, 1444512920, 1444508588, 1444512859, '109.87.201.130', '', 0, '', '', 1, 1, 0, 2, 1, 0, 1444500650, 1444500650, 0, NULL, NULL, NULL, NULL, NULL),
 (20, 'manual', 1, 0, 0, 0, 1, 'tutor1', '$2y$10$.HpE3/SgjvL32EZPnaOBwO6.oofxHSkCsQJMSWavV8Raxn8EAN0de', '', 'FnTutor1', 'LnTutor1', 'tutor1@gmail.com', 0, '', '', '', '', '', '', '', '', '', '', 'Ukraine', '', 'en', 'gregorian', '', '99', 1444508713, 1444969124, 1444932839, 1444969124, '109.87.201.130', '', 0, '', '', 1, 1, 0, 2, 1, 0, 1444500650, 1444500650, 0, NULL, NULL, NULL, NULL, NULL),
 (21, 'manual', 1, 0, 0, 0, 1, 'tutor2', '$2y$10$AEz6CoRC4lZ8io8lNyWllOj5QECiQiqMBNWXhl6iHPcQre6BkAyfy', '', 'FnTutor2', 'LnTutor2', 'tutor2@gmail.com', 0, '', '', '', '', '', '', '', '', '', '', 'Ukraine', '', 'en', 'gregorian', '', '99', 1444508760, 1444518933, 1444518092, 1444518329, '98.176.81.52', '', 0, '', '', 1, 1, 0, 2, 1, 0, 1444500650, 1444500650, 0, NULL, NULL, NULL, NULL, NULL),
-(22, 'manual', 1, 0, 0, 0, 1, 'manager', '$2y$10$t8/bMjCaEFgyX.XxBLOwXebFwRyClIPaFA.QMcal/IbtiQrJvFGJS', '', 'FnManager', 'LnManagr', 'manager@gmail.com', 0, '', '', '', '', '', '', '', '', '', '', 'Los Angeles', 'US', 'en', 'gregorian', '', '99', 1444509105, 1445327695, 1445326684, 1445327695, '109.87.201.130', '', 60, '', '<p>This is manager of the system.</p>', 1, 1, 0, 0, 1, 0, 1444509073, 1444509073, 0, 'Manager', '', '', '', '');
+(22, 'manual', 1, 0, 0, 0, 1, 'manager', '$2y$10$t8/bMjCaEFgyX.XxBLOwXebFwRyClIPaFA.QMcal/IbtiQrJvFGJS', '', 'FnManager', 'LnManagr', 'manager@gmail.com', 0, '', '', '', '', '', '', '', '', '', '', 'Los Angeles', 'US', 'en', 'gregorian', '', '99', 1444509105, 1445618818, 1445618568, 1445618818, '109.87.201.130', '', 60, '', '<p>This is manager of the system.</p>', 1, 1, 0, 0, 1, 0, 1444509073, 1444509073, 0, 'Manager', '', '', '', ''),
+(23, 'email', 1, 0, 1, 0, 1, 'sirromas@ukr.net.23@unknownemail.invalid.1445395665', '$2y$10$hQlijIpL.QOEhpljroUSqO94fmAlidxzopg0RhOKFxH.rCPesj07O', '', 'T_fname', 'T_Lname', 'be933f72994d78842dcb92ce50757c2a', 0, '', '', '', '', '', '', '', '', '', '', '', 'US', 'en', 'gregorian', '', '99', 1445395199, 1445395199, 0, 1445395199, '109.87.201.130', 'MMbMBGM8j1QoXsv', 0, '', NULL, 1, 1, 0, 2, 1, 0, 1445394413, 1445395665, 0, '', '', '', '', ''),
+(25, 'email', 1, 0, 1, 0, 1, 'sirromas@ukr.net.1445397141', '$2y$10$jHUdFQG7RdsMsYHo0lbWPeRvCtb0y1jsme46mtAu3j139oiiqEd1G', '', 'T_fname', 'T_lname', 'be933f72994d78842dcb92ce50757c2a', 0, '', '', '', '', '', '', '', '', '', '', '', '', 'en', 'gregorian', '', '99', 1445396080, 1445396080, 0, 1445396080, '109.87.201.130', 'C2aivRQ8eYz0fec', 0, '', NULL, 1, 1, 0, 2, 1, 0, 1445395758, 1445397141, 0, NULL, '', '', '', ''),
+(26, 'email', 1, 0, 1, 0, 1, 'sirromas@ukr.net.1445420291', '$2y$10$jX5km8A0hQ7kBRWr/tNqCuywM3Tt7/msKiqcvO819FFkYKo/gqRoy', '', 'T_fname', 'T_lname', 'be933f72994d78842dcb92ce50757c2a', 0, '', '', '', '', '', '', '', '', '', '', '', '', 'en', 'gregorian', '', '99', 1445397370, 1445397370, 0, 1445397370, '109.87.201.130', 'OT4chREV36NhuAT', 0, '', NULL, 1, 1, 0, 2, 1, 0, 1445397181, 1445420291, 0, NULL, '', '', '', ''),
+(27, 'email', 1, 0, 1, 0, 1, 'sirromas@ukr.net.1445420799', '$2y$10$SOq2yiiSxfAq1L2RQAAjPuHrJJFsXq.0ptFKOY7X1YB6iKRad5bem', '', 'T_fname', 'T_lname', 'be933f72994d78842dcb92ce50757c2a', 0, '', '', '', '', '', '', '', '', '', '', '', '', 'en', 'gregorian', '', '99', 1445420422, 1445420422, 0, 1445420422, '94.248.60.100', '49wBxoTVULx6bF9', 0, '', NULL, 1, 1, 0, 2, 1, 0, 1445420330, 1445420799, 0, NULL, '', '', '', ''),
+(28, 'email', 1, 0, 1, 0, 1, 'sirromas@ukr.net.1445421145', '$2y$10$7umsU5Lr7ZZbyzrda6u4POvRT6PbGBkMQ1zIy6qsqwFcyVci94VjG', '', 'T_fname', 'T_lname', 'be933f72994d78842dcb92ce50757c2a', 0, '', '', '', '', '', '', '', '', '', '', '', '', 'en', 'gregorian', '', '99', 0, 0, 0, 0, '', 'h3bCkz8DmCxRHgW', 0, '', NULL, 1, 1, 0, 2, 1, 0, 1445420886, 1445421145, 0, NULL, '', '', '', ''),
+(29, 'email', 0, 0, 1, 0, 1, 'sirromas@ukr.net.1445422937', '$2y$10$FPCGSJu.8it40djH0.5txen/GUTYscqcYtKIXRTuRmzSDzK6EKIJa', '', 'T_fname', 'T_lname', 'be933f72994d78842dcb92ce50757c2a', 0, '', '', '', '', '', '', '', '', '', '', '', '', 'en', 'gregorian', '', '99', 0, 0, 0, 0, '', '9f5mETBdDatf9fY', 0, '', NULL, 1, 1, 0, 2, 1, 0, 1445422886, 1445422937, 0, NULL, '', '', '', ''),
+(30, 'email', 0, 0, 1, 0, 1, 'sirromas@ukr.net.1445423363', '$2y$10$g2QsW5F3n83hTiNSGo8OCu8CICYTOgkbCNwxUovdgG5Tz2ZSpGeyq', '', 'T_fname', 'T_Lname', 'be933f72994d78842dcb92ce50757c2a', 0, '', '', '', '', '', '', '', '', '', '', '', '', 'en', 'gregorian', '', '99', 0, 0, 0, 0, '', 'rkMFLk7ABkQBX0q', 0, '', NULL, 1, 1, 0, 2, 1, 0, 1445423329, 1445423363, 0, NULL, '', '', '', ''),
+(31, 'email', 1, 0, 1, 0, 1, 'sirromas@ukr.net.1445424134', '$2y$10$FK1/2XBVbB3qwY4z4IPAnuWP2xD3cZ2zczq9e4R1cuQYdx3nMzDE.', '', 'T_fname', 'T_lname', 'be933f72994d78842dcb92ce50757c2a', 0, '', '', '', '', '', '', '', '', '', '', '', '', 'en', 'gregorian', '', '99', 1445423516, 1445423574, 1445423516, 1445423574, '94.248.60.100', 'f65MMDvTUh5jfZ4', 0, '', NULL, 1, 1, 0, 2, 1, 0, 1445423461, 1445424134, 0, NULL, '', '', '', ''),
+(32, 'email', 1, 0, 1, 0, 1, 'sirromas@ukr.net.1445438465', '$2y$10$rCj8SwO8ELwnKrbspU6vue498NLXh4mp00LZt4xAcjZ5fvb3oylS2', '', 'T_fname', 'T_lname', 'be933f72994d78842dcb92ce50757c2a', 0, '', '', '', '', '', '', '', '', '', '', '', '', 'en', 'gregorian', '', '99', 1445425726, 1445437793, 1445425726, 1445437793, '94.248.60.100', 'l1WVLgzACshC6ZF', 0, '', NULL, 1, 1, 0, 2, 1, 0, 1445424247, 1445438465, 0, NULL, '', '', '', ''),
+(33, 'email', 1, 0, 1, 0, 1, 'sirromas@ukr.net.1445438644', '$2y$10$0JebhrQXR2roOMU0iXg1..eXI3pe7ej64sO51Nv1edQg2ZRIPDJ0e', '', 'T_fname', 'T_lname', 'be933f72994d78842dcb92ce50757c2a', 0, '', '', '', '', '', '', '', '', '', '', '', '', 'en', 'gregorian', '', '99', 1445438530, 1445438530, 0, 1445438530, '94.248.60.100', '2wMfAp3Na2SSfXe', 0, '', NULL, 1, 1, 0, 2, 1, 0, 1445438500, 1445438644, 0, NULL, '', '', '', ''),
+(34, 'email', 1, 0, 1, 0, 1, 'sirromas@ukr.net.1445487001', '$2y$10$ZDnmJmXrUGK/gRm3icAtQOyTcnbu8SVR2biHwvJWhd/LmD8KEUCom', '', 'T_fname', 'T_Lname', 'be933f72994d78842dcb92ce50757c2a', 0, '', '', '', '', '', '', '', '', '', '', '', '', 'en', 'gregorian', '', '99', 1445486917, 1445486917, 0, 1445486917, '109.87.201.130', 'hpd7jkdshymkPcq', 0, '', NULL, 1, 1, 0, 2, 1, 0, 1445486843, 1445487001, 0, NULL, '', '', '', ''),
+(35, 'email', 0, 0, 1, 0, 1, 'sirromas@ukr.net.1445487221', '$2y$10$K7yyaQrlg5oseVKEwwsmReA7BGqrKWNm5QstaPWkwVP9b9Cvh8KXi', '', 'T_fname', 'T_lname', 'be933f72994d78842dcb92ce50757c2a', 0, '', '', '', '', '', '', '', '', '', '', '', '', 'en', 'gregorian', '', '99', 0, 0, 0, 0, '', 'Xhyh3AyubexRfnQ', 0, '', NULL, 1, 1, 0, 2, 1, 0, 1445487150, 1445487221, 0, NULL, '', '', '', ''),
+(36, 'email', 0, 0, 1, 0, 1, 'sirromas@ukr.net.1445487882', '$2y$10$Y.UjK3s7ZGU7ndGkLhpcEeswPwBHMmAt4U5TmGOc4UK14.iFjc7ce', '', 'T_fname', 'T_lname', 'be933f72994d78842dcb92ce50757c2a', 0, '', '', '', '', '', '', '', '', '', '', '', '', 'en', 'gregorian', '', '99', 0, 0, 0, 0, '', 'nPlFC1lAvzEqgpY', 0, '', NULL, 1, 1, 0, 2, 1, 0, 1445487508, 1445487882, 0, NULL, '', '', '', ''),
+(37, 'email', 1, 0, 1, 0, 1, 'sirromas@ukr.net.1445490780', '$2y$10$5X/b4I255AUQGCuyo9BFuu9bBElaLyNh0hLDKM5nafCBpesRljsVS', '', 'T_fname', 'T_lname', 'be933f72994d78842dcb92ce50757c2a', 0, '', '', '', '', '', '', '', '', '', '', '', '', 'en', 'gregorian', '', '99', 1445488592, 1445489354, 1445489261, 1445489354, '109.87.201.130', 'TzBXSrxtlWprmXq', 0, '', NULL, 1, 1, 0, 2, 1, 0, 1445487967, 1445490780, 0, NULL, '', '', '', ''),
+(38, 'email', 0, 0, 1, 0, 1, 'sirromas@ukr.net.1445492436', '$2y$10$kgvSAtGCMtOqNbygZL6lnuobEomY6CS5.i4ua2Hv.NuMbn83.H.iC', '', 'T_fname', 'T_lname', 'be933f72994d78842dcb92ce50757c2a', 0, '', '', '', '', '', '', '', '', '', '', '', '', 'en', 'gregorian', '', '99', 0, 0, 0, 0, '', 'QXjGv8YNXqHk94Z', 0, '', NULL, 1, 1, 0, 2, 1, 0, 1445492228, 1445492436, 0, NULL, '', '', '', ''),
+(39, 'email', 1, 0, 1, 0, 1, 'sirromas@ukr.net.1445497660', '$2y$10$4.LjaJeJMz5UeFhOcY6HfOLUSmVGTk/Tzc63OraiGuRnN.A.pb2iu', '', 'T_fname', 'T_lname', 'be933f72994d78842dcb92ce50757c2a', 0, '', '', '', '', '', '', '', '', '', '', '', '', 'en', 'gregorian', '', '99', 1445494617, 1445497310, 1445495417, 1445497310, '109.87.201.130', '2rE96j6iiQnpKaw', 0, '', NULL, 1, 1, 0, 2, 1, 0, 1445493950, 1445497660, 0, NULL, '', '', '', ''),
+(41, 'email', 1, 0, 1, 0, 1, 'sirromas@ukr.net.1445570508', '$2y$10$vZ.oG6gG4b9E.XvOFEdkve1qtp7wgMShkeTGRzCCq.n8XE.w6fMdm', '', 'T_fname', 'T_lname', 'be933f72994d78842dcb92ce50757c2a', 0, '', '', '', '', '', '', '', '', '', '', '', '', 'en', 'gregorian', '', '99', 1445497812, 1445537568, 1445535134, 1445537568, '109.87.201.130', 'DQgN0oAWB6VqKZs', 0, '', NULL, 1, 1, 0, 2, 1, 0, 1445497774, 1445570508, 0, NULL, '', '', '', ''),
+(42, 'email', 1, 0, 1, 0, 1, 'sirromas1@ukr.net.1445570494', '$2y$10$b2dsIt1LGICcBnUfbluau.2F/4kN72cGmxz/cAjrwUtyLyHURKqDG', '', 'S_fname', 'S_lname', '73b7875e57e473d8d5b11c279786f064', 0, '', '', '', '', '', '', '', '', '', '', '', '', 'en', 'gregorian', '', '99', 1445538236, 1445538236, 0, 1445538236, '109.87.201.130', 'E2lVI6aM1N8xtyG', 0, '', NULL, 1, 1, 0, 2, 1, 0, 1445538116, 1445570494, 0, NULL, '', '', '', ''),
+(43, 'email', 1, 0, 1, 0, 1, 'sirromas@ukr.net.1445575240', '$2y$10$ceV0F31.E0x2d9PPSik/n.p379MzicKiOGZXUSWctNmu9PrWvxrUS', '', 'T_firstname', 'T_lastname', 'be933f72994d78842dcb92ce50757c2a', 0, '', '', '', '', '', '', '', '', '', '', '', '', 'en', 'gregorian', '', '99', 1445573117, 1445574392, 1445573117, 1445574392, '109.87.201.130', 'Gv96GKyISpEK7vz', 0, '', NULL, 1, 1, 0, 2, 1, 0, 1445573036, 1445575240, 0, NULL, '', '', '', ''),
+(44, 'email', 1, 0, 1, 0, 1, 'sirromas@ukr.net.1445575617', '$2y$10$D4gH51F9QPdHoxu9FIDMp.IJhsqCVIxlMXnOsTNMXs84izW5Ad7.C', '', 'T_firstname', 'T_lastname', 'be933f72994d78842dcb92ce50757c2a', 0, '', '', '', '', '', '', '', '', '', '', '', '', 'en', 'gregorian', '', '99', 0, 0, 0, 0, '', 'X0sPp2zfVodmNLa', 0, '', NULL, 1, 1, 0, 2, 1, 0, 1445575284, 1445575617, 0, NULL, '', '', '', ''),
+(46, 'email', 1, 0, 1, 0, 1, 'sirromas@ukr.net.1445576345', '$2y$10$uuZIq.92zMWXsqCB9jOmAuwxTnTjR3yjNBGZ9cdc5580rtnc2DKhq', '', 'T_firstname', 'T_lastname', 'be933f72994d78842dcb92ce50757c2a', 0, '', '', '', '', '', '', '', '', '', '', '', '', 'en', 'gregorian', '', '99', 0, 0, 0, 0, '', 'bKnm7r573xHG76d', 0, '', NULL, 1, 1, 0, 2, 1, 0, 1445575731, 1445576345, 0, NULL, '', '', '', ''),
+(47, 'email', 1, 0, 1, 0, 1, 'sirromas@ukr.net.1445576403', '$2y$10$wsHVeTLo8s4f/pQohFFRxejjorxZ59sWmuqI6xr1KA6wQf/95NK1C', '', 'T_firstname', 'T_lastname', 'be933f72994d78842dcb92ce50757c2a', 0, '', '', '', '', '', '', '', '', '', '', '', '', 'en', 'gregorian', '', '99', 0, 0, 0, 0, '', 'Kit1PEbklruSbWO', 0, '', NULL, 1, 1, 0, 2, 1, 0, 1445576359, 1445576403, 0, NULL, '', '', '', ''),
+(48, 'email', 1, 0, 1, 0, 1, 'sirromas@ukr.net.1445576578', '$2y$10$/I9py5e35pIOGSvLWUNtfeziHuqV4P2Hxd/tT9FIxOuwMA.n2tosm', '', 'T_firstname', 'T_lastname', 'be933f72994d78842dcb92ce50757c2a', 0, '', '', '', '', '', '', '', '', '', '', '', '', 'en', 'gregorian', '', '99', 0, 0, 0, 0, '', '8H9DUBkISz61IhW', 0, '', NULL, 1, 1, 0, 2, 1, 0, 1445576435, 1445576578, 0, NULL, '', '', '', ''),
+(49, 'email', 1, 0, 1, 0, 1, 'sirromas@ukr.net.1445576816', '$2y$10$GLwgMc66iMqr7uURhHbN9ef84rvNKJWveoRKJSAV4kRrUeNg2LjFS', '', 'T_firstname', 'T_lastname', 'be933f72994d78842dcb92ce50757c2a', 0, '', '', '', '', '', '', '', '', '', '', '', '', 'en', 'gregorian', '', '99', 0, 0, 0, 0, '', 'Ea2yQKfoYO1uiaG', 0, '', NULL, 1, 1, 0, 2, 1, 0, 1445576659, 1445576816, 0, NULL, '', '', '', ''),
+(50, 'email', 1, 0, 1, 0, 1, 'sirromas@ukr.net.1445577580', '$2y$10$E8bLRxMh14CEDK1iR5Sh1OijzVGbkVuk3ydONbyPGIr4ZGVPl/Sxy', '', 'T_firstname', 'T_lastname', 'be933f72994d78842dcb92ce50757c2a', 0, '', '', '', '', '', '', '', '', '', '', '', '', 'en', 'gregorian', '', '99', 0, 0, 0, 0, '', '2pwHrk1ugjo2O7Y', 0, '', NULL, 1, 1, 0, 2, 1, 0, 1445576917, 1445577580, 0, NULL, '', '', '', ''),
+(51, 'email', 1, 0, 1, 0, 1, 'sirromas@ukr.net.1445577780', '$2y$10$WpqUol9kzr./bskCTrVG6.JHvWD4ZJgHPFULEmVsKBGHuB61C5GKO', '', 'T_firstname', 'T_lastname', 'be933f72994d78842dcb92ce50757c2a', 0, '', '', '', '', '', '', '', '', '', '', '', '', 'en', 'gregorian', '', '99', 0, 0, 0, 0, '', 'byVIqDBw3bbmz02', 0, '', NULL, 1, 1, 0, 2, 1, 0, 1445577605, 1445577780, 0, NULL, '', '', '', ''),
+(52, 'email', 1, 0, 1, 0, 1, 'sirromas@ukr.net.1445577855', '$2y$10$mMXl.4EN/NPM4XzuvTPSs.v8T9n01p9QFX36xWTgvMX3dafO3dG42', '', 'T_firstname', 'T_lastname', 'be933f72994d78842dcb92ce50757c2a', 0, '', '', '', '', '', '', '', '', '', '', '', '', 'en', 'gregorian', '', '99', 0, 0, 0, 0, '', 'xrfTCi9mXZ7kuIj', 0, '', NULL, 1, 1, 0, 2, 1, 0, 1445577793, 1445577855, 0, NULL, '', '', '', ''),
+(53, 'email', 1, 0, 1, 0, 1, 'sirromas@ukr.net.1445578374', '$2y$10$eddtYdvC9jkQk0P40Rsx0e8KwTaYVFX.Y5kA4QwoPaFvmo7pYqK2O', '', 'T_firstname', 'T_lastname', 'be933f72994d78842dcb92ce50757c2a', 0, '', '', '', '', '', '', '', '', '', '', '', '', 'en', 'gregorian', '', '99', 0, 0, 0, 0, '', 'uJm1JkM1MAdApCJ', 0, '', NULL, 1, 1, 0, 2, 1, 0, 1445578040, 1445578374, 0, NULL, '', '', '', ''),
+(54, 'email', 1, 0, 1, 0, 1, 'sirromas@ukr.net.1445618610', '$2y$10$EwuDGXTxeVnpO9sGUI4Jxu/mMeNLXIogEn2pSjkfzkE0IFo3T.mHm', '', 'T_firstname', 'T_lastname', 'be933f72994d78842dcb92ce50757c2a', 0, '', '', '', '', '', '', '', '', '', '', '', '', 'en', 'gregorian', '', '99', 1445578637, 1445604062, 1445602445, 1445604062, '109.87.201.130', 'LDOpIqzc64Uo9fU', 0, '', NULL, 1, 1, 0, 2, 1, 0, 1445578395, 1445618610, 0, NULL, '', '', '', ''),
+(55, 'email', 1, 0, 0, 0, 1, 'some@gmail.com', '$2y$10$SD01a.i3NohDkrtUxa22PuzTDAuL6m25ZviLGyDmeMZneFORxp1cy', '', 'S_fname', 'S_lname', 'some@gmail.com', 0, '', '', '', '', '', '', '', '', '', '', '', '', 'en', 'gregorian', '', '99', 1445578766, 1445578766, 0, 1445578766, '109.87.201.130', 'U7trPgpHHogexLO', 0, '', NULL, 1, 1, 0, 2, 1, 0, 1445578526, 1445578526, 0, NULL, '', '', '', ''),
+(56, 'email', 1, 0, 0, 0, 1, 'some2@gmail.com', '$2y$10$20IEVaz6qjfMC8.HymkUIOf3.VcPsERX7anQWFdbqRM6lmLVRf.2S', '', 'S_fname1', 'S_lname1', 'some2@gmail.com', 0, '', '', '', '', '', '', '', '', '', '', '', '', 'en', 'gregorian', '', '99', 1445587933, 1445602392, 1445588939, 1445601955, '109.87.201.130', 'b1jIJ6677R6hhhY', 0, '', NULL, 1, 1, 0, 2, 1, 0, 1445578891, 1445578891, 0, NULL, '', '', '', ''),
+(57, 'email', 1, 0, 0, 0, 1, 'some3@gmail.com', '$2y$10$3jdpOeWj3Wq6DEF.09vwb.ppfqB8cId9jr1hl3mBPSXSgyXGW1/YO', '', 'S_fname2', 'S_lname2', 'some3@gmail.com', 0, '', '', '', '', '', '', '', '', '', '', '', '', 'en', 'gregorian', '', '99', 0, 0, 0, 0, '', 'TE3VQEHZTNuGXhf', 0, '', NULL, 1, 1, 0, 2, 1, 0, 1445579098, 1445579098, 0, NULL, '', '', '', ''),
+(58, 'email', 1, 0, 0, 0, 1, 'some4@gmail.com', '$2y$10$Bm1QgUoU0MXlfr932DLzEOcgU84P2/0U1.gRwMiKKcJkeZRB70elS', '', 'S_fname3', 'S_lname3', 'some4@gmail.com', 0, '', '', '', '', '', '', '', '', '', '', '', '', 'en', 'gregorian', '', '99', 0, 0, 0, 0, '', 'BbEmU0cO4feB0Ba', 0, '', NULL, 1, 1, 0, 2, 1, 0, 1445581909, 1445581909, 0, NULL, '', '', '', ''),
+(59, 'email', 1, 0, 0, 0, 1, 'someanother@gmail.com', '$2y$10$pNLcn/h/gp.lhi.2j2Wd0.xyzzxS/iKVPiDx7S5zsiheZs3L2mqEW', '', 'S_fname5', 'S_lname5', 'someanother@gmail.com', 0, '', '', '', '', '', '', '', '', '', '', '', 'US', 'en', 'gregorian', '', '99', 0, 0, 0, 0, '', 'oABjm9rVdBmxKjv', 0, '', NULL, 1, 1, 0, 2, 1, 0, 1445583245, 1445583245, 0, NULL, '', '', '', ''),
+(60, 'email', 1, 0, 0, 0, 1, 'someanother1@gmail.com', '$2y$10$MCJltMOJvLMUbaTEe4zkee.6SCvPiyJ/VaUwp6NZK9KpUdWLal2gq', '', 'S_fname6', 'S_lname6', 'someanother1@gmail.com', 0, '', '', '', '', '', '', '', '', '', 'Some address', 'Some address', 'US', 'en', 'gregorian', '', '99', 0, 0, 0, 0, '', 'lWgO4APODopnWhE', 0, '', NULL, 1, 1, 0, 2, 1, 0, 1445583450, 1445583450, 0, NULL, '', '', '', ''),
+(61, 'email', 1, 0, 0, 0, 1, 'sirromas12@ukr.net', '$2y$10$5FyJ3NpWq7m/Vamtj2kss.Uil8KXfP38lkMV.QbApVDML2Ki90FKO', '', 'dvfvb', 'cdqcdq', 'sirromas12@ukr.net', 0, '', '', '', '', '', '', '', '', '', 'Some addresss', 'Some addresss', 'US', 'en', 'gregorian', '', '99', 0, 0, 0, 0, '', 'xlUm22yHkvJxq0F', 0, '', NULL, 1, 1, 0, 2, 1, 0, 1445584692, 1445584692, 0, NULL, '', '', '', ''),
+(62, 'email', 1, 0, 0, 0, 1, 'someurl@gmail.com', '$2y$10$PLA/4rbzXAlqeOC6ToEQruNHyFG7f3covV0FSgcwp4MWUkCQ6mRUy', '', 'Some', 'Student', 'someurl@gmail.com', 0, '', '', '', '', '', '', '', '', '', 'Some address', 'Some address', 'US', 'en', 'gregorian', '', '99', 0, 0, 0, 0, '', 'U3coKGDP8r50Vqi', 0, '', NULL, 1, 1, 0, 2, 1, 0, 1445603919, 1445603919, 0, NULL, '', '', '', ''),
+(63, 'email', 1, 0, 1, 0, 1, 'sirromas@ukr.net.1445619244', '$2y$10$N.33xbNh09sjuo3xsprFa.nyiXvn0MVRdEDdqT83AtxqK4bpJeKby', '', 'Some1', 'Student1', 'be933f72994d78842dcb92ce50757c2a', 0, '', '', '', '', '', '', '', '', '', 'Some address', 'Some address', 'US', 'en', 'gregorian', '', '99', 1445618765, 1445618877, 1445618765, 1445618877, '109.87.201.130', 'VxvnNmMsecy3HTA', 0, '', NULL, 1, 1, 0, 2, 1, 0, 1445618661, 1445619244, 0, NULL, '', '', '', ''),
+(64, 'email', 1, 0, 1, 0, 1, 'sirromas@ukr.net.1445619939', '$2y$10$r440vjXVjEoeFwmD4a5ryu4PZZuLbztNadUd9whhctJHQ35OpEfOm', '', 'rqwer', 'qwrqe', 'be933f72994d78842dcb92ce50757c2a', 0, '', '', '', '', '', '', '', '', '', 'Some address', 'Some address', 'US', 'en', 'gregorian', '', '99', 0, 0, 0, 0, '', 'wD6RmuatrCEoCAL', 0, '', NULL, 1, 1, 0, 2, 1, 0, 1445619295, 1445619939, 0, NULL, '', '', '', ''),
+(65, 'email', 1, 0, 1, 0, 1, 'sirromas@ukr.net.1445620168', '$2y$10$v8ERLz/2WZS.fOMcqjUh/.LcXZQihlK3B/0cchHPR0e4puYNU2dpu', '', 'aaaaaaaaa', 'bbbbbbbbb', 'be933f72994d78842dcb92ce50757c2a', 0, '', '', '', '', '', '', '', '', '', 'Some address', 'Some address', 'US', 'en', 'gregorian', '', '99', 0, 0, 0, 0, '', 'KxkAfrH5Ah0Knus', 0, '', NULL, 1, 1, 0, 2, 1, 0, 1445620044, 1445620168, 0, NULL, '', '', '', ''),
+(66, 'email', 1, 0, 1, 0, 1, 'sirromas@ukr.net.1445620662', '$2y$10$rv9Nd1TFaIUpv9iJf22fJ.8gifPVD.JmeIq6nqYN3NnQnnjKCl95y', '', 'aaaaaaaaa', 'bbbbbbbbb', 'be933f72994d78842dcb92ce50757c2a', 0, '', '', '', '', '', '', '', '', '', 'Some address', 'Some address', 'US', 'en', 'gregorian', '', '99', 0, 0, 0, 0, '', 'guP2GolYsY6pPL4', 0, '', NULL, 1, 1, 0, 2, 1, 0, 1445620320, 1445620662, 0, NULL, '', '', '', ''),
+(67, 'email', 1, 0, 0, 0, 1, 'sirromas@ukr.net', '$2y$10$NbwGKasIRW8h0sRpDaqD8O7DZhxFCtE4T3pGAxDpsEHzxDD.6bH7i', '', 'aaaaaaaaa', 'bbbbbbbbb', 'sirromas@ukr.net', 0, '', '', '', '', '', '', '', '', '', 'Some address', 'Some address', 'US', 'en', 'gregorian', '', '99', 1445621037, 1445622913, 1445621037, 1445622913, '109.87.201.130', 'qSl9FpKUOeaEEUh', 0, '', NULL, 1, 1, 0, 2, 1, 0, 1445620949, 1445620949, 0, NULL, '', '', '', '');
 
 -- --------------------------------------------------------
 
@@ -15115,7 +16044,7 @@ CREATE TABLE IF NOT EXISTS `mdl_user_enrolments` (
   KEY `mdl_userenro_enr_ix` (`enrolid`),
   KEY `mdl_userenro_use_ix` (`userid`),
   KEY `mdl_userenro_mod_ix` (`modifierid`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='Users participating in courses (aka enrolled users) - everyb' AUTO_INCREMENT=20 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='Users participating in courses (aka enrolled users) - everyb' AUTO_INCREMENT=60 ;
 
 --
 -- Dumping data for table `mdl_user_enrolments`
@@ -15140,7 +16069,16 @@ INSERT INTO `mdl_user_enrolments` (`id`, `status`, `enrolid`, `userid`, `timesta
 (16, 0, 4, 18, 1444456800, 0, 2, 1444504285, 1444504285),
 (17, 0, 4, 19, 1444456800, 0, 2, 1444504288, 1444504288),
 (18, 0, 4, 20, 1444456800, 0, 2, 1444504298, 1444504298),
-(19, 0, 4, 21, 1444456800, 0, 2, 1444504303, 1444504303);
+(19, 0, 4, 21, 1444456800, 0, 2, 1444504303, 1444504303),
+(47, 0, 13, 55, 1445578529, 2147483647, 2, 1445578529, 1445578529),
+(48, 0, 13, 56, 1445578898, 2147483647, 2, 1445578898, 1445578898),
+(49, 0, 13, 57, 1445579105, 2147483647, 2, 1445579105, 1445579105),
+(50, 0, 13, 58, 1445581911, 2147483647, 2, 1445581911, 1445581911),
+(51, 0, 13, 59, 1445583252, 2147483647, 2, 1445583252, 1445583252),
+(52, 0, 13, 60, 1445583457, 2147483647, 2, 1445583457, 1445583457),
+(53, 0, 4, 61, 1445584714, 2147483647, 2, 1445584714, 1445584714),
+(54, 0, 13, 62, 1445603921, 2147483647, 2, 1445603921, 1445603921),
+(59, 0, 13, 67, 1445620951, 2147483647, 2, 1445620951, 1445620951);
 
 -- --------------------------------------------------------
 
@@ -15227,7 +16165,7 @@ CREATE TABLE IF NOT EXISTS `mdl_user_lastaccess` (
   UNIQUE KEY `mdl_userlast_usecou_uix` (`userid`,`courseid`),
   KEY `mdl_userlast_use_ix` (`userid`),
   KEY `mdl_userlast_cou_ix` (`courseid`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='To keep track of course page access times, used in online pa' AUTO_INCREMENT=18 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='To keep track of course page access times, used in online pa' AUTO_INCREMENT=32 ;
 
 --
 -- Dumping data for table `mdl_user_lastaccess`
@@ -15241,15 +16179,22 @@ INSERT INTO `mdl_user_lastaccess` (`id`, `userid`, `courseid`, `timeaccess`) VAL
 (6, 6, 3, 1444507319),
 (7, 7, 3, 1444507544),
 (8, 8, 3, 1444507962),
-(9, 22, 3, 1445097882),
+(9, 22, 3, 1445535278),
 (10, 11, 3, 1444926195),
 (11, 14, 3, 1444512840),
 (12, 19, 3, 1444512951),
 (13, 15, 3, 1444926285),
 (14, 21, 3, 1444518933),
 (15, 20, 3, 1444969131),
-(16, 22, 4, 1445097786),
-(17, 22, 6, 1445097865);
+(16, 22, 4, 1445535327),
+(17, 22, 6, 1445618831),
+(18, 2, 5, 1445519505),
+(19, 22, 5, 1445535341),
+(20, 2, 4, 1445513395),
+(25, 2, 6, 1445622862),
+(28, 55, 6, 1445578772),
+(29, 56, 6, 1445602401),
+(31, 67, 6, 1445622937);
 
 -- --------------------------------------------------------
 
@@ -15308,7 +16253,7 @@ INSERT INTO `mdl_user_preferences` (`id`, `userid`, `name`, `value`) VALUES
 (1, 2, 'auth_manual_passwordupdatetime', '1444454804'),
 (2, 2, 'email_bounce_count', '1'),
 (3, 2, 'email_send_count', '1'),
-(4, 2, 'login_failed_count_since_success', '15'),
+(4, 2, 'login_failed_count_since_success', '21'),
 (5, 2, 'filepicker_recentrepository', '4'),
 (6, 2, 'filepicker_recentlicense', 'allrightsreserved'),
 (26, 2, 'userselector_optionscollapsed', '1'),
@@ -15341,7 +16286,7 @@ INSERT INTO `mdl_user_preferences` (`id`, `userid`, `name`, `value`) VALUES
 (53, 22, 'auth_forcepasswordchange', '0'),
 (54, 22, 'email_bounce_count', '1'),
 (55, 22, 'email_send_count', '1'),
-(56, 22, 'login_failed_count_since_success', '3'),
+(56, 22, 'login_failed_count_since_success', '5'),
 (57, 22, 'userselector_preserveselected', '0'),
 (58, 22, 'userselector_autoselectunique', '0'),
 (59, 22, 'userselector_searchanywhere', '0');
@@ -15569,6 +16514,165 @@ CREATE TABLE IF NOT EXISTS `mdl_workshop` (
   PRIMARY KEY (`id`),
   KEY `mdl_work_cou_ix` (`course`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='This table keeps information about the module instances and ' AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `mdl_workshopallocation_scheduled`
+--
+
+DROP TABLE IF EXISTS `mdl_workshopallocation_scheduled`;
+CREATE TABLE IF NOT EXISTS `mdl_workshopallocation_scheduled` (
+  `id` bigint(10) NOT NULL AUTO_INCREMENT,
+  `workshopid` bigint(10) NOT NULL,
+  `enabled` tinyint(2) NOT NULL DEFAULT '0',
+  `submissionend` bigint(10) NOT NULL,
+  `timeallocated` bigint(10) DEFAULT NULL,
+  `settings` longtext,
+  `resultstatus` bigint(10) DEFAULT NULL,
+  `resultmessage` varchar(1333) DEFAULT NULL,
+  `resultlog` longtext,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `mdl_worksche_wor_uix` (`workshopid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Stores the allocation settings for the scheduled allocator' AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `mdl_workshopeval_best_settings`
+--
+
+DROP TABLE IF EXISTS `mdl_workshopeval_best_settings`;
+CREATE TABLE IF NOT EXISTS `mdl_workshopeval_best_settings` (
+  `id` bigint(10) NOT NULL AUTO_INCREMENT,
+  `workshopid` bigint(10) NOT NULL,
+  `comparison` smallint(3) DEFAULT '5',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `mdl_workbestsett_wor_uix` (`workshopid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Settings for the grading evaluation subplugin Comparison wit' AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `mdl_workshopform_accumulative`
+--
+
+DROP TABLE IF EXISTS `mdl_workshopform_accumulative`;
+CREATE TABLE IF NOT EXISTS `mdl_workshopform_accumulative` (
+  `id` bigint(10) NOT NULL AUTO_INCREMENT,
+  `workshopid` bigint(10) NOT NULL,
+  `sort` bigint(10) DEFAULT '0',
+  `description` longtext,
+  `descriptionformat` smallint(3) DEFAULT '0',
+  `grade` bigint(10) NOT NULL,
+  `weight` mediumint(5) DEFAULT '1',
+  PRIMARY KEY (`id`),
+  KEY `mdl_workaccu_wor_ix` (`workshopid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='The assessment dimensions definitions of Accumulative gradin' AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `mdl_workshopform_comments`
+--
+
+DROP TABLE IF EXISTS `mdl_workshopform_comments`;
+CREATE TABLE IF NOT EXISTS `mdl_workshopform_comments` (
+  `id` bigint(10) NOT NULL AUTO_INCREMENT,
+  `workshopid` bigint(10) NOT NULL,
+  `sort` bigint(10) DEFAULT '0',
+  `description` longtext,
+  `descriptionformat` smallint(3) DEFAULT '0',
+  PRIMARY KEY (`id`),
+  KEY `mdl_workcomm_wor_ix` (`workshopid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='The assessment dimensions definitions of Comments strategy f' AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `mdl_workshopform_numerrors`
+--
+
+DROP TABLE IF EXISTS `mdl_workshopform_numerrors`;
+CREATE TABLE IF NOT EXISTS `mdl_workshopform_numerrors` (
+  `id` bigint(10) NOT NULL AUTO_INCREMENT,
+  `workshopid` bigint(10) NOT NULL,
+  `sort` bigint(10) DEFAULT '0',
+  `description` longtext,
+  `descriptionformat` smallint(3) DEFAULT '0',
+  `descriptiontrust` bigint(10) DEFAULT NULL,
+  `grade0` varchar(50) DEFAULT NULL,
+  `grade1` varchar(50) DEFAULT NULL,
+  `weight` mediumint(5) DEFAULT '1',
+  PRIMARY KEY (`id`),
+  KEY `mdl_worknume_wor_ix` (`workshopid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='The assessment dimensions definitions of Number of errors gr' AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `mdl_workshopform_numerrors_map`
+--
+
+DROP TABLE IF EXISTS `mdl_workshopform_numerrors_map`;
+CREATE TABLE IF NOT EXISTS `mdl_workshopform_numerrors_map` (
+  `id` bigint(10) NOT NULL AUTO_INCREMENT,
+  `workshopid` bigint(10) NOT NULL,
+  `nonegative` bigint(10) NOT NULL,
+  `grade` decimal(10,5) NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `mdl_worknumemap_wornon_uix` (`workshopid`,`nonegative`),
+  KEY `mdl_worknumemap_wor_ix` (`workshopid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='This maps the number of errors to a percentual grade for sub' AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `mdl_workshopform_rubric`
+--
+
+DROP TABLE IF EXISTS `mdl_workshopform_rubric`;
+CREATE TABLE IF NOT EXISTS `mdl_workshopform_rubric` (
+  `id` bigint(10) NOT NULL AUTO_INCREMENT,
+  `workshopid` bigint(10) NOT NULL,
+  `sort` bigint(10) DEFAULT '0',
+  `description` longtext,
+  `descriptionformat` smallint(3) DEFAULT '0',
+  PRIMARY KEY (`id`),
+  KEY `mdl_workrubr_wor_ix` (`workshopid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='The assessment dimensions definitions of Rubric grading stra' AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `mdl_workshopform_rubric_config`
+--
+
+DROP TABLE IF EXISTS `mdl_workshopform_rubric_config`;
+CREATE TABLE IF NOT EXISTS `mdl_workshopform_rubric_config` (
+  `id` bigint(10) NOT NULL AUTO_INCREMENT,
+  `workshopid` bigint(10) NOT NULL,
+  `layout` varchar(30) DEFAULT 'list',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `mdl_workrubrconf_wor_uix` (`workshopid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Configuration table for the Rubric grading strategy' AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `mdl_workshopform_rubric_levels`
+--
+
+DROP TABLE IF EXISTS `mdl_workshopform_rubric_levels`;
+CREATE TABLE IF NOT EXISTS `mdl_workshopform_rubric_levels` (
+  `id` bigint(10) NOT NULL AUTO_INCREMENT,
+  `dimensionid` bigint(10) NOT NULL,
+  `grade` decimal(10,5) NOT NULL,
+  `definition` longtext,
+  `definitionformat` smallint(3) DEFAULT '0',
+  PRIMARY KEY (`id`),
+  KEY `mdl_workrubrleve_dim_ix` (`dimensionid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='The definition of rubric rating scales' AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -15880,165 +16984,6 @@ CREATE TABLE IF NOT EXISTS `mdl_workshop_submissions_old` (
   KEY `mdl_worksubmold_mai_ix` (`mailed`),
   KEY `mdl_worksubmold_wor_ix` (`workshopid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Legacy workshop_submissions table to be dropped later in Moo' AUTO_INCREMENT=1 ;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `mdl_workshopallocation_scheduled`
---
-
-DROP TABLE IF EXISTS `mdl_workshopallocation_scheduled`;
-CREATE TABLE IF NOT EXISTS `mdl_workshopallocation_scheduled` (
-  `id` bigint(10) NOT NULL AUTO_INCREMENT,
-  `workshopid` bigint(10) NOT NULL,
-  `enabled` tinyint(2) NOT NULL DEFAULT '0',
-  `submissionend` bigint(10) NOT NULL,
-  `timeallocated` bigint(10) DEFAULT NULL,
-  `settings` longtext,
-  `resultstatus` bigint(10) DEFAULT NULL,
-  `resultmessage` varchar(1333) DEFAULT NULL,
-  `resultlog` longtext,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `mdl_worksche_wor_uix` (`workshopid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Stores the allocation settings for the scheduled allocator' AUTO_INCREMENT=1 ;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `mdl_workshopeval_best_settings`
---
-
-DROP TABLE IF EXISTS `mdl_workshopeval_best_settings`;
-CREATE TABLE IF NOT EXISTS `mdl_workshopeval_best_settings` (
-  `id` bigint(10) NOT NULL AUTO_INCREMENT,
-  `workshopid` bigint(10) NOT NULL,
-  `comparison` smallint(3) DEFAULT '5',
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `mdl_workbestsett_wor_uix` (`workshopid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Settings for the grading evaluation subplugin Comparison wit' AUTO_INCREMENT=1 ;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `mdl_workshopform_accumulative`
---
-
-DROP TABLE IF EXISTS `mdl_workshopform_accumulative`;
-CREATE TABLE IF NOT EXISTS `mdl_workshopform_accumulative` (
-  `id` bigint(10) NOT NULL AUTO_INCREMENT,
-  `workshopid` bigint(10) NOT NULL,
-  `sort` bigint(10) DEFAULT '0',
-  `description` longtext,
-  `descriptionformat` smallint(3) DEFAULT '0',
-  `grade` bigint(10) NOT NULL,
-  `weight` mediumint(5) DEFAULT '1',
-  PRIMARY KEY (`id`),
-  KEY `mdl_workaccu_wor_ix` (`workshopid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='The assessment dimensions definitions of Accumulative gradin' AUTO_INCREMENT=1 ;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `mdl_workshopform_comments`
---
-
-DROP TABLE IF EXISTS `mdl_workshopform_comments`;
-CREATE TABLE IF NOT EXISTS `mdl_workshopform_comments` (
-  `id` bigint(10) NOT NULL AUTO_INCREMENT,
-  `workshopid` bigint(10) NOT NULL,
-  `sort` bigint(10) DEFAULT '0',
-  `description` longtext,
-  `descriptionformat` smallint(3) DEFAULT '0',
-  PRIMARY KEY (`id`),
-  KEY `mdl_workcomm_wor_ix` (`workshopid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='The assessment dimensions definitions of Comments strategy f' AUTO_INCREMENT=1 ;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `mdl_workshopform_numerrors`
---
-
-DROP TABLE IF EXISTS `mdl_workshopform_numerrors`;
-CREATE TABLE IF NOT EXISTS `mdl_workshopform_numerrors` (
-  `id` bigint(10) NOT NULL AUTO_INCREMENT,
-  `workshopid` bigint(10) NOT NULL,
-  `sort` bigint(10) DEFAULT '0',
-  `description` longtext,
-  `descriptionformat` smallint(3) DEFAULT '0',
-  `descriptiontrust` bigint(10) DEFAULT NULL,
-  `grade0` varchar(50) DEFAULT NULL,
-  `grade1` varchar(50) DEFAULT NULL,
-  `weight` mediumint(5) DEFAULT '1',
-  PRIMARY KEY (`id`),
-  KEY `mdl_worknume_wor_ix` (`workshopid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='The assessment dimensions definitions of Number of errors gr' AUTO_INCREMENT=1 ;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `mdl_workshopform_numerrors_map`
---
-
-DROP TABLE IF EXISTS `mdl_workshopform_numerrors_map`;
-CREATE TABLE IF NOT EXISTS `mdl_workshopform_numerrors_map` (
-  `id` bigint(10) NOT NULL AUTO_INCREMENT,
-  `workshopid` bigint(10) NOT NULL,
-  `nonegative` bigint(10) NOT NULL,
-  `grade` decimal(10,5) NOT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `mdl_worknumemap_wornon_uix` (`workshopid`,`nonegative`),
-  KEY `mdl_worknumemap_wor_ix` (`workshopid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='This maps the number of errors to a percentual grade for sub' AUTO_INCREMENT=1 ;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `mdl_workshopform_rubric`
---
-
-DROP TABLE IF EXISTS `mdl_workshopform_rubric`;
-CREATE TABLE IF NOT EXISTS `mdl_workshopform_rubric` (
-  `id` bigint(10) NOT NULL AUTO_INCREMENT,
-  `workshopid` bigint(10) NOT NULL,
-  `sort` bigint(10) DEFAULT '0',
-  `description` longtext,
-  `descriptionformat` smallint(3) DEFAULT '0',
-  PRIMARY KEY (`id`),
-  KEY `mdl_workrubr_wor_ix` (`workshopid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='The assessment dimensions definitions of Rubric grading stra' AUTO_INCREMENT=1 ;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `mdl_workshopform_rubric_config`
---
-
-DROP TABLE IF EXISTS `mdl_workshopform_rubric_config`;
-CREATE TABLE IF NOT EXISTS `mdl_workshopform_rubric_config` (
-  `id` bigint(10) NOT NULL AUTO_INCREMENT,
-  `workshopid` bigint(10) NOT NULL,
-  `layout` varchar(30) DEFAULT 'list',
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `mdl_workrubrconf_wor_uix` (`workshopid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Configuration table for the Rubric grading strategy' AUTO_INCREMENT=1 ;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `mdl_workshopform_rubric_levels`
---
-
-DROP TABLE IF EXISTS `mdl_workshopform_rubric_levels`;
-CREATE TABLE IF NOT EXISTS `mdl_workshopform_rubric_levels` (
-  `id` bigint(10) NOT NULL AUTO_INCREMENT,
-  `dimensionid` bigint(10) NOT NULL,
-  `grade` decimal(10,5) NOT NULL,
-  `definition` longtext,
-  `definitionformat` smallint(3) DEFAULT '0',
-  PRIMARY KEY (`id`),
-  KEY `mdl_workrubrleve_dim_ix` (`dimensionid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='The definition of rubric rating scales' AUTO_INCREMENT=1 ;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
