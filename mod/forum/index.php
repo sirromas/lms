@@ -459,7 +459,7 @@ $PAGE->set_heading($course->fullname);
 $PAGE->set_button($searchform);
 echo $OUTPUT->header();
 
-// Show the subscribe all options only to non-guest, enrolled users
+// Show the subscribe all options only to non-guest, enrolled users 
 if (!isguestuser() && isloggedin() && $can_subscribe) {
     echo $OUTPUT->box_start('subscription');
     echo html_writer::tag('div',
@@ -473,6 +473,8 @@ if (!isguestuser() && isloggedin() && $can_subscribe) {
     echo $OUTPUT->box_end();
     echo $OUTPUT->box('&nbsp;', 'clearer');
 }
+
+
 
 if ($generalforums) {
     echo $OUTPUT->heading(get_string('generalforums', 'forum'), 2);

@@ -23,11 +23,18 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
+
+
 require('../../config.php');
+require_once ('../../course/courseSections.php');
 require_once($CFG->dirroot.'/mod/page/locallib.php');
 require_once($CFG->libdir.'/completionlib.php');
 
+
 $id      = optional_param('id', 0, PARAM_INT); // Course Module ID
+
 $p       = optional_param('p', 0, PARAM_INT);  // Page instance ID
 $inpopup = optional_param('inpopup', 0, PARAM_BOOL);
 
@@ -49,6 +56,16 @@ $course = $DB->get_record('course', array('id'=>$cm->course), '*', MUST_EXIST);
 require_course_login($course, true, $cm);
 $context = context_module::instance($cm->id);
 require_capability('mod/page:view', $context);
+
+// Instantiate course section object to get some additional info
+$cs=new courseSections($context, $COURSE->id, $USER->id);
+
+$forumid=false;
+$forumid=$cs->getForumId();
+
+$quizid=false;
+$quizid=$cs->getQuizId();
+
 
 // Trigger module viewed event.
 $event = \mod_page\event\course_module_viewed::create(array(
@@ -78,6 +95,9 @@ if ($inpopup and $page->display == RESOURCELIB_DISPLAY_POPUP) {
     $PAGE->set_heading($course->fullname);
     $PAGE->set_activity_record($page);
 }
+
+
+
 echo $OUTPUT->header();
 if (!isset($options['printheading']) || !empty($options['printheading'])) {
     echo $OUTPUT->heading(format_string($page->name), 2);
@@ -102,4 +122,31 @@ echo $OUTPUT->box($content, "generalbox center clearfix");
 $strlastmodified = get_string("lastmodified");
 echo "<div class=\"modified\">$strlastmodified: ".userdate($page->timemodified)."</div>";
 
+/*******************************************************************************
+ *  Here should be added forum functionality directly after page * 
+ ******************************************************************************/
+if ($forumid!=false) {
+$url='http://'.$_SERVER['SERVER_NAME'].'/lms/moodle/mod/forum/view.php?id='.$forumid;
+?>
+<iframe src="<?php echo $url; ?>" onload="this.width=screen.width*0.9;this.height=screen.height;"></iframe>
+<?php
+}
+
+/*******************************************************************************
+ *  Here should be added link to quiz * 
+ ******************************************************************************/
+if ($quizid!=false) {
+$qizurl="http://".$_SERVER['SERVER_NAME']."/lms/moodle/mod/quiz/view.php?id=".$quizid."";
+?>
+<br/><br/>
+<div style="text-align: center;"><a href="<?php echo $qizurl;  ?>" >Go to Quiz</a></div>
+<?php
+}
+
+
+
+?>
+
+
+<?php
 echo $OUTPUT->footer();

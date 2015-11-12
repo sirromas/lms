@@ -25,7 +25,7 @@
     require_once('lib.php');
     require_once($CFG->libdir.'/completionlib.php');
 
-    $id          = optional_param('id', 0, PARAM_INT);       // Course Module ID
+    $id          = optional_param('id', 0, PARAM_INT);       // Course Module ID    
     $f           = optional_param('f', 0, PARAM_INT);        // Forum ID
     $mode        = optional_param('mode', 0, PARAM_INT);     // Display mode (for single forum)
     $showall     = optional_param('showall', '', PARAM_INT); // show all discussions on one page
@@ -119,11 +119,12 @@
     forum_view($forum, $course, $cm, $context);
 
     echo $OUTPUT->header();
-
+     
     echo $OUTPUT->heading(format_string($forum->name), 2);
     if (!empty($forum->intro) && $forum->type != 'single' && $forum->type != 'teacher') {
         echo $OUTPUT->box(format_module_intro('forum', $forum, $cm->id), 'generalbox', 'intro');
     }
+    
 
 /// find out current groups mode
     groups_print_activity_menu($cm, $CFG->wwwroot . '/mod/forum/view.php?id=' . $cm->id);
