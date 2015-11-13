@@ -50,6 +50,9 @@ defined('MOODLE_INTERNAL') || die();
  * @package core
  * @category output
  */
+
+
+require_once ($_SERVER['DOCUMENT_ROOT'] . '/lms/moodle/my/myCourses.php');
 class renderer_base {
     /**
      * @var xhtml_container_stack The xhtml_container_stack to use.
@@ -4047,12 +4050,17 @@ EOD;
      * @return string HTML to display the main header.
      */
     public function full_header() {
+        GLOBAL $USER;
         $html = html_writer::start_tag('header', array('id' => 'page-header', 'class' => 'clearfix'));
         $html .= $this->context_header();
-        //$html .= html_writer::start_div('clearfix', array('id' => 'page-navbar'));
-        //$html .= html_writer::tag('nav', $this->navbar(), array('class' => 'breadcrumb-nav'));
-        //$html .= html_writer::div($this->page_heading_button(), 'breadcrumb-button');
-        //$html .= html_writer::end_div();
+        $mc = new myCourses($USER->id);
+        $roleid = $mc->getUserRole();
+        if ($roleid==1 || $roleid==2) {       
+        $html .= html_writer::start_div('clearfix', array('id' => 'page-navbar'));
+        $html .= html_writer::tag('nav', $this->navbar(), array('class' => 'breadcrumb-nav'));
+        $html .= html_writer::div($this->page_heading_button(), 'breadcrumb-button');
+        $html .= html_writer::end_div();
+        }
         $html .= html_writer::tag('div', $this->course_header(), array('id' => 'course-header'));
         $html .= html_writer::end_tag('header');
         return $html;
