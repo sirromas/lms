@@ -3,7 +3,7 @@
 //error_reporting(E_ALL);
 //ini_set('display_errors', 1);
 
-require_once ($_SERVER['DOCUMENT_ROOT'] . '/lms/moodle/class.database.php');
+require_once ($_SERVER['DOCUMENT_ROOT'] . '/lms/moodle/class.pdo.database.php');
 
 class myCourses {
 
@@ -11,7 +11,7 @@ class myCourses {
     private $userid;
 
     function __construct($userid) {
-        $db = DB::getInstance();
+        $db = new pdo_db();
         $this->db = $db;
         $this->userid = $userid;
     }
@@ -23,7 +23,7 @@ class myCourses {
         $num = $this->db->numrows($query);
         if ($num) {
             $result = $this->db->query($query);
-            while ($row = mysql_fetch_assoc($result)) {
+            while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
                 $contextid = $row['contextid'];
             }
             return $contextid;
@@ -40,8 +40,7 @@ class myCourses {
             $num = $this->db->numrows($query);
             if ($num > 0) {
                 $result = $this->db->query($query);
-                $result = $this->db->query($query);
-                while ($row = mysql_fetch_assoc($result)) {
+                while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
                     $instanceid = $row['instanceid'];
                 }
                 return $instanceid;
@@ -55,7 +54,7 @@ class myCourses {
         $num = $this->db->numrows($query);
         if ($num > 0) {
             $result = $this->db->query($query);
-            while ($row = mysql_fetch_assoc($result)) {
+            while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
                 $roleid = $row['roleid'];
             }
             return $roleid;

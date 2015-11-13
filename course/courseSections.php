@@ -3,7 +3,7 @@
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
-require_once ($_SERVER['DOCUMENT_ROOT'] . '/lms/moodle/class.database.php');
+require_once ($_SERVER['DOCUMENT_ROOT'] . '/lms/moodle/class.pdo.database.php');
 
 GLOBAL $COURSE, $USER;
 
@@ -14,8 +14,8 @@ class courseSections {
     private $courseid;
     private $userid;
 
-    function __construct($context, $courseid, $userid) {
-        $db = DB::getInstance();
+    function __construct($context, $courseid, $userid) {        
+        $db = new pdo_db();
         $this->db = $db;
         $this->context = $context;
         $this->courseid = $courseid;
@@ -34,7 +34,7 @@ class courseSections {
         $query = "select * from mdl_course_modules where "
                 . "course=" . $this->courseid . " and module=9";
         $result = $this->db->query($query);
-        while ($row = mysql_fetch_assoc($result)) {
+        while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
             $id = $row['id'];
         }
         return $id;
@@ -44,7 +44,7 @@ class courseSections {
         $query = "select * from mdl_course_modules where "
                 . "course=" . $this->courseid . " and module=15 limit 0,1";
         $result = $this->db->query($query);
-        while ($row = mysql_fetch_assoc($result)) {
+        while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
             $id = $row['id'];
         }
         return $id;
@@ -54,7 +54,7 @@ class courseSections {
         $query = "select * from mdl_course_modules where "
                 . "course=" . $this->courseid . " and module=16 limit 0,1";
         $result = $this->db->query($query);
-        while ($row = mysql_fetch_assoc($result)) {
+        while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
             $id = $row['id'];
         }
         return $id;
