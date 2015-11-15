@@ -52,7 +52,7 @@ defined('MOODLE_INTERNAL') || die();
  */
 
 
-require_once ($_SERVER['DOCUMENT_ROOT'] . '/lms/moodle/my/myCourses.php');
+require_once ($_SERVER['DOCUMENT_ROOT'] . '/lms/my/myCourses.php');
 class renderer_base {
     /**
      * @var xhtml_container_stack The xhtml_container_stack to use.
@@ -4055,7 +4055,7 @@ EOD;
         $html .= $this->context_header();
         $mc = new myCourses($USER->id);
         $roleid = $mc->getUserRole();
-        if ($roleid==1 || $roleid==2) {       
+        if ($roleid==0 || $roleid==1 || $roleid==2) {       
         $html .= html_writer::start_div('clearfix', array('id' => 'page-navbar'));
         $html .= html_writer::tag('nav', $this->navbar(), array('class' => 'breadcrumb-nav'));
         $html .= html_writer::div($this->page_heading_button(), 'breadcrumb-button');
