@@ -1082,7 +1082,8 @@ function forum_cron() {
                             $posttext .= "\n".format_string($post->subject,true).' '.get_string("bynameondate", "forum", $by);
                             $posttext .= "\n---------------------------------------------------------------------";
 
-                            $by->name = "<a target=\"_blank\" href=\"$CFG->wwwroot/user/view.php?id=$userfrom->id&amp;course=$course->id\">$by->name</a>";
+                            $by->name = "<a target=\"_blank\" href=''>$by->name</a>";
+                            //$by->name = "<a target=\"_blank\" href=\"$CFG->wwwroot/user/view.php?id=$userfrom->id&amp;course=$course->id\">$by->name</a>";
                             $posthtml .= '<div><a target="_blank" href="'.$CFG->wwwroot.'/mod/forum/discuss.php?d='.$discussion->id.'#p'.$post->id.'">'.format_string($post->subject,true).'</a> '.get_string("bynameondate", "forum", $by).'</div>';
 
                         } else {
@@ -3063,7 +3064,8 @@ function forum_make_mail_post($course, $cm, $forum, $discussion, $post, $userfro
 
     $fullname = fullname($userfrom, $viewfullnames);
     $by = new stdClass();
-    $by->name = '<a href="'.$CFG->wwwroot.'/user/view.php?id='.$userfrom->id.'&amp;course='.$course->id.'">'.$fullname.'</a>';
+    $by->name = '<a href="">'.$fullname.'</a>';
+    //$by->name = '<a href="'.$CFG->wwwroot.'/user/view.php?id='.$userfrom->id.'&amp;course='.$course->id.'">'.$fullname.'</a>';
     $by->date = userdate($post->modified, '', core_date::get_user_timezone($userto));
     $output .= '<div class="author">'.get_string('bynameondate', 'forum', $by).'</div>';
 
@@ -3267,7 +3269,8 @@ function forum_print_post($post, $discussion, $forum, &$cm, $course, $ownpost=fa
     $postuser = username_load_fields_from_object($postuser, $post, null, $postuserfields);
     $postuser->id = $post->userid;
     $postuser->fullname    = fullname($postuser, $cm->cache->caps['moodle/site:viewfullnames']);
-    $postuser->profilelink = new moodle_url('/user/view.php', array('id'=>$post->userid, 'course'=>$course->id));
+    $postuser->profilelink = '';
+    //$postuser->profilelink = new moodle_url('/user/view.php', array('id'=>$post->userid, 'course'=>$course->id));
 
     // Prepare the groups the posting user belongs to
     if (isset($cm->cache->usersgroups)) {
@@ -3767,7 +3770,8 @@ function forum_print_discussion_header(&$post, $forum, $group=-1, $datestring=""
     // User name
     $fullname = fullname($postuser, has_capability('moodle/site:viewfullnames', $modcontext));
     echo '<td class="author">';
-    echo '<a href="'.$CFG->wwwroot.'/user/view.php?id='.$post->userid.'&amp;course='.$forum->course.'">'.$fullname.'</a>';
+    echo '<a href="">'.$fullname.'</a>';
+    //echo '<a href="'.$CFG->wwwroot.'/user/view.php?id='.$post->userid.'&amp;course='.$forum->course.'">'.$fullname.'</a>';
     echo "</td>\n";
 
     // Group picture
@@ -5982,8 +5986,9 @@ function forum_print_recent_mod_activity($activity, $courseid, $detail, $modname
 
     echo '<div class="user">';
     $fullname = fullname($activity->user, $viewfullnames);
-    echo "<a href=\"$CFG->wwwroot/user/view.php?id={$activity->user->id}&amp;course=$courseid\">"
-         ."{$fullname}</a> - ".userdate($activity->timestamp);
+    echo "<a href=''>"."{$fullname}</a> - ".userdate($activity->timestamp);
+    //echo "<a href=\"$CFG->wwwroot/user/view.php?id={$activity->user->id}&amp;course=$courseid\">"
+      //   ."{$fullname}</a> - ".userdate($activity->timestamp);
     echo '</div>';
       echo "</td></tr></table>";
 

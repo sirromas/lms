@@ -56,13 +56,13 @@ $pageid=$cs->getPageId();
 
 if ($roleid==4) {
     // Navigate directly to gradebook
-    $url="http://".$_SERVER['SERVER_NAME']."/lms/moodle/grade/report/grader/index.php?id=".$course->id."";
+    $url="http://".$_SERVER['SERVER_NAME']."/lms/grade/report/grader/index.php?id=".$course->id."";
     header("Location: $url");
 }
 
 if ($roleid==5 && $pageid>1) {
     // Navigate directly to course section  
-    $url="http://".$_SERVER['SERVER_NAME']."/lms/moodle/mod/page/view.php?id=".$pageid."";
+    $url="http://".$_SERVER['SERVER_NAME']."/lms/mod/page/view.php?id=".$pageid."";
     header("Location: $url");
 }
 

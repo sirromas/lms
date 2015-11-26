@@ -25,6 +25,10 @@
  */
 
 require_once('../../config.php');
+require_once('../../course/courseSections.php');
+require_once('../../my/myCourses.php');
+
+GLOBAL $COURSE, $USER;
 
 $d      = required_param('d', PARAM_INT);                // Discussion ID
 $parent = optional_param('parent', 0, PARAM_INT);        // If set, then display this post and all children.
@@ -225,15 +229,15 @@ if ($node && $post->id != $discussion->firstpost) {
     $node->add(format_string($post->subject), $PAGE->url);
 }
 
-$PAGE->set_title("$course->shortname: ".format_string($discussion->name));
-$PAGE->set_heading($course->fullname);
+//$PAGE->set_title("$course->shortname: ".format_string($discussion->name));
+//$PAGE->set_heading($course->fullname);
 $PAGE->set_button($searchform);
 $renderer = $PAGE->get_renderer('mod_forum');
 
 echo $OUTPUT->header();
 
 echo $OUTPUT->heading(format_string($forum->name), 2);
-echo $OUTPUT->heading(format_string($discussion->name), 3, 'discussionname');
+//echo $OUTPUT->heading(format_string($discussion->name), 3, 'discussionname');
 
 // is_guest should be used here as this also checks whether the user is a guest in the current course.
 // Guests and visitors cannot subscribe - only enrolled users.
@@ -360,4 +364,21 @@ echo $neighbourlinks;
 // Add the subscription toggle JS.
 $PAGE->requires->yui_module('moodle-mod_forum-subscriptiontoggle', 'Y.M.mod_forum.subscriptiontoggle.init');
 
-echo $OUTPUT->footer();
+$mc=new myCourses($USER->id);
+$roleid=$mc->getUserRole();
+if ($roleid==5) {
+    $context = context_course::instance($COURSE->id, MUST_EXIST);
+    $cs=new courseSections($context, $COURSE->id, $USER->id);
+    $forumid=$cs->getForumId();
+    $url='http://'.$_SERVER['SERVER_NAME'].'/lms/mod/forum/view.php?id='.$forumid;
+    echo "<a href='$url'>Back to forum main page</a>";        
+}
+else {
+    echo $OUTPUT->footer();
+}
+
+
+
+
+
+//echo $OUTPUT->footer();

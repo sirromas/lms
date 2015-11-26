@@ -26,6 +26,8 @@
 require_once('../../config.php');
 require_once('lib.php');
 require_once($CFG->libdir.'/completionlib.php');
+require_once('../../course/courseSections.php');
+require_once('../../my/myCourses.php');
 
 $reply   = optional_param('reply', 0, PARAM_INT);
 $forum   = optional_param('forum', 0, PARAM_INT);
@@ -85,8 +87,8 @@ if (!isloggedin() or isguestuser()) {
 
     $PAGE->set_cm($cm, $course, $forum);
     $PAGE->set_context($modcontext);
-    $PAGE->set_title($course->shortname);
-    $PAGE->set_heading($course->fullname);
+    //$PAGE->set_title($course->shortname);
+    //$PAGE->set_heading($course->fullname);
     $referer = get_local_referer(false);
 
     echo $OUTPUT->header();
@@ -393,8 +395,8 @@ if (!empty($forum)) {      // User is starting a new discussion in a forum
 
         forum_set_return();
         $PAGE->navbar->add(get_string('delete', 'forum'));
-        $PAGE->set_title($course->shortname);
-        $PAGE->set_heading($course->fullname);
+        //$PAGE->set_title($course->shortname);
+        //$PAGE->set_heading($course->fullname);
 
         if ($replycount) {
             if (!has_capability('mod/forum:deleteanypost', $modcontext)) {
@@ -533,7 +535,7 @@ if (!empty($forum)) {      // User is starting a new discussion in a forum
         $PAGE->navbar->add(format_string($post->subject, true), new moodle_url('/mod/forum/discuss.php', array('d'=>$discussion->id)));
         $PAGE->navbar->add(get_string("prune", "forum"));
         $PAGE->set_title(format_string($discussion->name).": ".format_string($post->subject));
-        $PAGE->set_heading($course->fullname);
+        //$PAGE->set_heading($course->fullname);
         echo $OUTPUT->header();
         echo $OUTPUT->heading(format_string($forum->name), 2);
         echo $OUTPUT->heading(get_string('pruneheading', 'forum'), 3);
@@ -1009,7 +1011,7 @@ if ($edit) {
 }
 
 $PAGE->set_title("$course->shortname: $strdiscussionname ".format_string($toppost->subject));
-$PAGE->set_heading($course->fullname);
+//$PAGE->set_heading($course->fullname);
 
 echo $OUTPUT->header();
 echo $OUTPUT->heading(format_string($forum->name), 2);
@@ -1064,5 +1066,16 @@ if (!empty($formheading)) {
 }
 $mform_post->display();
 
-echo $OUTPUT->footer();
+$mc=new myCourses($USER->id);
+$roleid=$mc->getUserRole();
+if ($roleid==5) {
+    $context = context_course::instance($COURSE->id, MUST_EXIST);
+    $cs=new courseSections($context, $COURSE->id, $USER->id);
+    $forumid=$cs->getForumId();
+    $url='http://'.$_SERVER['SERVER_NAME'].'/lms/mod/forum/view.php?id='.$forumid;
+    echo "<a href='$url'>Back to forum main page</a>";
+}
+else {
+    echo $OUTPUT->footer();
+}
 
