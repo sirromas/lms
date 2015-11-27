@@ -25,6 +25,7 @@
  */
 defined('MOODLE_INTERNAL') || die();
 require_once("$CFG->dirroot/my/myCourses.php");
+require_once("$CFG->dirroot/enrol/tutorUsers.php");
 
 /**
  * This class provides a targeted tied together means of interfacing the enrolment
@@ -143,14 +144,32 @@ class course_enrolment_manager {
      * @param int $statusfilter if not -1, filter users with active/inactive enrollment.
      */
     public function __construct(moodle_page $moodlepage, $course, $instancefilter = null, $rolefilter = 0, $searchfilter = '', $groupfilter = 0, $statusfilter = -1) {
+        global $USER;
         $this->moodlepage = $moodlepage;
         $this->context = context_course::instance($course->id);
         $this->course = $course;
         $this->instancefilter = $instancefilter;
         $this->rolefilter = $rolefilter;
         $this->searchfilter = $searchfilter;
-        $this->groupfilter = $groupfilter;
         $this->statusfilter = $statusfilter;
+        $this->groupfilter = $groupfilter;
+        /*         * ********************************************************************
+         * Check if current user is teacher then use only teachers group users* 
+         * ******************************************************************* */
+
+        /*
+          $mc = new myCourses($USER->id);
+          $roleid = $mc->getUserRole();
+          echo "Role id: ".$roleid."<br/>";
+          if ($roleid == 3 || $roleid == 4) {
+          $tutor_groups=$this->get_tutor_groups(); // array
+          print_r($tutor_groups);
+          $this->groupfilter=$tutor_groups[0];
+          } else {
+          $this->groupfilter = $groupfilter;
+          }
+         * 
+         */
     }
 
     /**
@@ -171,18 +190,38 @@ class course_enrolment_manager {
      * @return int
      */
     public function get_total_users() {
-        global $DB;
+        global $DB, $USER;
         if ($this->totalusers === null) {
             list($instancessql, $params, $filter) = $this->get_instance_sql();
             list($filtersql, $moreparams) = $this->get_filter_sql();
-            $params += $moreparams;
-            $sqltotal = "SELECT COUNT(DISTINCT u.id)
+            $mc = new myCourses($USER->id);
+            $roleid = $mc->getUserRole();
+
+            if ($roleid == 3 || $roleid == 4) {
+                $page_url = $_SERVER['REQUEST_URI'];
+                $pos = strpos($page_url, 'filtergroup');
+                if ($pos === false) {
+                    $this->totalusers = 'please select group of';
+                } else {
+                    $params += $moreparams;
+                    $sqltotal = "SELECT COUNT(DISTINCT u.id)
                            FROM {user} u
                            JOIN {user_enrolments} ue ON (ue.userid = u.id  AND ue.enrolid $instancessql)
                            JOIN {enrol} e ON (e.id = ue.enrolid)
                       LEFT JOIN {groups_members} gm ON u.id = gm.userid
                           WHERE $filtersql";
-            $this->totalusers = (int) $DB->count_records_sql($sqltotal, $params);
+                    $this->totalusers = (int) $DB->count_records_sql($sqltotal, $params);
+                }
+            } else {
+                $params += $moreparams;
+                $sqltotal = "SELECT COUNT(DISTINCT u.id)
+                           FROM {user} u
+                           JOIN {user_enrolments} ue ON (ue.userid = u.id  AND ue.enrolid $instancessql)
+                           JOIN {enrol} e ON (e.id = ue.enrolid)
+                      LEFT JOIN {groups_members} gm ON u.id = gm.userid
+                          WHERE $filtersql";
+                $this->totalusers = (int) $DB->count_records_sql($sqltotal, $params);
+            }
         }
         return $this->totalusers;
     }
@@ -219,21 +258,21 @@ class course_enrolment_manager {
     }
 
     public function get_tutor_groups() {
-        $groups = groups_get_my_groups();
-        $tutor_groups = array();
-        foreach ($groups as $group) {
-            array_push($tutor_groups, $group->name);
-        }
-        return array_unique($tutor_groups);
+        $tu = new tutorUsers();
+        return $tutor_groups = $tu->getTutorGroups();
     }
 
     public function filter_tutor_students($users) {
         $tutor_groups = $this->get_tutor_groups();
+        //echo "Tutor groups: <br/>";
         //print_r($tutor_groups);
+        //echo "<br/>----------------------<br/>";
         $filtered_users = array();
         foreach ($users as $user) {
             $user_groups = $user->groups; //array
+            //echo "Current user group: <br/>";
             //print_r($user_groups);
+            //echo "<br/>----------------------<br/>";
             foreach ($user_groups as $group) {
                 if (in_array($group, $tutor_groups)) {
                     array_push($filtered_users, $user);
@@ -266,6 +305,7 @@ class course_enrolment_manager {
         if (!array_key_exists($key, $this->users)) {
             list($instancessql, $params, $filter) = $this->get_instance_sql();
             list($filtersql, $moreparams) = $this->get_filter_sql();
+            //echo "Filter sql: ".$filtersql."<br/>";
             $params += $moreparams;
             $extrafields = get_extra_user_fields($this->get_context());
             $extrafields[] = 'lastaccess';
@@ -278,6 +318,7 @@ class course_enrolment_manager {
                  LEFT JOIN {groups_members} gm ON u.id = gm.userid
                      WHERE $filtersql
                   ORDER BY u.$sort $direction";
+            //echo $sql;
             $this->users[$key] = $DB->get_records_sql($sql, $params, $page * $perpage, $perpage);
         }
         return $this->users[$key];
@@ -291,7 +332,7 @@ class course_enrolment_manager {
      * @return array Two-element array with SQL and params for WHERE clause
      */
     protected function get_filter_sql() {
-        global $DB;
+        global $DB, $USER;
 
         // Search condition.
         $extrafields = get_extra_user_fields($this->get_context());
@@ -312,10 +353,19 @@ class course_enrolment_manager {
         }
 
         // Group condition.
-        if ($this->groupfilter) {
+        $mc = new myCourses($USER->id);
+        $roleid = $mc->getUserRole();
+        //echo "Role id: ".$roleid."<br/>";
+        if ($roleid == 3 || $roleid == 4) {
             $sql .= " AND gm.groupid = :groupid";
             $params['groupid'] = $this->groupfilter;
+        } else {
+            if ($this->groupfilter) {
+                $sql .= " AND gm.groupid = :groupid";
+                $params['groupid'] = $this->groupfilter;
+            }
         }
+
 
         // Status condition.
         if ($this->statusfilter === ENROL_USER_ACTIVE) {
@@ -1116,8 +1166,8 @@ class course_enrolment_manager {
             $userdetails[$user->id] = $details;
             //print_r($userdetails);
         }
-        
-        //return $this->filter_tutor_students($userdetails);
+
+        $this->filter_tutor_students($userdetails[$user->id]);
         return $userdetails;
     }
 

@@ -55,7 +55,7 @@ $PAGE->set_pagelayout('admin');
 
 $manager = new course_enrolment_manager($PAGE, $course, $filter, $role, $search, $fgroup, $status);
 $manager->filter_tutor_students($users);
-        
+
 $table = new course_enrolment_users_table($manager, $PAGE);
 $PAGE->set_url('/enrol/users.php', $manager->get_url_params() + $table->get_url_params() + array('newcourse' => $newcourse));
 navigation_node::override_active_url(new moodle_url('/enrol/users.php', array('id' => $id)));

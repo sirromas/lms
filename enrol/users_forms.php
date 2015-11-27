@@ -176,6 +176,7 @@ class enrol_users_filter_form extends moodleform {
             $groupsmenu[0] = get_string('allparticipants');
         }
         foreach ($allgroups as $gid => $unused) {
+            $groupsmenu[0]='Select..';
             $groupsmenu[$gid] = $allgroups[$gid]->name;
         }
         if (count($groupsmenu) > 1) {
