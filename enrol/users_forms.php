@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -21,20 +22,23 @@
  * @copyright  2010 Petr Skoda {@link http://skodak.org}
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-
 defined('MOODLE_INTERNAL') || die();
 
 require_once("$CFG->libdir/formslib.php");
+require_once("$CFG->dirroot/my/myCourses.php");
 
 class enrol_users_assign_form extends moodleform {
+
+    public $_groups;
+
     function definition() {
         global $CFG, $DB;
 
         $mform = $this->_form;
 
-        $user       = $this->_customdata['user'];
-        $course     = $this->_customdata['course'];
-        $context    = context_course::instance($course->id);
+        $user = $this->_customdata['user'];
+        $course = $this->_customdata['course'];
+        $context = context_course::instance($course->id);
         $assignable = $this->_customdata['assignable'];
         $assignable = array_reverse($assignable, true); // students first
 
@@ -43,7 +47,7 @@ class enrol_users_assign_form extends moodleform {
             unset($assignable[$ra->roleid]);
         }
 
-        $mform->addElement('header','general', fullname($user));
+        $mform->addElement('header', 'general', fullname($user));
 
         $mform->addElement('select', 'roleid', get_string('addrole', 'role'), $assignable);
 
@@ -73,19 +77,21 @@ class enrol_users_assign_form extends moodleform {
 
         $this->add_action_buttons();
 
-        $this->set_data(array('action'=>'assign', 'user'=>$user->id));
+        $this->set_data(array('action' => 'assign', 'user' => $user->id));
     }
+
 }
 
 class enrol_users_addmember_form extends moodleform {
+
     function definition() {
         global $CFG, $DB;
 
         $mform = $this->_form;
 
-        $user     = $this->_customdata['user'];
-        $course   = $this->_customdata['course'];
-        $context  = context_course::instance($course->id, IGNORE_MISSING);
+        $user = $this->_customdata['user'];
+        $course = $this->_customdata['course'];
+        $context = context_course::instance($course->id, IGNORE_MISSING);
         $allgroups = $this->_customdata['allgroups'];
         $usergroups = groups_get_all_groups($course->id, $user->id, 0, 'g.id');
 
@@ -97,7 +103,7 @@ class enrol_users_addmember_form extends moodleform {
             $options[$group->id] = $group->name;
         }
 
-        $mform->addElement('header','general', fullname($user));
+        $mform->addElement('header', 'general', fullname($user));
 
         $mform->addElement('select', 'groupids', get_string('addgroup', 'group'), $options, array('multiple' => 'multiple'));
         $mform->addRule('groupids', null, 'required');
@@ -128,15 +134,16 @@ class enrol_users_addmember_form extends moodleform {
 
         $this->add_action_buttons();
 
-        $this->set_data(array('action'=>'addmember', 'user'=>$user->id));
+        $this->set_data(array('action' => 'addmember', 'user' => $user->id));
     }
-}
 
+}
 
 /**
  * Form that lets users filter the enrolled user list.
  */
 class enrol_users_filter_form extends moodleform {
+
     function definition() {
         global $CFG, $DB;
 
@@ -149,8 +156,7 @@ class enrol_users_filter_form extends moodleform {
         $mform->setType('search', PARAM_RAW);
 
         // Filter by enrolment plugin type.
-        $mform->addElement('select', 'ifilter', get_string('enrolmentinstances', 'enrol'),
-                array(0 => get_string('all')) + (array)$manager->get_enrolment_instance_names());
+        $mform->addElement('select', 'ifilter', get_string('enrolmentinstances', 'enrol'), array(0 => get_string('all')) + (array) $manager->get_enrolment_instance_names());
 
         // Role select dropdown includes all roles, but using course-specific
         // names if applied. The reason for not restricting to roles that can
@@ -161,13 +167,15 @@ class enrol_users_filter_form extends moodleform {
         foreach ($allroles as $id => $role) {
             $rolenames[$id] = $role->localname;
         }
-        $mform->addElement('select', 'role', get_string('role'),
-                array(0 => get_string('all')) + $rolenames);
+        $mform->addElement('select', 'role', get_string('role'), array(0 => get_string('all')) + $rolenames);
 
-        // Filter by group.
-        $allgroups = $manager->get_all_groups();
-        $groupsmenu[0] = get_string('allparticipants');
-        foreach($allgroups as $gid => $unused) {
+        // Filter by group.        
+        $allgroups = $this->get_all_groups();
+        $roleid = $this->getUserRole();
+        if ($roleid != 3 && $roleid != 4) {
+            $groupsmenu[0] = get_string('allparticipants');
+        }
+        foreach ($allgroups as $gid => $unused) {
             $groupsmenu[$gid] = $allgroups[$gid]->name;
         }
         if (count($groupsmenu) > 1) {
@@ -175,10 +183,9 @@ class enrol_users_filter_form extends moodleform {
         }
 
         // Status active/inactive.
-        $mform->addElement('select', 'status', get_string('status'),
-                array(-1 => get_string('all'),
-                    ENROL_USER_ACTIVE => get_string('active'),
-                    ENROL_USER_SUSPENDED => get_string('inactive')));
+        $mform->addElement('select', 'status', get_string('status'), array(-1 => get_string('all'),
+            ENROL_USER_ACTIVE => get_string('active'),
+            ENROL_USER_SUSPENDED => get_string('inactive')));
 
         // Submit button does not use add_action_buttons because that adds
         // another fieldset which causes the CSS style to break in an unfixable
@@ -194,4 +201,27 @@ class enrol_users_filter_form extends moodleform {
         $mform->addElement('hidden', 'newcourse', $this->_customdata['newcourse']);
         $mform->setType('newcourse', PARAM_BOOL);
     }
+
+    function getUserRole() {
+        global $USER;
+        $mc = new myCourses($USER->id);
+        $roleid = $mc->getUserRole();
+        return $roleid;
+    }
+
+    public function get_all_groups() {
+        if ($this->_groups === null) {
+            $roleid = $this->getUserRole();
+            if ($roleid == 3 || $roleid == 4) {
+                $this->_groups = groups_get_my_groups($this->course->id);
+            } else {
+                $this->_groups = groups_get_all_groups($this->course->id);
+            }
+            foreach ($this->_groups as $gid => $group) {
+                $this->_groups[$gid]->name = format_string($group->name);
+            }
+        }
+        return $this->_groups;
+    }
+
 }
