@@ -1,4 +1,5 @@
 <?php
+error_reporting(0);
 header('Location: http://globalizationplus.com/');
 // This file is part of Moodle - http://moodle.org/
 //
