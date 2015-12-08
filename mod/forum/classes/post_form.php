@@ -227,7 +227,7 @@ class mod_forum_post_form extends moodleform {
                 if (empty($post->groupid)) {
                     $groupname = get_string('allparticipants');
                 } else {
-                    $groupname = format_string($groupdata[$post->groupid]->name);
+                    $groupname = @format_string($groupdata[$post->groupid]->name);
                 }
                 $mform->addElement('static', 'groupinfo', get_string('group'), $groupname);
             }
