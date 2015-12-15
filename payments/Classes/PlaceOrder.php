@@ -3,7 +3,6 @@
 require_once($_SERVER['DOCUMENT_ROOT'] . '/lms/config.php');
 require_once($_SERVER['DOCUMENT_ROOT'] . '/lms/lib/moodlelib.php');
 require_once($_SERVER['DOCUMENT_ROOT'] . '/lms/class.database.php');
-require_once 'PHPMailerAutoload.php';
 
 class PlaceOrder {
 
@@ -32,7 +31,21 @@ class PlaceOrder {
                     '" . mysql_real_escape_string($order->cds_pay_type) . "',    
                     '" . mysql_real_escape_string(time()) . "')";
         $this->db->query($query);
-        $this->putEnrolKey(mysql_insert_id(), $order->cds_email);
+        $status=$this->putEnrolKey(mysql_insert_id(), $order->cds_email);
+        if ($status) {
+            $res="Thank you for your order. Confirmation email "
+                    . "is sent to $order->cds_email."
+                    . "If you did not receive confirmation email, please"
+                    . "contact <a href='mailto:subscriptions@globalizationplus.com'>us</a>";
+        }
+        else {
+            $res="Thank you for your order. "
+                    . "We could not send confirmation email to $order->cds_email."
+                    . "Please contact "
+                    . "<a href='mailto:subscriptions@globalizationplus.com'>us</a>"
+                    . " to receive your enrol key";
+        }
+        return $status;        
     }
 
     function putEnrolKey($order_id, $email) {
@@ -48,18 +61,17 @@ class PlaceOrder {
                         '" . mysql_real_escape_string($enrol_key) . "',    
                         '" . $exp_date . "')";
         $this->db->query($query);
-        $status=$this->sendConfirmationEmail($email, $enrol_key, $exp_date);
+        $status = $this->sendConfirmationEmail($email, $enrol_key, $exp_date);
         if ($status) {
             return true;
-        }
-        else {
+        } else {
             return false;
         }
     }
 
     function sendConfirmationEmail($email, $enrol_key, $exp_date) {
-        $user=new stdClass();
-        $from='Globalization Plus';
+        $user = new stdClass();
+        $from = 'Globalization Plus';
         $message = "";
         $subject = "Order Confirmation";
         $message_footer = "</body></html>";
@@ -71,23 +83,20 @@ class PlaceOrder {
                 . "please be aware your enrol key is attached to your email $email "
                 . "so please <a href='https://globalizationplus.com/registerteacher.html'>signup</a> with this email."
                 . "If you have any issues please contact <a href='mailto:subscriptions@globalizationplus.com'>us</a></p>"
-                ."<br/><br/><br/> <span>Globalization Plus Support team</span>";
-        $message = $message.$message_header;
-        $message=$message.$message_body;
-        $message=$message.$message_footer;          
-        
-        $user->message=$message;
-        $user->email=$email;
-        $user->subject=$subject;        
-        if (mail_to_user_payment ($user, $from, $subject, $message)) {
+                . "<br/><br/><br/> <span>Globalization Plus Support team.</span>";
+        $message = $message . $message_header;
+        $message = $message . $message_body;
+        $message = $message . $message_footer;
+
+        $user->message = $message;
+        $user->email = $email;
+        $user->subject = $subject;
+        $status=mail_to_user_payment($user, $from, $subject, $message);
+        if ($status) {
             return true;
-        }
-        else {
+        } else {
             return false;
         }
-        
-        
-        
     }
 
     function generateRandomString($length = 25) {

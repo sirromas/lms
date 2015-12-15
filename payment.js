@@ -25,46 +25,41 @@ $(document).ready(function () {
         var exp_month = $("[name='cds_cc_exp_month']").val();
         var exp_year = $("[name='cds_cc_exp_year']").val();
 
-        if (name != '' && address != ''
-                && city != '' && state != '' && state != 'State'
-                && zip != '' && email != ''
-                && pay_type != '' && cc_number != ''
-                && exp_month != '' && exp_year != '') {
-            if (validateEmail(email) != true) {
+        if (name !== '' && address !== ''
+                && city !== '' && state !== '' && state !== 'State'
+                && zip !=='' && email !== ''
+                && pay_type !== '' && cc_number !== ''
+                && exp_month !== '' && exp_year !== '') {
+            if (validateEmail(email) !== true) {
                 $(".errormsg").html('Provided email is incorrect');
                 return false;
             }
             else {
-                var url='https://globalizationplus.com/lms/payments/process.php';
-                query={cds_name:name,
-                       cds_address_1:address,
-                       cds_city:city,
-                       cds_state:state,
-                       cds_zip:zip,
-                       cds_email:email,
-                       cds_pay_type:pay_type,
-                       cds_cc_number:cc_number,
-                       cds_cc_exp_month:exp_month,
-                       cds_cc_exp_year:exp_year             
-                };
-                
-                $('#payment_form').fadeTo("slow", 0.33);                
+                var url = 'https://globalizationplus.com/lms/payments/process.php';
+                query = {cds_name: name,
+                    cds_address_1: address,
+                    cds_city: city,
+                    cds_state: state,
+                    cds_zip: zip,
+                    cds_email: email,
+                    cds_pay_type: pay_type,
+                    cds_cc_number: cc_number,
+                    cds_cc_exp_month: exp_month,
+                    cds_cc_exp_year: exp_year};
+
+                $('#payment_form').fadeTo("slow", 0.33);
                 $.post(url, query).done(function (data) {
-                    $('payment_form').fadeTo("slow", 1);                    
-                    $("#signup_content").html(data);
+                    $('#payment_form').fadeTo("slow", 1);
+                    $("#payment_form").html(data);
                 });
-            }
+                return false;
+            } // end else
         } // end if name != '' && address != ''
         else {
             $(".errormsg").html('Please provide all fields');
             return false;
         }
-
-
-
-
     });
-
-})
+});
 
 
