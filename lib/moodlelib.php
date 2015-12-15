@@ -5735,13 +5735,12 @@ function mail_to_user_payment ($user, $from, $subject, $messagehtml) {
         $mail->addReplyTo($values[0], $values[1]);
     }
 
-    if ($mail->send()) {        
-        if (!empty($mail->SMTPDebug)) {
-            echo '</pre>';
-        }
+    if ($mail->send()) {       
+        //echo "Inside true ...<br/>";
         return true;
     } // end if $mail->send()    
     else {        
+        //echo "Inside false ...<br/>";
         return false;
     }
 }

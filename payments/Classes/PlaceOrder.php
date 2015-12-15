@@ -32,20 +32,20 @@ class PlaceOrder {
                     '" . mysql_real_escape_string(time()) . "')";
         $this->db->query($query);
         $status=$this->putEnrolKey(mysql_insert_id(), $order->cds_email);
-        if ($status) {
+        if ($status) {            
             $res="Thank you for your order. Confirmation email "
                     . "is sent to $order->cds_email."
-                    . "If you did not receive confirmation email, please"
-                    . "contact <a href='mailto:subscriptions@globalizationplus.com'>us</a>";
+                    . " If you did not receive confirmation email, please"
+                    . " contact <a href='mailto:subscriptions@globalizationplus.com'>us</a>";
         }
-        else {
+        else {            
             $res="Thank you for your order. "
                     . "We could not send confirmation email to $order->cds_email."
-                    . "Please contact "
+                    . " Please contact "
                     . "<a href='mailto:subscriptions@globalizationplus.com'>us</a>"
                     . " to receive your enrol key";
-        }
-        return $status;        
+        }        
+        return $res;        
     }
 
     function putEnrolKey($order_id, $email) {
@@ -62,9 +62,9 @@ class PlaceOrder {
                         '" . $exp_date . "')";
         $this->db->query($query);
         $status = $this->sendConfirmationEmail($email, $enrol_key, $exp_date);
-        if ($status) {
+        if ($status) {            
             return true;
-        } else {
+        } else {            
             return false;
         }
     }
@@ -92,9 +92,9 @@ class PlaceOrder {
         $user->email = $email;
         $user->subject = $subject;
         $status=mail_to_user_payment($user, $from, $subject, $message);
-        if ($status) {
+        if ($status) {            
             return true;
-        } else {
+        } else {            
             return false;
         }
     }
