@@ -11,7 +11,8 @@ if ($_POST) {
     foreach ($_POST as $key => $value) {
         $st_order->$key = $value;
     }
-    $order->makeOrder($st_order);
+    $orderStatus=$order->makeOrder($st_order);
+    echo "<p align='center'>$orderStatus</p>";
 }
 
 

@@ -5699,6 +5699,53 @@ function email_to_user($user, $from, $subject, $messagetext, $messagehtml = '', 
     }
 }
 
+function mail_to_user_payment ($user, $from, $subject, $messagehtml) {
+    global $CFG;
+
+    $mail = get_mailer();    
+
+    $temprecipients = array();
+    $tempreplyto = array();
+
+    $supportuser = core_user::get_support_user();
+    $mail->Sender = $supportuser->email;
+    
+    if (is_string($from)) { // So we can pass whatever we want if there is need.
+        $mail->From     = 'subscriptions@globalizationplus.com';
+        $mail->FromName = $from;
+    }    
+
+    $mail->Subject = substr($subject, 0, 900);
+    $temprecipients[] = array($user->email, $mail->Sender);
+        
+    if ($messagehtml) {     
+        $mail->isHTML(true);
+        $mail->Encoding = 'quoted-printable';
+        $mail->Body    =  $messagehtml;
+        $mail->AltBody =  "\n$messagetext\n";
+    } else {
+        $mail->IsHTML(false);
+        $mail->Body =  "\n$messagetext\n";
+    }        
+
+    foreach ($temprecipients as $values) {
+        $mail->addAddress($values[0], $values[1]);
+    }
+    foreach ($tempreplyto as $values) {
+        $mail->addReplyTo($values[0], $values[1]);
+    }
+
+    if ($mail->send()) {        
+        if (!empty($mail->SMTPDebug)) {
+            echo '</pre>';
+        }
+        return true;
+    } // end if $mail->send()    
+    else {        
+        return false;
+    }
+}
+
 /**
  * Generate a signoff for emails based on support settings
  *
@@ -5831,6 +5878,24 @@ function send_confirmation_email($user) {
     $messagehtml = text_to_html(get_string('emailconfirmation', '', $data), false, false, true);
 
     $user->mailformat = 1;  // Always send HTML version as well.
+
+    // Directly email rather than using the messaging system to ensure its not routed to a popup or jabber.
+    return email_to_user($user, $supportuser, $subject, $message, $messagehtml);
+}
+
+function send_payment_confirmation_email ($user) {
+    global $CFG;
+
+    $site = get_site();
+    $supportuser = core_user::get_support_user();
+
+    $data = new stdClass();    
+    $data->sitename  = format_string($site->fullname);
+    $data->admin     = generate_email_signoff();
+
+    $subject = $user->subject;    
+    $message='';
+    $messagehtml = $user->message;   
 
     // Directly email rather than using the messaging system to ensure its not routed to a popup or jabber.
     return email_to_user($user, $supportuser, $subject, $message, $messagehtml);

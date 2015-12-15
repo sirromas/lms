@@ -13,52 +13,20 @@ function validateEmail(email) {
 $(document).ready(function () {
 
     $('.dsR1652').on('submit', function () {
-        console.log("Form submitted");
 
-        /*        
-         .cds_name
-         .cds_address_1
-         .cds_city
-         .cds_state
-         .cds_zip
-         .cds_email
-         .cds_pay_type
-         .cds_cc_number
-         .cds_cc_exp_month
-         .cds_cc_exp_year        
-         */
         var name = $("[name='cds_name']").val();
-        console.log('Name: ' + name);
-
         var address = $("[name='cds_address_1']").val();
-        console.log('Address: ' + address);
-
         var city = $("[name='cds_city']").val();
-        console.log('City: ' + city);
-
         var state = $("[name='cds_state']").val();
-        console.log('State: ' + state);
-
         var zip = $("[name='cds_zip']").val();
-        console.log('Zip: ' + zip);
-
         var email = $("[name='cds_email']").val();
-        console.log('Email: ' + email);
-
         var pay_type = $("[name='cds_pay_type']").val();
-        console.log("Card type: " + pay_type);
-
         var cc_number = $("[name='cds_cc_number']").val();
-        console.log("Card number: " + cc_number);
-
         var exp_month = $("[name='cds_cc_exp_month']").val();
-        console.log("Expiration month: " + exp_month);
-
         var exp_year = $("[name='cds_cc_exp_year']").val();
-        console.log("Expiration year: " + exp_year);
 
         if (name != '' && address != ''
-                && city != '' && state != '' && state!='State'
+                && city != '' && state != '' && state != 'State'
                 && zip != '' && email != ''
                 && pay_type != '' && cc_number != ''
                 && exp_month != '' && exp_year != '') {
@@ -67,9 +35,26 @@ $(document).ready(function () {
                 return false;
             }
             else {
-                return true;
+                var url='https://globalizationplus.com/lms/payments/process.php';
+                query={cds_name:name,
+                       cds_address_1:address,
+                       cds_city:city,
+                       cds_state:state,
+                       cds_zip:zip,
+                       cds_email:email,
+                       cds_pay_type:pay_type,
+                       cds_cc_number:cc_number,
+                       cds_cc_exp_month:exp_month,
+                       cds_cc_exp_year:exp_year             
+                };
+                
+                $('#payment_form').fadeTo("slow", 0.33);                
+                $.post(url, query).done(function (data) {
+                    $('payment_form').fadeTo("slow", 1);                    
+                    $("#signup_content").html(data);
+                });
             }
-        }
+        } // end if name != '' && address != ''
         else {
             $(".errormsg").html('Please provide all fields');
             return false;

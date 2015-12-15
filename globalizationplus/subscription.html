@@ -42,7 +42,7 @@
             a#redLink:visited { color: red; text-decoration: underline;}
             a#redLink:hover { color: red; text-decoration: underline;}
         </style>
-        
+
         <meta http-equiv="content-type" content="text/html;charset=utf-8" />
         <meta name="generator" content="Adobe GoLive" />
         <title>Globalization Plus</title>
@@ -111,158 +111,161 @@
                             <div class="clearfix dsR1640">
                             </div>
                             <!--<form class="dsR1652" method="post" action="/servlet/Transaction" NAME="subscription_US1">-->
-                            <form class="dsR1652" method="post" action="lms/payments/process.php" />    
-                                <div>
-                                    <span class="errormsg"></span>
-                                    <p class="yes"><span class="ds280">Billing Information</span><br>
-                                            <br>
-                                                <label>Name</label>
-                                                <input class="lg dsR1632" name="cds_name" placeholder="Name" type="text" value="" size="49" maxlength="27" />
-                                                <p><label>Street Address</label>
-                                                    <input class="lg dsR1631" name="cds_address_1" placeholder="Address" type="text" value="" size="66" maxlength="27" /></p>
-                                                <p><label>City</label>
-                                                    <input class="lg dsR1633" name="cds_city" placeholder="City" type="text" value="" size="31" maxlength="13" />
-                                                    <label>State</label>
-                                                    <select class="select" id="state" name="cds_state" >
-                                                        <option selected="selected">State</option>
-                                                        <option value="AL" >Alabama</option>
-                                                        <option value="AK" >Alaska</option>
-                                                        <option value="AE" >APO/FPO-Africa</option>
-                                                        <option value="AE" >APO/FPO-Canada</option>
-                                                        <option value="AE" >APO/FPO-Europe</option>
-                                                        <option value="AE" >APO/FPO-Middle East</option>
-                                                        <option value="AA" >APO/FPO-Americas</option>
-                                                        <option value="AP" >APO/FPO-Pacific</option>
-                                                        <option value="AZ" >Arizona</option>
-                                                        <option value="AR" >Arkansas</option>
-                                                        <option value="CA" >California</option>
-                                                        <option value="CO" >Colorado</option>
-                                                        <option value="CT" >Connecticut</option>
-                                                        <option value="DE" >Delaware</option>
-                                                        <option value="DC" >District of Columbia</option>
-                                                        <option value="FL" >Florida</option>
-                                                        <option value="GA" >Georgia</option>
-                                                        <option value="GU" >Guam</option>
-                                                        <option value="HI" >Hawaii</option>
-                                                        <option value="ID" >Idaho</option>
-                                                        <option value="IL" >Illinois</option>
-                                                        <option value="IN" >Indiana</option>
-                                                        <option value="IA" >Iowa</option>
-                                                        <option value="KS" >Kansas</option>
-                                                        <option value="KY" >Kentucky</option>
-                                                        <option value="LA" >Louisiana</option>
-                                                        <option value="ME" >Maine</option>
-                                                        <option value="MD" >Maryland</option>
-                                                        <option value="MA" >Massachusetts</option>
-                                                        <option value="MI" >Michigan</option>
-                                                        <option value="MN" >Minnesota</option>
-                                                        <option value="MS" >Mississippi</option>
-                                                        <option value="MO" >Missouri</option>
-                                                        <option value="MT" >Montana</option>
-                                                        <option value="NE" >Nebraska</option>
-                                                        <option value="NV" >Nevada</option>
-                                                        <option value="NH" >New Hampshire</option>
-                                                        <option value="NJ" >New Jersey</option>
-                                                        <option value="NM" >New Mexico</option>
-                                                        <option value="NY" >New York</option>
-                                                        <option value="NC" >North Carolina</option>
-                                                        <option value="ND" >North Dakota</option>
-                                                        <option value="OH" >Ohio</option>
-                                                        <option value="OK" >Oklahoma</option>
-                                                        <option value="OR" >Oregon</option>
-                                                        <option value="PA" >Pennsylvania</option>
-                                                        <option value="PR" >Puerto Rico</option>
-                                                        <option value="RI" >Rhode Island</option>
-                                                        <option value="SC" >South Carolina</option>
-                                                        <option value="SD" >South Dakota</option>
-                                                        <option value="TN" >Tennessee</option>
-                                                        <option value="TX" >Texas</option>
-                                                        <option value="UT" >Utah</option>
-                                                        <option value="VT" >Vermont</option>
-                                                        <option value="VI" >Virgin Islands</option>
-                                                        <option value="VA" >Virginia</option>
-                                                        <option value="WA" >Washington</option>
-                                                        <option value="WV" >West Virginia</option>
-                                                        <option value="WI" >Wisconsin</option>
-                                                        <option value="WY" >Wyoming</option>
+                            <div id='payment_form'>
+                            <form class="dsR1652" method="post" action=''/>    
+                            <div>
+                                <span class="errormsg"></span>
+                                <p class="yes"><span class="ds280">Billing Information</span><br>
+                                        <br>
+                                            <label>Name</label>
+                                            <input class="lg dsR1632" name="cds_name" placeholder="Name" type="text" value="" size="49" maxlength="27" />
+                                            <p><label>Street Address</label>
+                                                <input class="lg dsR1631" name="cds_address_1" placeholder="Address" type="text" value="" size="66" maxlength="27" /></p>
+                                            <p><label>City</label>
+                                                <input class="lg dsR1633" name="cds_city" placeholder="City" type="text" value="" size="31" maxlength="13" />
+                                                <label>State</label>
+                                                <select class="select" id="state" name="cds_state" >
+                                                    <option selected="selected">State</option>
+                                                    <option value="AL" >Alabama</option>
+                                                    <option value="AK" >Alaska</option>
+                                                    <option value="AE" >APO/FPO-Africa</option>
+                                                    <option value="AE" >APO/FPO-Canada</option>
+                                                    <option value="AE" >APO/FPO-Europe</option>
+                                                    <option value="AE" >APO/FPO-Middle East</option>
+                                                    <option value="AA" >APO/FPO-Americas</option>
+                                                    <option value="AP" >APO/FPO-Pacific</option>
+                                                    <option value="AZ" >Arizona</option>
+                                                    <option value="AR" >Arkansas</option>
+                                                    <option value="CA" >California</option>
+                                                    <option value="CO" >Colorado</option>
+                                                    <option value="CT" >Connecticut</option>
+                                                    <option value="DE" >Delaware</option>
+                                                    <option value="DC" >District of Columbia</option>
+                                                    <option value="FL" >Florida</option>
+                                                    <option value="GA" >Georgia</option>
+                                                    <option value="GU" >Guam</option>
+                                                    <option value="HI" >Hawaii</option>
+                                                    <option value="ID" >Idaho</option>
+                                                    <option value="IL" >Illinois</option>
+                                                    <option value="IN" >Indiana</option>
+                                                    <option value="IA" >Iowa</option>
+                                                    <option value="KS" >Kansas</option>
+                                                    <option value="KY" >Kentucky</option>
+                                                    <option value="LA" >Louisiana</option>
+                                                    <option value="ME" >Maine</option>
+                                                    <option value="MD" >Maryland</option>
+                                                    <option value="MA" >Massachusetts</option>
+                                                    <option value="MI" >Michigan</option>
+                                                    <option value="MN" >Minnesota</option>
+                                                    <option value="MS" >Mississippi</option>
+                                                    <option value="MO" >Missouri</option>
+                                                    <option value="MT" >Montana</option>
+                                                    <option value="NE" >Nebraska</option>
+                                                    <option value="NV" >Nevada</option>
+                                                    <option value="NH" >New Hampshire</option>
+                                                    <option value="NJ" >New Jersey</option>
+                                                    <option value="NM" >New Mexico</option>
+                                                    <option value="NY" >New York</option>
+                                                    <option value="NC" >North Carolina</option>
+                                                    <option value="ND" >North Dakota</option>
+                                                    <option value="OH" >Ohio</option>
+                                                    <option value="OK" >Oklahoma</option>
+                                                    <option value="OR" >Oregon</option>
+                                                    <option value="PA" >Pennsylvania</option>
+                                                    <option value="PR" >Puerto Rico</option>
+                                                    <option value="RI" >Rhode Island</option>
+                                                    <option value="SC" >South Carolina</option>
+                                                    <option value="SD" >South Dakota</option>
+                                                    <option value="TN" >Tennessee</option>
+                                                    <option value="TX" >Texas</option>
+                                                    <option value="UT" >Utah</option>
+                                                    <option value="VT" >Vermont</option>
+                                                    <option value="VI" >Virgin Islands</option>
+                                                    <option value="VA" >Virginia</option>
+                                                    <option value="WA" >Washington</option>
+                                                    <option value="WV" >West Virginia</option>
+                                                    <option value="WI" >Wisconsin</option>
+                                                    <option value="WY" >Wyoming</option>
+                                                </select>
+                                                <label>ZIP Code</label>
+                                                <input class="sm" name="cds_zip" type="text" value="" placeholder="Zip Code" maxlength="5" /></p>
+                                            <p><label>Email</label>
+                                                <input class="lg dsR1634" name="cds_email" placeholder="Email Address" type="text" value="" size="40" maxlength="50" /></p>
+                                            </div>
+                                            <span class="ds276">Payment Information</span>
+                                            <p>
+                                                <!--
+                                                <select id="payselector" style=" margin-top: 5px;" size="1">
+                                                    <option value="bill"><div align="center">CLICK HERE</option></div>
+                                                    <option value="charge">Charge My Credit Card</option>
+                                                </select>
+                                                -->
+                                            </p>
+                                            <hr>
+                                                <div id="select" class="method" align="center">
+                                                    &nbsp;</div>
+                                                <div id="charge" class="method" style="display:none;">
+                                                    <label><span class="ds275">Select your card type</span></label>
+                                                    <select name="cds_pay_type" id="cds_pay_type" class="lg">
+                                                        <option value="" selected >Select Card</option>
+                                                        <option value="10" >MasterCard</option>
+                                                        <option value="11" >Visa</option>
+                                                        <option value="12" >American Express</option>
+                                                        <option value="14" >Discover</option>
+                                                        <option value="6" style="display:none;" >Bill Me Later</option>
                                                     </select>
-                                                    <label>ZIP Code</label>
-                                                    <input class="sm" name="cds_zip" type="text" value="" placeholder="Zip Code" maxlength="5" /></p>
-                                                <p><label>Email</label>
-                                                    <input class="lg dsR1634" name="cds_email" placeholder="Email Address" type="text" value="" size="40" maxlength="50" /></p>
+                                                    &nbsp;&nbsp;<img src="../cclogos.jpg" alt="Visa, MasterCard, AmEx, Discover" style="margin-top:15px;" width="150" height="21"/>
+                                                    <!--<label>Name on card</label>
+                                                    <input type="text">--><label>Card Number</label>
+                                                    <input class="lg" name="cds_cc_number" placeholder="Card Number" type="text" value="" maxlength="16" autocomplete="off" />
+                                                    <label>Expires</label>
+                                                    <select name="cds_cc_exp_month" class="half">
+                                                        <option value="" selected SELECTED>month</option>
+                                                        <option value="01"  >01</option>
+                                                        <option value="02"  >02</option>
+                                                        <option value="03"  >03</option>
+                                                        <option value="04"  >04</option>
+                                                        <option value="05"  >05</option>
+                                                        <option value="06"  >06</option>
+                                                        <option value="07"  >07</option>
+                                                        <option value="08"  >08</option>
+                                                        <option value="09"  >09</option>
+                                                        <option value="10"  >10</option>
+                                                        <option value="11"  >11</option>
+                                                        <option value="12"  >12</option>
+                                                    </select>
+                                                    <select name="cds_cc_exp_year" class="half">
+                                                        <option value="" selected SELECTED>year</option>
+                                                        <option value="15" >2015</option>
+                                                        <option value="16" >2016</option>
+                                                        <option value="17" >2017</option>
+                                                        <option value="18" >2018</option>
+                                                        <option value="19" >2019</option>
+                                                        <option value="20" >2020</option>
+                                                        <option value="21" >2021</option>
+                                                        <option value="22" >2022</option>
+                                                        <option value="23" >2023</option>
+                                                        <option value="24" >2024</option>
+                                                        <option value="25" >2025</option>
+                                                        <option value="26" >2026</option>
+                                                        <option value="27" >2027</option>
+                                                        <option value="28" >2028</option>
+                                                        <option value="29" >2029</option>
+                                                    </select></div>
+                                                <div id="bill" class="method" style="display:none;">
+                                                    &nbsp;</div>
+
                                                 </div>
-                                                <span class="ds276">Payment Information</span>
-                                                <p>
-                                                    <!--
-                                                    <select id="payselector" style=" margin-top: 5px;" size="1">
-                                                        <option value="bill"><div align="center">CLICK HERE</option></div>
-                                                        <option value="charge">Charge My Credit Card</option>
-                                                    </select>
-                                                    -->
-                                                </p>
-                                                <hr>
-                                                    <div id="select" class="method" align="center">
-                                                        &nbsp;</div>
-                                                    <div id="charge" class="method" style="display:none;">
-                                                        <label><span class="ds275">Select your card type</span></label>
-                                                        <select name="cds_pay_type" id="cds_pay_type" class="lg">
-                                                            <option value="" selected >Select Card</option>
-                                                            <option value="10" >MasterCard</option>
-                                                            <option value="11" >Visa</option>
-                                                            <option value="12" >American Express</option>
-                                                            <option value="14" >Discover</option>
-                                                            <option value="6" style="display:none;" >Bill Me Later</option>
-                                                        </select>
-                                                        &nbsp;&nbsp;<img src="../cclogos.jpg" alt="Visa, MasterCard, AmEx, Discover" style="margin-top:15px;" width="150" height="21"/>
-                                                        <!--<label>Name on card</label>
-                                                        <input type="text">--><label>Card Number</label>
-                                                        <input class="lg" name="cds_cc_number" placeholder="Card Number" type="text" value="" maxlength="16" autocomplete="off" />
-                                                        <label>Expires</label>
-                                                        <select name="cds_cc_exp_month" class="half">
-                                                            <option value="" selected SELECTED>month</option>
-                                                            <option value="01"  >01</option>
-                                                            <option value="02"  >02</option>
-                                                            <option value="03"  >03</option>
-                                                            <option value="04"  >04</option>
-                                                            <option value="05"  >05</option>
-                                                            <option value="06"  >06</option>
-                                                            <option value="07"  >07</option>
-                                                            <option value="08"  >08</option>
-                                                            <option value="09"  >09</option>
-                                                            <option value="10"  >10</option>
-                                                            <option value="11"  >11</option>
-                                                            <option value="12"  >12</option>
-                                                        </select>
-                                                        <select name="cds_cc_exp_year" class="half">
-                                                            <option value="" selected SELECTED>year</option>
-                                                            <option value="15" >2015</option>
-                                                            <option value="16" >2016</option>
-                                                            <option value="17" >2017</option>
-                                                            <option value="18" >2018</option>
-                                                            <option value="19" >2019</option>
-                                                            <option value="20" >2020</option>
-                                                            <option value="21" >2021</option>
-                                                            <option value="22" >2022</option>
-                                                            <option value="23" >2023</option>
-                                                            <option value="24" >2024</option>
-                                                            <option value="25" >2025</option>
-                                                            <option value="26" >2026</option>
-                                                            <option value="27" >2027</option>
-                                                            <option value="28" >2028</option>
-                                                            <option value="29" >2029</option>
-                                                        </select></div>
-                                                    <div id="bill" class="method" style="display:none;">
-                                                        &nbsp;</div>
 
+                                                </div>
+                                                <br>
+
+                                                    <center>
+                                                        <span class="ds275"><button name="send" type="submit" id="Button-Submit" onclick="localLink = true">PLACE MY ORDER</button></span></center>
                                                     </div>
-
+                                                    </form>
                                                     </div>
-                                                    <br>
-
-                                                        <center>
-                                                            <span class="ds275"><button name="send" type="submit" id="Button-Submit" onclick="localLink = true">PLACE MY ORDER</button></span></center>
-                                                        </div>
-                                                        </form>
+                                                    <dv id="pr" style='width: 50%; margin: 0 auto;'></div>
                                                         <p><br>
                                                                 <span class="ds285">Refund Policy: cancel within 14 days of placing your order • Customer Service: subscriptions@globalizationplus.com</span></p>
                                                         </div>
@@ -273,40 +276,40 @@
                                                             </div>
                                                             <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script> 
                                                             <script>window.jQuery || document.write('<script src="images/jquery-1.10.2.min.js"><\/script>')</script> 
-                                                            
-                                                            <script type="text/javascript">
-                                                                        $(document).ready(function () {
-                                                                            $("#Button-Submit").click(function () {
-                                                                                var cds_opt_in1 = $("input[name='optout1']:checked").val();
-                                                                                var cds_opt_in2 = $("input[name='optout2']:checked").val();
 
-                                                                                if (cds_opt_in1 == "Y") {
-                                                                                    $(":radio[name='cds_opt_in1'][value='Y']").attr("checked", true);
-                                                                                }
-                                                                                else {
-                                                                                    $(":radio[name='cds_opt_in1'][value='N']").attr("checked", true);
-                                                                                }
-                                                                                if (cds_opt_in2 == "Y") {
-                                                                                    $(":radio[name='cds_opt_in2'][value='Y']").attr("checked", true);
-                                                                                }
-                                                                                else {
-                                                                                    $(":radio[name='cds_opt_in2'][value='N']").attr("checked", true);
-                                                                                }
-                                                                            });
-                                                                        });
-                                                                        $(function () {
-                                                                            $('#payselector').change(function () {
-                                                                                var ths = $(this).val();
-                                                                                $('.method').hide();
-                                                                                $('#' + ths).show();
-                                                                                if (ths == "bill") {
-                                                                                    $('#cds_pay_type').val('6');
-                                                                                }
-                                                                                else {
-                                                                                    $('#cds_pay_type').val('');
-                                                                                }
-                                                                            });
-                                                                        });
+                                                            <script type="text/javascript">
+                                                                $(document).ready(function () {
+                                                                    $("#Button-Submit").click(function () {
+                                                                        var cds_opt_in1 = $("input[name='optout1']:checked").val();
+                                                                        var cds_opt_in2 = $("input[name='optout2']:checked").val();
+
+                                                                        if (cds_opt_in1 == "Y") {
+                                                                            $(":radio[name='cds_opt_in1'][value='Y']").attr("checked", true);
+                                                                        }
+                                                                        else {
+                                                                            $(":radio[name='cds_opt_in1'][value='N']").attr("checked", true);
+                                                                        }
+                                                                        if (cds_opt_in2 == "Y") {
+                                                                            $(":radio[name='cds_opt_in2'][value='Y']").attr("checked", true);
+                                                                        }
+                                                                        else {
+                                                                            $(":radio[name='cds_opt_in2'][value='N']").attr("checked", true);
+                                                                        }
+                                                                    });
+                                                                });
+                                                                $(function () {
+                                                                    $('#payselector').change(function () {
+                                                                        var ths = $(this).val();
+                                                                        $('.method').hide();
+                                                                        $('#' + ths).show();
+                                                                        if (ths == "bill") {
+                                                                            $('#cds_pay_type').val('6');
+                                                                        }
+                                                                        else {
+                                                                            $('#cds_pay_type').val('');
+                                                                        }
+                                                                    });
+                                                                });
                                                             </script>
                                                             <script type="text/javascript">
 
@@ -334,32 +337,4 @@
                                                             </div>
                                                             </div>
                                                             </div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
                                                             </html>
