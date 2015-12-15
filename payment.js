@@ -49,6 +49,7 @@ $(document).ready(function () {
 
                 $('#payment_form').fadeTo("slow", 0.33);
                 $.post(url, query).done(function (data) {
+                    console.log('Server response: '+data);
                     $('#payment_form').fadeTo("slow", 1);
                     $("#payment_form").html(data);
                 });
