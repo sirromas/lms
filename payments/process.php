@@ -11,8 +11,18 @@ if ($_POST) {
     foreach ($_POST as $key => $value) {
         $st_order->$key = $value;
     }
-    $orderStatus=$order->makeOrder($st_order);
-    echo "<p align='center'>$orderStatus</p>";
+
+    $status = $pr->make_transaction($st_order);
+
+    if ($status === false) {
+        echo "<p align='center'>Transaction failed, please contact your bank for detailes.</p>";
+    } else {
+        $st_order->trans_id=$status['trans_id'];
+        $st_order->auth_code=$status['auth_code'];
+        $st_order->sum=$status['sum'];
+        $orderStatus = $order->makeOrder($st_order);
+        echo "<p align='center'>$orderStatus</p>";
+    }
 }
 
 

@@ -14,7 +14,10 @@ class PlaceOrder {
 
     function makeOrder($order) {
         $query = "insert into mdl_order 
-            (name,
+            (trans_id,
+             auth_code,
+             sum,
+             name,
              address,
              city,
              state,
@@ -22,7 +25,10 @@ class PlaceOrder {
              email,
              pay_type,
              date)
-            VALUES ('" . mysql_real_escape_string($order->cds_name) . "',
+            VALUES ('" . mysql_real_escape_string($order->trans_id) . "',
+                    '" . mysql_real_escape_string($order->auth_code) . "',
+                    '" . mysql_real_escape_string($order->sum) . "',    
+                    '" . mysql_real_escape_string($order->cds_name) . "',
                     '" . mysql_real_escape_string($order->cds_address_1) . "',
                     '" . mysql_real_escape_string($order->cds_city) . "',
                     '" . mysql_real_escape_string($order->cds_state) . "',
