@@ -211,13 +211,13 @@ $(document).ready(function () {
     $("#user_type").on('change', function () {
         var user_type = $("#user_type").val();
         // console.log(user_type);
-        if (user_type == 1) {
+        if (user_type == 5) {
             $("#tr_code").show();
         } else {
             $("#tr_code").hide();
         }
 
-    })
+    });
 
     $('#loginform').on('change', function () {
         $("#email_err").html('');
@@ -226,21 +226,43 @@ $(document).ready(function () {
         $("#code_err").html('');
     });
 
+    function checkTypeCode(email, user_type, code) {
+        var query = {user_type: user_type,
+            username: email,
+            code: code};
+        $.post('lms/login_verify.php', query).done(function (data) {
+            var user_data = $.parseJSON(data);
+            var status = [user_data.type, user_data.code];
+            //console.log('checkTypeCode' + status);
+            return status;
+        }); // .post('lms/login_verify.php', query).done
+    }
+
+    function signinSubmit(user_data) {
+        console.log('signinSubmit: ' + user_data);
+        if (user_data[0] == 0) {
+            $("#user_err").html('Invalid user type');
+            return false;
+        }
+        if (user_data[1] == 0) {
+            $("#code_err").html('Invalid enrollment code');
+            return false;
+        }
+        if (user_data[0] == 1 && user_data[1] == 1) {
+            return true;
+        }
+    }
+
     $('#loginform').on('submit', function () {
         var user_type = $("#user_type").val();
-        //console.log('User type: ' + user_type);
         var email = $('#username').val();
-        //console.log('Email: ' + email);
         var password = $('#password').val();
-        //console.log('Password:' + password);
         var code = $('#code').val();
-        //console.log('Code: ' + code);
-
 
         if (email.length == 0) {
             $("#email_err").html('Please provide email');
             return false
-        }        
+        }
 
         if (password.length == 0) {
             $("#pwd_err").html('Please provide password');
@@ -251,29 +273,49 @@ $(document).ready(function () {
             $("#user_err").html('Please select user type');
             return false;
         }
-        else {
 
-            if (user_type == 1) {
-                if (code.length == 0) {
-                    $("#code_err").html('Please provide enroll key');
-                    return false;
-                }
+        if (user_type == 5) {
+            if (code.length == 0) {
+                $("#code_err").html('Please provide enroll key');
+                return false;
             }
         }
 
-        var query = {user_type: user_type,
-            password: password,
-            username: email,
-            code: code};        
 
+        var query = {user_type: user_type,
+            username: email,
+            code: code};
         $.post('lms/login_verify.php', query).done(function (data) {
             var user_data = $.parseJSON(data);
-            console.log(user_data);
+            if (user_data.type == 0) {
+                $("#user_err").html('Invalid user type');
+                return false;
+            }
             if (user_data.code == 0) {
                 $("#code_err").html('Invalid enrollment code');
                 return false;
             }
+            if (user_data.type == 1 && user_data.code == 1) {
+                //("#loginform").submit();
+                HTMLFormElement.prototype.submit.call($('#loginform')[0]);
+            }
         }); // .post('lms/login_verify.php', query).done
-        return true;
-    }) // ('#loginform').on('submit', function ()
+        return false;
+        /*
+         if ($("#code_err").text()=='' && $("#code_err").text()=='') {
+         return true;
+         }else {
+         return false;
+         }
+         */
+
+
+
+
+        /*
+         status = checkTypeCode(email, user_type, code);
+         console.log("Status: " + status);
+         return false;
+         */
+    }) // ('#loginform').on('submit', function ()    
 }); // document).ready(function () 

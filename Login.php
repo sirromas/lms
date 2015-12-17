@@ -19,13 +19,10 @@ class Login {
         $hash_password = password_hash($password, PASSWORD_DEFAULT, $options);
         $query = "select password from mdl_user "
                 . "where password='$hash_password'";
+        // echo "Query: ".$query."<br/>";
         return $this->db->numrows($query);
     }
-
-    function verifyPromocode($code) {
-        
-    }
-
+    
     function verifyUserType($username) {
 
         /*****************************************************
@@ -35,17 +32,19 @@ class Login {
          *          4 teacher
          *          5 student  
          *          6 guest 
-         ****************************************************/
+         * ************************************************** */
 
-        $query = "select email, username "
+        $query = "select id, email, username "
                 . "from mdl_user where email='$username' "
                 . "or username='$username'";
+        // echo "Query: ".$query."<br/>";
         $result = $this->db->query($query);
         while ($row = mysql_fetch_assoc($result)) {
             $userid = $row['id'];
         }
         $query = "select roleid, userid from mdl_role_assignments "
                 . "where  userid=$userid";
+        // echo "Query: ".$query."<br/>";
         $result = $this->db->query($query);
         while ($row = mysql_fetch_assoc($result)) {
             $roleid = $row['roleid'];
@@ -57,21 +56,48 @@ class Login {
         }
     }
 
-    function verifyCode($code) {
-        // Temporary workaround untill payment system will work
-        return 1;
+    function verifyPromoCode($code) {         
+        $now = time();
+        $query = "select code, active, expire_date "
+                . "from mdl_promo_code "
+                . "where active=1 and code='".$code."' "
+                . "and expire_date>'.$now.'";
+         //echo "Query: ".$query."<br/>";
+        return $this->db->numrows($query);
+    }
+    
+    function verifyPaidCode ($email, $code) {        
+        $now=time();
+        $query="select email, enrol_key, exp_date "
+                . "from mdl_enrol_key "
+                . "where enrol_key='".$code."' "
+                . "and email='".$email."' "
+                . "and exp_date>'".$now."'";
+         // echo "Query: ".$query."<br/>";
+        return $this->db->numrows($query);         
+    }    
+
+    function verifyCode($email, $code) {       
+        $promo_status=$this->verifyPromoCode($code);        
+        $paid_status=$this->verifyPaidCode($email, $code);        
+        $status=($promo_status > 0) ? $promo_status : $paid_status;
+        return $status;        
     }
 
-    function verifyUser($username, $code) {
+    function verifyUser($username, $code) {        
         $type = $this->verifyUserType($username);
         if ($type == 1) {
+            // User type is match
             if ($this->user_type == 5) {
-                $code_status = $this->verifyCode($code);
+                $code_status = $this->verifyCode($username, $code);
             } // end if $this->user_type==5
             else {
                 $code_status = 1;
             }
         } // end if $type
+        else {
+            $code_status = 0;
+        }
         return array('type' => $type, 'code' => $code_status);
     }
 
