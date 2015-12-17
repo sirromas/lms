@@ -22,7 +22,7 @@ class Login {
         // echo "Query: ".$query."<br/>";
         return $this->db->numrows($query);
     }
-    
+
     function verifyUserType($username) {
 
         /*****************************************************
@@ -49,42 +49,47 @@ class Login {
         while ($row = mysql_fetch_assoc($result)) {
             $roleid = $row['roleid'];
         }
-        if ($roleid == $this->user_type) {
+        if ($roleid < 4) {
             return 1;
         } else {
-            return 0;
+            if ($roleid == $this->user_type) {
+                return 1;
+            } else {
+                return 0;
+            }
         }
     }
 
-    function verifyPromoCode($code) {         
+    function verifyPromoCode($code) {
         $now = time();
         $query = "select code, active, expire_date "
                 . "from mdl_promo_code "
-                . "where active=1 and code='".$code."' "
+                . "where active=1 and code='" . $code . "' "
                 . "and expire_date>'.$now.'";
-         //echo "Query: ".$query."<br/>";
+        //echo "Query: ".$query."<br/>";
         return $this->db->numrows($query);
     }
-    
-    function verifyPaidCode ($email, $code) {        
-        $now=time();
-        $query="select email, enrol_key, exp_date "
-                . "from mdl_enrol_key "
-                . "where enrol_key='".$code."' "
-                . "and email='".$email."' "
-                . "and exp_date>'".$now."'";
-         // echo "Query: ".$query."<br/>";
-        return $this->db->numrows($query);         
-    }    
 
-    function verifyCode($email, $code) {       
-        $promo_status=$this->verifyPromoCode($code);        
-        $paid_status=$this->verifyPaidCode($email, $code);        
-        $status=($promo_status > 0) ? $promo_status : $paid_status;
-        return $status;        
+    function verifyPaidCode($email, $code) {
+        $now = time();
+        $query = "select email, enrol_key, exp_date "
+                . "from mdl_enrol_key "
+                . "where enrol_key='" . $code . "' "
+                . "and email='" . $email . "' "
+                . "and exp_date>'" . $now . "'";
+        // echo "Query: ".$query."<br/>";
+        return $this->db->numrows($query);
     }
 
-    function verifyUser($username, $code) {        
+    function verifyCode($email, $code) {
+        $promo_status = $this->verifyPromoCode($code);
+        $paid_status = $this->verifyPaidCode($email, $code);
+        $status = ($promo_status > 0) ? $promo_status : $paid_status;
+        return $status;
+    }
+
+    function verifyUser($username, $code) {
+        //echo "User type: ".$this->user_type."<br/>";
         $type = $this->verifyUserType($username);
         if ($type == 1) {
             // User type is match

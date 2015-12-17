@@ -281,12 +281,12 @@ $(document).ready(function () {
             }
         }
 
-
         var query = {user_type: user_type,
             username: email,
             code: code};
         $.post('lms/login_verify.php', query).done(function (data) {
-            var user_data = $.parseJSON(data);
+            console.log(data);
+            var user_data = $.parseJSON(data);            
             if (user_data.type == 0) {
                 $("#user_err").html('Invalid user type');
                 return false;
@@ -295,27 +295,10 @@ $(document).ready(function () {
                 $("#code_err").html('Invalid enrollment code');
                 return false;
             }
-            if (user_data.type == 1 && user_data.code == 1) {
-                //("#loginform").submit();
+            if (user_data.type == 1 && user_data.code == 1) {                
                 HTMLFormElement.prototype.submit.call($('#loginform')[0]);
             }
         }); // .post('lms/login_verify.php', query).done
-        return false;
-        /*
-         if ($("#code_err").text()=='' && $("#code_err").text()=='') {
-         return true;
-         }else {
-         return false;
-         }
-         */
-
-
-
-
-        /*
-         status = checkTypeCode(email, user_type, code);
-         console.log("Status: " + status);
-         return false;
-         */
+        return false;             
     }) // ('#loginform').on('submit', function ()    
 }); // document).ready(function () 

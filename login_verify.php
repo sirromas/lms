@@ -18,7 +18,7 @@ echo "User type: ".$user_type."<br/>";
 echo "Code: ".$code. "<br/>";
 */
 
-if ($username !== '' && $code !== '' && $user_type!=='') {
+if ($username !== '' && $user_type!=='') {
     $login=new Login($user_type);
     $user_data = $login->verifyUser($username, $code);    
 }
