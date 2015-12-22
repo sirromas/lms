@@ -12,8 +12,8 @@ class ProcessPayment {
     private $db;
     public $PAYMENT_SUM = '20.00';
     private $AUTHORIZENET_LOG_FILE;
-    private $LOGIN_ID = '6cUTfQ5238'; // Test sandbox for now
-    private $TRANSACTION_KEY = '3JdSm73D2R624xxr'; // Test sandbox for now
+    private $LOGIN_ID = '9wae3KtCE5h'; // production settings
+    private $TRANSACTION_KEY = '3s7Bb5W26r9J9cNL'; // production settings
 
     function __construct() {
         $this->db = DB::getInstance();
@@ -155,7 +155,7 @@ class ProcessPayment {
         $request->setRefId($refId);
         $request->setTransactionRequest($transactionRequestType);
         $controller = new AnetController\CreateTransactionController($request);
-        $response = $controller->executeWithApiResponse(\net\authorize\api\constants\ANetEnvironment::SANDBOX);
+        $response = $controller->executeWithApiResponse(\net\authorize\api\constants\ANetEnvironment::PRODUCTION);
         if ($response != null) {
             $tresponse = $response->getTransactionResponse();
             /*
