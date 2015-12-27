@@ -46,6 +46,13 @@ if (! $authplugin->can_signup()) {
 
 if ($_POST) {    
     
+    /*
+    echo "<br/>-----------------------<br/>";
+    print_r($_POST) ;
+    echo "<br/>-----------------------<br/>";
+    die ('stopped');
+    */
+    
     $user=new stdClass(); 
     $user->type=$_POST['user_type'];
     $user->username=$_POST['email'];
@@ -58,6 +65,7 @@ if ($_POST) {
     $user->lastname=$_POST['lastname'];
     $user->course=$_POST['course'];
     $user->group=$_POST['group'];
+    $user->create_group=$_POST['create_groups'];
     $user->confirmed = 1;
     $user->address=$_POST['address'];
     $user->lang = current_language();
@@ -75,10 +83,17 @@ if ($_POST) {
     $csignup=new CustomSignup($user); 
     $csignup->processCourseRequest();    
     if ($_POST['user_type'] == 'student') {
-        $response="<span style='color:#570101'>Thank you for Signup. Confirmation email is sent to ".$_POST['email']. ". &nbsp;Next step is to get <a href='' style='color: #570101;cursor:pointer;text-decoration:underline;'>enrollment key</a></span>.";        
+        $response="<span style='color:#570101'>Thank you for Signup. "
+                . "Confirmation email is sent to ".$_POST['email']. ". "
+                . "&nbsp;Next step is to get <a href='https://globalizationplus.com/subscription.html' "
+                . "style='color: #570101;cursor:pointer;text-decoration:underline;'>enrollment key</a></span>."
+                . "Please be aware key is attached to email you just signed up,"
+                . "so please provide this email (".$_POST['email'].") when you buy"
+                . " a key.";        
     }
     else {
-        $response="<span style='color:#570101'>Thank you for Signup. Confirmation email is sent to ".$_POST['email']."</span>";
+        $response="<span style='color:#570101'>Thank you for Signup. "
+                . "Confirmation email is sent to ".$_POST['email']."</span>";
     }
     die($response);
 }
