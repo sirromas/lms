@@ -579,7 +579,8 @@ A new account has been requested at \'{$a->sitename}\'
 using your email address.
 
 Your username: \'{$a->username}\' 
-Your password: \'{$a->password}\'       
+Your password: \'{$a->password}\'    
+Your group: \'{$a->group}\'    
 
 If you need help, please contact the site administrator,
 {$a->admin}';
