@@ -187,28 +187,19 @@ $(document).ready(function () {
                 address: address};
         }
 
-        $.post("lms/getGroups.php", {
-            email: email
-        }).done(function (data) {
-            console.log('Email status: ' + data);
-            if (data != 0) {
-                $("#email_err").html('Provided email already in use');
-                return false;
-            } // end if data != 0 
-            else {
-                $('.CSSTableGenerator').fadeTo("slow", 0.33);
-                $('#spinner').show();
-                $.post(url, query).done(function (data) {
-                    $("#signup_content").html(data);
-                }).fail(function () {
-                    $("#email_err").html('Provided email already in use');
-                    return false;
-                })
-                return false;
-            } // end else
-        }) // end .done(function (data)
+        // Check email before post to make sure it is not used
+
+
+        $('.CSSTableGenerator').fadeTo("slow", 0.33);
+        $('#spinner').show();
+        $.post(url, query).done(function (data) {
+            $("#signup_content").html(data);
+        }).fail(function () {
+            $("#email_err").html('Provided email already in use');
+            return false;
+        })
         return false;
-    }); // end of signup form submit event
+    });
 
 })
 
