@@ -5849,13 +5849,6 @@ function reset_password_and_mail($user) {
     return email_to_user($user, $supportuser, $subject, $message);
 }
 
-function get_user_group ($user) {
-    global $DB;
-    
-    $group_name=$DB->get_record('groups', array('id'=>$user->group));    
-    return $group_name->name;    
-}
-
 /**
  * Send email to specified user with confirmation text and activation link.
  *
@@ -5880,8 +5873,6 @@ function send_confirmation_email($user) {
     $data->link  = $CFG->wwwroot .'/login/confirm.php?data='. $user->secret .'/'. $username;
     $data->username=$user->username;
     $data->password=$CFG->purepassword;
-    $data->group=get_user_group($user);
-    //$data->group=$user->group;
     $message     = get_string('emailconfirmation', '', $data);
     $messagehtml = text_to_html(get_string('emailconfirmation', '', $data), false, false, true);
 
