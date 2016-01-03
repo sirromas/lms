@@ -27,7 +27,7 @@ class signup_user
     {
         $list = "";
         $row = null;
-        $list = $list . "<select id='courses' name='courses' style='background-color: rgb(250, 255, 189);'>";
+        $list = $list . "<select id='courses' name='courses' style='background-color: rgb(250, 255, 189);width:152px'>";
         $list = $list . "<option value='0' selected>--------------------</option>";
         if ($this->user_type=='student') {
         $query = "SELECT c.id, c.fullname, g.courseid, g.name
@@ -81,18 +81,9 @@ class signup_user
             return $list;
         }
         if ($user == 'tutor' && $course == null) {
-            $list = $list . "<span id='for_gr' >";
+            $list = $list . "<span id='for_gr'>";
             $list = $list . "<select id='groups' name='groups' style='background-color: rgb(250, 255, 189);width:153px;'>";
-            $list = $list . "<option value='1'>1</option>";
-            $list = $list . "<option value='2'>2</option>";
-            $list = $list . "<option value='3'>3</option>";
-            $list = $list . "<option value='4'>4</option>";
-            $list = $list . "<option value='5'>5</option>";
-            $list = $list . "<option value='6'>6</option>";
-            $list = $list . "<option value='7'>7</option>";
-            $list = $list . "<option value='8'>8</option>";
-            $list = $list . "<option value='9'>9</option>";
-            $list = $list . "<option value='10'>10</option>";
+            $list = $list . "<option value='0' selected>--------------------</option>";
             $list = $list . "</select>";
             $list = $list . "</span>";
             return $list;
@@ -171,7 +162,7 @@ class signup_user
             $groups = $this->getGroupsList('tutor', null);
             $form = $form . "<input type='hidden' id='user_type' value='tutor'>";
             $form = $form . "<tr><td><label for='course'>Course</label></td><td>" . $courses . "&nbsp;<span style='color:red;font-size:12px;' id='course_err'></span></td></tr>";
-            $form = $form . "<tr><td><label for='course'>Number of groups</label></td><td>" . $groups . "&nbsp;<span style='color:red;font-size:12px;' id='group_err'></span></td></tr>";
+            $form = $form . "<tr><td><label for='course'>Group</label></td><td>" . $groups . "&nbsp;<span style='color:red;font-size:12px;' id='group_err'></span></td></tr>";
         }
         
         $form = $form . "<tr><td colspan='2'><input class='submit' type='submit' value='Submit'></td></tr></table></form>
