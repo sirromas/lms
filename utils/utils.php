@@ -96,7 +96,7 @@ class utils {
         $result = $this->db->query($query);
         while ($row = mysql_fetch_assoc($result)) {
             $list = $list . "<tr>";
-            $list = $list . "<td style='font-size: 12px;'>" . $row['groupid'] . "</td>"
+            $list = $list . "<td style='font-size: 14px;'>" . $row['groupid'] . "</td>"
                     . "<td style='font-size: 14px;'>" . $this->getCourseName($row['courseid']) . "</td>"
                     . "<td style='font-size: 14px;'>" . $row['name'] . "</td>"
                     . "<td style='font-size: 14px;'>" . $row['code'] . "</td>";
@@ -125,7 +125,7 @@ class utils {
         while ($row = mysql_fetch_assoc($result)) {
             $status=($row['active']==1) ? "Yes" : "No";
             $list = $list . "<tr>";
-            $list = $list . "<td style='font-size: 12px;'>" . $row['code'] . "</td>"
+            $list = $list . "<td style='font-size: 14px;'>" . $row['code'] . "</td>"
                     . "<td style='font-size: 14px;'>" . $status . "</td>"
                     . "<td style='font-size: 14px;'>" . date('m/d/Y H:i:s', $row['expire_date']) . "</td>";                    
             $list = $list . "</tr>";
