@@ -12,7 +12,7 @@ $(document).ready(function () {
         var password = $('#password').val();
 
         if (email == '') {
-            $("#email_err").html('Please provide username');
+            $("#email_err").html('Please provide email');
             return false
         }
 

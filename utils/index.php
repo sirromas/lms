@@ -68,7 +68,7 @@
                                             <td colspan='2'>USER SIGNIN</td>
                                         </tr>
                                         <tr>
-                                            <td style='width: 250px;'><label for='email'>Username*</label></td>
+                                            <td style='width: 250px;'><label for='email'>Email*</label></td>
                                             <td><input id='username' name='username' 
                                                        style='background-color: rgb(250, 255, 189);width:173px;'/>&nbsp;<span
                                                        style='color: red; font-size: 12px;' id='email_err'></span></td>
