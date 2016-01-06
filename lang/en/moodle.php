@@ -575,16 +575,17 @@ $string['emailagain'] = 'Email (again)';
 $string['emailconfirm'] = 'Confirm your account';
 $string['emailconfirmation'] = 'Hi {$a->firstname},
 
-A new account has been requested at \'{$a->sitename}\'
+A new account has been requested at Globalization Plus
 using your email address.
 
 Your username: \'{$a->username}\' 
 Your password: \'{$a->password}\'    
 Your group: \'{$a->group}\'    
+Your user type: \'{$a->user_type}\'    
 
 If you need help, please contact the site administrator,
 {$a->admin}';
-$string['emailconfirmationsubject'] = '{$a}: account confirmation';
+$string['emailconfirmationsubject'] = 'Account confirmation';
 $string['emailconfirmsent'] = '<p>An email should have been sent to your address at <b>{$a}</b></p>
    <p>It contains easy instructions to complete your registration.</p>
    <p>If you continue to have difficulty, contact the site administrator.</p>';

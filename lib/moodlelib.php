@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -27,11 +28,9 @@
  * @copyright  1999 onwards Martin Dougiamas  http://dougiamas.com
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-
 defined('MOODLE_INTERNAL') || die();
 
 // CONSTANTS (Encased in phpdoc proper comments).
-
 // Date and time constants.
 /**
  * Time constant - the number of seconds in a year
@@ -74,7 +73,7 @@ define('HOURMINS', 60);
 /**
  * PARAM_ALPHA - contains only english ascii letters a-zA-Z.
  */
-define('PARAM_ALPHA',    'alpha');
+define('PARAM_ALPHA', 'alpha');
 
 /**
  * PARAM_ALPHAEXT the same contents as PARAM_ALPHA plus the chars in quotes: "_-" allowed
@@ -95,23 +94,23 @@ define('PARAM_ALPHANUMEXT', 'alphanumext');
 /**
  * PARAM_AUTH - actually checks to make sure the string is a valid auth plugin
  */
-define('PARAM_AUTH',  'auth');
+define('PARAM_AUTH', 'auth');
 
 /**
  * PARAM_BASE64 - Base 64 encoded format
  */
-define('PARAM_BASE64',   'base64');
+define('PARAM_BASE64', 'base64');
 
 /**
  * PARAM_BOOL - converts input into 0 or 1, use for switches in forms and urls.
  */
-define('PARAM_BOOL',     'bool');
+define('PARAM_BOOL', 'bool');
 
 /**
  * PARAM_CAPABILITY - A capability name, like 'moodle/role:manage'. Actually
  * checked against the list of capabilities in the database.
  */
-define('PARAM_CAPABILITY',   'capability');
+define('PARAM_CAPABILITY', 'capability');
 
 /**
  * PARAM_CLEANHTML - cleans submitted HTML code. Note that you almost never want
@@ -125,12 +124,12 @@ define('PARAM_CLEANHTML', 'cleanhtml');
 /**
  * PARAM_EMAIL - an email address following the RFC
  */
-define('PARAM_EMAIL',   'email');
+define('PARAM_EMAIL', 'email');
 
 /**
  * PARAM_FILE - safe file name, all dangerous chars are stripped, protects against XSS, SQL injections and directory traversals
  */
-define('PARAM_FILE',   'file');
+define('PARAM_FILE', 'file');
 
 /**
  * PARAM_FLOAT - a real/floating point number.
@@ -143,22 +142,22 @@ define('PARAM_FILE',   'file');
  *     $realvalue = unformat_float($rawvalue);
  *     // ... then use $realvalue
  */
-define('PARAM_FLOAT',  'float');
+define('PARAM_FLOAT', 'float');
 
 /**
  * PARAM_HOST - expected fully qualified domain name (FQDN) or an IPv4 dotted quad (IP address)
  */
-define('PARAM_HOST',     'host');
+define('PARAM_HOST', 'host');
 
 /**
  * PARAM_INT - integers only, use when expecting only numbers.
  */
-define('PARAM_INT',      'int');
+define('PARAM_INT', 'int');
 
 /**
  * PARAM_LANG - checks to see if the string is a valid installed language in the current site.
  */
-define('PARAM_LANG',  'lang');
+define('PARAM_LANG', 'lang');
 
 /**
  * PARAM_LOCALURL - expected properly formatted URL as well as one that refers to the local server itself. (NOT orthogonal to the
@@ -169,23 +168,23 @@ define('PARAM_LOCALURL', 'localurl');
 /**
  * PARAM_NOTAGS - all html tags are stripped from the text. Do not abuse this type.
  */
-define('PARAM_NOTAGS',   'notags');
+define('PARAM_NOTAGS', 'notags');
 
 /**
  * PARAM_PATH - safe relative path name, all dangerous chars are stripped, protects against XSS, SQL injections and directory
  * traversals note: the leading slash is not removed, window drive letter is not allowed
  */
-define('PARAM_PATH',     'path');
+define('PARAM_PATH', 'path');
 
 /**
  * PARAM_PEM - Privacy Enhanced Mail format
  */
-define('PARAM_PEM',      'pem');
+define('PARAM_PEM', 'pem');
 
 /**
  * PARAM_PERMISSION - A permission, one of CAP_INHERIT, CAP_ALLOW, CAP_PREVENT or CAP_PROHIBIT.
  */
-define('PARAM_PERMISSION',   'permission');
+define('PARAM_PERMISSION', 'permission');
 
 /**
  * PARAM_RAW specifies a parameter that is not cleaned/processed in any way except the discarding of the invalid utf-8 characters
@@ -200,54 +199,54 @@ define('PARAM_RAW_TRIMMED', 'raw_trimmed');
 /**
  * PARAM_SAFEDIR - safe directory name, suitable for include() and require()
  */
-define('PARAM_SAFEDIR',  'safedir');
+define('PARAM_SAFEDIR', 'safedir');
 
 /**
  * PARAM_SAFEPATH - several PARAM_SAFEDIR joined by "/", suitable for include() and require(), plugin paths, etc.
  */
-define('PARAM_SAFEPATH',  'safepath');
+define('PARAM_SAFEPATH', 'safepath');
 
 /**
  * PARAM_SEQUENCE - expects a sequence of numbers like 8 to 1,5,6,4,6,8,9.  Numbers and comma only.
  */
-define('PARAM_SEQUENCE',  'sequence');
+define('PARAM_SEQUENCE', 'sequence');
 
 /**
  * PARAM_TAG - one tag (interests, blogs, etc.) - mostly international characters and space, <> not supported
  */
-define('PARAM_TAG',   'tag');
+define('PARAM_TAG', 'tag');
 
 /**
  * PARAM_TAGLIST - list of tags separated by commas (interests, blogs, etc.)
  */
-define('PARAM_TAGLIST',   'taglist');
+define('PARAM_TAGLIST', 'taglist');
 
 /**
  * PARAM_TEXT - general plain text compatible with multilang filter, no other html tags. Please note '<', or '>' are allowed here.
  */
-define('PARAM_TEXT',  'text');
+define('PARAM_TEXT', 'text');
 
 /**
  * PARAM_THEME - Checks to see if the string is a valid theme name in the current site
  */
-define('PARAM_THEME',  'theme');
+define('PARAM_THEME', 'theme');
 
 /**
  * PARAM_URL - expected properly formatted URL. Please note that domain part is required, http://localhost/ is not accepted but
  * http://localhost.localdomain/ is ok.
  */
-define('PARAM_URL',      'url');
+define('PARAM_URL', 'url');
 
 /**
  * PARAM_USERNAME - Clean username to only contains allowed characters. This is to be used ONLY when manually creating user
  * accounts, do NOT use when syncing with external systems!!
  */
-define('PARAM_USERNAME',    'username');
+define('PARAM_USERNAME', 'username');
 
 /**
  * PARAM_STRINGID - used to check if the given string is valid string identifier for get_string()
  */
-define('PARAM_STRINGID',    'stringid');
+define('PARAM_STRINGID', 'stringid');
 
 // DEPRECATED PARAM TYPES OR ALIASES - DO NOT USE FOR NEW CODE.
 /**
@@ -255,39 +254,39 @@ define('PARAM_STRINGID',    'stringid');
  * It was one of the first types, that is why it is abused so much ;-)
  * @deprecated since 2.0
  */
-define('PARAM_CLEAN',    'clean');
+define('PARAM_CLEAN', 'clean');
 
 /**
  * PARAM_INTEGER - deprecated alias for PARAM_INT
  * @deprecated since 2.0
  */
-define('PARAM_INTEGER',  'int');
+define('PARAM_INTEGER', 'int');
 
 /**
  * PARAM_NUMBER - deprecated alias of PARAM_FLOAT
  * @deprecated since 2.0
  */
-define('PARAM_NUMBER',  'float');
+define('PARAM_NUMBER', 'float');
 
 /**
  * PARAM_ACTION - deprecated alias for PARAM_ALPHANUMEXT, use for various actions in forms and urls
  * NOTE: originally alias for PARAM_APLHA
  * @deprecated since 2.0
  */
-define('PARAM_ACTION',   'alphanumext');
+define('PARAM_ACTION', 'alphanumext');
 
 /**
  * PARAM_FORMAT - deprecated alias for PARAM_ALPHANUMEXT, use for names of plugins, formats, etc.
  * NOTE: originally alias for PARAM_APLHA
  * @deprecated since 2.0
  */
-define('PARAM_FORMAT',   'alphanumext');
+define('PARAM_FORMAT', 'alphanumext');
 
 /**
  * PARAM_MULTILANG - deprecated alias of PARAM_TEXT.
  * @deprecated since 2.0
  */
-define('PARAM_MULTILANG',  'text');
+define('PARAM_MULTILANG', 'text');
 
 /**
  * PARAM_TIMEZONE - expected timezone. Timezone can be int +-(0-13) or float +-(0.5-12.5) or
@@ -364,11 +363,11 @@ define('GETREMOTEADDR_SKIP_HTTP_CLIENT_IP', '1');
 define('GETREMOTEADDR_SKIP_HTTP_X_FORWARDED_FOR', '2');
 
 // Blog access level constant declaration.
-define ('BLOG_USER_LEVEL', 1);
-define ('BLOG_GROUP_LEVEL', 2);
-define ('BLOG_COURSE_LEVEL', 3);
-define ('BLOG_SITE_LEVEL', 4);
-define ('BLOG_GLOBAL_LEVEL', 5);
+define('BLOG_USER_LEVEL', 1);
+define('BLOG_GROUP_LEVEL', 2);
+define('BLOG_COURSE_LEVEL', 3);
+define('BLOG_SITE_LEVEL', 4);
+define('BLOG_GLOBAL_LEVEL', 5);
 
 
 // Tag constants.
@@ -382,10 +381,10 @@ define ('BLOG_GLOBAL_LEVEL', 5);
 define('TAG_MAX_LENGTH', 50);
 
 // Password policy constants.
-define ('PASSWORD_LOWER', 'abcdefghijklmnopqrstuvwxyz');
-define ('PASSWORD_UPPER', 'ABCDEFGHIJKLMNOPQRSTUVWXYZ');
-define ('PASSWORD_DIGITS', '0123456789');
-define ('PASSWORD_NONALPHANUM', '.,;:!?_-+/*@#&$');
+define('PASSWORD_LOWER', 'abcdefghijklmnopqrstuvwxyz');
+define('PASSWORD_UPPER', 'ABCDEFGHIJKLMNOPQRSTUVWXYZ');
+define('PASSWORD_DIGITS', '0123456789');
+define('PASSWORD_NONALPHANUM', '.,;:!?_-+/*@#&$');
 
 // Feature constants.
 // Used for plugin_supports() to report features that are, or are not, supported by a module.
@@ -537,7 +536,7 @@ define('AUTH_PASSWORD_NOT_CACHED', 'not cached');
  */
 function required_param($parname, $type) {
     if (func_num_args() != 2 or empty($parname) or empty($type)) {
-        throw new coding_exception('required_param() requires $parname and $type to be specified (parameter: '.$parname.')');
+        throw new coding_exception('required_param() requires $parname and $type to be specified (parameter: ' . $parname . ')');
     }
     // POST has precedence.
     if (isset($_POST[$parname])) {
@@ -549,7 +548,7 @@ function required_param($parname, $type) {
     }
 
     if (is_array($param)) {
-        debugging('Invalid array parameter detected in required_param(): '.$parname);
+        debugging('Invalid array parameter detected in required_param(): ' . $parname);
         // TODO: switch to fatal error in Moodle 2.3.
         return required_param_array($parname, $type);
     }
@@ -576,7 +575,7 @@ function required_param($parname, $type) {
  */
 function required_param_array($parname, $type) {
     if (func_num_args() != 2 or empty($parname) or empty($type)) {
-        throw new coding_exception('required_param_array() requires $parname and $type to be specified (parameter: '.$parname.')');
+        throw new coding_exception('required_param_array() requires $parname and $type to be specified (parameter: ' . $parname . ')');
     }
     // POST has precedence.
     if (isset($_POST[$parname])) {
@@ -593,7 +592,7 @@ function required_param_array($parname, $type) {
     $result = array();
     foreach ($param as $key => $value) {
         if (!preg_match('/^[a-z0-9_-]+$/i', $key)) {
-            debugging('Invalid key name in required_param_array() detected: '.$key.', parameter: '.$parname);
+            debugging('Invalid key name in required_param_array() detected: ' . $key . ', parameter: ' . $parname);
             continue;
         }
         $result[$key] = clean_param($value, $type);
@@ -621,7 +620,7 @@ function required_param_array($parname, $type) {
  */
 function optional_param($parname, $default, $type) {
     if (func_num_args() != 3 or empty($parname) or empty($type)) {
-        throw new coding_exception('optional_param requires $parname, $default + $type to be specified (parameter: '.$parname.')');
+        throw new coding_exception('optional_param requires $parname, $default + $type to be specified (parameter: ' . $parname . ')');
     }
     if (!isset($default)) {
         $default = null;
@@ -637,7 +636,7 @@ function optional_param($parname, $default, $type) {
     }
 
     if (is_array($param)) {
-        debugging('Invalid array parameter detected in required_param(): '.$parname);
+        debugging('Invalid array parameter detected in required_param(): ' . $parname);
         // TODO: switch to $default in Moodle 2.3.
         return optional_param_array($parname, $default, $type);
     }
@@ -664,7 +663,7 @@ function optional_param($parname, $default, $type) {
  */
 function optional_param_array($parname, $default, $type) {
     if (func_num_args() != 3 or empty($parname) or empty($type)) {
-        throw new coding_exception('optional_param_array requires $parname, $default + $type to be specified (parameter: '.$parname.')');
+        throw new coding_exception('optional_param_array requires $parname, $default + $type to be specified (parameter: ' . $parname . ')');
     }
 
     // POST has precedence.
@@ -676,14 +675,14 @@ function optional_param_array($parname, $default, $type) {
         return $default;
     }
     if (!is_array($param)) {
-        debugging('optional_param_array() expects array parameters only: '.$parname);
+        debugging('optional_param_array() expects array parameters only: ' . $parname);
         return $default;
     }
 
     $result = array();
     foreach ($param as $key => $value) {
         if (!preg_match('/^[a-z0-9_-]+$/i', $key)) {
-            debugging('Invalid key name in optional_param_array() detected: '.$key.', parameter: '.$parname);
+            debugging('Invalid key name in optional_param_array() detected: ' . $key . ', parameter: ' . $parname);
             continue;
         }
         $result[$key] = clean_param($value, $type);
@@ -706,7 +705,7 @@ function optional_param_array($parname, $default, $type) {
  * @return mixed the $param value converted to PHP type
  * @throws invalid_parameter_exception if $param is not of given type
  */
-function validate_param($param, $type, $allownull=NULL_NOT_ALLOWED, $debuginfo='') {
+function validate_param($param, $type, $allownull = NULL_NOT_ALLOWED, $debuginfo = '') {
     if (is_null($param)) {
         if ($allownull == NULL_ALLOWED) {
             return null;
@@ -724,10 +723,10 @@ function validate_param($param, $type, $allownull=NULL_NOT_ALLOWED, $debuginfo='
         // Do not detect precision loss here.
         if (is_float($param) or is_int($param)) {
             // These always fit.
-        } else if (!is_numeric($param) or !preg_match('/^[\+-]?[0-9]*\.?[0-9]*(e[-+]?[0-9]+)?$/i', (string)$param)) {
+        } else if (!is_numeric($param) or ! preg_match('/^[\+-]?[0-9]*\.?[0-9]*(e[-+]?[0-9]+)?$/i', (string) $param)) {
             throw new invalid_parameter_exception($debuginfo);
         }
-    } else if ((string)$param !== (string)$cleaned) {
+    } else if ((string) $param !== (string) $cleaned) {
         // Conversion to string is usually lossless.
         throw new invalid_parameter_exception($debuginfo);
     }
@@ -750,7 +749,7 @@ function validate_param($param, $type, $allownull=NULL_NOT_ALLOWED, $debuginfo='
  */
 function clean_param_array(array $param = null, $type, $recursive = false) {
     // Convert null to empty array.
-    $param = (array)$param;
+    $param = (array) $param;
     foreach ($param as $key => $value) {
         if (is_array($value)) {
             if ($recursive) {
@@ -822,11 +821,11 @@ function clean_param($param, $type) {
 
         case PARAM_INT:
             // Convert to integer.
-            return (int)$param;
+            return (int) $param;
 
         case PARAM_FLOAT:
             // Convert to float.
-            return (float)$param;
+            return (float) $param;
 
         case PARAM_ALPHA:
             // Remove everything not `a-z`.
@@ -853,7 +852,7 @@ function clean_param($param, $type) {
             $tempstr = strtolower($param);
             if ($tempstr === 'on' or $tempstr === 'yes' or $tempstr === 'true') {
                 $param = 1;
-            } else if ($tempstr === 'off' or $tempstr === 'no'  or $tempstr === 'false') {
+            } else if ($tempstr === 'off' or $tempstr === 'no' or $tempstr === 'false') {
                 $param = 0;
             } else {
                 $param = empty($param) ? 0 : 1;
@@ -897,7 +896,6 @@ function clean_param($param, $type) {
                         break;
                     }
                     return $param;
-
                 } else if (strpos($param, '</span>') !== false) {
                     // Current problematic multilang syntax.
                     $param = strip_tags($param, '<span>');
@@ -995,25 +993,22 @@ function clean_param($param, $type) {
 
         case PARAM_HOST:
             // Allow FQDN or IPv4 dotted quad.
-            $param = preg_replace('/[^\.\d\w-]/', '', $param );
+            $param = preg_replace('/[^\.\d\w-]/', '', $param);
             // Match ipv4 dotted quad.
             if (preg_match('/(\d{1,3})\.(\d{1,3})\.(\d{1,3})\.(\d{1,3})/', $param, $match)) {
                 // Confirm values are ok.
-                if ( $match[0] > 255
-                     || $match[1] > 255
-                     || $match[3] > 255
-                     || $match[4] > 255 ) {
+                if ($match[0] > 255 || $match[1] > 255 || $match[3] > 255 || $match[4] > 255) {
                     // Hmmm, what kind of dotted quad is this?
                     $param = '';
                 }
-            } else if ( preg_match('/^[\w\d\.-]+$/', $param) // Dots, hyphens, numbers.
-                       && !preg_match('/^[\.-]/',  $param) // No leading dots/hyphens.
-                       && !preg_match('/[\.-]$/',  $param) // No trailing dots/hyphens.
-                       ) {
+            } else if (preg_match('/^[\w\d\.-]+$/', $param) // Dots, hyphens, numbers.
+                    && !preg_match('/^[\.-]/', $param) // No leading dots/hyphens.
+                    && !preg_match('/[\.-]$/', $param) // No trailing dots/hyphens.
+            ) {
                 // All is ok - $param is respected.
             } else {
                 // All is not ok...
-                $param='';
+                $param = '';
             }
             return $param;
 
@@ -1024,7 +1019,7 @@ function clean_param($param, $type) {
                 // All is ok, param is respected.
             } else {
                 // Not really ok.
-                $param ='';
+                $param = '';
             }
             return $param;
 
@@ -1088,7 +1083,7 @@ function clean_param($param, $type) {
                 $lines = preg_split('/[\s]+/', $param, -1, PREG_SPLIT_NO_EMPTY);
                 // Each line of base64 encoded data must be 64 characters in length, except for the last line which may be less
                 // than (or equal to) 64 characters long.
-                for ($i=0, $j=count($lines); $i < $j; $i++) {
+                for ($i = 0, $j = count($lines); $i < $j; $i++) {
                     if ($i + 1 == $j) {
                         if (64 < strlen($lines[$i])) {
                             return '';
@@ -1140,7 +1135,7 @@ function clean_param($param, $type) {
             }
 
         case PARAM_PERMISSION:
-            $param = (int)$param;
+            $param = (int) $param;
             if (in_array($param, array(CAP_INHERIT, CAP_ALLOW, CAP_PREVENT, CAP_PROHIBIT))) {
                 return $param;
             } else {
@@ -1185,7 +1180,7 @@ function clean_param($param, $type) {
             // Convert uppercase to lowercase MDL-16919.
             $param = core_text::strtolower($param);
             if (empty($CFG->extendedusernamechars)) {
-                $param = str_replace(" " , "", $param);
+                $param = str_replace(" ", "", $param);
                 // Regular expression, eliminate all chars EXCEPT:
                 // alphanum, dash (-), underscore (_), at sign (@) and period (.) characters.
                 $param = preg_replace('/[^-\.@_a-z0-9]/', '', $param);
@@ -1234,9 +1229,8 @@ function clean_param($param, $type) {
 function fix_utf8($value) {
     if (is_null($value) or $value === '') {
         return $value;
-
     } else if (is_string($value)) {
-        if ((string)(int)$value === $value) {
+        if ((string) (int) $value === $value) {
             // Shortcut.
             return $value;
         }
@@ -1246,7 +1240,7 @@ function fix_utf8($value) {
         // Note: this duplicates min_fix_utf8() intentionally.
         static $buggyiconv = null;
         if ($buggyiconv === null) {
-            $buggyiconv = (!function_exists('iconv') or @iconv('UTF-8', 'UTF-8//IGNORE', '100'.chr(130).'â‚¬') !== '100â‚¬');
+            $buggyiconv = (!function_exists('iconv') or @ iconv('UTF-8', 'UTF-8//IGNORE', '100' . chr(130) . 'â‚¬') !== '100â‚¬');
         }
 
         if ($buggyiconv) {
@@ -1255,24 +1249,20 @@ function fix_utf8($value) {
                 mb_substitute_character('');
                 $result = mb_convert_encoding($value, 'utf-8', 'utf-8');
                 mb_substitute_character($subst);
-
             } else {
                 // Warn admins on admin/index.php page.
                 $result = $value;
             }
-
         } else {
             $result = @iconv('UTF-8', 'UTF-8//IGNORE', $value);
         }
 
         return $result;
-
     } else if (is_array($value)) {
         foreach ($value as $k => $v) {
             $value[$k] = fix_utf8($v);
         }
         return $value;
-
     } else if (is_object($value)) {
         // Do not modify original.
         $value = clone($value);
@@ -1280,7 +1270,6 @@ function fix_utf8($value) {
             $value->$k = fix_utf8($v);
         }
         return $value;
-
     } else {
         // This is some other type, no utf-8 here.
         return $value;
@@ -1297,7 +1286,7 @@ function is_number($value) {
     if (is_int($value)) {
         return true;
     } else if (is_string($value)) {
-        return ((string)(int)$value) === $value;
+        return ((string) (int) $value) === $value;
     } else {
         return false;
     }
@@ -1350,7 +1339,7 @@ function html_is_blank($string) {
  * @param string $plugin (optional) the plugin scope, default null
  * @return bool true or exception
  */
-function set_config($name, $value, $plugin=null) {
+function set_config($name, $value, $plugin = null) {
     global $CFG, $DB;
 
     if (empty($plugin)) {
@@ -1360,7 +1349,7 @@ function set_config($name, $value, $plugin=null) {
                 unset($CFG->$name);
             } else {
                 // Settings from db are always strings.
-                $CFG->$name = (string)$value;
+                $CFG->$name = (string) $value;
             }
         }
 
@@ -1373,7 +1362,7 @@ function set_config($name, $value, $plugin=null) {
         } else {
             if ($value !== null) {
                 $config = new stdClass();
-                $config->name  = $name;
+                $config->name = $name;
                 $config->value = $value;
                 $DB->insert_record('config', $config, false);
             }
@@ -1385,7 +1374,7 @@ function set_config($name, $value, $plugin=null) {
     } else {
         // Plugin scope.
         if ($id = $DB->get_field('config_plugins', 'id', array('name' => $name, 'plugin' => $plugin))) {
-            if ($value===null) {
+            if ($value === null) {
                 $DB->delete_records('config_plugins', array('name' => $name, 'plugin' => $plugin));
             } else {
                 $DB->set_field('config_plugins', 'value', $value, array('id' => $id));
@@ -1394,8 +1383,8 @@ function set_config($name, $value, $plugin=null) {
             if ($value !== null) {
                 $config = new stdClass();
                 $config->plugin = $plugin;
-                $config->name   = $name;
-                $config->value  = $value;
+                $config->name = $name;
+                $config->value = $value;
                 $DB->insert_record('config_plugins', $config, false);
             }
         }
@@ -1430,12 +1419,12 @@ function get_config($plugin, $name = null) {
     static $siteidentifier = null;
 
     if ($plugin === 'moodle' || $plugin === 'core' || empty($plugin)) {
-        $forced =& $CFG->config_php_settings;
+        $forced = & $CFG->config_php_settings;
         $iscore = true;
         $plugin = 'core';
     } else {
         if (array_key_exists($plugin, $CFG->forced_plugin_settings)) {
-            $forced =& $CFG->forced_plugin_settings[$plugin];
+            $forced = & $CFG->forced_plugin_settings[$plugin];
         } else {
             $forced = array();
         }
@@ -1457,7 +1446,7 @@ function get_config($plugin, $name = null) {
 
     if (!empty($name)) {
         if (array_key_exists($name, $forced)) {
-            return (string)$forced[$name];
+            return (string) $forced[$name];
         } else if ($name === 'siteidentifier' && $plugin == 'core') {
             return $siteidentifier;
         }
@@ -1471,7 +1460,8 @@ function get_config($plugin, $name = null) {
             $result = $DB->get_records_menu('config_plugins', array('plugin' => $plugin), '', 'name,value');
         } else {
             // This part is not really used any more, but anyway...
-            $result = $DB->get_records_menu('config', array(), '', 'name,value');;
+            $result = $DB->get_records_menu('config', array(), '', 'name,value');
+            ;
         }
         $cache->set($plugin, $result);
     }
@@ -1493,11 +1483,11 @@ function get_config($plugin, $name = null) {
             unset($result[$key]);
         } else {
             // Convert to string as if it went through the DB.
-            $result[$key] = (string)$value;
+            $result[$key] = (string) $value;
         }
     }
 
-    return (object)$result;
+    return (object) $result;
 }
 
 /**
@@ -1509,7 +1499,7 @@ function get_config($plugin, $name = null) {
  * @param string $plugin (optional) the plugin scope
  * @return boolean whether the operation succeeded.
  */
-function unset_config($name, $plugin=null) {
+function unset_config($name, $plugin = null) {
     global $CFG, $DB;
 
     if (empty($plugin)) {
@@ -1538,7 +1528,7 @@ function unset_all_config_for_plugin($plugin) {
     $DB->delete_records('config_plugins', array('plugin' => $plugin));
     // Next delete any suspect settings from config.
     $like = $DB->sql_like('name', '?', true, true, false, '|');
-    $params = array($DB->sql_like_escape($plugin.'_', '|') . '%');
+    $params = array($DB->sql_like_escape($plugin . '_', '|') . '%');
     $DB->delete_records_select('config', $like, $params);
     // Finally clear both the plugin cache and the core cache (suspect settings now removed from core).
     cache_helper::invalidate_by_definition('core', 'config', array(), array('core', $plugin));
@@ -1588,7 +1578,6 @@ function get_users_from_config($value, $capability, $includeadmins = true) {
     return $result;
 }
 
-
 /**
  * Invalidates browser caches and cached data in temp.
  *
@@ -1620,7 +1609,7 @@ function purge_all_caches() {
     cache_helper::purge_all();
 
     // Purge all other caches: rss, simplepie, etc.
-    remove_dir($CFG->cachedir.'', true);
+    remove_dir($CFG->cachedir . '', true);
 
     // Make sure cache dir is writable, throws exception if not.
     make_cache_directory('');
@@ -1666,7 +1655,7 @@ function get_cache_flags($type, $changedsince = null) {
  * @param int $changedsince default null
  * @return string|false The cache flag value or false
  */
-function get_cache_flag($type, $name, $changedsince=null) {
+function get_cache_flag($type, $name, $changedsince = null) {
     global $DB;
 
     $params = array('type' => $type, 'name' => $name, 'expiry' => time());
@@ -1696,7 +1685,7 @@ function set_cache_flag($type, $name, $value, $expiry = null) {
     if ($expiry === null || $expiry < $timemodified) {
         $expiry = $timemodified + 24 * 60 * 60;
     } else {
-        $expiry = (int)$expiry;
+        $expiry = (int) $expiry;
     }
 
     if ($value === null) {
@@ -1709,16 +1698,16 @@ function set_cache_flag($type, $name, $value, $expiry = null) {
         if ($f->value == $value and $f->expiry == $expiry and $f->timemodified == $timemodified) {
             return true; // No need to update.
         }
-        $f->value        = $value;
-        $f->expiry       = $expiry;
+        $f->value = $value;
+        $f->expiry = $expiry;
         $f->timemodified = $timemodified;
         $DB->update_record('cache_flags', $f);
     } else {
         $f = new stdClass();
-        $f->flagtype     = $type;
-        $f->name         = $name;
-        $f->value        = $value;
-        $f->expiry       = $expiry;
+        $f->flagtype = $type;
+        $f->name = $name;
+        $f->value = $value;
+        $f->expiry = $expiry;
         $f->timemodified = $timemodified;
         $DB->insert_record('cache_flags', $f);
     }
@@ -1789,7 +1778,6 @@ function check_user_preferences_loaded(stdClass $user, $cachelifetime = 120) {
         if ($user->preference['_lastloaded'] + $cachelifetime > $timenow) {
             // No need to reload - we are on the same page and we loaded prefs just a moment ago.
             return;
-
         } else if (!get_cache_flag('userpreferenceschanged', $user->id, $user->preference['_lastloaded'])) {
             // No change since the lastcheck on this page.
             $user->preference['_lastloaded'] = $timenow;
@@ -1854,7 +1842,7 @@ function set_user_preference($name, $value, $user = null) {
         throw new coding_exception('Invalid value in set_user_preference() call, arrays are not allowed');
     }
     // Value column maximum length is 1333 characters.
-    $value = (string)$value;
+    $value = (string) $value;
     if (core_text::strlen($value) > 1333) {
         throw new coding_exception('Invalid value in set_user_preference() call, value is is too long for the value column');
     }
@@ -1864,7 +1852,7 @@ function set_user_preference($name, $value, $user = null) {
     } else if (isset($user->id)) {
         // It is a valid object.
     } else if (is_numeric($user)) {
-        $user = (object)array('id' => (int)$user);
+        $user = (object) array('id' => (int) $user);
     } else {
         throw new coding_exception('Invalid $user parameter in set_user_preference() call');
     }
@@ -1883,12 +1871,11 @@ function set_user_preference($name, $value, $user = null) {
             return true;
         }
         $DB->set_field('user_preferences', 'value', $value, array('id' => $preference->id));
-
     } else {
         $preference = new stdClass();
         $preference->userid = $user->id;
-        $preference->name   = $name;
-        $preference->value  = $value;
+        $preference->name = $name;
+        $preference->value = $value;
         $DB->insert_record('user_preferences', $preference);
     }
 
@@ -1945,7 +1932,7 @@ function unset_user_preference($name, $user = null) {
     } else if (isset($user->id)) {
         // It is a valid object.
     } else if (is_numeric($user)) {
-        $user = (object)array('id' => (int)$user);
+        $user = (object) array('id' => (int) $user);
     } else {
         throw new coding_exception('Invalid $user parameter in unset_user_preference() call');
     }
@@ -2007,7 +1994,7 @@ function get_user_preferences($name = null, $default = null, $user = null) {
     } else if (isset($user->id)) {
         // Is a valid object.
     } else if (is_numeric($user)) {
-        $user = (object)array('id' => (int)$user);
+        $user = (object) array('id' => (int) $user);
     } else {
         throw new coding_exception('Invalid $user parameter in get_user_preferences() call');
     }
@@ -2045,10 +2032,10 @@ function get_user_preferences($name = null, $default = null, $user = null) {
  *             applied only if timezone is 99 or string.
  * @return int GMT timestamp
  */
-function make_timestamp($year, $month=1, $day=1, $hour=0, $minute=0, $second=0, $timezone=99, $applydst=true) {
+function make_timestamp($year, $month = 1, $day = 1, $hour = 0, $minute = 0, $second = 0, $timezone = 99, $applydst = true) {
     $date = new DateTime('now', core_date::get_user_timezone_object($timezone));
-    $date->setDate((int)$year, (int)$month, (int)$day);
-    $date->setTime((int)$hour, (int)$minute, (int)$second);
+    $date->setDate((int) $year, (int) $month, (int) $day);
+    $date->setTime((int) $hour, (int) $minute, (int) $second);
 
     $time = $date->getTimestamp();
 
@@ -2058,7 +2045,6 @@ function make_timestamp($year, $month=1, $day=1, $hour=0, $minute=0, $second=0, 
     }
 
     return $time;
-
 }
 
 /**
@@ -2084,32 +2070,32 @@ function format_time($totalsecs, $str = null) {
     if (!$str) {
         // Create the str structure the slow way.
         $str = new stdClass();
-        $str->day   = get_string('day');
-        $str->days  = get_string('days');
-        $str->hour  = get_string('hour');
+        $str->day = get_string('day');
+        $str->days = get_string('days');
+        $str->hour = get_string('hour');
         $str->hours = get_string('hours');
-        $str->min   = get_string('min');
-        $str->mins  = get_string('mins');
-        $str->sec   = get_string('sec');
-        $str->secs  = get_string('secs');
-        $str->year  = get_string('year');
+        $str->min = get_string('min');
+        $str->mins = get_string('mins');
+        $str->sec = get_string('sec');
+        $str->secs = get_string('secs');
+        $str->year = get_string('year');
         $str->years = get_string('years');
     }
 
-    $years     = floor($totalsecs/YEARSECS);
-    $remainder = $totalsecs - ($years*YEARSECS);
-    $days      = floor($remainder/DAYSECS);
-    $remainder = $totalsecs - ($days*DAYSECS);
-    $hours     = floor($remainder/HOURSECS);
-    $remainder = $remainder - ($hours*HOURSECS);
-    $mins      = floor($remainder/MINSECS);
-    $secs      = $remainder - ($mins*MINSECS);
+    $years = floor($totalsecs / YEARSECS);
+    $remainder = $totalsecs - ($years * YEARSECS);
+    $days = floor($remainder / DAYSECS);
+    $remainder = $totalsecs - ($days * DAYSECS);
+    $hours = floor($remainder / HOURSECS);
+    $remainder = $remainder - ($hours * HOURSECS);
+    $mins = floor($remainder / MINSECS);
+    $secs = $remainder - ($mins * MINSECS);
 
-    $ss = ($secs == 1)  ? $str->sec  : $str->secs;
-    $sm = ($mins == 1)  ? $str->min  : $str->mins;
+    $ss = ($secs == 1) ? $str->sec : $str->secs;
+    $sm = ($mins == 1) ? $str->min : $str->mins;
     $sh = ($hours == 1) ? $str->hour : $str->hours;
-    $sd = ($days == 1)  ? $str->day  : $str->days;
-    $sy = ($years == 1)  ? $str->year  : $str->years;
+    $sd = ($days == 1) ? $str->day : $str->days;
+    $sy = ($years == 1) ? $str->year : $str->years;
 
     $oyears = '';
     $odays = '';
@@ -2118,32 +2104,32 @@ function format_time($totalsecs, $str = null) {
     $osecs = '';
 
     if ($years) {
-        $oyears  = $years .' '. $sy;
+        $oyears = $years . ' ' . $sy;
     }
     if ($days) {
-        $odays  = $days .' '. $sd;
+        $odays = $days . ' ' . $sd;
     }
     if ($hours) {
-        $ohours = $hours .' '. $sh;
+        $ohours = $hours . ' ' . $sh;
     }
     if ($mins) {
-        $omins  = $mins .' '. $sm;
+        $omins = $mins . ' ' . $sm;
     }
     if ($secs) {
-        $osecs  = $secs .' '. $ss;
+        $osecs = $secs . ' ' . $ss;
     }
 
     if ($years) {
-        return trim($oyears .' '. $odays);
+        return trim($oyears . ' ' . $odays);
     }
     if ($days) {
-        return trim($odays .' '. $ohours);
+        return trim($odays . ' ' . $ohours);
     }
     if ($hours) {
-        return trim($ohours .' '. $omins);
+        return trim($ohours . ' ' . $omins);
     }
     if ($mins) {
-        return trim($omins .' '. $osecs);
+        return trim($omins . ' ' . $osecs);
     }
     if ($secs) {
         return $osecs;
@@ -2219,7 +2205,7 @@ function date_format_string($date, $format, $tz = 99) {
  * @param float|int|string $timezone user timezone
  * @return array An array that represents the date in user time
  */
-function usergetdate($time, $timezone=99) {
+function usergetdate($time, $timezone = 99) {
     date_default_timezone_set(core_date::get_user_timezone($timezone));
     $result = getdate($time);
     core_date::set_default_server_timezone();
@@ -2240,7 +2226,7 @@ function usergetdate($time, $timezone=99) {
  * @param float|int|string $timezone user timezone
  * @return int
  */
-function usertime($date, $timezone=99) {
+function usertime($date, $timezone = 99) {
     $userdate = new DateTime('@' . $date);
     $userdate->setTimezone(core_date::get_user_timezone_object($timezone));
     $dst = dst_offset_on($date, $timezone);
@@ -2258,13 +2244,12 @@ function usertime($date, $timezone=99) {
  * @param float|int|string $timezone user timezone
  * @return int Returns a GMT timestamp
  */
-function usergetmidnight($date, $timezone=99) {
+function usergetmidnight($date, $timezone = 99) {
 
     $userdate = usergetdate($date, $timezone);
 
     // Time of midnight of this user's day, in GMT.
     return make_timestamp($userdate['year'], $userdate['mon'], $userdate['mday'], 0, 0, 0, $timezone);
-
 }
 
 /**
@@ -2275,7 +2260,7 @@ function usergetmidnight($date, $timezone=99) {
  * @param float|int|string $timezone user timezone
  * @return string
  */
-function usertimezone($timezone=99) {
+function usertimezone($timezone = 99) {
     $tz = core_date::get_user_timezone($timezone);
     return core_date::get_localised_timezone($tz);
 }
@@ -2301,7 +2286,7 @@ function get_user_timezone($tz = 99) {
         isset($CFG->forcetimezone) ? $CFG->forcetimezone : 99,
         isset($USER->timezone) ? $USER->timezone : 99,
         isset($CFG->timezone) ? $CFG->timezone : 99,
-        );
+    );
 
     $tz = 99;
 
@@ -2542,7 +2527,7 @@ function require_login($courseorid = null, $autologinguest = true, $cm = null, $
 
     // If the user is not even logged in yet then make sure they are.
     if (!isloggedin()) {
-        if ($autologinguest and !empty($CFG->guestloginbutton) and !empty($CFG->autologinguests)) {
+        if ($autologinguest and ! empty($CFG->guestloginbutton) and ! empty($CFG->autologinguests)) {
             if (!$guest = get_complete_user_data('id', $CFG->siteguest)) {
                 // Misconfigured site guest, just redirect to login page.
                 redirect(get_login_url());
@@ -2569,7 +2554,7 @@ function require_login($courseorid = null, $autologinguest = true, $cm = null, $
 
             // Give auth plugins an opportunity to authenticate or redirect to an external login page
             $authsequence = get_enabled_auth_plugins(true); // auths, in sequence
-            foreach($authsequence as $authname) {
+            foreach ($authsequence as $authname) {
                 $authplugin = get_auth_plugin($authname);
                 $authplugin->pre_loginpage_hook();
                 if (isloggedin()) {
@@ -2589,7 +2574,7 @@ function require_login($courseorid = null, $autologinguest = true, $cm = null, $
     if ($course->id != SITEID and \core\session\manager::is_loggedinas()) {
         if ($USER->loginascontext->contextlevel == CONTEXT_COURSE) {
             if ($USER->loginascontext->instanceid != $course->id) {
-                print_error('loginasonecourse', '', $CFG->wwwroot.'/course/view.php?id='.$USER->loginascontext->instanceid);
+                print_error('loginasonecourse', '', $CFG->wwwroot . '/course/view.php?id=' . $USER->loginascontext->instanceid);
             }
         }
     }
@@ -2597,7 +2582,7 @@ function require_login($courseorid = null, $autologinguest = true, $cm = null, $
     // Check whether the user should be changing password (but only if it is REALLY them).
     if (get_user_preferences('auth_forcepasswordchange') && !\core\session\manager::is_loggedinas()) {
         $userauth = get_auth_plugin($USER->auth);
-        if ($userauth->can_change_password() and !$preventredirect) {
+        if ($userauth->can_change_password() and ! $preventredirect) {
             if ($setwantsurltome) {
                 $SESSION->wantsurl = qualified_me();
             }
@@ -2607,10 +2592,10 @@ function require_login($courseorid = null, $autologinguest = true, $cm = null, $
             } else {
                 // Use moodle internal method.
                 if (empty($CFG->loginhttps)) {
-                    redirect($CFG->wwwroot .'/login/change_password.php');
+                    redirect($CFG->wwwroot . '/login/change_password.php');
                 } else {
                     $wwwroot = str_replace('http:', 'https:', $CFG->wwwroot);
-                    redirect($wwwroot .'/login/change_password.php');
+                    redirect($wwwroot . '/login/change_password.php');
                 }
             }
         } else {
@@ -2626,7 +2611,7 @@ function require_login($courseorid = null, $autologinguest = true, $cm = null, $
         if ($setwantsurltome) {
             $SESSION->wantsurl = qualified_me();
         }
-        redirect($CFG->wwwroot .'/user/edit.php?id='. $USER->id .'&amp;course='. SITEID);
+        redirect($CFG->wwwroot . '/user/edit.php?id=' . $USER->id . '&amp;course=' . SITEID);
     }
 
     // Make sure the USER has a sesskey set up. Used for CSRF protection.
@@ -2647,15 +2632,15 @@ function require_login($courseorid = null, $autologinguest = true, $cm = null, $
     }
 
     // Check that the user has agreed to a site policy if there is one - do not test in case of admins.
-    if (!$USER->policyagreed and !is_siteadmin()) {
-        if (!empty($CFG->sitepolicy) and !isguestuser()) {
+    if (!$USER->policyagreed and ! is_siteadmin()) {
+        if (!empty($CFG->sitepolicy) and ! isguestuser()) {
             if ($preventredirect) {
                 throw new require_login_exception('Policy not agreed');
             }
             if ($setwantsurltome) {
                 $SESSION->wantsurl = qualified_me();
             }
-            redirect($CFG->wwwroot .'/user/policy.php');
+            redirect($CFG->wwwroot . '/user/policy.php');
         } else if (!empty($CFG->sitepolicyguest) and isguestuser()) {
             if ($preventredirect) {
                 throw new require_login_exception('Policy not agreed');
@@ -2663,7 +2648,7 @@ function require_login($courseorid = null, $autologinguest = true, $cm = null, $
             if ($setwantsurltome) {
                 $SESSION->wantsurl = qualified_me();
             }
-            redirect($CFG->wwwroot .'/user/policy.php');
+            redirect($CFG->wwwroot . '/user/policy.php');
         }
     }
 
@@ -2677,7 +2662,7 @@ function require_login($courseorid = null, $autologinguest = true, $cm = null, $
     }
 
     // If the site is currently under maintenance, then print a message.
-    if (!empty($CFG->maintenance_enabled) and !has_capability('moodle/site:config', $sysctx)) {
+    if (!empty($CFG->maintenance_enabled) and ! has_capability('moodle/site:config', $sysctx)) {
         if ($preventredirect) {
             throw new require_login_exception('Maintenance in progress');
         }
@@ -2692,7 +2677,7 @@ function require_login($courseorid = null, $autologinguest = true, $cm = null, $
         if (is_role_switched($course->id)) {
             // When switching roles ignore the hidden flag - user had to be in course to do the switch.
         } else {
-            if (!$course->visible and !has_capability('moodle/course:viewhiddencourses', $coursecontext)) {
+            if (!$course->visible and ! has_capability('moodle/course:viewhiddencourses', $coursecontext)) {
                 // Originally there was also test of parent category visibility, BUT is was very slow in complex queries
                 // involving "my courses" now it is also possible to simply hide all courses user is not enrolled in :-).
                 if ($preventredirect) {
@@ -2702,7 +2687,7 @@ function require_login($courseorid = null, $autologinguest = true, $cm = null, $
                 // We need to override the navigation URL as the course won't have been added to the navigation and thus
                 // the navigation will mess up when trying to find it.
                 navigation_node::override_active_url(new moodle_url('/'));
-                notice(get_string('coursehidden'), $CFG->wwwroot .'/');
+                notice(get_string('coursehidden'), $CFG->wwwroot . '/');
             }
         }
     }
@@ -2714,14 +2699,13 @@ function require_login($courseorid = null, $autologinguest = true, $cm = null, $
         if (\core\session\manager::is_loggedinas()) {
             // Make sure the REAL person can access this course first.
             $realuser = \core\session\manager::get_realuser();
-            if (!is_enrolled($coursecontext, $realuser->id, '', true) and
-                !is_viewing($coursecontext, $realuser->id) and !is_siteadmin($realuser->id)) {
+            if (!is_enrolled($coursecontext, $realuser->id, '', true) and ! is_viewing($coursecontext, $realuser->id) and ! is_siteadmin($realuser->id)) {
                 if ($preventredirect) {
                     throw new require_login_exception('Invalid course login-as access');
                 }
                 $PAGE->set_context(null);
                 echo $OUTPUT->header();
-                notice(get_string('studentnotallowed', '', fullname($USER, true)), $CFG->wwwroot .'/');
+                notice(get_string('studentnotallowed', '', fullname($USER, true)), $CFG->wwwroot . '/');
             }
         }
 
@@ -2730,11 +2714,9 @@ function require_login($courseorid = null, $autologinguest = true, $cm = null, $
         if (is_role_switched($course->id)) {
             // Ok, user had to be inside this course before the switch.
             $access = true;
-
         } else if (is_viewing($coursecontext, $USER)) {
             // Ok, no need to mess with enrol.
             $access = true;
-
         } else {
             if (isset($USER->enrol['enrolled'][$course->id])) {
                 if ($USER->enrol['enrolled'][$course->id] > time()) {
@@ -2770,7 +2752,6 @@ function require_login($courseorid = null, $autologinguest = true, $cm = null, $
                     }
                     $USER->enrol['enrolled'][$course->id] = $until;
                     $access = true;
-
                 } else {
                     $params = array('courseid' => $course->id, 'status' => ENROL_INSTANCE_ENABLED);
                     $instances = $DB->get_records('enrol', $params, 'sortorder, id ASC');
@@ -2817,7 +2798,7 @@ function require_login($courseorid = null, $autologinguest = true, $cm = null, $
             if ($setwantsurltome) {
                 $SESSION->wantsurl = qualified_me();
             }
-            redirect($CFG->wwwroot .'/enrol/index.php?id='. $course->id);
+            redirect($CFG->wwwroot . '/enrol/index.php?id=' . $course->id);
         }
     }
 
@@ -2847,7 +2828,6 @@ function require_login($courseorid = null, $autologinguest = true, $cm = null, $
     user_accesstime_log($course->id);
 }
 
-
 /**
  * This function just makes sure a user is logged out.
  *
@@ -2874,13 +2854,13 @@ function require_logout() {
     // Store info that gets removed during logout.
     $sid = session_id();
     $event = \core\event\user_loggedout::create(
-        array(
-            'userid' => $USER->id,
-            'objectid' => $USER->id,
-            'other' => array('sessionid' => $sid),
-        )
+                    array(
+                        'userid' => $USER->id,
+                        'objectid' => $USER->id,
+                        'other' => array('sessionid' => $sid),
+                    )
     );
-    if ($session = $DB->get_record('sessions', array('sid'=>$sid))) {
+    if ($session = $DB->get_record('sessions', array('sid' => $sid))) {
         $event->add_record_snapshot('sessions', $session);
     }
 
@@ -2923,7 +2903,7 @@ function require_logout() {
 function require_course_login($courseorid, $autologinguest = true, $cm = null, $setwantsurltome = true, $preventredirect = false) {
     global $CFG, $PAGE, $SITE;
     $issite = ((is_object($courseorid) and $courseorid->id == SITEID)
-          or (!is_object($courseorid) and $courseorid == SITEID));
+            or ( !is_object($courseorid) and $courseorid == SITEID));
     if ($issite && !empty($cm) && !($cm instanceof cm_info)) {
         // Note: nearly all pages call get_fast_modinfo anyway and it does not make any
         // db queries so this is not really a performance concern, however it is obviously
@@ -2939,11 +2919,9 @@ function require_course_login($courseorid, $autologinguest = true, $cm = null, $
     if (!empty($CFG->forcelogin)) {
         // Login required for both SITE and courses.
         require_login($courseorid, $autologinguest, $cm, $setwantsurltome, $preventredirect);
-
-    } else if ($issite && !empty($cm) and !$cm->uservisible) {
+    } else if ($issite && !empty($cm) and ! $cm->uservisible) {
         // Always login for hidden activities.
         require_login($courseorid, $autologinguest, $cm, $setwantsurltome, $preventredirect);
-
     } else if ($issite) {
         // Login for SITE not required.
         // We still need to instatiate PAGE vars properly so that things that rely on it like navigation function correctly.
@@ -2968,7 +2946,6 @@ function require_course_login($courseorid, $autologinguest = true, $cm = null, $
         }
         user_accesstime_log(SITEID);
         return;
-
     } else {
         // Course login always required.
         require_login($courseorid, $autologinguest, $cm, $setwantsurltome, $preventredirect);
@@ -2984,7 +2961,7 @@ function require_course_login($courseorid, $autologinguest = true, $cm = null, $
  * @param int $instance optional instance id
  * @return int Instance ID
  */
-function require_user_key_login($script, $instance=null) {
+function require_user_key_login($script, $instance = null) {
     global $DB;
 
     if (!NO_MOODLE_COOKIES) {
@@ -3006,7 +2983,7 @@ function require_user_key_login($script, $instance=null) {
 
     if ($key->iprestriction) {
         $remoteaddr = getremoteaddr(null);
-        if (empty($remoteaddr) or !address_in_subnet($remoteaddr, $key->iprestriction)) {
+        if (empty($remoteaddr) or ! address_in_subnet($remoteaddr, $key->iprestriction)) {
             print_error('ipmismatch');
         }
     }
@@ -3038,22 +3015,22 @@ function require_user_key_login($script, $instance=null) {
  * @param timestamp $validuntil key valid only until given data
  * @return string access key value
  */
-function create_user_key($script, $userid, $instance=null, $iprestriction=null, $validuntil=null) {
+function create_user_key($script, $userid, $instance = null, $iprestriction = null, $validuntil = null) {
     global $DB;
 
     $key = new stdClass();
-    $key->script        = $script;
-    $key->userid        = $userid;
-    $key->instance      = $instance;
+    $key->script = $script;
+    $key->userid = $userid;
+    $key->instance = $instance;
     $key->iprestriction = $iprestriction;
-    $key->validuntil    = $validuntil;
-    $key->timecreated   = time();
+    $key->validuntil = $validuntil;
+    $key->timecreated = time();
 
     // Something long and unique.
-    $key->value         = md5($userid.'_'.time().random_string(40));
+    $key->value = md5($userid . '_' . time() . random_string(40));
     while ($DB->record_exists('user_private_key', array('value' => $key->value))) {
         // Must be unique.
-        $key->value     = md5($userid.'_'.time().random_string(40));
+        $key->value = md5($userid . '_' . time() . random_string(40));
     }
     $DB->insert_record('user_private_key', $key);
     return $key->value;
@@ -3081,18 +3058,17 @@ function delete_user_key($script, $userid) {
  * @param timestamp $validuntil key valid only until given data
  * @return string access key value
  */
-function get_user_key($script, $userid, $instance=null, $iprestriction=null, $validuntil=null) {
+function get_user_key($script, $userid, $instance = null, $iprestriction = null, $validuntil = null) {
     global $DB;
 
     if ($key = $DB->get_record('user_private_key', array('script' => $script, 'userid' => $userid,
-                                                         'instance' => $instance, 'iprestriction' => $iprestriction,
-                                                         'validuntil' => $validuntil))) {
+        'instance' => $instance, 'iprestriction' => $iprestriction,
+        'validuntil' => $validuntil))) {
         return $key->value;
     } else {
         return create_user_key($script, $userid, $instance, $iprestriction, $validuntil);
     }
 }
-
 
 /**
  * Modify the user table by setting the currently logged in user's last login to now.
@@ -3172,13 +3148,13 @@ function over_bounce_threshold($user) {
     }
     $bouncecount = 0;
     $sendcount = 0;
-    if ($bounce = $DB->get_record('user_preferences', array ('userid' => $user->id, 'name' => 'email_bounce_count'))) {
+    if ($bounce = $DB->get_record('user_preferences', array('userid' => $user->id, 'name' => 'email_bounce_count'))) {
         $bouncecount = $bounce->value;
     }
     if ($send = $DB->get_record('user_preferences', array('userid' => $user->id, 'name' => 'email_send_count'))) {
         $sendcount = $send->value;
     }
-    return ($bouncecount >= $CFG->minbounces && $bouncecount/$sendcount >= $CFG->bounceratio);
+    return ($bouncecount >= $CFG->minbounces && $bouncecount / $sendcount >= $CFG->bounceratio);
 }
 
 /**
@@ -3188,7 +3164,7 @@ function over_bounce_threshold($user) {
  * @param bool $reset will reset the count to 0
  * @return void
  */
-function set_send_count($user, $reset=false) {
+function set_send_count($user, $reset = false) {
     global $DB;
 
     if (empty($user->id)) {
@@ -3197,13 +3173,13 @@ function set_send_count($user, $reset=false) {
     }
 
     if ($pref = $DB->get_record('user_preferences', array('userid' => $user->id, 'name' => 'email_send_count'))) {
-        $pref->value = (!empty($reset)) ? 0 : $pref->value+1;
+        $pref->value = (!empty($reset)) ? 0 : $pref->value + 1;
         $DB->update_record('user_preferences', $pref);
     } else if (!empty($reset)) {
         // If it's not there and we're resetting, don't bother. Make a new one.
         $pref = new stdClass();
-        $pref->name   = 'email_send_count';
-        $pref->value  = 1;
+        $pref->name = 'email_send_count';
+        $pref->value = 1;
         $pref->userid = $user->id;
         $DB->insert_record('user_preferences', $pref, false);
     }
@@ -3215,17 +3191,17 @@ function set_send_count($user, $reset=false) {
  * @param stdClass $user object containing an id
  * @param bool $reset will reset the count to 0
  */
-function set_bounce_count($user, $reset=false) {
+function set_bounce_count($user, $reset = false) {
     global $DB;
 
     if ($pref = $DB->get_record('user_preferences', array('userid' => $user->id, 'name' => 'email_bounce_count'))) {
-        $pref->value = (!empty($reset)) ? 0 : $pref->value+1;
+        $pref->value = (!empty($reset)) ? 0 : $pref->value + 1;
         $DB->update_record('user_preferences', $pref);
     } else if (!empty($reset)) {
         // If it's not there and we're resetting, don't bother. Make a new one.
         $pref = new stdClass();
-        $pref->name   = 'email_bounce_count';
-        $pref->value  = 1;
+        $pref->name = 'email_bounce_count';
+        $pref->value = 1;
         $pref->userid = $user->id;
         $DB->insert_record('user_preferences', $pref, false);
     }
@@ -3257,10 +3233,10 @@ function ismoving($courseid) {
  * @param bool $override If true then the name will be firstname followed by lastname rather than adhering to fullnamedisplay.
  * @return string
  */
-function fullname($user, $override=false) {
+function fullname($user, $override = false) {
     global $CFG, $SESSION;
 
-    if (!isset($user->firstname) and !isset($user->lastname)) {
+    if (!isset($user->firstname) and ! isset($user->lastname)) {
         return '';
     }
 
@@ -3324,7 +3300,7 @@ function fullname($user, $override=false) {
     foreach ($requirednames as $altname) {
         if (isset($user->$altname)) {
             // Using empty() on the below if statement causes breakages.
-            if ((string)$user->$altname == '') {
+            if ((string) $user->$altname == '') {
                 $displayname = str_replace($altname, 'EMPTY', $displayname);
             } else {
                 $displayname = str_replace($altname, $user->$altname, $displayname);
@@ -3371,11 +3347,11 @@ function get_all_user_name_fields($returnsql = false, $tableprefix = null, $pref
     // This array is provided in this order because when called by fullname() (above) if firstname is before
     // firstnamephonetic str_replace() will change the wrong placeholder.
     $alternatenames = array('firstnamephonetic' => 'firstnamephonetic',
-                            'lastnamephonetic' => 'lastnamephonetic',
-                            'middlename' => 'middlename',
-                            'alternatename' => 'alternatename',
-                            'firstname' => 'firstname',
-                            'lastname' => 'lastname');
+        'lastnamephonetic' => 'lastnamephonetic',
+        'middlename' => 'middlename',
+        'alternatename' => 'alternatename',
+        'firstname' => 'firstname',
+        'lastname' => 'lastname');
 
     // Let's add a prefix to the array of user name fields if provided.
     if ($prefix) {
@@ -3499,7 +3475,7 @@ function get_extra_user_fields($context, $already = array()) {
         // Explode gives wrong result with empty string.
         $extra = array();
     } else {
-        $extra =  explode(',', $CFG->showuseridentity);
+        $extra = explode(',', $CFG->showuseridentity);
     }
     $renumber = false;
     foreach ($extra as $key => $field) {
@@ -3527,7 +3503,7 @@ function get_extra_user_fields($context, $already = array()) {
  * @param array $already Array of fields that we're going to include anyway so don't list them (default none)
  * @return string Partial SQL select clause, beginning with comma, for example ',u.idnumber,u.department' unless it is blank
  */
-function get_extra_user_fields_sql($context, $alias='', $prefix='', $already = array()) {
+function get_extra_user_fields_sql($context, $alias = '', $prefix = '', $already = array()) {
     $fields = get_extra_user_fields($context, $already);
     $result = '';
     // Add punctuation for alias.
@@ -3552,26 +3528,26 @@ function get_user_field_name($field) {
     // Some fields have language strings which are not the same as field name.
     switch ($field) {
         case 'phone1' : {
-            return get_string('phone');
-        }
+                return get_string('phone');
+            }
         case 'url' : {
-            return get_string('webpage');
-        }
+                return get_string('webpage');
+            }
         case 'icq' : {
-            return get_string('icqnumber');
-        }
+                return get_string('icqnumber');
+            }
         case 'skype' : {
-            return get_string('skypeid');
-        }
+                return get_string('skypeid');
+            }
         case 'aim' : {
-            return get_string('aimid');
-        }
+                return get_string('aimid');
+            }
         case 'yahoo' : {
-            return get_string('yahooid');
-        }
+                return get_string('yahooid');
+            }
         case 'msn' : {
-            return get_string('msnid');
-        }
+                return get_string('msnid');
+            }
     }
     // Otherwise just use the same lang string.
     return get_string($field);
@@ -3618,7 +3594,7 @@ function get_auth_plugin($auth) {
     global $CFG;
 
     // Check the plugin exists first.
-    if (! exists_auth_plugin($auth)) {
+    if (!exists_auth_plugin($auth)) {
         print_error('authpluginnotfound', 'debug', '', $auth);
     }
 
@@ -3634,7 +3610,7 @@ function get_auth_plugin($auth) {
  * @param bool $fix fix $CFG->auth if needed
  * @return array
  */
-function get_enabled_auth_plugins($fix=false) {
+function get_enabled_auth_plugins($fix = false) {
     global $CFG;
 
     $default = array('manual', 'nologin');
@@ -3715,8 +3691,8 @@ function get_user_fieldnames() {
  */
 function create_user_record($username, $password, $auth = 'manual') {
     global $CFG, $DB;
-    require_once($CFG->dirroot.'/user/profile/lib.php');
-    require_once($CFG->dirroot.'/user/lib.php');
+    require_once($CFG->dirroot . '/user/profile/lib.php');
+    require_once($CFG->dirroot . '/user/lib.php');
 
     // Just in case check text case.
     $username = trim(core_text::strtolower($username));
@@ -3764,7 +3740,7 @@ function create_user_record($username, $password, $auth = 'manual') {
     profile_save_data($newuser);
 
     $user = get_complete_user_data('id', $newuser->id);
-    if (!empty($CFG->{'auth_'.$newuser->auth.'_forcechangepassword'})) {
+    if (!empty($CFG->{'auth_' . $newuser->auth . '_forcechangepassword'})) {
         set_user_preference('auth_forcepasswordchange', 1, $user);
     }
     // Set the password.
@@ -3799,8 +3775,8 @@ function update_user_record($username) {
  */
 function update_user_record_by_id($id) {
     global $DB, $CFG;
-    require_once($CFG->dirroot."/user/profile/lib.php");
-    require_once($CFG->dirroot.'/user/lib.php');
+    require_once($CFG->dirroot . "/user/profile/lib.php");
+    require_once($CFG->dirroot . '/user/lib.php');
 
     $params = array('mnethostid' => $CFG->mnet_localhost_id, 'id' => $id, 'deleted' => 0);
     $oldinfo = $DB->get_record('user', $params, '*', MUST_EXIST);
@@ -3836,8 +3812,8 @@ function update_user_record_by_id($id) {
                 // stand in until LDAP is giving a value for this field.
                 if (!(empty($value) && $lockval === 'unlockedifempty')) {
                     if ($iscustom || (in_array($key, $userauth->userfields) &&
-                            ((string)$oldinfo->$key !== (string)$value))) {
-                        $newuser[$key] = (string)$value;
+                            ((string) $oldinfo->$key !== (string) $value))) {
+                        $newuser[$key] = (string) $value;
                     }
                 }
             }
@@ -3867,20 +3843,20 @@ function update_user_record_by_id($id) {
 function truncate_userinfo(array $info) {
     // Define the limits.
     $limit = array(
-        'username'    => 100,
-        'idnumber'    => 255,
-        'firstname'   => 100,
-        'lastname'    => 100,
-        'email'       => 100,
-        'icq'         =>  15,
-        'phone1'      =>  20,
-        'phone2'      =>  20,
+        'username' => 100,
+        'idnumber' => 255,
+        'firstname' => 100,
+        'lastname' => 100,
+        'email' => 100,
+        'icq' => 15,
+        'phone1' => 20,
+        'phone2' => 20,
         'institution' => 255,
-        'department'  => 255,
-        'address'     => 255,
-        'city'        => 120,
-        'country'     =>   2,
-        'url'         => 255,
+        'department' => 255,
+        'address' => 255,
+        'city' => 120,
+        'country' => 2,
+        'url' => 255,
     );
 
     // Apply where needed.
@@ -3905,14 +3881,14 @@ function truncate_userinfo(array $info) {
  */
 function delete_user(stdClass $user) {
     global $CFG, $DB;
-    require_once($CFG->libdir.'/grouplib.php');
-    require_once($CFG->libdir.'/gradelib.php');
-    require_once($CFG->dirroot.'/message/lib.php');
-    require_once($CFG->dirroot.'/tag/lib.php');
-    require_once($CFG->dirroot.'/user/lib.php');
+    require_once($CFG->libdir . '/grouplib.php');
+    require_once($CFG->libdir . '/gradelib.php');
+    require_once($CFG->dirroot . '/message/lib.php');
+    require_once($CFG->dirroot . '/tag/lib.php');
+    require_once($CFG->dirroot . '/user/lib.php');
 
     // Make sure nobody sends bogus record type as parameter.
-    if (!property_exists($user, 'id') or !property_exists($user, 'username')) {
+    if (!property_exists($user, 'id') or ! property_exists($user, 'username')) {
         throw new coding_exception('Invalid $user parameter in delete_user() detected');
     }
 
@@ -3949,7 +3925,6 @@ function delete_user(stdClass $user) {
     message_move_userfrom_unread2read($user->id);
 
     // TODO: remove from cohorts using standard API here.
-
     // Remove user tags.
     tag_set('user', $user->id, array(), 'core', $usercontext->id);
 
@@ -3961,7 +3936,6 @@ function delete_user(stdClass $user) {
     role_unassign_all(array('userid' => $user->id));
 
     // Now do a brute force cleanup.
-
     // Remove from all cohorts.
     $DB->delete_records('cohort_members', array('userid' => $user->id));
 
@@ -4008,12 +3982,12 @@ function delete_user(stdClass $user) {
 
     // Mark internal user record as "deleted".
     $updateuser = new stdClass();
-    $updateuser->id           = $user->id;
-    $updateuser->deleted      = 1;
-    $updateuser->username     = $delname;            // Remember it just in case.
-    $updateuser->email        = md5($user->username);// Store hash of username, useful importing/restoring users.
-    $updateuser->idnumber     = '';                  // Clear this field to free it up.
-    $updateuser->picture      = 0;
+    $updateuser->id = $user->id;
+    $updateuser->deleted = 1;
+    $updateuser->username = $delname;            // Remember it just in case.
+    $updateuser->email = md5($user->username); // Store hash of username, useful importing/restoring users.
+    $updateuser->idnumber = '';                  // Clear this field to free it up.
+    $updateuser->picture = 0;
     $updateuser->timemodified = time();
 
     // Don't trigger update event, as user is being deleted.
@@ -4025,19 +3999,19 @@ function delete_user(stdClass $user) {
     // Any plugin that needs to cleanup should register this event.
     // Trigger event.
     $event = \core\event\user_deleted::create(
-            array(
-                'objectid' => $user->id,
-                'relateduserid' => $user->id,
-                'context' => $usercontext,
-                'other' => array(
-                    'username' => $user->username,
-                    'email' => $user->email,
-                    'idnumber' => $user->idnumber,
-                    'picture' => $user->picture,
-                    'mnethostid' => $user->mnethostid
+                    array(
+                        'objectid' => $user->id,
+                        'relateduserid' => $user->id,
+                        'context' => $usercontext,
+                        'other' => array(
+                            'username' => $user->username,
+                            'email' => $user->email,
+                            'idnumber' => $user->idnumber,
+                            'picture' => $user->picture,
+                            'mnethostid' => $user->mnethostid
+                        )
                     )
-                )
-            );
+    );
     $event->add_record_snapshot('user', $olduser);
     $event->trigger();
 
@@ -4091,13 +4065,12 @@ function guest_user() {
  * @param int $failurereason login failure reason, can be used in renderers (it may disclose if account exists)
  * @return stdClass|false A {@link $USER} object or false if error
  */
-function authenticate_user_login($username, $password, $ignorelockout=false, &$failurereason=null) {
+function authenticate_user_login($username, $password, $ignorelockout = false, &$failurereason = null) {
     global $CFG, $DB;
     require_once("$CFG->libdir/authlib.php");
 
     if ($user = get_complete_user_data('username', $username, $CFG->mnet_localhost_id)) {
         // we have found the user
-
     } else if (!empty($CFG->authloginviaemail)) {
         if ($email = clean_param($username, PARAM_EMAIL)) {
             $select = "mnethostid = :mnethostid AND LOWER(email) = LOWER(:email) AND deleted = 0";
@@ -4123,34 +4096,33 @@ function authenticate_user_login($username, $password, $ignorelockout=false, &$f
 
             // Trigger login failed event.
             $event = \core\event\user_login_failed::create(array('userid' => $user->id,
-                    'other' => array('username' => $username, 'reason' => $failurereason)));
+                        'other' => array('username' => $username, 'reason' => $failurereason)));
             $event->trigger();
-            error_log('[client '.getremoteaddr()."]  $CFG->wwwroot  Suspended Login:  $username  ".$_SERVER['HTTP_USER_AGENT']);
+            error_log('[client ' . getremoteaddr() . "]  $CFG->wwwroot  Suspended Login:  $username  " . $_SERVER['HTTP_USER_AGENT']);
             return false;
         }
-        if ($auth=='nologin' or !is_enabled_auth($auth)) {
+        if ($auth == 'nologin' or ! is_enabled_auth($auth)) {
             // Legacy way to suspend user.
             $failurereason = AUTH_LOGIN_SUSPENDED;
 
             // Trigger login failed event.
             $event = \core\event\user_login_failed::create(array('userid' => $user->id,
-                    'other' => array('username' => $username, 'reason' => $failurereason)));
+                        'other' => array('username' => $username, 'reason' => $failurereason)));
             $event->trigger();
-            error_log('[client '.getremoteaddr()."]  $CFG->wwwroot  Disabled Login:  $username  ".$_SERVER['HTTP_USER_AGENT']);
+            error_log('[client ' . getremoteaddr() . "]  $CFG->wwwroot  Disabled Login:  $username  " . $_SERVER['HTTP_USER_AGENT']);
             return false;
         }
         $auths = array($auth);
-
     } else {
         // Check if there's a deleted record (cheaply), this should not happen because we mangle usernames in delete_user().
-        if ($DB->get_field('user', 'id', array('username' => $username, 'mnethostid' => $CFG->mnet_localhost_id,  'deleted' => 1))) {
+        if ($DB->get_field('user', 'id', array('username' => $username, 'mnethostid' => $CFG->mnet_localhost_id, 'deleted' => 1))) {
             $failurereason = AUTH_LOGIN_NOUSER;
 
             // Trigger login failed event.
             $event = \core\event\user_login_failed::create(array('other' => array('username' => $username,
-                    'reason' => $failurereason)));
+                            'reason' => $failurereason)));
             $event->trigger();
-            error_log('[client '.getremoteaddr()."]  $CFG->wwwroot  Deleted Login:  $username  ".$_SERVER['HTTP_USER_AGENT']);
+            error_log('[client ' . getremoteaddr() . "]  $CFG->wwwroot  Deleted Login:  $username  " . $_SERVER['HTTP_USER_AGENT']);
             return false;
         }
 
@@ -4170,10 +4142,10 @@ function authenticate_user_login($username, $password, $ignorelockout=false, &$f
 
             // Trigger login failed event.
             $event = \core\event\user_login_failed::create(array('userid' => $user->id,
-                    'other' => array('username' => $username, 'reason' => $failurereason)));
+                        'other' => array('username' => $username, 'reason' => $failurereason)));
             $event->trigger();
 
-            error_log('[client '.getremoteaddr()."]  $CFG->wwwroot  Login lockout:  $username  ".$_SERVER['HTTP_USER_AGENT']);
+            error_log('[client ' . getremoteaddr() . "]  $CFG->wwwroot  Login lockout:  $username  " . $_SERVER['HTTP_USER_AGENT']);
             return false;
         }
     } else {
@@ -4212,10 +4184,10 @@ function authenticate_user_login($username, $password, $ignorelockout=false, &$f
 
                 // Trigger login failed event.
                 $event = \core\event\user_login_failed::create(array('other' => array('username' => $username,
-                        'reason' => $failurereason)));
+                                'reason' => $failurereason)));
                 $event->trigger();
 
-                error_log('[client '.getremoteaddr()."]  $CFG->wwwroot  Unknown user, can not create new accounts:  $username  ".
+                error_log('[client ' . getremoteaddr() . "]  $CFG->wwwroot  Unknown user, can not create new accounts:  $username  " .
                         $_SERVER['HTTP_USER_AGENT']);
                 return false;
             } else {
@@ -4234,7 +4206,7 @@ function authenticate_user_login($username, $password, $ignorelockout=false, &$f
             $failurereason = AUTH_LOGIN_NOUSER;
             // Trigger login failed event.
             $event = \core\event\user_login_failed::create(array('other' => array('username' => $username,
-                    'reason' => $failurereason)));
+                            'reason' => $failurereason)));
             $event->trigger();
             return false;
         }
@@ -4244,9 +4216,9 @@ function authenticate_user_login($username, $password, $ignorelockout=false, &$f
             $failurereason = AUTH_LOGIN_SUSPENDED;
             // Trigger login failed event.
             $event = \core\event\user_login_failed::create(array('userid' => $user->id,
-                    'other' => array('username' => $username, 'reason' => $failurereason)));
+                        'other' => array('username' => $username, 'reason' => $failurereason)));
             $event->trigger();
-            error_log('[client '.getremoteaddr()."]  $CFG->wwwroot  Suspended Login:  $username  ".$_SERVER['HTTP_USER_AGENT']);
+            error_log('[client ' . getremoteaddr() . "]  $CFG->wwwroot  Suspended Login:  $username  " . $_SERVER['HTTP_USER_AGENT']);
             return false;
         }
 
@@ -4257,7 +4229,7 @@ function authenticate_user_login($username, $password, $ignorelockout=false, &$f
 
     // Failed if all the plugins have failed.
     if (debugging('', DEBUG_ALL)) {
-        error_log('[client '.getremoteaddr()."]  $CFG->wwwroot  Failed Login:  $username  ".$_SERVER['HTTP_USER_AGENT']);
+        error_log('[client ' . getremoteaddr() . "]  $CFG->wwwroot  Failed Login:  $username  " . $_SERVER['HTTP_USER_AGENT']);
     }
 
     if ($user->id) {
@@ -4265,13 +4237,13 @@ function authenticate_user_login($username, $password, $ignorelockout=false, &$f
         $failurereason = AUTH_LOGIN_FAILED;
         // Trigger login failed event.
         $event = \core\event\user_login_failed::create(array('userid' => $user->id,
-                'other' => array('username' => $username, 'reason' => $failurereason)));
+                    'other' => array('username' => $username, 'reason' => $failurereason)));
         $event->trigger();
     } else {
         $failurereason = AUTH_LOGIN_NOUSER;
         // Trigger login failed event.
         $event = \core\event\user_login_failed::create(array('other' => array('username' => $username,
-                'reason' => $failurereason)));
+                        'reason' => $failurereason)));
         $event->trigger();
     }
 
@@ -4307,11 +4279,11 @@ function complete_user_login($user) {
 
     // Trigger login event.
     $event = \core\event\user_loggedin::create(
-        array(
-            'userid' => $USER->id,
-            'objectid' => $USER->id,
-            'other' => array('username' => $USER->username),
-        )
+                    array(
+                        'userid' => $USER->id,
+                        'objectid' => $USER->id,
+                        'other' => array('username' => $USER->username),
+                    )
     );
     $event->trigger();
 
@@ -4334,7 +4306,7 @@ function complete_user_login($user) {
             if ($changeurl = $userauth->change_password_url()) {
                 redirect($changeurl);
             } else {
-                redirect($CFG->httpswwwroot.'/login/change_password.php');
+                redirect($CFG->httpswwwroot . '/login/change_password.php');
             }
         } else {
             print_error('nopasswordchangeforced', 'auth');
@@ -4364,7 +4336,7 @@ function password_is_legacy_hash($password) {
  */
 function validate_internal_user_password($user, $password) {
     global $CFG;
-    require_once($CFG->libdir.'/password_compat/lib/password.php');
+    require_once($CFG->libdir . '/password_compat/lib/password.php');
 
     if ($user->password === AUTH_PASSWORD_NOT_CACHED) {
         // Internal password is not used at all, it can not validate.
@@ -4382,19 +4354,18 @@ function validate_internal_user_password($user, $password) {
     $sitesalt = isset($CFG->passwordsaltmain) ? $CFG->passwordsaltmain : '';
     $validated = false;
 
-    if ($user->password === md5($password.$sitesalt)
+    if ($user->password === md5($password . $sitesalt)
             or $user->password === md5($password)
-            or $user->password === md5(addslashes($password).$sitesalt)
+            or $user->password === md5(addslashes($password) . $sitesalt)
             or $user->password === md5(addslashes($password))) {
         // Note: we are intentionally using the addslashes() here because we
         //       need to accept old password hashes of passwords with magic quotes.
         $validated = true;
-
     } else {
-        for ($i=1; $i<=20; $i++) { // 20 alternative salts should be enough, right?
-            $alt = 'passwordsaltalt'.$i;
+        for ($i = 1; $i <= 20; $i++) { // 20 alternative salts should be enough, right?
+            $alt = 'passwordsaltalt' . $i;
             if (!empty($CFG->$alt)) {
-                if ($user->password === md5($password.$CFG->$alt) or $user->password === md5(addslashes($password).$CFG->$alt)) {
+                if ($user->password === md5($password . $CFG->$alt) or $user->password === md5(addslashes($password) . $CFG->$alt)) {
                     $validated = true;
                     break;
                 }
@@ -4425,7 +4396,7 @@ function validate_internal_user_password($user, $password) {
  */
 function hash_internal_user_password($password, $fasthash = false) {
     global $CFG;
-    require_once($CFG->libdir.'/password_compat/lib/password.php');
+    require_once($CFG->libdir . '/password_compat/lib/password.php');
 
     // Set the cost factor to 4 for fast hashing, otherwise use default cost.
     $options = ($fasthash) ? array('cost' => 4) : array();
@@ -4461,12 +4432,11 @@ function hash_internal_user_password($password, $fasthash = false) {
  */
 function update_internal_user_password($user, $password, $fasthash = false) {
     global $CFG, $DB;
-    require_once($CFG->libdir.'/password_compat/lib/password.php');
+    require_once($CFG->libdir . '/password_compat/lib/password.php');
 
     // Figure out what the hashed password should be.
     if (!isset($user->auth)) {
-        debugging('User record in update_internal_user_password() must include field auth',
-                DEBUG_DEVELOPER);
+        debugging('User record in update_internal_user_password() must include field auth', DEBUG_DEVELOPER);
         $user->auth = $DB->get_field('user', 'auth', array('id' => $user->id));
     }
     $authplugin = get_auth_plugin($user->auth);
@@ -4481,7 +4451,6 @@ function update_internal_user_password($user, $password, $fasthash = false) {
     if ($hashedpassword === AUTH_PASSWORD_NOT_CACHED) {
         // Password is not cached, update it if not set to AUTH_PASSWORD_NOT_CACHED.
         $passwordchanged = ($user->password !== $hashedpassword);
-
     } else if (isset($user->password)) {
         // If verification fails then it means the password has changed.
         $passwordchanged = !password_verify($password, $user->password);
@@ -4493,7 +4462,7 @@ function update_internal_user_password($user, $password, $fasthash = false) {
     }
 
     if ($passwordchanged || $algorithmchanged) {
-        $DB->set_field('user', 'password',  $hashedpassword, array('id' => $user->id));
+        $DB->set_field('user', 'password', $hashedpassword, array('id' => $user->id));
         $user->password = $hashedpassword;
 
         // Trigger event.
@@ -4539,17 +4508,16 @@ function get_complete_user_data($field, $value, $mnethostid = null) {
     }
 
     // Get all the basic user data.
-    if (! $user = $DB->get_record_select('user', $constraints, $params)) {
+    if (!$user = $DB->get_record_select('user', $constraints, $params)) {
         return false;
     }
 
     // Get various settings and preferences.
-
     // Preload preference cache.
     check_user_preferences_loaded($user);
 
     // Load course enrolment related stuff.
-    $user->lastcourseaccess    = array(); // During last session.
+    $user->lastcourseaccess = array(); // During last session.
     $user->currentcourseaccess = array(); // During current session.
     if ($lastaccesses = $DB->get_records('user_lastaccess', array('userid' => $user->id))) {
         foreach ($lastaccesses as $lastaccess) {
@@ -4577,7 +4545,7 @@ function get_complete_user_data($field, $value, $mnethostid = null) {
     // Add the custom profile fields to the user record.
     $user->profile = array();
     if (!isguestuser($user)) {
-        require_once($CFG->dirroot.'/user/profile/lib.php');
+        require_once($CFG->dirroot . '/user/profile/lib.php');
         profile_load_custom_fields($user);
     }
 
@@ -4613,26 +4581,22 @@ function check_password_policy($password, &$errmsg) {
 
     $errmsg = '';
     if (core_text::strlen($password) < $CFG->minpasswordlength) {
-        $errmsg .= '<div>'. get_string('errorminpasswordlength', 'auth', $CFG->minpasswordlength) .'</div>';
-
+        $errmsg .= '<div>' . get_string('errorminpasswordlength', 'auth', $CFG->minpasswordlength) . '</div>';
     }
     if (preg_match_all('/[[:digit:]]/u', $password, $matches) < $CFG->minpassworddigits) {
-        $errmsg .= '<div>'. get_string('errorminpassworddigits', 'auth', $CFG->minpassworddigits) .'</div>';
-
+        $errmsg .= '<div>' . get_string('errorminpassworddigits', 'auth', $CFG->minpassworddigits) . '</div>';
     }
     if (preg_match_all('/[[:lower:]]/u', $password, $matches) < $CFG->minpasswordlower) {
-        $errmsg .= '<div>'. get_string('errorminpasswordlower', 'auth', $CFG->minpasswordlower) .'</div>';
-
+        $errmsg .= '<div>' . get_string('errorminpasswordlower', 'auth', $CFG->minpasswordlower) . '</div>';
     }
     if (preg_match_all('/[[:upper:]]/u', $password, $matches) < $CFG->minpasswordupper) {
-        $errmsg .= '<div>'. get_string('errorminpasswordupper', 'auth', $CFG->minpasswordupper) .'</div>';
-
+        $errmsg .= '<div>' . get_string('errorminpasswordupper', 'auth', $CFG->minpasswordupper) . '</div>';
     }
     if (preg_match_all('/[^[:upper:][:lower:][:digit:]]/u', $password, $matches) < $CFG->minpasswordnonalphanum) {
-        $errmsg .= '<div>'. get_string('errorminpasswordnonalphanum', 'auth', $CFG->minpasswordnonalphanum) .'</div>';
+        $errmsg .= '<div>' . get_string('errorminpasswordnonalphanum', 'auth', $CFG->minpasswordnonalphanum) . '</div>';
     }
     if (!check_consecutive_identical_characters($password, $CFG->maxconsecutiveidentchars)) {
-        $errmsg .= '<div>'. get_string('errormaxconsecutiveidentchars', 'auth', $CFG->maxconsecutiveidentchars) .'</div>';
+        $errmsg .= '<div>' . get_string('errormaxconsecutiveidentchars', 'auth', $CFG->maxconsecutiveidentchars) . '</div>';
     }
 
     if ($errmsg == '') {
@@ -4641,7 +4605,6 @@ function check_password_policy($password, &$errmsg) {
         return false;
     }
 }
-
 
 /**
  * When logging in, this function is run to set certain preferences for the current SESSION.
@@ -4655,7 +4618,6 @@ function set_login_session_preferences() {
     unset($SESSION->forcelang);
     unset($SESSION->load_navigation_admin);
 }
-
 
 /**
  * Delete a course, including all related data from the database, and any associated files.
@@ -4671,7 +4633,7 @@ function delete_course($courseorid, $showfeedback = true) {
 
     if (is_object($courseorid)) {
         $courseid = $courseorid->id;
-        $course   = $courseorid;
+        $course = $courseorid;
     } else {
         $courseid = $courseorid;
         if (!$course = $DB->get_record('course', array('id' => $courseid))) {
@@ -4701,13 +4663,13 @@ function delete_course($courseorid, $showfeedback = true) {
 
     // Trigger a course deleted event.
     $event = \core\event\course_deleted::create(array(
-        'objectid' => $course->id,
-        'context' => $context,
-        'other' => array(
-            'shortname' => $course->shortname,
-            'fullname' => $course->fullname,
-            'idnumber' => $course->idnumber
-            )
+                'objectid' => $course->id,
+                'context' => $context,
+                'other' => array(
+                    'shortname' => $course->shortname,
+                    'fullname' => $course->fullname,
+                    'idnumber' => $course->idnumber
+                )
     ));
     $event->add_record_snapshot('course', $course);
     $event->trigger();
@@ -4737,24 +4699,24 @@ function delete_course($courseorid, $showfeedback = true) {
 function remove_course_contents($courseid, $showfeedback = true, array $options = null) {
     global $CFG, $DB, $OUTPUT;
 
-    require_once($CFG->libdir.'/badgeslib.php');
-    require_once($CFG->libdir.'/completionlib.php');
-    require_once($CFG->libdir.'/questionlib.php');
-    require_once($CFG->libdir.'/gradelib.php');
-    require_once($CFG->dirroot.'/group/lib.php');
-    require_once($CFG->dirroot.'/tag/coursetagslib.php');
-    require_once($CFG->dirroot.'/comment/lib.php');
-    require_once($CFG->dirroot.'/rating/lib.php');
-    require_once($CFG->dirroot.'/notes/lib.php');
+    require_once($CFG->libdir . '/badgeslib.php');
+    require_once($CFG->libdir . '/completionlib.php');
+    require_once($CFG->libdir . '/questionlib.php');
+    require_once($CFG->libdir . '/gradelib.php');
+    require_once($CFG->dirroot . '/group/lib.php');
+    require_once($CFG->dirroot . '/tag/coursetagslib.php');
+    require_once($CFG->dirroot . '/comment/lib.php');
+    require_once($CFG->dirroot . '/rating/lib.php');
+    require_once($CFG->dirroot . '/notes/lib.php');
 
     // Handle course badges.
     badges_handle_course_deletion($courseid);
 
     // NOTE: these concatenated strings are suboptimal, but it is just extra info...
-    $strdeleted = get_string('deleted').' - ';
+    $strdeleted = get_string('deleted') . ' - ';
 
     // Some crazy wishlist of stuff we should skip during purging of course content.
-    $options = (array)$options;
+    $options = (array) $options;
 
     $course = $DB->get_record('course', array('id' => $courseid), '*', MUST_EXIST);
     $coursecontext = context_course::instance($courseid);
@@ -4764,7 +4726,7 @@ function remove_course_contents($courseid, $showfeedback = true, array $options 
     $cc = new completion_info($course);
     $cc->clear_criteria();
     if ($showfeedback) {
-        echo $OUTPUT->notification($strdeleted.get_string('completion', 'completion'), 'notifysuccess');
+        echo $OUTPUT->notification($strdeleted . get_string('completion', 'completion'), 'notifysuccess');
     }
 
     // Remove all data from gradebook - this needs to be done before course modules
@@ -4782,7 +4744,7 @@ function remove_course_contents($courseid, $showfeedback = true, array $options 
     unset($childcontexts);
     blocks_delete_all_for_context($coursecontext->id);
     if ($showfeedback) {
-        echo $OUTPUT->notification($strdeleted.get_string('type_block_plural', 'plugin'), 'notifysuccess');
+        echo $OUTPUT->notification($strdeleted . get_string('type_block_plural', 'plugin'), 'notifysuccess');
     }
 
     // Delete every instance of every module,
@@ -4794,14 +4756,14 @@ function remove_course_contents($courseid, $showfeedback = true, array $options 
         }
         if ($module = $DB->get_record('modules', array('name' => $modname))) {
             include_once("$moddir/lib.php");                 // Shows php warning only if plugin defective.
-            $moddelete = $modname .'_delete_instance';       // Delete everything connected to an instance.
-            $moddeletecourse = $modname .'_delete_course';   // Delete other stray stuff (uncommon).
+            $moddelete = $modname . '_delete_instance';       // Delete everything connected to an instance.
+            $moddeletecourse = $modname . '_delete_course';   // Delete other stray stuff (uncommon).
 
             if ($instances = $DB->get_records($modname, array('course' => $course->id))) {
                 foreach ($instances as $instance) {
                     if ($cm = get_coursemodule_from_instance($modname, $instance->id, $course->id)) {
                         // Delete activity context questions and question categories.
-                        question_delete_activity($cm,  $showfeedback);
+                        question_delete_activity($cm, $showfeedback);
                     }
                     if (function_exists($moddelete)) {
                         // This purges all module data in related tables, extra user prefs, settings, etc.
@@ -4824,7 +4786,7 @@ function remove_course_contents($courseid, $showfeedback = true, array $options 
                 $moddeletecourse($course, $showfeedback);
             }
             if ($instances and $showfeedback) {
-                echo $OUTPUT->notification($strdeleted.get_string('pluginname', $modname), 'notifysuccess');
+                echo $OUTPUT->notification($strdeleted . get_string('pluginname', $modname), 'notifysuccess');
             }
         } else {
             // Ooops, this module is not properly installed, force-delete it in the next block.
@@ -4832,13 +4794,10 @@ function remove_course_contents($courseid, $showfeedback = true, array $options 
     }
 
     // We have tried to delete everything the nice way - now let's force-delete any remaining module data.
-
     // Remove all data from availability and completion tables that is associated
     // with course-modules belonging to this course. Note this is done even if the
     // features are not enabled now, in case they were enabled previously.
-    $DB->delete_records_select('course_modules_completion',
-           'coursemoduleid IN (SELECT id from {course_modules} WHERE course=?)',
-           array($courseid));
+    $DB->delete_records_select('course_modules_completion', 'coursemoduleid IN (SELECT id from {course_modules} WHERE course=?)', array($courseid));
 
     // Remove course-module data.
     $cms = $DB->get_records('course_modules', array('course' => $course->id));
@@ -4855,7 +4814,7 @@ function remove_course_contents($courseid, $showfeedback = true, array $options 
     }
 
     if ($showfeedback) {
-        echo $OUTPUT->notification($strdeleted.get_string('type_mod_plural', 'plugin'), 'notifysuccess');
+        echo $OUTPUT->notification($strdeleted . get_string('type_mod_plural', 'plugin'), 'notifysuccess');
     }
 
     // Cleanup the rest of plugins.
@@ -4866,14 +4825,14 @@ function remove_course_contents($courseid, $showfeedback = true, array $options 
             $pluginfunction($course->id, $showfeedback);
         }
         if ($showfeedback) {
-            echo $OUTPUT->notification($strdeleted.get_string('type_'.$type.'_plural', 'plugin'), 'notifysuccess');
+            echo $OUTPUT->notification($strdeleted . get_string('type_' . $type . '_plural', 'plugin'), 'notifysuccess');
         }
     }
 
     // Delete questions and question categories.
     question_delete_course($course, $showfeedback);
     if ($showfeedback) {
-        echo $OUTPUT->notification($strdeleted.get_string('questions', 'question'), 'notifysuccess');
+        echo $OUTPUT->notification($strdeleted . get_string('questions', 'question'), 'notifysuccess');
     }
 
     // Make sure there are no subcontexts left - all valid blocks and modules should be already gone.
@@ -4889,7 +4848,7 @@ function remove_course_contents($courseid, $showfeedback = true, array $options 
         role_unassign_all(array('contextid' => $coursecontext->id, 'component' => ''), true);
         enrol_course_delete($course);
         if ($showfeedback) {
-            echo $OUTPUT->notification($strdeleted.get_string('type_enrol_plural', 'plugin'), 'notifysuccess');
+            echo $OUTPUT->notification($strdeleted . get_string('type_enrol_plural', 'plugin'), 'notifysuccess');
         }
     }
 
@@ -4925,7 +4884,7 @@ function remove_course_contents($courseid, $showfeedback = true, array $options 
     // This array stores the tables that need to be cleared, as
     // table_name => column_name that contains the course id.
     $tablestoclear = array(
-        'backup_courses' => 'courseid',  // Scheduled backup stuff.
+        'backup_courses' => 'courseid', // Scheduled backup stuff.
         'user_lastaccess' => 'courseid', // User access info.
     );
     foreach ($tablestoclear as $table => $col) {
@@ -4937,10 +4896,10 @@ function remove_course_contents($courseid, $showfeedback = true, array $options 
 
     // Cleanup course record - remove links to deleted stuff.
     $oldcourse = new stdClass();
-    $oldcourse->id               = $course->id;
-    $oldcourse->summary          = '';
-    $oldcourse->cacherev         = 0;
-    $oldcourse->legacyfiles      = 0;
+    $oldcourse->id = $course->id;
+    $oldcourse->summary = '';
+    $oldcourse->cacherev = 0;
+    $oldcourse->legacyfiles = 0;
     $oldcourse->enablecompletion = 0;
     if (!empty($options['keep_groups_and_groupings'])) {
         $oldcourse->defaultgroupingid = 0;
@@ -4952,7 +4911,6 @@ function remove_course_contents($courseid, $showfeedback = true, array $options 
 
     // Delete legacy, section and any other course files.
     $fs->delete_area_files($coursecontext->id, 'course'); // Files from summary and section.
-
     // Delete all remaining stuff linked to context such as files, comments, ratings, etc.
     if (empty($options['keep_roles_and_enrolments']) and empty($options['keep_groups_and_groupings'])) {
         // Easy, do not delete the context itself...
@@ -4965,7 +4923,7 @@ function remove_course_contents($courseid, $showfeedback = true, array $options 
 
     // Delete legacy files - just in case some files are still left there after conversion to new file api,
     // also some non-standard unsupported plugins may try to store something there.
-    fulldelete($CFG->dataroot.'/'.$course->id);
+    fulldelete($CFG->dataroot . '/' . $course->id);
 
     // Delete from cache to reduce the cache size especially makes sense in case of bulk course deletion.
     $cachemodinfo = cache::make('core', 'coursemodinfo');
@@ -4973,11 +4931,11 @@ function remove_course_contents($courseid, $showfeedback = true, array $options 
 
     // Trigger a course content deleted event.
     $event = \core\event\course_content_deleted::create(array(
-        'objectid' => $course->id,
-        'context' => $coursecontext,
-        'other' => array('shortname' => $course->shortname,
-                         'fullname' => $course->fullname,
-                         'options' => $options) // Passing this for legacy reasons.
+                'objectid' => $course->id,
+                'context' => $coursecontext,
+                'other' => array('shortname' => $course->shortname,
+                    'fullname' => $course->fullname,
+                    'options' => $options) // Passing this for legacy reasons.
     ));
     $event->add_record_snapshot('course', $course);
     $event->trigger();
@@ -4997,12 +4955,12 @@ function remove_course_contents($courseid, $showfeedback = true, array $options 
  */
 function shift_course_mod_dates($modname, $fields, $timeshift, $courseid, $modid = 0) {
     global $CFG, $DB;
-    include_once($CFG->dirroot.'/mod/'.$modname.'/lib.php');
+    include_once($CFG->dirroot . '/mod/' . $modname . '/lib.php');
 
     $return = true;
     $params = array($timeshift, $courseid);
     foreach ($fields as $field) {
-        $updatesql = "UPDATE {".$modname."}
+        $updatesql = "UPDATE {" . $modname . "}
                           SET $field = $field + ?
                         WHERE course=? AND $field<>0";
         if ($modid) {
@@ -5012,7 +4970,7 @@ function shift_course_mod_dates($modname, $fields, $timeshift, $courseid, $modid
         $return = $DB->execute($updatesql, $params) && $return;
     }
 
-    $refreshfunction = $modname.'_refresh_events';
+    $refreshfunction = $modname . '_refresh_events';
     if (function_exists($refreshfunction)) {
         $refreshfunction($courseid);
     }
@@ -5029,9 +4987,9 @@ function shift_course_mod_dates($modname, $fields, $timeshift, $courseid, $modid
  */
 function reset_course_userdata($data) {
     global $CFG, $DB;
-    require_once($CFG->libdir.'/gradelib.php');
-    require_once($CFG->libdir.'/completionlib.php');
-    require_once($CFG->dirroot.'/group/lib.php');
+    require_once($CFG->libdir . '/gradelib.php');
+    require_once($CFG->libdir . '/completionlib.php');
+    require_once($CFG->dirroot . '/group/lib.php');
 
     $data->courseid = $data->id;
     $context = context_course::instance($data->courseid);
@@ -5079,13 +5037,13 @@ function reset_course_userdata($data) {
     }
 
     if (!empty($data->reset_notes)) {
-        require_once($CFG->dirroot.'/notes/lib.php');
+        require_once($CFG->dirroot . '/notes/lib.php');
         note_delete_all($data->courseid);
         $status[] = array('component' => $componentstr, 'item' => get_string('deletenotes', 'notes'), 'error' => false);
     }
 
     if (!empty($data->delete_blog_associations)) {
-        require_once($CFG->dirroot.'/blog/lib.php');
+        require_once($CFG->dirroot . '/blog/lib.php');
         blog_remove_associations_for_course($data->courseid);
         $status[] = array('component' => $componentstr, 'item' => get_string('deleteblogassociations', 'blog'), 'error' => false);
     }
@@ -5096,7 +5054,7 @@ function reset_course_userdata($data) {
         $cc = new completion_info($course);
         $cc->delete_all_completion_data();
         $status[] = array('component' => $componentstr,
-                'item' => get_string('deletecompletiondata', 'completion'), 'error' => false);
+            'item' => get_string('deletecompletiondata', 'completion'), 'error' => false);
     }
 
     $componentstr = get_string('roles');
@@ -5142,7 +5100,6 @@ function reset_course_userdata($data) {
                           JOIN {context} c ON (c.contextlevel = :courselevel AND c.instanceid = e.courseid)
                           JOIN {role_assignments} ra ON (ra.contextid = c.id AND ra.roleid = :roleid AND ra.userid = ue.userid)";
                 $params = array('courseid' => $data->courseid, 'roleid' => $withroleid, 'courselevel' => CONTEXT_COURSE);
-
             } else {
                 // Without any role assigned at course context.
                 $sql = "SELECT ue.*
@@ -5161,7 +5118,7 @@ function reset_course_userdata($data) {
                 }
                 $instance = $instances[$ue->enrolid];
                 $plugin = $plugins[$instance->enrol];
-                if (!$plugin->allow_unenrol($instance) and !$plugin->allow_unenrol_user($instance, $ue)) {
+                if (!$plugin->allow_unenrol($instance) and ! $plugin->allow_unenrol_user($instance, $ue)) {
                     continue;
                 }
 
@@ -5174,7 +5131,7 @@ function reset_course_userdata($data) {
     if (!empty($data->unenrolled)) {
         $status[] = array(
             'component' => $componentstr,
-            'item' => get_string('unenrol', 'enrol').' ('.count($data->unenrolled).')',
+            'item' => get_string('unenrol', 'enrol') . ' (' . count($data->unenrolled) . ')',
             'error' => false
         );
     }
@@ -5207,11 +5164,11 @@ function reset_course_userdata($data) {
 
     // Look in every instance of every module for data to delete.
     $unsupportedmods = array();
-    if ($allmods = $DB->get_records('modules') ) {
+    if ($allmods = $DB->get_records('modules')) {
         foreach ($allmods as $mod) {
             $modname = $mod->name;
-            $modfile = $CFG->dirroot.'/mod/'. $modname.'/lib.php';
-            $moddeleteuserdata = $modname.'_reset_userdata';   // Function to delete user data.
+            $modfile = $CFG->dirroot . '/mod/' . $modname . '/lib.php';
+            $moddeleteuserdata = $modname . '_reset_userdata';   // Function to delete user data.
             if (file_exists($modfile)) {
                 if (!$DB->count_records($modname, array('course' => $data->courseid))) {
                     continue; // Skip mods with no instances.
@@ -5222,13 +5179,13 @@ function reset_course_userdata($data) {
                     if (is_array($modstatus)) {
                         $status = array_merge($status, $modstatus);
                     } else {
-                        debugging('Module '.$modname.' returned incorrect staus - must be an array!');
+                        debugging('Module ' . $modname . ' returned incorrect staus - must be an array!');
                     }
                 } else {
                     $unsupportedmods[] = $mod;
                 }
             } else {
-                debugging('Missing lib.php in '.$modname.' module!');
+                debugging('Missing lib.php in ' . $modname . ' module!');
             }
         }
     }
@@ -5251,14 +5208,13 @@ function reset_course_userdata($data) {
         grade_grab_course_grades($data->courseid);
         grade_regrade_final_grades($data->courseid);
         $status[] = array('component' => $componentstr, 'item' => get_string('removeallcourseitems', 'grades'), 'error' => false);
-
     } else if (!empty($data->reset_gradebook_grades)) {
         grade_course_reset($data->courseid);
         $status[] = array('component' => $componentstr, 'item' => get_string('removeallcoursegrades', 'grades'), 'error' => false);
     }
     // Reset comments.
     if (!empty($data->reset_comments)) {
-        require_once($CFG->dirroot.'/comment/lib.php');
+        require_once($CFG->dirroot . '/comment/lib.php');
         comment::reset_course_page_comments($context);
     }
 
@@ -5278,8 +5234,8 @@ function reset_course_userdata($data) {
 function generate_email_processing_address($modid, $modargs) {
     global $CFG;
 
-    $header = $CFG->mailprefix . substr(base64_encode(pack('C', $modid)), 0, 2).$modargs;
-    return $header . substr(md5($header.get_site_identifier()), 0, 16).'@'.$CFG->maildomain;
+    $header = $CFG->mailprefix . substr(base64_encode(pack('C', $modid)), 0, 2) . $modargs;
+    return $header . substr(md5($header . get_site_identifier()), 0, 16) . '@' . $CFG->maildomain;
 }
 
 /**
@@ -5296,17 +5252,17 @@ function moodle_process_email($modargs, $body) {
     // The first char should be an unencoded letter. We'll take this as an action.
     switch ($modargs{0}) {
         case 'B': { // Bounce.
-            list(, $userid) = unpack('V', base64_decode(substr($modargs, 1, 8)));
-            if ($user = $DB->get_record("user", array('id' => $userid), "id,email")) {
-                // Check the half md5 of their email.
-                $md5check = substr(md5($user->email), 0, 16);
-                if ($md5check == substr($modargs, -16)) {
-                    set_bounce_count($user);
+                list(, $userid) = unpack('V', base64_decode(substr($modargs, 1, 8)));
+                if ($user = $DB->get_record("user", array('id' => $userid), "id,email")) {
+                    // Check the half md5 of their email.
+                    $md5check = substr(md5($user->email), 0, 16);
+                    if ($md5check == substr($modargs, -16)) {
+                        set_bounce_count($user);
+                    }
+                    // Else maybe they've already changed it?
                 }
-                // Else maybe they've already changed it?
             }
-        }
-        break;
+            break;
         // Maybe more later?
     }
 }
@@ -5319,11 +5275,11 @@ function moodle_process_email($modargs, $body) {
  * @param string $action 'get', 'buffer', 'close' or 'flush'
  * @return moodle_phpmailer|null mailer instance if 'get' used or nothing
  */
-function get_mailer($action='get') {
+function get_mailer($action = 'get') {
     global $CFG;
 
     /** @var moodle_phpmailer $mailer */
-    static $mailer  = null;
+    static $mailer = null;
     static $counter = 0;
 
     if (!isset($CFG->smtpmaxbulk)) {
@@ -5334,19 +5290,19 @@ function get_mailer($action='get') {
         $prevkeepalive = false;
 
         if (isset($mailer) and $mailer->Mailer == 'smtp') {
-            if ($counter < $CFG->smtpmaxbulk and !$mailer->isError()) {
+            if ($counter < $CFG->smtpmaxbulk and ! $mailer->isError()) {
                 $counter++;
                 // Reset the mailer.
-                $mailer->Priority         = 3;
-                $mailer->CharSet          = 'UTF-8'; // Our default.
-                $mailer->ContentType      = "text/plain";
-                $mailer->Encoding         = "8bit";
-                $mailer->From             = "root@localhost";
-                $mailer->FromName         = "Root User";
-                $mailer->Sender           = "";
-                $mailer->Subject          = "";
-                $mailer->Body             = "";
-                $mailer->AltBody          = "";
+                $mailer->Priority = 3;
+                $mailer->CharSet = 'UTF-8'; // Our default.
+                $mailer->ContentType = "text/plain";
+                $mailer->Encoding = "8bit";
+                $mailer->From = "root@localhost";
+                $mailer->FromName = "Root User";
+                $mailer->Sender = "";
+                $mailer->Subject = "";
+                $mailer->Body = "";
+                $mailer->AltBody = "";
                 $mailer->ConfirmReadingTo = "";
 
                 $mailer->clearAllRecipients();
@@ -5360,7 +5316,7 @@ function get_mailer($action='get') {
             get_mailer('flush');
         }
 
-        require_once($CFG->libdir.'/phpmailer/moodle_phpmailer.php');
+        require_once($CFG->libdir . '/phpmailer/moodle_phpmailer.php');
         $mailer = new moodle_phpmailer();
 
         $counter = 1;
@@ -5368,11 +5324,9 @@ function get_mailer($action='get') {
         if ($CFG->smtphosts == 'qmail') {
             // Use Qmail system.
             $mailer->isQmail();
-
         } else if (empty($CFG->smtphosts)) {
             // Use PHP mail() = sendmail.
             $mailer->isMail();
-
         } else {
             // Use SMTP directly.
             $mailer->isSMTP();
@@ -5380,9 +5334,9 @@ function get_mailer($action='get') {
                 $mailer->SMTPDebug = true;
             }
             // Specify main and backup servers.
-            $mailer->Host          = $CFG->smtphosts;
+            $mailer->Host = $CFG->smtphosts;
             // Specify secure connection protocol.
-            $mailer->SMTPSecure    = $CFG->smtpsecure;
+            $mailer->SMTPSecure = $CFG->smtpsecure;
             // Use previous keepalive.
             $mailer->SMTPKeepAlive = $prevkeepalive;
 
@@ -5415,7 +5369,7 @@ function get_mailer($action='get') {
     if ($action == 'flush') {
         if (isset($mailer) and $mailer->Mailer == 'smtp') {
             if (!empty($mailer->SMTPDebug)) {
-                echo '<pre>'."\n";
+                echo '<pre>' . "\n";
             }
             $mailer->SmtpClose();
             if (!empty($mailer->SMTPDebug)) {
@@ -5453,8 +5407,7 @@ function get_mailer($action='get') {
  * @param int $wordwrapwidth custom word wrap width, default 79
  * @return bool Returns true if mail was sent OK and false if there was an error.
  */
-function email_to_user($user, $from, $subject, $messagetext, $messagehtml = '', $attachment = '', $attachname = '',
-                       $usetrueaddress = true, $replyto = '', $replytoname = '', $wordwrapwidth = 79) {
+function email_to_user($user, $from, $subject, $messagetext, $messagehtml = '', $attachment = '', $attachname = '', $usetrueaddress = true, $replyto = '', $replytoname = '', $wordwrapwidth = 79) {
 
     global $CFG;
 
@@ -5464,12 +5417,12 @@ function email_to_user($user, $from, $subject, $messagetext, $messagehtml = '', 
     }
 
     if (empty($user->email)) {
-        debugging('Can not send email to user without email: '.$user->id, DEBUG_DEVELOPER);
+        debugging('Can not send email to user without email: ' . $user->id, DEBUG_DEVELOPER);
         return false;
     }
 
     if (!empty($user->deleted)) {
-        debugging('Can not send email to deleted user: '.$user->id, DEBUG_DEVELOPER);
+        debugging('Can not send email to deleted user: ' . $user->id, DEBUG_DEVELOPER);
         return false;
     }
 
@@ -5491,25 +5444,25 @@ function email_to_user($user, $from, $subject, $messagetext, $messagehtml = '', 
     }
 
     // Skip mail to suspended users.
-    if ((isset($user->auth) && $user->auth=='nologin') or (isset($user->suspended) && $user->suspended)) {
+    if ((isset($user->auth) && $user->auth == 'nologin') or ( isset($user->suspended) && $user->suspended)) {
         return true;
     }
 
     if (!validate_email($user->email)) {
         // We can not send emails to invalid addresses - it might create security issue or confuse the mailer.
-        debugging("email_to_user: User $user->id (".fullname($user).") email ($user->email) is invalid! Not sending.");
+        debugging("email_to_user: User $user->id (" . fullname($user) . ") email ($user->email) is invalid! Not sending.");
         return false;
     }
 
     if (over_bounce_threshold($user)) {
-        debugging("email_to_user: User $user->id (".fullname($user).") is over bounce threshold! Not sending.");
+        debugging("email_to_user: User $user->id (" . fullname($user) . ") is over bounce threshold! Not sending.");
         return false;
     }
 
     // TLD .invalid  is specifically reserved for invalid domain names.
     // For More information, see {@link http://tools.ietf.org/html/rfc2606#section-2}.
     if (substr($user->email, -8) == '.invalid') {
-        debugging("email_to_user: User $user->id (".fullname($user).") email domain ($user->email) is invalid! Not sending.");
+        debugging("email_to_user: User $user->id (" . fullname($user) . ") email domain ($user->email) is invalid! Not sending.");
         return true; // This is not an error.
     }
 
@@ -5517,17 +5470,13 @@ function email_to_user($user, $from, $subject, $messagetext, $messagehtml = '', 
     // wwwroot and modify the url to direct the user's browser to login at their
     // home site (identity provider - idp) before hitting the link itself.
     if (is_mnet_remote_user($user)) {
-        require_once($CFG->dirroot.'/mnet/lib.php');
+        require_once($CFG->dirroot . '/mnet/lib.php');
 
         $jumpurl = mnet_get_idp_jump_url($user);
         $callback = partial('mnet_sso_apply_indirection', $jumpurl);
 
-        $messagetext = preg_replace_callback("%($CFG->wwwroot[^[:space:]]*)%",
-                $callback,
-                $messagetext);
-        $messagehtml = preg_replace_callback("%href=[\"'`]($CFG->wwwroot[\w_:\?=#&@/;.~-]*)[\"'`]%",
-                $callback,
-                $messagehtml);
+        $messagetext = preg_replace_callback("%($CFG->wwwroot[^[:space:]]*)%", $callback, $messagetext);
+        $messagehtml = preg_replace_callback("%href=[\"'`]($CFG->wwwroot[\w_:\?=#&@/;.~-]*)[\"'`]%", $callback, $messagehtml);
     }
     $mail = get_mailer();
 
@@ -5542,7 +5491,7 @@ function email_to_user($user, $from, $subject, $messagetext, $messagehtml = '', 
 
     // Make up an email address for handling bounces.
     if (!empty($CFG->handlebounces)) {
-        $modargs = 'B'.base64_encode(pack('V', $user->id)).substr(md5($user->email), 0, 16);
+        $modargs = 'B' . base64_encode(pack('V', $user->id)) . substr(md5($user->email), 0, 16);
         $mail->Sender = generate_email_processing_address(0, $modargs);
     } else {
         $mail->Sender = $supportuser->email;
@@ -5557,13 +5506,13 @@ function email_to_user($user, $from, $subject, $messagetext, $messagehtml = '', 
     }
 
     if (is_string($from)) { // So we can pass whatever we want if there is need.
-        $mail->From     = $CFG->noreplyaddress;
+        $mail->From = $CFG->noreplyaddress;
         $mail->FromName = $from;
     } else if ($usetrueaddress and $from->maildisplay) {
-        $mail->From     = $from->email;
+        $mail->From = $from->email;
         $mail->FromName = fullname($from);
     } else {
-        $mail->From     = $CFG->noreplyaddress;
+        $mail->From = $CFG->noreplyaddress;
         $mail->FromName = fullname($from);
         if (empty($replyto)) {
             $tempreplyto[] = array($CFG->noreplyaddress, get_string('noreplyname'));
@@ -5600,20 +5549,20 @@ function email_to_user($user, $from, $subject, $messagetext, $messagehtml = '', 
         // Don't ever send HTML to users who don't want it.
         $mail->isHTML(true);
         $mail->Encoding = 'quoted-printable';
-        $mail->Body    =  $messagehtml;
-        $mail->AltBody =  "\n$messagetext\n";
+        $mail->Body = $messagehtml;
+        $mail->AltBody = "\n$messagetext\n";
     } else {
         $mail->IsHTML(false);
-        $mail->Body =  "\n$messagetext\n";
+        $mail->Body = "\n$messagetext\n";
     }
 
     if ($attachment && $attachname) {
-        if (preg_match( "~\\.\\.~" , $attachment )) {
+        if (preg_match("~\\.\\.~", $attachment)) {
             // Security check for ".." in dir path.
             $temprecipients[] = array($supportuser->email, fullname($supportuser, true));
             $mail->addStringAttachment('Error in attachment.  User attempted to attach a filename with a unsafe name.', 'error.txt', '8bit', 'text/plain');
         } else {
-            require_once($CFG->libdir.'/filelib.php');
+            require_once($CFG->libdir . '/filelib.php');
             $mimetype = mimeinfo('type', $attachname);
 
             $attachmentpath = $attachment;
@@ -5648,11 +5597,11 @@ function email_to_user($user, $from, $subject, $messagetext, $messagehtml = '', 
         $charsets = get_list_of_charsets();
         unset($charsets['UTF-8']);
         if (in_array($charset, $charsets)) {
-            $mail->CharSet  = $charset;
+            $mail->CharSet = $charset;
             $mail->FromName = core_text::convert($mail->FromName, 'utf-8', strtolower($charset));
-            $mail->Subject  = core_text::convert($mail->Subject, 'utf-8', strtolower($charset));
-            $mail->Body     = core_text::convert($mail->Body, 'utf-8', strtolower($charset));
-            $mail->AltBody  = core_text::convert($mail->AltBody, 'utf-8', strtolower($charset));
+            $mail->Subject = core_text::convert($mail->Subject, 'utf-8', strtolower($charset));
+            $mail->Body = core_text::convert($mail->Body, 'utf-8', strtolower($charset));
+            $mail->AltBody = core_text::convert($mail->AltBody, 'utf-8', strtolower($charset));
 
             foreach ($temprecipients as $key => $values) {
                 $temprecipients[$key][1] = core_text::convert($values[1], 'utf-8', strtolower($charset));
@@ -5679,18 +5628,18 @@ function email_to_user($user, $from, $subject, $messagetext, $messagehtml = '', 
     } else {
         // Trigger event for failing to send email.
         $event = \core\event\email_failed::create(array(
-            'context' => context_system::instance(),
-            'userid' => $from->id,
-            'relateduserid' => $user->id,
-            'other' => array(
-                'subject' => $subject,
-                'message' => $messagetext,
-                'errorinfo' => $mail->ErrorInfo
-            )
+                    'context' => context_system::instance(),
+                    'userid' => $from->id,
+                    'relateduserid' => $user->id,
+                    'other' => array(
+                        'subject' => $subject,
+                        'message' => $messagetext,
+                        'errorinfo' => $mail->ErrorInfo
+                    )
         ));
         $event->trigger();
         if (CLI_SCRIPT) {
-            mtrace('Error: lib/moodlelib.php email_to_user(): '.$mail->ErrorInfo);
+            mtrace('Error: lib/moodlelib.php email_to_user(): ' . $mail->ErrorInfo);
         }
         if (!empty($mail->SMTPDebug)) {
             echo '</pre>';
@@ -5699,34 +5648,34 @@ function email_to_user($user, $from, $subject, $messagetext, $messagehtml = '', 
     }
 }
 
-function mail_to_user_payment ($user, $from, $subject, $messagehtml) {
+function mail_to_user_payment($user, $from, $subject, $messagehtml) {
     global $CFG;
 
-    $mail = get_mailer();    
+    $mail = get_mailer();
 
     $temprecipients = array();
     $tempreplyto = array();
 
     $supportuser = core_user::get_support_user();
     $mail->Sender = $supportuser->email;
-    
+
     if (is_string($from)) { // So we can pass whatever we want if there is need.
-        $mail->From     = 'subscriptions@globalizationplus.com';
+        $mail->From = 'subscriptions@globalizationplus.com';
         $mail->FromName = $from;
-    }    
+    }
 
     $mail->Subject = substr($subject, 0, 900);
     $temprecipients[] = array($user->email, $mail->Sender);
-        
-    if ($messagehtml) {     
+
+    if ($messagehtml) {
         $mail->isHTML(true);
         $mail->Encoding = 'quoted-printable';
-        $mail->Body    =  $messagehtml;
-        $mail->AltBody =  "\n$messagetext\n";
+        $mail->Body = $messagehtml;
+        $mail->AltBody = "\n$messagetext\n";
     } else {
         $mail->IsHTML(false);
-        $mail->Body =  "\n$messagetext\n";
-    }        
+        $mail->Body = "\n$messagetext\n";
+    }
 
     foreach ($temprecipients as $values) {
         $mail->addAddress($values[0], $values[1]);
@@ -5735,11 +5684,11 @@ function mail_to_user_payment ($user, $from, $subject, $messagehtml) {
         $mail->addReplyTo($values[0], $values[1]);
     }
 
-    if ($mail->send()) {       
+    if ($mail->send()) {
         //echo "Inside true ...<br/>";
         return true;
     } // end if $mail->send()    
-    else {        
+    else {
         //echo "Inside false ...<br/>";
         return false;
     }
@@ -5755,13 +5704,13 @@ function generate_email_signoff() {
 
     $signoff = "\n";
     if (!empty($CFG->supportname)) {
-        $signoff .= $CFG->supportname."\n";
+        $signoff .= $CFG->supportname . "\n";
     }
     if (!empty($CFG->supportemail)) {
-        $signoff .= $CFG->supportemail."\n";
+        $signoff .= $CFG->supportemail . "\n";
     }
     if (!empty($CFG->supportpage)) {
-        $signoff .= $CFG->supportpage."\n";
+        $signoff .= $CFG->supportpage . "\n";
     }
     return $signoff;
 }
@@ -5781,7 +5730,7 @@ function setnew_password_and_mail($user, $fasthash = false) {
     // so multilang will not work properly for site->fullname.
     $lang = empty($user->lang) ? $CFG->lang : $user->lang;
 
-    $site  = get_site();
+    $site = get_site();
 
     $supportuser = core_user::get_support_user();
 
@@ -5790,20 +5739,19 @@ function setnew_password_and_mail($user, $fasthash = false) {
     update_internal_user_password($user, $newpassword, $fasthash);
 
     $a = new stdClass();
-    $a->firstname   = fullname($user, true);
-    $a->sitename    = format_string($site->fullname);
-    $a->username    = $user->username;
+    $a->firstname = fullname($user, true);
+    $a->sitename = format_string($site->fullname);
+    $a->username = $user->username;
     $a->newpassword = $newpassword;
-    $a->link        = $CFG->wwwroot .'/login/';
-    $a->signoff     = generate_email_signoff();
+    $a->link = $CFG->wwwroot . '/login/';
+    $a->signoff = generate_email_signoff();
 
-    $message = (string)new lang_string('newusernewpasswordtext', '', $a, $lang);
+    $message = (string) new lang_string('newusernewpasswordtext', '', $a, $lang);
 
-    $subject = format_string($site->fullname) .': '. (string)new lang_string('newusernewpasswordsubj', '', $a, $lang);
+    $subject = format_string($site->fullname) . ': ' . (string) new lang_string('newusernewpasswordsubj', '', $a, $lang);
 
     // Directly email rather than using the messaging system to ensure its not routed to a popup or jabber.
     return email_to_user($user, $supportuser, $subject, $message);
-
 }
 
 /**
@@ -5815,11 +5763,11 @@ function setnew_password_and_mail($user, $fasthash = false) {
 function reset_password_and_mail($user) {
     global $CFG;
 
-    $site  = get_site();
+    $site = get_site();
     $supportuser = core_user::get_support_user();
 
     $userauth = get_auth_plugin($user->auth);
-    if (!$userauth->can_reset_password() or !is_enabled_auth($user->auth)) {
+    if (!$userauth->can_reset_password() or ! is_enabled_auth($user->auth)) {
         trigger_error("Attempt to reset user password for user $user->username with Auth $user->auth.");
         return false;
     }
@@ -5831,29 +5779,53 @@ function reset_password_and_mail($user) {
     }
 
     $a = new stdClass();
-    $a->firstname   = $user->firstname;
-    $a->lastname    = $user->lastname;
-    $a->sitename    = format_string($site->fullname);
-    $a->username    = $user->username;
+    $a->firstname = $user->firstname;
+    $a->lastname = $user->lastname;
+    $a->sitename = format_string($site->fullname);
+    $a->username = $user->username;
     $a->newpassword = $newpassword;
-    $a->link        = $CFG->httpswwwroot .'/login/change_password.php';
-    $a->signoff     = generate_email_signoff();
+    $a->link = $CFG->httpswwwroot . '/login/change_password.php';
+    $a->signoff = generate_email_signoff();
 
     $message = get_string('newpasswordtext', '', $a);
 
-    $subject  = format_string($site->fullname) .': '. get_string('changedpassword');
+    $subject = format_string($site->fullname) . ': ' . get_string('changedpassword');
 
     unset_user_preference('create_password', $user); // Prevent cron from generating the password.
-
     // Directly email rather than using the messaging system to ensure its not routed to a popup or jabber.
     return email_to_user($user, $supportuser, $subject, $message);
 }
 
-function get_user_group ($user) {
+function get_user_group($user) {
     global $DB;
-    
-    $group_name=$DB->get_record('groups', array('id'=>$user->group));    
-    return $group_name->name;    
+
+    $group_name = $DB->get_record('groups', array('id' => $user->group));
+    return $group_name->name;
+}
+
+function getTutorWelcomeMessage($user) {
+
+    global $CFG;
+
+    $message = "";
+    $message = "";
+    $subject = "Account confirmation";
+    $message_header = "<html><body>";
+    $message_footer = "</body></html>";
+    $message_body = "<p align='center'>Dear $user->firstname $user->lastname !</p>"
+            . "<p align='center'>Thank you for signup!</p>"
+            . "<p>Your username: $user->username </p>"
+            . "<p>Your password: $CFG->purepassword </p>"
+            . "<p>Your group: " . get_user_group($user) . "</p>"
+            . "<p>Because you are Professor you need to confirm your membership."
+            . "Please go to http://globalizationplus.com/lms/tutors/ and use "
+            . "your email: $user->email and group secret code to confirm your membership. </p>"
+            . "<p>If you have any issues please contact us via email subscriptions@globalizationplus.com."
+            . "<br/><br/><br/> <span>Globalization Plus Support team.</span>";
+    $message = $message . $message_header;
+    $message = $message . $message_body;
+    $message = $message . $message_footer;
+    return $message;
 }
 
 /**
@@ -5870,40 +5842,44 @@ function send_confirmation_email($user) {
 
     $data = new stdClass();
     $data->firstname = fullname($user);
-    $data->sitename  = format_string($site->fullname);
-    $data->admin     = generate_email_signoff();
-
+    $data->sitename = format_string($site->fullname);
+    $data->admin = generate_email_signoff();
     $subject = get_string('emailconfirmationsubject', '', format_string($site->fullname));
-
-    $username = urlencode($user->username);
-    $username = str_replace('.', '%2E', $username); // Prevent problems with trailing dots.
-    $data->link  = $CFG->wwwroot .'/login/confirm.php?data='. $user->secret .'/'. $username;
-    $data->username=$user->username;
-    $data->password=$CFG->purepassword;
-    $data->group=get_user_group($user);
-    //$data->group=$user->group;
-    $message     = get_string('emailconfirmation', '', $data);
-    $messagehtml = text_to_html(get_string('emailconfirmation', '', $data), false, false, true);
-
     $user->mailformat = 1;  // Always send HTML version as well.
+    $message = get_string('emailconfirmation', '', $data);
 
-    // Directly email rather than using the messaging system to ensure its not routed to a popup or jabber.
+    if ($user->type== 'student') {
+
+        $username = urlencode($user->username);
+        $username = str_replace('.', '%2E', $username); // Prevent problems with trailing dots.
+        $data->link = $CFG->wwwroot . '/login/confirm.php?data=' . $user->secret . '/' . $username;
+        $data->username = $user->username;
+        $data->password = $CFG->purepassword;
+        $data->group = get_user_group($user);
+        $data->user_type=$user->type;
+
+        $messagehtml = text_to_html(get_string('emailconfirmation', '', $data), false, false, true);
+    } // end if $user->type!='tutor'
+    else {
+        $messagehtml = getTutorWelcomeMessage($user);
+    }
+
     return email_to_user($user, $supportuser, $subject, $message, $messagehtml);
 }
 
-function send_payment_confirmation_email ($user) {
+function send_payment_confirmation_email($user) {
     global $CFG;
 
     $site = get_site();
     $supportuser = core_user::get_support_user();
 
-    $data = new stdClass();    
-    $data->sitename  = format_string($site->fullname);
-    $data->admin     = generate_email_signoff();
+    $data = new stdClass();
+    $data->sitename = format_string($site->fullname);
+    $data->admin = generate_email_signoff();
 
-    $subject = $user->subject;    
-    $message='';
-    $messagehtml = $user->message;   
+    $subject = $user->subject;
+    $message = '';
+    $messagehtml = $user->message;
 
     // Directly email rather than using the messaging system to ensure its not routed to a popup or jabber.
     return email_to_user($user, $supportuser, $subject, $message, $messagehtml);
@@ -5925,11 +5901,11 @@ function send_password_change_confirmation_email($user, $resetrecord) {
 
     $data = new stdClass();
     $data->firstname = $user->firstname;
-    $data->lastname  = $user->lastname;
-    $data->username  = $user->username;
-    $data->sitename  = format_string($site->fullname);
-    $data->link      = $CFG->httpswwwroot .'/login/forgot_password.php?token='. $resetrecord->token;
-    $data->admin     = generate_email_signoff();
+    $data->lastname = $user->lastname;
+    $data->username = $user->username;
+    $data->sitename = format_string($site->fullname);
+    $data->link = $CFG->httpswwwroot . '/login/forgot_password.php?token=' . $resetrecord->token;
+    $data->admin = generate_email_signoff();
     $data->resetminutes = $pwresetmins;
 
     $message = get_string('emailresetconfirmation', '', $data);
@@ -5937,7 +5913,6 @@ function send_password_change_confirmation_email($user, $resetrecord) {
 
     // Directly email rather than using the messaging system to ensure its not routed to a popup or jabber.
     return email_to_user($user, $supportuser, $subject, $message);
-
 }
 
 /**
@@ -5955,9 +5930,9 @@ function send_password_change_info($user) {
 
     $data = new stdClass();
     $data->firstname = $user->firstname;
-    $data->lastname  = $user->lastname;
-    $data->sitename  = format_string($site->fullname);
-    $data->admin     = generate_email_signoff();
+    $data->lastname = $user->lastname;
+    $data->sitename = format_string($site->fullname);
+    $data->admin = generate_email_signoff();
 
     $userauth = get_auth_plugin($user->auth);
 
@@ -5971,7 +5946,6 @@ function send_password_change_info($user) {
     if ($userauth->can_change_password() and $userauth->change_password_url()) {
         // We have some external url for password changing.
         $data->link .= $userauth->change_password_url();
-
     } else {
         // No way to change password, sorry.
         $data->link = '';
@@ -5987,7 +5961,6 @@ function send_password_change_info($user) {
 
     // Directly email rather than using the messaging system to ensure its not routed to a popup or jabber.
     return email_to_user($user, $supportuser, $subject, $message);
-
 }
 
 /**
@@ -6011,13 +5984,11 @@ function email_is_not_allowed($email) {
                     // Subdomains are in a form ".example.com" - matches "xxx@anything.example.com".
                     return false;
                 }
-
-            } else if (strpos(strrev($email), strrev('@'.$allowedpattern)) === 0) {
+            } else if (strpos(strrev($email), strrev('@' . $allowedpattern)) === 0) {
                 return false;
             }
         }
         return get_string('emailonlyallowed', '', $CFG->allowemailaddresses);
-
     } else if (!empty($CFG->denyemailaddresses)) {
         $denied = explode(' ', $CFG->denyemailaddresses);
         foreach ($denied as $deniedpattern) {
@@ -6030,8 +6001,7 @@ function email_is_not_allowed($email) {
                     // Subdomains are in a form ".example.com" - matches "xxx@anything.example.com".
                     return get_string('emailnotallowed', '', $CFG->denyemailaddresses);
                 }
-
-            } else if (strpos(strrev($email), strrev('@'.$deniedpattern)) === 0) {
+            } else if (strpos(strrev($email), strrev('@' . $deniedpattern)) === 0) {
                 return get_string('emailnotallowed', '', $CFG->denyemailaddresses);
             }
         }
@@ -6061,13 +6031,13 @@ function get_file_storage() {
     if (isset($CFG->filedir)) {
         $filedir = $CFG->filedir;
     } else {
-        $filedir = $CFG->dataroot.'/filedir';
+        $filedir = $CFG->dataroot . '/filedir';
     }
 
     if (isset($CFG->trashdir)) {
         $trashdirdir = $CFG->trashdir;
     } else {
-        $trashdirdir = $CFG->dataroot.'/trashdir';
+        $trashdirdir = $CFG->dataroot . '/trashdir';
     }
 
     $fs = new file_storage($filedir, $trashdirdir, "$CFG->tempdir/filestorage", $CFG->directorypermissions, $CFG->filepermissions);
@@ -6102,7 +6072,7 @@ function get_file_browser() {
  * @param string $mimetype default application/zip
  * @return file_packer
  */
-function get_file_packer($mimetype='application/zip') {
+function get_file_packer($mimetype = 'application/zip') {
     global $CFG;
 
     static $fp = array();
@@ -6175,9 +6145,9 @@ function valid_uploaded_file($newfile) {
  * @param int $modulebytes Current module ->maxbytes (in bytes)
  * @return int The maximum size for uploading files.
  */
-function get_max_upload_file_size($sitebytes=0, $coursebytes=0, $modulebytes=0) {
+function get_max_upload_file_size($sitebytes = 0, $coursebytes = 0, $modulebytes = 0) {
 
-    if (! $filesize = ini_get('upload_max_filesize')) {
+    if (!$filesize = ini_get('upload_max_filesize')) {
         $filesize = '5M';
     }
     $minimumsize = get_real_size($filesize);
@@ -6189,15 +6159,15 @@ function get_max_upload_file_size($sitebytes=0, $coursebytes=0, $modulebytes=0) 
         }
     }
 
-    if (($sitebytes > 0) and ($sitebytes < $minimumsize)) {
+    if (($sitebytes > 0) and ( $sitebytes < $minimumsize)) {
         $minimumsize = $sitebytes;
     }
 
-    if (($coursebytes > 0) and ($coursebytes < $minimumsize)) {
+    if (($coursebytes > 0) and ( $coursebytes < $minimumsize)) {
         $minimumsize = $coursebytes;
     }
 
-    if (($modulebytes > 0) and ($modulebytes < $minimumsize)) {
+    if (($modulebytes > 0) and ( $modulebytes < $minimumsize)) {
         $minimumsize = $modulebytes;
     }
 
@@ -6264,11 +6234,11 @@ function get_max_upload_sizes($sitebytes = 0, $coursebytes = 0, $modulebytes = 0
 
     $filesize = array();
     $sizelist = array(10240, 51200, 102400, 512000, 1048576, 2097152,
-                      5242880, 10485760, 20971520, 52428800, 104857600);
+        5242880, 10485760, 20971520, 52428800, 104857600);
 
     // If custombytes is given and is valid then add it to the list.
     if (is_number($custombytes) and $custombytes > 0) {
-        $custombytes = (int)$custombytes;
+        $custombytes = (int) $custombytes;
         if (!in_array($custombytes, $sizelist)) {
             $sizelist[] = $custombytes;
         }
@@ -6284,24 +6254,22 @@ function get_max_upload_sizes($sitebytes = 0, $coursebytes = 0, $modulebytes = 0
 
     foreach ($sizelist as $sizebytes) {
         if ($sizebytes < $maxsize && $sizebytes > 0) {
-            $filesize[(string)intval($sizebytes)] = display_size($sizebytes);
+            $filesize[(string) intval($sizebytes)] = display_size($sizebytes);
         }
     }
 
     $limitlevel = '';
     $displaysize = '';
     if ($modulebytes &&
-        (($modulebytes < $coursebytes || $coursebytes == 0) &&
-         ($modulebytes < $sitebytes || $sitebytes == 0))) {
+            (($modulebytes < $coursebytes || $coursebytes == 0) &&
+            ($modulebytes < $sitebytes || $sitebytes == 0))) {
         $limitlevel = get_string('activity', 'core');
         $displaysize = display_size($modulebytes);
         $filesize[$modulebytes] = $displaysize; // Make sure the limit is also included in the list.
-
     } else if ($coursebytes && ($coursebytes < $sitebytes || $sitebytes == 0)) {
         $limitlevel = get_string('course', 'core');
         $displaysize = display_size($coursebytes);
         $filesize[$coursebytes] = $displaysize; // Make sure the limit is also included in the list.
-
     } else if ($sitebytes) {
         $limitlevel = get_string('site', 'core');
         $displaysize = display_size($sitebytes);
@@ -6311,7 +6279,7 @@ function get_max_upload_sizes($sitebytes = 0, $coursebytes = 0, $modulebytes = 0
     krsort($filesize, SORT_NUMERIC);
     if ($limitlevel) {
         $params = (object) array('contextname' => $limitlevel, 'displaysize' => $displaysize);
-        $filesize  = array('0' => get_string('uploadlimitwithsize', 'core', $params)) + $filesize;
+        $filesize = array('0' => get_string('uploadlimitwithsize', 'core', $params)) + $filesize;
     }
 
     return $filesize;
@@ -6334,11 +6302,11 @@ function get_max_upload_sizes($sitebytes = 0, $coursebytes = 0, $modulebytes = 0
  * @param bool $getfiles  If true then files are included in the output
  * @return array An array with all the filenames in all subdirectories, relative to the given rootdir
  */
-function get_directory_list($rootdir, $excludefiles='', $descend=true, $getdirs=false, $getfiles=true) {
+function get_directory_list($rootdir, $excludefiles = '', $descend = true, $getdirs = false, $getfiles = true) {
 
     $dirs = array();
 
-    if (!$getdirs and !$getfiles) {   // Nothing to show.
+    if (!$getdirs and ! $getfiles) {   // Nothing to show.
         return $dirs;
     }
 
@@ -6359,7 +6327,7 @@ function get_directory_list($rootdir, $excludefiles='', $descend=true, $getdirs=
         if ($firstchar == '.' or $file == 'CVS' or in_array($file, $excludefiles)) {
             continue;
         }
-        $fullfile = $rootdir .'/'. $file;
+        $fullfile = $rootdir . '/' . $file;
         if (filetype($fullfile) == 'dir') {
             if ($getdirs) {
                 $dirs[] = $file;
@@ -6367,7 +6335,7 @@ function get_directory_list($rootdir, $excludefiles='', $descend=true, $getdirs=
             if ($descend) {
                 $subdirs = get_directory_list($fullfile, $excludefiles, $descend, $getdirs, $getfiles);
                 foreach ($subdirs as $subdir) {
-                    $dirs[] = $file .'/'. $subdir;
+                    $dirs[] = $file . '/' . $subdir;
                 }
             }
         } else if ($getfiles) {
@@ -6381,7 +6349,6 @@ function get_directory_list($rootdir, $excludefiles='', $descend=true, $getdirs=
     return $dirs;
 }
 
-
 /**
  * Adds up all the files in a directory and works out the size.
  *
@@ -6389,18 +6356,18 @@ function get_directory_list($rootdir, $excludefiles='', $descend=true, $getdirs=
  * @param string $excludefile A file to exclude when summing directory size
  * @return int The summed size of all files and subfiles within the root directory
  */
-function get_directory_size($rootdir, $excludefile='') {
+function get_directory_size($rootdir, $excludefile = '') {
     global $CFG;
 
     // Do it this way if we can, it's much faster.
     if (!empty($CFG->pathtodu) && is_executable(trim($CFG->pathtodu))) {
-        $command = trim($CFG->pathtodu).' -sk '.escapeshellarg($rootdir);
+        $command = trim($CFG->pathtodu) . ' -sk ' . escapeshellarg($rootdir);
         $output = null;
         $return = null;
         exec($command, $output, $return);
         if (is_array($output)) {
             // We told it to return k.
-            return get_real_size(intval($output[0]).'k');
+            return get_real_size(intval($output[0]) . 'k');
         }
     }
 
@@ -6421,7 +6388,7 @@ function get_directory_size($rootdir, $excludefile='') {
         if ($firstchar == '.' or $file == 'CVS' or $file == $excludefile) {
             continue;
         }
-        $fullfile = $rootdir .'/'. $file;
+        $fullfile = $rootdir . '/' . $file;
         if (filetype($fullfile) == 'dir') {
             $size += get_directory_size($fullfile, $excludefile);
         } else {
@@ -6455,7 +6422,7 @@ function display_size($size) {
         $gb = get_string('sizegb');
         $mb = get_string('sizemb');
         $kb = get_string('sizekb');
-        $b  = get_string('sizeb');
+        $b = get_string('sizeb');
     }
 
     if ($size >= 1073741824) {
@@ -6465,7 +6432,7 @@ function display_size($size) {
     } else if ($size >= 1024) {
         $size = round($size / 1024 * 10) / 10 . $kb;
     } else {
-        $size = intval($size) .' '. $b; // File sizes over 2GB can not work in 32bit PHP anyway.
+        $size = intval($size) . ' ' . $b; // File sizes over 2GB can not work in 32bit PHP anyway.
     }
     return $size;
 }
@@ -6480,7 +6447,6 @@ function display_size($size) {
 function clean_filename($string) {
     return clean_param($string, PARAM_FILE);
 }
-
 
 // STRING TRANSLATION.
 
@@ -6499,21 +6465,16 @@ function current_language() {
         // Also used by some code to temporarily get language-related information in a
         // specific language (see force_current_language()).
         $return = $SESSION->forcelang;
-
-    } else if (!empty($COURSE->id) and $COURSE->id != SITEID and !empty($COURSE->lang)) {
+    } else if (!empty($COURSE->id) and $COURSE->id != SITEID and ! empty($COURSE->lang)) {
         // Course language can override all other settings for this page.
         $return = $COURSE->lang;
-
     } else if (!empty($SESSION->lang)) {
         // Session language can override other settings.
         $return = $SESSION->lang;
-
     } else if (!empty($USER->lang)) {
         $return = $USER->lang;
-
     } else if (isset($CFG->lang)) {
         $return = $CFG->lang;
-
     } else {
         $return = 'en';
     }
@@ -6531,7 +6492,7 @@ function current_language() {
  * @param string $lang null means current language
  * @return string
  */
-function get_parent_language($lang=null) {
+function get_parent_language($lang = null) {
 
     // Let's hack around the current language.
     if (!empty($lang)) {
@@ -6583,7 +6544,7 @@ function force_current_language($language) {
  * @param bool $forcereload shall the singleton be released and new instance created instead?
  * @return core_string_manager
  */
-function get_string_manager($forcereload=false) {
+function get_string_manager($forcereload = false) {
     global $CFG;
 
     static $singleton = null;
@@ -6595,7 +6556,7 @@ function get_string_manager($forcereload=false) {
         if (empty($CFG->early_install_lang)) {
 
             if (empty($CFG->langlist)) {
-                 $translist = array();
+                $translist = array();
             } else {
                 $translist = explode(',', $CFG->langlist);
             }
@@ -6609,19 +6570,16 @@ function get_string_manager($forcereload=false) {
                     if (isset($implements['core_string_manager'])) {
                         $singleton = new $classname($CFG->langotherroot, $CFG->langlocalroot, $translist);
                         return $singleton;
-
                     } else {
-                        debugging('Unable to instantiate custom string manager: class '.$classname.
-                            ' does not implement the core_string_manager interface.');
+                        debugging('Unable to instantiate custom string manager: class ' . $classname .
+                                ' does not implement the core_string_manager interface.');
                     }
-
                 } else {
-                    debugging('Unable to instantiate custom string manager: class '.$classname.' can not be found.');
+                    debugging('Unable to instantiate custom string manager: class ' . $classname . ' can not be found.');
                 }
             }
 
             $singleton = new core_string_manager_standard($CFG->langotherroot, $CFG->langlocalroot, $translist);
-
         } else {
             $singleton = new core_string_manager_install();
         }
@@ -6725,7 +6683,7 @@ function get_string($identifier, $component = '', $a = null, $lazyload = false) 
 
     if (strpos($component, '/') !== false) {
         debugging('The module name you passed to get_string is the deprecated format ' .
-                'like mod/mymod or block/myblock. The correct form looks like mymod, or block_myblock.' , DEBUG_DEVELOPER);
+                'like mod/mymod or block/myblock. The correct form looks like mymod, or block_myblock.', DEBUG_DEVELOPER);
         $componentpath = explode('/', $component);
 
         switch ($componentpath[0]) {
@@ -6734,16 +6692,16 @@ function get_string($identifier, $component = '', $a = null, $lazyload = false) 
                 break;
             case 'blocks':
             case 'block':
-                $component = 'block_'.$componentpath[1];
+                $component = 'block_' . $componentpath[1];
                 break;
             case 'enrol':
-                $component = 'enrol_'.$componentpath[1];
+                $component = 'enrol_' . $componentpath[1];
                 break;
             case 'format':
-                $component = 'format_'.$componentpath[1];
+                $component = 'format_' . $componentpath[1];
                 break;
             case 'grade':
-                $component = 'grade'.$componentpath[1].'_'.$componentpath[2];
+                $component = 'grade' . $componentpath[1] . '_' . $componentpath[2];
                 break;
         }
     }
@@ -6811,13 +6769,13 @@ function print_string($identifier, $component = '', $a = null) {
 function get_list_of_charsets() {
 
     $charsets = array(
-        'EUC-JP'     => 'EUC-JP',
-        'ISO-2022-JP'=> 'ISO-2022-JP',
+        'EUC-JP' => 'EUC-JP',
+        'ISO-2022-JP' => 'ISO-2022-JP',
         'ISO-8859-1' => 'ISO-8859-1',
-        'SHIFT-JIS'  => 'SHIFT-JIS',
-        'GB2312'     => 'GB2312',
-        'GB18030'    => 'GB18030', // GB18030 not supported by typo and mbstring.
-        'UTF-8'      => 'UTF-8');
+        'SHIFT-JIS' => 'SHIFT-JIS',
+        'GB2312' => 'GB2312',
+        'GB18030' => 'GB18030', // GB18030 not supported by typo and mbstring.
+        'UTF-8' => 'UTF-8');
 
     asort($charsets);
 
@@ -6995,16 +6953,16 @@ class emoticon_manager {
      * @param string $imagecomponent to be used by {@link pix_emoticon}
      * @return stdClass
      */
-    protected function prepare_emoticon_object($text, $imagename, $altidentifier = null,
-                                               $altcomponent = 'core_pix', $imagecomponent = 'core') {
-        return (object)array(
-            'text'           => $text,
-            'imagename'      => $imagename,
-            'imagecomponent' => $imagecomponent,
-            'altidentifier'  => $altidentifier,
-            'altcomponent'   => $altcomponent,
+    protected function prepare_emoticon_object($text, $imagename, $altidentifier = null, $altcomponent = 'core_pix', $imagecomponent = 'core') {
+        return (object) array(
+                    'text' => $text,
+                    'imagename' => $imagename,
+                    'imagecomponent' => $imagecomponent,
+                    'altidentifier' => $altidentifier,
+                    'altcomponent' => $altcomponent,
         );
     }
+
 }
 
 // ENCRYPTION.
@@ -7039,7 +6997,7 @@ function rc4decrypt($data) {
  * @param string $case Either 'de' for decrypt or '' for encrypt
  * @return string
  */
-function endecrypt ($pwd, $data, $case) {
+function endecrypt($pwd, $data, $case) {
 
     if ($case == 'de') {
         $data = urldecode($data);
@@ -7123,7 +7081,6 @@ function get_plugin_list_with_function($plugintype, $function, $file = 'lib.php'
         if (function_exists($fullfunction)) {
             // Function exists with standard name. Store, indexed by frankenstyle name of plugin.
             $pluginfunctions[$plugintype . '_' . $plugin] = $fullfunction;
-
         } else if ($plugintype === 'mod') {
             // For modules, we also allow plugin without full frankenstyle but just starting with the module name.
             $shortfunction = $plugin . '_' . $function;
@@ -7148,16 +7105,15 @@ function get_plugin_list_with_function($plugintype, $function, $file = 'lib.php'
  * @param string $basedir full path to the base dir where $plugin resides (defaults to $CFG->dirroot)
  * @return array Sorted array of directory names found under the requested parameters
  */
-function get_list_of_plugins($directory='mod', $exclude='', $basedir='') {
+function get_list_of_plugins($directory = 'mod', $exclude = '', $basedir = '') {
     global $CFG;
 
     $plugins = array();
 
     if (empty($basedir)) {
-        $basedir = $CFG->dirroot .'/'. $directory;
-
+        $basedir = $CFG->dirroot . '/' . $directory;
     } else {
-        $basedir = $basedir .'/'. $directory;
+        $basedir = $basedir . '/' . $directory;
     }
 
     if ($CFG->debugdeveloper and empty($exclude)) {
@@ -7179,10 +7135,10 @@ function get_list_of_plugins($directory='mod', $exclude='', $basedir='') {
         while (false !== ($dir = readdir($dirhandle))) {
             // Func: strpos is marginally but reliably faster than substr($dir, 0, 1).
             if (strpos($dir, '.') === 0 or $dir === 'CVS' or $dir === '_vti_cnf' or $dir === 'simpletest' or $dir === 'yui' or
-                $dir === 'tests' or $dir === 'classes' or $dir === $exclude) {
+                    $dir === 'tests' or $dir === 'classes' or $dir === $exclude) {
                 continue;
             }
-            if (filetype($basedir .'/'. $dir) != 'dir') {
+            if (filetype($basedir . '/' . $dir) != 'dir') {
                 continue;
             }
             $plugins[] = $dir;
@@ -7259,8 +7215,8 @@ function component_callback_exists($component, $function) {
     list($type, $name) = core_component::normalize_component($component);
     $component = $type . '_' . $name;
 
-    $oldfunction = $name.'_'.$function;
-    $function = $component.'_'.$function;
+    $oldfunction = $name . '_' . $function;
+    $function = $component . '_' . $function;
 
     $dir = core_component::get_component_directory($component);
     if (empty($dir)) {
@@ -7268,8 +7224,8 @@ function component_callback_exists($component, $function) {
     }
 
     // Load library and look for function.
-    if (file_exists($dir.'/lib.php')) {
-        require_once($dir.'/lib.php');
+    if (file_exists($dir . '/lib.php')) {
+        require_once($dir . '/lib.php');
     }
 
     if (!function_exists($function) and function_exists($oldfunction)) {
@@ -7316,13 +7272,12 @@ function plugin_supports($type, $name, $feature, $default = null) {
         // otherwise it would end up in infinite loop.
         if (file_exists("$CFG->dirroot/mod/$name/lib.php")) {
             include_once("$CFG->dirroot/mod/$name/lib.php");
-            $function = $component.'_supports';
+            $function = $component . '_supports';
             if (!function_exists($function)) {
                 // Legacy non-frankenstyle function name.
-                $function = $name.'_supports';
+                $function = $name . '_supports';
             }
         }
-
     } else {
         if (!$path = core_component::get_plugin_directory($type, $name)) {
             // Non existent plugin type.
@@ -7330,7 +7285,7 @@ function plugin_supports($type, $name, $feature, $default = null) {
         }
         if (file_exists("$path/lib.php")) {
             include_once("$path/lib.php");
-            $function = $component.'_supports';
+            $function = $component . '_supports';
         }
     }
 
@@ -7356,7 +7311,7 @@ function plugin_supports($type, $name, $feature, $default = null) {
  * @param string $version The version of php being tested.
  * @return bool
  */
-function check_php_version($version='5.2.4') {
+function check_php_version($version = '5.2.4') {
     return (version_compare(phpversion(), $version) >= 0);
 }
 
@@ -7405,11 +7360,10 @@ function moodle_major_version($fromdisk = false) {
 
     if ($fromdisk) {
         $release = null;
-        require($CFG->dirroot.'/version.php');
+        require($CFG->dirroot . '/version.php');
         if (empty($release)) {
             return false;
         }
-
     } else {
         if (empty($CFG->release)) {
             return false;
@@ -7432,7 +7386,7 @@ function moodle_major_version($fromdisk = false) {
  * @category string
  * @param string $locale Can be used to force a locale
  */
-function moodle_setlocale($locale='') {
+function moodle_setlocale($locale = '') {
     global $CFG;
 
     static $currentlocale = ''; // Last locale caching.
@@ -7463,36 +7417,35 @@ function moodle_setlocale($locale='') {
     // Due to some strange BUG we cannot set the LC_TIME directly, so we fetch current values,
     // set LC_ALL and then set values again. Just wondering why we cannot set LC_ALL only??? - stronk7
     // Some day, numeric, monetary and other categories should be set too, I think. :-/.
-
     // Get current values.
-    $monetary= setlocale (LC_MONETARY, 0);
-    $numeric = setlocale (LC_NUMERIC, 0);
-    $ctype   = setlocale (LC_CTYPE, 0);
+    $monetary = setlocale(LC_MONETARY, 0);
+    $numeric = setlocale(LC_NUMERIC, 0);
+    $ctype = setlocale(LC_CTYPE, 0);
     if ($CFG->ostype != 'WINDOWS') {
-        $messages= setlocale (LC_MESSAGES, 0);
+        $messages = setlocale(LC_MESSAGES, 0);
     }
     // Set locale to all.
-    $result = setlocale (LC_ALL, $currentlocale);
+    $result = setlocale(LC_ALL, $currentlocale);
     // If setting of locale fails try the other utf8 or utf-8 variant,
     // some operating systems support both (Debian), others just one (OSX).
     if ($result === false) {
         if (stripos($currentlocale, '.UTF-8') !== false) {
             $newlocale = str_ireplace('.UTF-8', '.UTF8', $currentlocale);
-            setlocale (LC_ALL, $newlocale);
+            setlocale(LC_ALL, $newlocale);
         } else if (stripos($currentlocale, '.UTF8') !== false) {
             $newlocale = str_ireplace('.UTF8', '.UTF-8', $currentlocale);
-            setlocale (LC_ALL, $newlocale);
+            setlocale(LC_ALL, $newlocale);
         }
     }
     // Set old values.
-    setlocale (LC_MONETARY, $monetary);
-    setlocale (LC_NUMERIC, $numeric);
+    setlocale(LC_MONETARY, $monetary);
+    setlocale(LC_NUMERIC, $numeric);
     if ($CFG->ostype != 'WINDOWS') {
-        setlocale (LC_MESSAGES, $messages);
+        setlocale(LC_MESSAGES, $messages);
     }
     if ($currentlocale == 'tr_TR' or $currentlocale == 'tr_TR.UTF-8') {
         // To workaround a well-known PHP problem with Turkish letter Ii.
-        setlocale (LC_CTYPE, $ctype);
+        setlocale(LC_CTYPE, $ctype);
     }
 }
 
@@ -7541,16 +7494,16 @@ function count_letters($string) {
  * @param int $length The length of the string to be created.
  * @return string
  */
-function random_string($length=15) {
+function random_string($length = 15) {
     $randombytes = random_bytes_emulate($length);
-    $pool  = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    $pool = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
     $pool .= 'abcdefghijklmnopqrstuvwxyz';
     $pool .= '0123456789';
     $poollen = strlen($pool);
     $string = '';
     for ($i = 0; $i < $length; $i++) {
         $rand = ord($randombytes[$i]);
-        $string .= substr($pool, ($rand%($poollen)), 1);
+        $string .= substr($pool, ($rand % ($poollen)), 1);
     }
     return $string;
 }
@@ -7564,18 +7517,18 @@ function random_string($length=15) {
  * @param int $length Optional if set generates a string to exactly this length
  * @return string
  */
-function complex_random_string($length=null) {
-    $pool  = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+function complex_random_string($length = null) {
+    $pool = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
     $pool .= '`~!@#%^&*()_+-=[];,./<>?:{} ';
     $poollen = strlen($pool);
-    if ($length===null) {
+    if ($length === null) {
         $length = floor(rand(24, 32));
     }
     $randombytes = random_bytes_emulate($length);
     $string = '';
     for ($i = 0; $i < $length; $i++) {
         $rand = ord($randombytes[$i]);
-        $string .= $pool[($rand%$poollen)];
+        $string .= $pool[($rand % $poollen)];
     }
     return $string;
 }
@@ -7632,7 +7585,7 @@ function random_bytes_emulate($length) {
  * @param string $ending The string to append if the passed string is truncated
  * @return string $truncate shortened string
  */
-function shorten_text($text, $ideal=30, $exact = false, $ending='...') {
+function shorten_text($text, $ideal = 30, $exact = false, $ending = '...') {
     // If the plain text is shorter than the maximum length, return the whole text.
     if (core_text::strlen(preg_replace('/<.*?>/', '', $text)) <= $ideal) {
         return $text;
@@ -7659,18 +7612,17 @@ function shorten_text($text, $ideal=30, $exact = false, $ending='...') {
                 if (preg_match('/^<\s*\/([^\s]+?)\s*>$/s', $linematchings[1], $tagmatchings)) {
                     // Record closing tag.
                     $tagdetails[] = (object) array(
-                            'open' => false,
-                            'tag'  => core_text::strtolower($tagmatchings[1]),
-                            'pos'  => core_text::strlen($truncate),
-                        );
-
+                                'open' => false,
+                                'tag' => core_text::strtolower($tagmatchings[1]),
+                                'pos' => core_text::strlen($truncate),
+                    );
                 } else if (preg_match('/^<\s*([^\s>!]+).*?>$/s', $linematchings[1], $tagmatchings)) {
                     // Record opening tag.
                     $tagdetails[] = (object) array(
-                            'open' => true,
-                            'tag'  => core_text::strtolower($tagmatchings[1]),
-                            'pos'  => core_text::strlen($truncate),
-                        );
+                                'open' => true,
+                                'tag' => core_text::strtolower($tagmatchings[1]),
+                                'pos' => core_text::strlen($truncate),
+                    );
                 }
             }
             // Add html-tag to $truncate'd text.
@@ -7687,7 +7639,7 @@ function shorten_text($text, $ideal=30, $exact = false, $ending='...') {
             if (preg_match_all('/&[0-9a-z]{2,8};|&#[0-9]{1,7};|&#x[0-9a-f]{1,6};/i', $linematchings[2], $entities, PREG_OFFSET_CAPTURE)) {
                 // Calculate the real length of all entities in the legal range.
                 foreach ($entities[0] as $entity) {
-                    if ($entity[1]+1-$entitieslength <= $left) {
+                    if ($entity[1] + 1 - $entitieslength <= $left) {
                         $left--;
                         $entitieslength += core_text::strlen($entity[0]);
                     } else {
@@ -7762,7 +7714,6 @@ function shorten_text($text, $ideal=30, $exact = false, $ending='...') {
     return $truncate;
 }
 
-
 /**
  * Given dates in seconds, how many weeks is the date from startdate
  * The first week is 1, the second 2 etc ...
@@ -7771,7 +7722,7 @@ function shorten_text($text, $ideal=30, $exact = false, $ending='...') {
  * @param int $thedate Timestamp for the end date
  * @return string
  */
-function getweek ($startdate, $thedate) {
+function getweek($startdate, $thedate) {
     if ($thedate < $startdate) {
         return 0;
     }
@@ -7788,7 +7739,7 @@ function getweek ($startdate, $thedate) {
  * @param int $maxlen  The maximum size of the password being generated.
  * @return string
  */
-function generate_password($maxlen=10) {
+function generate_password($maxlen = 10) {
     global $CFG;
 
     if (empty($CFG->passwordpolicy)) {
@@ -7831,17 +7782,17 @@ function generate_password($maxlen=10) {
         }
 
         // Now mix and shuffle it all.
-        $password = str_shuffle (substr(str_shuffle ($passwordlower), 0, $lower) .
-                                 substr(str_shuffle ($passwordupper), 0, $upper) .
-                                 substr(str_shuffle ($passworddigits), 0, $digits) .
-                                 substr(str_shuffle ($passwordnonalphanum), 0 , $nonalphanum) .
-                                 substr(str_shuffle ($passwordlower .
-                                                     $passwordupper .
-                                                     $passworddigits .
-                                                     $passwordnonalphanum), 0 , $additional));
+        $password = str_shuffle(substr(str_shuffle($passwordlower), 0, $lower) .
+                substr(str_shuffle($passwordupper), 0, $upper) .
+                substr(str_shuffle($passworddigits), 0, $digits) .
+                substr(str_shuffle($passwordnonalphanum), 0, $nonalphanum) .
+                substr(str_shuffle($passwordlower .
+                                $passwordupper .
+                                $passworddigits .
+                                $passwordnonalphanum), 0, $additional));
     }
 
-    return substr ($password, 0, $maxlen);
+    return substr($password, 0, $maxlen);
 }
 
 /**
@@ -7859,7 +7810,7 @@ function generate_password($maxlen=10) {
  * @param bool $stripzeros If true, removes final zeros after decimal point
  * @return string locale float
  */
-function format_float($float, $decimalpoints=1, $localized=true, $stripzeros=false) {
+function format_float($float, $decimalpoints = 1, $localized = true, $stripzeros = false) {
     if (is_null($float)) {
         return '';
     }
@@ -7898,7 +7849,7 @@ function unformat_float($localefloat, $strict = false) {
         return false;
     }
 
-    return (float)$localefloat;
+    return (float) $localefloat;
 }
 
 /**
@@ -7994,11 +7945,11 @@ function microtime_diff($a, $b) {
  * @param string $separator The separator used within the list string
  * @return array The now assembled array
  */
-function make_menu_from_list($list, $separator=',') {
+function make_menu_from_list($list, $separator = ',') {
 
     $array = array_reverse(explode($separator, $list), true);
     foreach ($array as $key => $item) {
-        $outarray[$key+1] = trim($item);
+        $outarray[$key + 1] = trim($item);
     }
     return $outarray;
 }
@@ -8021,12 +7972,12 @@ function make_grades_menu($gradingtype) {
 
     $grades = array();
     if ($gradingtype < 0) {
-        if ($scale = $DB->get_record('scale', array('id'=> (-$gradingtype)))) {
+        if ($scale = $DB->get_record('scale', array('id' => (-$gradingtype)))) {
             return make_menu_from_list($scale->scale);
         }
     } else if ($gradingtype > 0) {
-        for ($i=$gradingtype; $i>=0; $i--) {
-            $grades[$i] = $i .' / '. $gradingtype;
+        for ($i = $gradingtype; $i >= 0; $i--) {
+            $grades[$i] = $i . ' / ' . $gradingtype;
         }
         return $grades;
     }
@@ -8049,9 +8000,9 @@ function course_scale_used($courseid, $scaleid) {
         if ($cms = get_course_mods($courseid)) {
             foreach ($cms as $cm) {
                 // Check cm->name/lib.php exists.
-                if (file_exists($CFG->dirroot.'/mod/'.$cm->modname.'/lib.php')) {
-                    include_once($CFG->dirroot.'/mod/'.$cm->modname.'/lib.php');
-                    $functionname = $cm->modname.'_scale_used';
+                if (file_exists($CFG->dirroot . '/mod/' . $cm->modname . '/lib.php')) {
+                    include_once($CFG->dirroot . '/mod/' . $cm->modname . '/lib.php');
+                    $functionname = $cm->modname . '_scale_used';
                     if (function_exists($functionname)) {
                         if ($functionname($cm->instance, $scaleid)) {
                             $return++;
@@ -8069,8 +8020,7 @@ function course_scale_used($courseid, $scaleid) {
                                              FROM {grade_outcomes_courses} goc,
                                                   {grade_outcomes} go
                                             WHERE go.id = goc.outcomeid
-                                                  AND go.scaleid = ? AND goc.courseid = ?",
-                                          array($scaleid, $courseid));
+                                                  AND go.scaleid = ? AND goc.courseid = ?", array($scaleid, $courseid));
     }
     return $return;
 }
@@ -8123,15 +8073,14 @@ function make_unique_id_code($extra = '') {
 
     $date = gmdate("ymdHis");
 
-    $random =  random_string(6);
+    $random = random_string(6);
 
     if ($extra) {
-        return $hostname .'+'. $date .'+'. $random .'+'. $extra;
+        return $hostname . '+' . $date . '+' . $random . '+' . $extra;
     } else {
-        return $hostname .'+'. $date .'+'. $random;
+        return $hostname . '+' . $date . '+' . $random;
     }
 }
-
 
 /**
  * Function to check the passed address is within the passed subnet
@@ -8199,22 +8148,21 @@ function address_in_subnet($addr, $subnetstr) {
                     continue;
                 }
                 $ipparts = explode(':', $ip);
-                $modulo  = $mask % 16;
-                $ipnet   = array_slice($ipparts, 0, ($mask-$modulo)/16);
-                $addrnet = array_slice($addrparts, 0, ($mask-$modulo)/16);
+                $modulo = $mask % 16;
+                $ipnet = array_slice($ipparts, 0, ($mask - $modulo) / 16);
+                $addrnet = array_slice($addrparts, 0, ($mask - $modulo) / 16);
                 if (implode(':', $ipnet) === implode(':', $addrnet)) {
                     if ($modulo == 0) {
                         return true;
                     }
-                    $pos     = ($mask-$modulo)/16;
-                    $ipnet   = hexdec($ipparts[$pos]);
+                    $pos = ($mask - $modulo) / 16;
+                    $ipnet = hexdec($ipparts[$pos]);
                     $addrnet = hexdec($addrparts[$pos]);
-                    $mask    = 0xffff << (16 - $modulo);
+                    $mask = 0xffff << (16 - $modulo);
                     if (($addrnet & $mask) == ($ipnet & $mask)) {
                         return true;
                     }
                 }
-
             } else {
                 // IPv4.
                 if ($ipv6) {
@@ -8237,7 +8185,6 @@ function address_in_subnet($addr, $subnetstr) {
                     return true;
                 }
             }
-
         } else if (strpos($subnet, '-') !== false) {
             // 2: xxx.xxx.xxx.xxx-yyy or  xxxx:xxxx:xxxx:xxxx:xxxx:xxxx:xxxx::xxxx-yyyy. A range of IP addresses in the last group.
             $parts = explode('-', $subnet);
@@ -8271,10 +8218,9 @@ function address_in_subnet($addr, $subnetstr) {
 
                 $addrend = hexdec($addrparts[7]);
 
-                if (($addrend >= $start) and ($addrend <= $end)) {
+                if (($addrend >= $start) and ( $addrend <= $end)) {
                     return true;
                 }
-
             } else {
                 // IPv4.
                 if ($ipv6) {
@@ -8291,11 +8237,10 @@ function address_in_subnet($addr, $subnetstr) {
                     continue;
                 }
 
-                if ((ip2long($addr) >= ip2long($ipstart)) and (ip2long($addr) <= ip2long($ipend))) {
+                if ((ip2long($addr) >= ip2long($ipstart)) and ( ip2long($addr) <= ip2long($ipend))) {
                     return true;
                 }
             }
-
         } else {
             // 3: xxx.xxx or xxx.xxx. or xxx:xxx:xxxx or xxx:xxx:xxxx.
             if (strpos($subnet, ':') !== false) {
@@ -8305,8 +8250,8 @@ function address_in_subnet($addr, $subnetstr) {
                 }
                 $parts = explode(':', $subnet);
                 $count = count($parts);
-                if ($parts[$count-1] === '') {
-                    unset($parts[$count-1]); // Trim trailing :'s.
+                if ($parts[$count - 1] === '') {
+                    unset($parts[$count - 1]); // Trim trailing :'s.
                     $count--;
                     $subnet = implode('.', $parts);
                 }
@@ -8319,12 +8264,11 @@ function address_in_subnet($addr, $subnetstr) {
                 } else if ($count > 8) {
                     continue;
                 }
-                $zeros = array_fill(0, 8-$count, '0');
-                $subnet = $subnet.':'.implode(':', $zeros).'/'.($count*16);
+                $zeros = array_fill(0, 8 - $count, '0');
+                $subnet = $subnet . ':' . implode(':', $zeros) . '/' . ($count * 16);
                 if (address_in_subnet($addr, $subnet)) {
                     return true;
                 }
-
             } else {
                 // IPv4.
                 if ($ipv6) {
@@ -8332,8 +8276,8 @@ function address_in_subnet($addr, $subnetstr) {
                 }
                 $parts = explode('.', $subnet);
                 $count = count($parts);
-                if ($parts[$count-1] === '') {
-                    unset($parts[$count-1]); // Trim trailing .
+                if ($parts[$count - 1] === '') {
+                    unset($parts[$count - 1]); // Trim trailing .
                     $count--;
                     $subnet = implode('.', $parts);
                 }
@@ -8346,8 +8290,8 @@ function address_in_subnet($addr, $subnetstr) {
                 } else if ($count > 4) {
                     continue;
                 }
-                $zeros = array_fill(0, 4-$count, '0');
-                $subnet = $subnet.'.'.implode('.', $zeros).'/'.($count*8);
+                $zeros = array_fill(0, 4 - $count, '0');
+                $subnet = $subnet . '.' . implode('.', $zeros) . '/' . ($count * 8);
                 if (address_in_subnet($addr, $subnet)) {
                     return true;
                 }
@@ -8366,10 +8310,10 @@ function address_in_subnet($addr, $subnetstr) {
  * @param string $sleep Period to make the application sleep
  *                      This ensures any messages have time to display before redirect
  */
-function mtrace($string, $eol="\n", $sleep=0) {
+function mtrace($string, $eol = "\n", $sleep = 0) {
 
-    if (defined('STDOUT') and !PHPUNIT_TEST) {
-        fwrite(STDOUT, $string.$eol);
+    if (defined('STDOUT') and ! PHPUNIT_TEST) {
+        fwrite(STDOUT, $string . $eol);
     } else {
         echo $string . $eol;
     }
@@ -8388,7 +8332,7 @@ function mtrace($string, $eol="\n", $sleep=0) {
  * @param string $path The path to strip
  * @return string the path with double slashes removed
  */
-function cleardoubleslashes ($path) {
+function cleardoubleslashes($path) {
     return preg_replace('/(\/|\\\){1,}/', '/', $path);
 }
 
@@ -8424,7 +8368,7 @@ function remoteip_in_list($list) {
  * @param string $default If an address can't be determined, then return this
  * @return string The remote IP address
  */
-function getremoteaddr($default='0.0.0.0') {
+function getremoteaddr($default = '0.0.0.0') {
     global $CFG;
 
     if (empty($CFG->getremoteaddrconf)) {
@@ -8478,7 +8422,7 @@ function getremoteaddr($default='0.0.0.0') {
  * @param bool $compress use IPv6 address compression
  * @return string normalised ip address string, null if error
  */
-function cleanremoteaddr($addr, $compress=false) {
+function cleanremoteaddr($addr, $compress = false) {
     $addr = trim($addr);
 
     // TODO: maybe add a separate function is_addr_public() or something like this.
@@ -8488,7 +8432,7 @@ function cleanremoteaddr($addr, $compress=false) {
         $parts = explode(':', $addr);
         $count = count($parts);
 
-        if (strpos($parts[$count-1], '.') !== false) {
+        if (strpos($parts[$count - 1], '.') !== false) {
             // Legacy ipv4 notation.
             $last = array_pop($parts);
             $ipv4 = cleanremoteaddr($last, true);
@@ -8496,8 +8440,8 @@ function cleanremoteaddr($addr, $compress=false) {
                 return null;
             }
             $bits = explode('.', $ipv4);
-            $parts[] = dechex($bits[0]).dechex($bits[1]);
-            $parts[] = dechex($bits[2]).dechex($bits[3]);
+            $parts[] = dechex($bits[0]) . dechex($bits[1]);
+            $parts[] = dechex($bits[2]) . dechex($bits[3]);
             $count = count($parts);
             $addr = implode(':', $parts);
         }
@@ -8569,7 +8513,7 @@ function cleanremoteaddr($addr, $compress=false) {
         if ($match > 255) {
             return null;
         }
-        $parts[$key] = (int)$match; // Normalise 0s.
+        $parts[$key] = (int) $match; // Normalise 0s.
     }
 
     return implode('.', $parts);
@@ -8586,12 +8530,12 @@ function fullclone($thing) {
     return unserialize(serialize($thing));
 }
 
- /**
-  * If new messages are waiting for the current user, then insert
-  * JavaScript to pop up the messaging window into the page
-  *
-  * @return void
-  */
+/**
+ * If new messages are waiting for the current user, then insert
+ * JavaScript to pop up the messaging window into the page
+ *
+ * @return void
+ */
 function message_popup_window() {
     global $USER, $DB, $PAGE, $CFG;
 
@@ -8605,7 +8549,7 @@ function message_popup_window() {
 
     if (!isset($USER->message_lastpopup)) {
         $USER->message_lastpopup = 0;
-    } else if ($USER->message_lastpopup > (time()-120)) {
+    } else if ($USER->message_lastpopup > (time() - 120)) {
         // Don't run the query to check whether to display a popup if its been run in the last 2 minutes.
         return;
     }
@@ -8628,7 +8572,7 @@ function message_popup_window() {
 
     // If the user was last notified over an hour ago we can re-notify them of old messages
     // so don't worry about when the new message was sent.
-    $lastnotifiedlongago = $USER->message_lastpopup < (time()-3600);
+    $lastnotifiedlongago = $USER->message_lastpopup < (time() - 3600);
     if (!$lastnotifiedlongago) {
         $messagesql .= 'AND m.timecreated > :lastpopuptime';
     }
@@ -8656,26 +8600,25 @@ function message_popup_window() {
         $beep = get_user_preferences('message_beepnewmessage', '');
         if (!empty($beep)) {
             // Browsers will work down this list until they find something they support.
-            $sourcetags =  html_writer::empty_tag('source', array('src' => $CFG->wwwroot.'/message/bell.wav', 'type' => 'audio/wav'));
-            $sourcetags .= html_writer::empty_tag('source', array('src' => $CFG->wwwroot.'/message/bell.ogg', 'type' => 'audio/ogg'));
-            $sourcetags .= html_writer::empty_tag('source', array('src' => $CFG->wwwroot.'/message/bell.mp3', 'type' => 'audio/mpeg'));
-            $sourcetags .= html_writer::empty_tag('embed',  array('src' => $CFG->wwwroot.'/message/bell.wav', 'autostart' => 'true', 'hidden' => 'true'));
+            $sourcetags = html_writer::empty_tag('source', array('src' => $CFG->wwwroot . '/message/bell.wav', 'type' => 'audio/wav'));
+            $sourcetags .= html_writer::empty_tag('source', array('src' => $CFG->wwwroot . '/message/bell.ogg', 'type' => 'audio/ogg'));
+            $sourcetags .= html_writer::empty_tag('source', array('src' => $CFG->wwwroot . '/message/bell.mp3', 'type' => 'audio/mpeg'));
+            $sourcetags .= html_writer::empty_tag('embed', array('src' => $CFG->wwwroot . '/message/bell.wav', 'autostart' => 'true', 'hidden' => 'true'));
 
             $notificationsound = html_writer::tag('audio', $sourcetags, array('preload' => 'auto', 'autoplay' => 'autoplay'));
         }
 
-        $url = $CFG->wwwroot.'/message/index.php';
-        $content =  html_writer::start_tag('div', array('id' => 'newmessageoverlay', 'class' => 'mdl-align')).
-                        html_writer::start_tag('div', array('id' => 'newmessagetext')).
-                            $strmessages.
-                        html_writer::end_tag('div').
-
-                        $notificationsound.
-                        html_writer::start_tag('div', array('id' => 'newmessagelinks')).
-                        html_writer::link($url, $strgomessage, array('id' => 'notificationyes')).'&nbsp;&nbsp;&nbsp;'.
-                        html_writer::link('', $strstaymessage, array('id' => 'notificationno')).
-                        html_writer::end_tag('div');
-                    html_writer::end_tag('div');
+        $url = $CFG->wwwroot . '/message/index.php';
+        $content = html_writer::start_tag('div', array('id' => 'newmessageoverlay', 'class' => 'mdl-align')) .
+                html_writer::start_tag('div', array('id' => 'newmessagetext')) .
+                $strmessages .
+                html_writer::end_tag('div') .
+                $notificationsound .
+                html_writer::start_tag('div', array('id' => 'newmessagelinks')) .
+                html_writer::link($url, $strgomessage, array('id' => 'notificationyes')) . '&nbsp;&nbsp;&nbsp;' .
+                html_writer::link('', $strstaymessage, array('id' => 'notificationno')) .
+                html_writer::end_tag('div');
+        html_writer::end_tag('div');
 
         $PAGE->requires->js_init_call('M.core_message.init_notification', array('', $content, $url));
 
@@ -8731,31 +8674,31 @@ function get_performance_info() {
 
     $info = array();
     $info['html'] = '';         // Holds userfriendly HTML representation.
-    $info['txt']  = me() . ' '; // Holds log-friendly representation.
+    $info['txt'] = me() . ' '; // Holds log-friendly representation.
 
     $info['realtime'] = microtime_diff($PERF->starttime, microtime());
 
-    $info['html'] .= '<span class="timeused">'.$info['realtime'].' secs</span> ';
-    $info['txt'] .= 'time: '.$info['realtime'].'s ';
+    $info['html'] .= '<span class="timeused">' . $info['realtime'] . ' secs</span> ';
+    $info['txt'] .= 'time: ' . $info['realtime'] . 's ';
 
     if (function_exists('memory_get_usage')) {
         $info['memory_total'] = memory_get_usage();
         $info['memory_growth'] = memory_get_usage() - $PERF->startmemory;
-        $info['html'] .= '<span class="memoryused">RAM: '.display_size($info['memory_total']).'</span> ';
-        $info['txt']  .= 'memory_total: '.$info['memory_total'].'B (' . display_size($info['memory_total']).') memory_growth: '.
-            $info['memory_growth'].'B ('.display_size($info['memory_growth']).') ';
+        $info['html'] .= '<span class="memoryused">RAM: ' . display_size($info['memory_total']) . '</span> ';
+        $info['txt'] .= 'memory_total: ' . $info['memory_total'] . 'B (' . display_size($info['memory_total']) . ') memory_growth: ' .
+                $info['memory_growth'] . 'B (' . display_size($info['memory_growth']) . ') ';
     }
 
     if (function_exists('memory_get_peak_usage')) {
         $info['memory_peak'] = memory_get_peak_usage();
-        $info['html'] .= '<span class="memoryused">RAM peak: '.display_size($info['memory_peak']).'</span> ';
-        $info['txt']  .= 'memory_peak: '.$info['memory_peak'].'B (' . display_size($info['memory_peak']).') ';
+        $info['html'] .= '<span class="memoryused">RAM peak: ' . display_size($info['memory_peak']) . '</span> ';
+        $info['txt'] .= 'memory_peak: ' . $info['memory_peak'] . 'B (' . display_size($info['memory_peak']) . ') ';
     }
 
     $inc = get_included_files();
     $info['includecount'] = count($inc);
-    $info['html'] .= '<span class="included">Included '.$info['includecount'].' files</span> ';
-    $info['txt']  .= 'includecount: '.$info['includecount'].' ';
+    $info['html'] .= '<span class="included">Included ' . $info['includecount'] . ' files</span> ';
+    $info['txt'] .= 'includecount: ' . $info['includecount'] . ' ';
 
     if (!empty($CFG->early_install_lang) or empty($PAGE)) {
         // We can not track more performance before installation or before PAGE init, sorry.
@@ -8784,23 +8727,23 @@ function get_performance_info() {
 
     if (!empty($PERF->logwrites)) {
         $info['logwrites'] = $PERF->logwrites;
-        $info['html'] .= '<span class="logwrites">Log DB writes '.$info['logwrites'].'</span> ';
-        $info['txt'] .= 'logwrites: '.$info['logwrites'].' ';
+        $info['html'] .= '<span class="logwrites">Log DB writes ' . $info['logwrites'] . '</span> ';
+        $info['txt'] .= 'logwrites: ' . $info['logwrites'] . ' ';
     }
 
-    $info['dbqueries'] = $DB->perf_get_reads().'/'.($DB->perf_get_writes() - $PERF->logwrites);
-    $info['html'] .= '<span class="dbqueries">DB reads/writes: '.$info['dbqueries'].'</span> ';
-    $info['txt'] .= 'db reads/writes: '.$info['dbqueries'].' ';
+    $info['dbqueries'] = $DB->perf_get_reads() . '/' . ($DB->perf_get_writes() - $PERF->logwrites);
+    $info['html'] .= '<span class="dbqueries">DB reads/writes: ' . $info['dbqueries'] . '</span> ';
+    $info['txt'] .= 'db reads/writes: ' . $info['dbqueries'] . ' ';
 
     $info['dbtime'] = round($DB->perf_get_queries_time(), 5);
-    $info['html'] .= '<span class="dbtime">DB queries time: '.$info['dbtime'].' secs</span> ';
+    $info['html'] .= '<span class="dbtime">DB queries time: ' . $info['dbtime'] . ' secs</span> ';
     $info['txt'] .= 'db queries time: ' . $info['dbtime'] . 's ';
 
     if (function_exists('posix_times')) {
         $ptimes = posix_times();
         if (is_array($ptimes)) {
             foreach ($ptimes as $key => $val) {
-                $info[$key] = $ptimes[$key] -  $PERF->startposixtimes[$key];
+                $info[$key] = $ptimes[$key] - $PERF->startposixtimes[$key];
             }
             $info['html'] .= "<span class=\"posixtimes\">ticks: $info[ticks] user: $info[utime] sys: $info[stime] cuser: $info[cutime] csys: $info[cstime]</span> ";
             $info['txt'] .= "ticks: $info[ticks] user: $info[utime] sys: $info[stime] cuser: $info[cutime] csys: $info[cstime] ";
@@ -8813,7 +8756,7 @@ function get_performance_info() {
     if (is_readable('/proc/loadavg') && $loadavg = @file('/proc/loadavg')) {
         list($serverload) = explode(' ', $loadavg[0]);
         unset($loadavg);
-    } else if ( function_exists('is_executable') && is_executable('/usr/bin/uptime') && $loadavg = `/usr/bin/uptime` ) {
+    } else if (function_exists('is_executable') && is_executable('/usr/bin/uptime') && $loadavg = `/usr/bin/uptime`) {
         if (preg_match('/load averages?: (\d+[\.,:]\d+)/', $loadavg, $matches)) {
             $serverload = $matches[1];
         } else {
@@ -8822,7 +8765,7 @@ function get_performance_info() {
     }
     if (!empty($serverload)) {
         $info['serverload'] = $serverload;
-        $info['html'] .= '<span class="serverload">Load average: '.$info['serverload'].'</span> ';
+        $info['html'] .= '<span class="serverload">Load average: ' . $info['serverload'] . '</span> ';
         $info['txt'] .= "serverload: {$info['serverload']} ";
     }
 
@@ -8855,8 +8798,8 @@ function get_performance_info() {
                     $mode = ' <span title="request cache">[r]</span>';
                     break;
             }
-            $html .= '<span class="cache-definition-stats cache-mode-'.$modeclass.'">';
-            $html .= '<span class="cache-definition-stats-heading">'.$definition.$mode.'</span>';
+            $html .= '<span class="cache-definition-stats cache-mode-' . $modeclass . '">';
+            $html .= '<span class="cache-definition-stats-heading">' . $definition . $mode . '</span>';
             $text .= "$definition {";
             foreach ($details['stores'] as $store => $data) {
                 $hits += $data['hits'];
@@ -8879,14 +8822,14 @@ function get_performance_info() {
         $html .= '</span> ';
         $info['cachesused'] = "$hits / $misses / $sets";
         $info['html'] .= $html;
-        $info['txt'] .= $text.'. ';
+        $info['txt'] .= $text . '. ';
     } else {
         $info['cachesused'] = '0 / 0 / 0';
         $info['html'] .= '<span class="cachesused">Caches used (hits/misses/sets): 0/0/0</span>';
         $info['txt'] .= 'Caches used (hits/misses/sets): 0/0/0 ';
     }
 
-    $info['html'] = '<div class="performanceinfo siteinfo">'.$info['html'].'</div>';
+    $info['html'] = '<div class="performanceinfo siteinfo">' . $info['html'] . '</div>';
     return $info;
 }
 
@@ -8906,7 +8849,7 @@ function apd_get_profiling() {
  * @param bool $contentonly
  * @return bool success, true also if dir does not exist
  */
-function remove_dir($dir, $contentonly=false) {
+function remove_dir($dir, $contentonly = false) {
     if (!file_exists($dir)) {
         // Nothing to do.
         return true;
@@ -8915,12 +8858,12 @@ function remove_dir($dir, $contentonly=false) {
         return false;
     }
     $result = true;
-    while (false!==($item = readdir($handle))) {
+    while (false !== ($item = readdir($handle))) {
         if ($item != '.' && $item != '..') {
-            if (is_dir($dir.'/'.$item)) {
-                $result = remove_dir($dir.'/'.$item) && $result;
+            if (is_dir($dir . '/' . $item)) {
+                $result = remove_dir($dir . '/' . $item) && $result;
             } else {
-                $result = unlink($dir.'/'.$item) && $result;
+                $result = unlink($dir . '/' . $item) && $result;
             }
         }
     }
@@ -8942,13 +8885,13 @@ function remove_dir($dir, $contentonly=false) {
  * @param string $property name of property to find
  * @return bool true if property exists
  */
-function object_property_exists( $obj, $property ) {
-    if (is_string( $obj )) {
-        $properties = get_class_vars( $obj );
+function object_property_exists($obj, $property) {
+    if (is_string($obj)) {
+        $properties = get_class_vars($obj);
     } else {
-        $properties = get_object_vars( $obj );
+        $properties = get_object_vars($obj);
     }
-    return array_key_exists( $property, $properties );
+    return array_key_exists($property, $properties);
 }
 
 /**
@@ -9032,7 +8975,7 @@ function is_mnet_remote_user($user) {
 function setup_lang_from_browser() {
     global $CFG, $SESSION, $USER;
 
-    if (!empty($SESSION->lang) or !empty($USER->lang) or empty($CFG->autolang)) {
+    if (!empty($SESSION->lang) or ! empty($USER->lang) or empty($CFG->autolang)) {
         // Lang is defined in session or user profile, nothing to do.
         return;
     }
@@ -9050,12 +8993,12 @@ function setup_lang_from_browser() {
     $order = 1.0;
     foreach ($rawlangs as $lang) {
         if (strpos($lang, ';') === false) {
-            $langs[(string)$order] = $lang;
-            $order = $order-0.01;
+            $langs[(string) $order] = $lang;
+            $order = $order - 0.01;
         } else {
             $parts = explode(';', $lang);
             $pos = strpos($parts[1], '=');
-            $langs[substr($parts[1], $pos+1)] = $parts[0];
+            $langs[substr($parts[1], $pos + 1)] = $parts[0];
         }
     }
     krsort($langs, SORT_NUMERIC);
@@ -9082,7 +9025,7 @@ function setup_lang_from_browser() {
  * @param string $url url to check
  * @return boolean true if we should bypass the proxy
  */
-function is_proxybypass( $url ) {
+function is_proxybypass($url) {
     global $CFG;
 
     // Sanity check.
@@ -9091,12 +9034,12 @@ function is_proxybypass( $url ) {
     }
 
     // Get the host part out of the url.
-    if (!$host = parse_url( $url, PHP_URL_HOST )) {
+    if (!$host = parse_url($url, PHP_URL_HOST)) {
         return false;
     }
 
     // Get the possible bypass hosts into an array.
-    $matches = explode( ',', $CFG->proxybypass );
+    $matches = explode(',', $CFG->proxybypass);
 
     // Check for a match.
     // (IPs need to match the left hand side and hosts the right of the url,
@@ -9106,13 +9049,13 @@ function is_proxybypass( $url ) {
 
         // Try for IP match (Left side).
         $lhs = substr($host, 0, strlen($match));
-        if (strcasecmp($match, $lhs)==0) {
+        if (strcasecmp($match, $lhs) == 0) {
             return true;
         }
 
         // Try for host match (Right side).
         $rhs = substr($host, -strlen($match));
-        if (strcasecmp($match, $rhs)==0) {
+        if (strcasecmp($match, $rhs) == 0) {
             return true;
         }
     }
@@ -9160,12 +9103,12 @@ function in_object_vars($var, $object) {
  */
 function object_array_unique($array, $keepkeyassoc = true) {
     $duplicatekeys = array();
-    $tmp         = array();
+    $tmp = array();
 
     foreach ($array as $key => $val) {
         // Convert objects to arrays, in_array() does not support objects.
         if (is_object($val)) {
-            $val = (array)$val;
+            $val = (array) $val;
         }
 
         if (!in_array($val, $tmp)) {
@@ -9189,7 +9132,7 @@ function object_array_unique($array, $keepkeyassoc = true) {
  * @return boolean
  */
 function is_primary_admin($userid) {
-    $primaryadmin =  get_admin();
+    $primaryadmin = get_admin();
 
     if ($userid == $primaryadmin->id) {
         return true;
@@ -9269,16 +9212,20 @@ function check_consecutive_identical_characters($password, $maxchars) {
  */
 function partial() {
     if (!class_exists('partial')) {
+
         /**
          * Used to manage function binding.
          * @copyright  2009 Penny Leach
          * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
          */
-        class partial{
+        class partial {
+
             /** @var array */
             public $values = array();
+
             /** @var string The function to call as a callback. */
             public $func;
+
             /**
              * Constructor
              * @param string $func
@@ -9288,6 +9235,7 @@ function partial() {
                 $this->values = $args;
                 $this->func = $func;
             }
+
             /**
              * Calls the callback function.
              * @return mixed
@@ -9296,7 +9244,9 @@ function partial() {
                 $args = func_get_args();
                 return call_user_func_array($this->func, array_merge($this->values, $args));
             }
+
         }
+
     }
     $args = func_get_args();
     $func = array_shift($args);
@@ -9384,7 +9334,7 @@ function get_home_page() {
         if ($CFG->defaulthomepage == HOMEPAGE_MY) {
             return HOMEPAGE_MY;
         } else {
-            return (int)get_user_preferences('user_home_page_preference', HOMEPAGE_MY);
+            return (int) get_user_preferences('user_home_page_preference', HOMEPAGE_MY);
         }
     }
     return HOMEPAGE_SITE;
@@ -9401,7 +9351,7 @@ function get_course_display_name_for_list($course) {
     global $CFG;
     if (!empty($CFG->courselistshortnames)) {
         if (!($course instanceof stdClass)) {
-            $course = (object)convert_to_array($course);
+            $course = (object) convert_to_array($course);
         }
         return get_string('courseextendednamedisplay', '', $course);
     } else {
@@ -9473,10 +9423,13 @@ class lang_string {
 
     /** @var string The strings identifier */
     protected $identifier;
+
     /** @var string The strings component. Default '' */
     protected $component = '';
+
     /** @var array|stdClass Any arguments required for the string. Default null */
     protected $a = null;
+
     /** @var string The language to use when processing the string. Default null */
     protected $lang = null;
 
@@ -9521,7 +9474,7 @@ class lang_string {
             } else if ($a instanceof lang_string) {
                 $this->a = $a->out();
             } else if (is_object($a) or is_array($a)) {
-                $a = (array)$a;
+                $a = (array) $a;
                 $this->a = array();
                 foreach ($a as $key => $value) {
                     // Make sure conversion errors don't get displayed (results in '').
@@ -9534,7 +9487,7 @@ class lang_string {
                             $this->a[$key] = '';
                         }
                     } else {
-                        $this->a[$key] = (string)$value;
+                        $this->a[$key] = (string) $value;
                     }
                 }
             }
@@ -9548,7 +9501,7 @@ class lang_string {
                 throw new coding_exception('Invalid string compontent. Please check your string definition');
             }
             if (!get_string_manager()->string_exists($this->identifier, $this->component)) {
-                debugging('String does not exist. Please check your string definition for '.$this->identifier.'/'.$this->component, DEBUG_DEVELOPER);
+                debugging('String does not exist. Please check your string definition for ' . $this->identifier . '/' . $this->component, DEBUG_DEVELOPER);
             }
         }
     }
@@ -9596,7 +9549,7 @@ class lang_string {
     public function out($lang = null) {
         if ($lang !== null && $lang != $this->lang && ($this->lang == null && $lang != current_language())) {
             if ($this->forcedstring) {
-                debugging('lang_string objects that have been used cannot be printed in another language. ('.$this->lang.' used)', DEBUG_DEVELOPER);
+                debugging('lang_string objects that have been used cannot be printed in another language. (' . $this->lang . ' used)', DEBUG_DEVELOPER);
                 return $this->get_string();
             }
             $translatedstring = new lang_string($this->identifier, $this->component, $this->a, $lang);
@@ -9635,4 +9588,5 @@ class lang_string {
         $this->forcedstring = true;
         return array('forcedstring', 'string', 'lang');
     }
+
 }

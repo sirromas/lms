@@ -28,7 +28,7 @@ require ('CustomSignup.php');
 require_once ($CFG->dirroot . '/user/editlib.php');
 
 // Try to prevent searching for sites that allow sign-up.
-if (! isset($CFG->additionalhtmlhead)) {
+if (!isset($CFG->additionalhtmlhead)) {
     $CFG->additionalhtmlhead = '';
 }
 $CFG->additionalhtmlhead .= '<meta name="robots" content="noindex" />';
@@ -38,36 +38,40 @@ if (empty($CFG->registerauth)) {
 }
 $authplugin = get_auth_plugin($CFG->registerauth);
 
-if (! $authplugin->can_signup()) {
+if (!$authplugin->can_signup()) {
     print_error('notlocalisederrormessage', 'error', '', 'Sorry, you may not use this page.');
 }
 
 
 
-if ($_POST) {    
-    
+if ($_POST) {
+
     /*
-    echo "<br/>-----------------------<br/>";
-    print_r($_POST) ;
-    echo "<br/>-----------------------<br/>";
-    die ('stopped');
-    */
-    
-    $user=new stdClass(); 
-    $user->type=$_POST['user_type'];
-    $user->username=$_POST['email'];
-    $user->password=$_POST['password'];
-    $CFG->purepassword=$_POST['password'];
-    $user->email=$_POST['email'];
-    $user->email1=$_POST['email'];
-    $user->email2=$_POST['email'];
-    $user->firstname=$_POST['firstname'];
-    $user->lastname=$_POST['lastname'];
-    $user->course=$_POST['course'];
-    $user->group=$_POST['group'];
-    $user->create_group=$_POST['create_groups'];
-    $user->confirmed = 1;
-    $user->address=$_POST['address'];
+      echo "<br/>-----------------------<br/>";
+      print_r($_POST) ;
+      echo "<br/>-----------------------<br/>";
+      die ('stopped');
+     */
+
+    $user = new stdClass();
+    $user->type = $_POST['user_type'];
+    if ($user->type == 'tutor') {
+        $user->confirmed = 0;
+    } else {
+        $user->confirmed = 1;
+    }
+    $user->username = $_POST['email'];
+    $user->password = $_POST['password'];
+    $CFG->purepassword = $_POST['password'];
+    $user->email = $_POST['email'];
+    $user->email1 = $_POST['email'];
+    $user->email2 = $_POST['email'];
+    $user->firstname = $_POST['firstname'];
+    $user->lastname = $_POST['lastname'];
+    $user->course = $_POST['course'];
+    $user->group = $_POST['group'];
+    $user->create_group = $_POST['create_groups'];
+    $user->address = $_POST['address'];
     $user->lang = current_language();
     $user->firstaccess = 0;
     $user->timecreated = time();
@@ -78,22 +82,21 @@ if ($_POST) {
     $namefields = array_diff(get_all_user_name_fields(), useredit_get_required_name_fields());
     foreach ($namefields as $namefield) {
         $user->$namefield = '';
-    }    
-    $authplugin->user_signup($user, false);    
-    $csignup=new CustomSignup($user); 
-    $csignup->processCourseRequest();    
+    }
+    $authplugin->user_signup($user, false);
+    $csignup = new CustomSignup($user);
+    $csignup->processCourseRequest();
     if ($_POST['user_type'] == 'student') {
-        $response="<span style='color:#570101'>Thank you for Signup. "
-                . "Confirmation email is sent to ".$_POST['email']. ". "
+        $response = "<span style='color:#570101'>Thank you for Signup. "
+                . "Confirmation email is sent to " . $_POST['email'] . ". "
                 . "&nbsp;Next step is to get <a href='https://globalizationplus.com/subscription.html' "
                 . "style='color: #570101;cursor:pointer;text-decoration:underline;'>enrollment key</a></span>."
                 . "Please be aware key is attached to email you just signed up,"
-                . "so please provide this email (".$_POST['email'].") when you buy"
-                . " a key.";        
-    }
-    else {
-        $response="<span style='color:#570101'>Thank you for Signup. "
-                . "Confirmation email is sent to ".$_POST['email']."</span>";
+                . "so please provide this email (" . $_POST['email'] . ") when you buy"
+                . " a key.";
+    } else {
+        $response = "<span style='color:#570101'>Thank you for Signup. "
+                . "Confirmation email is sent to " . $_POST['email'] . "</span>";
     }
     die($response);
 }
@@ -115,7 +118,7 @@ if (isloggedin() and ! isguestuser()) {
     $logout = new single_button(new moodle_url($CFG->httpswwwroot . '/login/logout.php', array(
         'sesskey' => sesskey(),
         'loginpage' => 1
-    )), get_string('logout'), 'post');
+            )), get_string('logout'), 'post');
     $continue = new single_button(new moodle_url('/'), get_string('cancel'), 'get');
     echo $OUTPUT->confirm(get_string('cannotsignup', 'error', fullname($USER)), $logout, $continue);
     echo $OUTPUT->box_end();
@@ -127,32 +130,32 @@ $mform_signup = $authplugin->signup_form();
 
 if ($mform_signup->is_cancelled()) {
     redirect(get_login_url());
-} else 
-    
-    if ($user = $mform_signup->get_data()) {
-        
-        
-        print_r($user);
-        die ('Stopped');
-        
-        $user->confirmed = 0;
-        $user->lang = current_language();
-        $user->firstaccess = 0;
-        $user->timecreated = time();
-        $user->mnethostid = $CFG->mnet_localhost_id;
-        $user->secret = random_string(15);
-        $user->auth = $CFG->registerauth;
-        // Initialize alternate name fields to empty strings.
-        $namefields = array_diff(get_all_user_name_fields(), useredit_get_required_name_fields());
-        foreach ($namefields as $namefield) {
-            $user->$namefield = '';
-        }
-        
-        $authplugin->user_signup($user, true); // prints notice and link to login/index.php
-        exit(); // never reached
+} else
+
+if ($user = $mform_signup->get_data()) {
+
+
+    print_r($user);
+    die('Stopped');
+
+    $user->confirmed = 0;
+    $user->lang = current_language();
+    $user->firstaccess = 0;
+    $user->timecreated = time();
+    $user->mnethostid = $CFG->mnet_localhost_id;
+    $user->secret = random_string(15);
+    $user->auth = $CFG->registerauth;
+    // Initialize alternate name fields to empty strings.
+    $namefields = array_diff(get_all_user_name_fields(), useredit_get_required_name_fields());
+    foreach ($namefields as $namefield) {
+        $user->$namefield = '';
     }
-    
-   
+
+    $authplugin->user_signup($user, true); // prints notice and link to login/index.php
+    exit(); // never reached
+}
+
+
 
 // make sure we really are on the https page when https login required
 $PAGE->verify_https_required();
