@@ -3,7 +3,7 @@
 //error_reporting(E_ALL);
 //ini_set('display_errors', 1);
 
-require_once ($_SERVER['DOCUMENT_ROOT'] . '/lms/moodle/class.pdo.database.php');
+require_once ($_SERVER['DOCUMENT_ROOT'] . '/lms/class.pdo.database.php');
 
 class myCourses {
 
@@ -58,6 +58,39 @@ class myCourses {
                 $roleid = $row['roleid'];
             }
             return $roleid;
+        }
+    }
+
+    function getTutorGroups() {
+        $groups = array();
+        $query = "select groupid, userid  "
+                . "from mdl_groups_members "
+                . "where userid=$this->userid";
+        $num = $this->db->numrows($query);
+        if ($num > 0) {
+            $result = $this->db->query($query);
+            while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+                $groups[] = $row['groupid'];
+            }
+        }
+        return $groups;
+    }
+
+    function insideGroup($studentid) {
+        $groups = $this->getTutorGroups();
+        $query = "select groupid, userid  "
+                . "from mdl_groups_members "
+                . "where userid=$studentid";
+        $num = $this->db->numrows($query);
+        if ($num > 0) {
+            $result = $this->db->query($query);
+            while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+                $groupid = $row['groupid'];
+            }
+            return in_array($groupid, $groups);
+        } // end if $num > 0
+        else {
+            return false;
         }
     }
 
