@@ -22,14 +22,14 @@
  * @author     Adam Olley <adam.olley@netspot.com.au>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-
 require_once(__DIR__ . '/../../../config.php');
-require_once($CFG->libdir.'/gradelib.php');
-require_once($CFG->dirroot.'/grade/lib.php');
+require_once($CFG->libdir . '/gradelib.php');
+require_once($CFG->dirroot . '/grade/lib.php');
+require_once($CFG->dirroot . '/course/courseSections.php');
 
-$download      = optional_param('download', '', PARAM_ALPHA);
-$courseid      = required_param('id', PARAM_INT);        // Course id.
-$page          = optional_param('page', 0, PARAM_INT);   // Active page.
+$download = optional_param('download', '', PARAM_ALPHA);
+$courseid = required_param('id', PARAM_INT);        // Course id.
+$page = optional_param('page', 0, PARAM_INT);   // Active page.
 
 $PAGE->set_pagelayout('report');
 $url = new moodle_url('/grade/report/history/index.php', array('id' => $courseid));
@@ -38,6 +38,13 @@ $PAGE->set_url($url);
 $course = $DB->get_record('course', array('id' => $courseid), '*', MUST_EXIST);
 require_login($course);
 $context = context_course::instance($course->id);
+
+global $COURSE, $USER;
+
+$cs = new courseSections($context, $COURSE->id, $USER->id);
+$roleid = $cs->getCourseRoles();
+$forumid = $cs->getForumId();
+
 
 require_capability('gradereport/history:view', $context);
 require_capability('moodle/grade:viewall', $context);
@@ -58,7 +65,7 @@ $params = array('course' => $course, 'itemids' => $itemids, 'graders' => $grader
 $mform = new \gradereport_history\filter_form(null, $params);
 $filters = array();
 if ($data = $mform->get_data()) {
-    $filters = (array)$data;
+    $filters = (array) $data;
 
     if (!empty($filters['datetill'])) {
         $filters['datetill'] += DAYSECS - 1; // Set to end of the chosen day.
@@ -109,11 +116,20 @@ $mform->display();
 echo $output->render($table);
 
 $event = \gradereport_history\event\grade_report_viewed::create(
-    array(
-        'context' => $context,
-        'courseid' => $courseid
-    )
+                array(
+                    'context' => $context,
+                    'courseid' => $courseid
+                )
 );
 $event->trigger();
+
+if ($roleid == 4) {
+
+    $url = 'http://' . $_SERVER['SERVER_NAME'] . '/lms/mod/forum/view.php?id=' . $forumid;
+    ?>
+    <br/><br/><p><a href="<?php echo $url; ?>" target="_blank">Go to forum</a></p>
+
+    <?php
+}
 
 echo $OUTPUT->footer();

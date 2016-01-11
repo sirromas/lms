@@ -58,6 +58,7 @@ require_capability('mod/quiz:view', $context);
 
 // Get forrum link
 $cs = new courseSections($context, $COURSE->id, $USER->id);
+$roleid = $cs->getCourseRoles();
 $forumid = $cs->getForumId();
 
 
@@ -244,13 +245,15 @@ if (isguestuser()) {
     echo $output->view_page($course, $quiz, $cm, $context, $viewobj);
 }
 
-if ($forumid != false) {
-    $url = 'http://' . $_SERVER['SERVER_NAME'] . '/lms/mod/forum/view.php?id=' . $forumid;
-    ?>
-    <iframe src="<?php echo $url; ?>" onload="this.width = screen.width * 0.9;
-                this.height = screen.height;" frameBorder="0"></iframe>
-    <?php
-}
+if ($roleid == 5) {
 
+    if ($forumid != false) {
+        $url = 'http://' . $_SERVER['SERVER_NAME'] . '/lms/mod/forum/view.php?id=' . $forumid;
+        ?>
+        <iframe src="<?php echo $url; ?>" onload="this.width = screen.width * 0.9;
+                    this.height = screen.height;" frameBorder="0"></iframe>
+        <?php
+    }
+}
 
 echo $OUTPUT->footer();

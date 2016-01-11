@@ -1,5 +1,4 @@
 <?php
-
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -27,6 +26,7 @@ require_once($CFG->libdir . '/gradelib.php');
 require_once($CFG->dirroot . '/user/renderer.php');
 require_once($CFG->dirroot . '/grade/lib.php');
 require_once($CFG->dirroot . '/grade/report/grader/lib.php');
+require_once($CFG->dirroot . '/course/courseSections.php');
 
 $courseid = required_param('id', PARAM_INT);        // course id
 $page = optional_param('page', 0, PARAM_INT);   // active page
@@ -60,6 +60,16 @@ if (!$course = $DB->get_record('course', array('id' => $courseid))) {
 }
 require_login($course);
 $context = context_course::instance($course->id);
+
+// Get forum link
+
+global $COURSE, $USER;
+
+$cs = new courseSections($context, $COURSE->id, $USER->id);
+$roleid = $cs->getCourseRoles();
+$forumid = $cs->getForumId();
+
+
 
 require_capability('gradereport/grader:view', $context);
 require_capability('moodle/grade:viewall', $context);
@@ -206,5 +216,16 @@ $event = \gradereport_grader\event\grade_report_viewed::create(
                 )
 );
 $event->trigger();
+
+if ($roleid == 4) {
+
+    $url = 'http://' . $_SERVER['SERVER_NAME'] . '/lms/mod/forum/view.php?id=' . $forumid;
+    ?>
+    <p><a href="<?php echo $url; ?>" target="_blank">Go to forum</a></p>
+
+    <?php
+}
+
+
 
 echo $OUTPUT->footer();

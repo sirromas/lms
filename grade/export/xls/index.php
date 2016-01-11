@@ -1,5 +1,4 @@
 <?php
-
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -16,19 +15,27 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 require_once '../../../config.php';
-require_once $CFG->dirroot.'/grade/export/lib.php';
+require_once $CFG->dirroot . '/grade/export/lib.php';
 require_once 'grade_export_xls.php';
+require_once($CFG->dirroot . '/course/courseSections.php');
 
 $id = required_param('id', PARAM_INT); // course id
 
-$PAGE->set_url('/grade/export/xls/index.php', array('id'=>$id));
+$PAGE->set_url('/grade/export/xls/index.php', array('id' => $id));
 
-if (!$course = $DB->get_record('course', array('id'=>$id))) {
+if (!$course = $DB->get_record('course', array('id' => $id))) {
     print_error('nocourseid');
 }
 
 require_login($course);
 $context = context_course::instance($id);
+
+global $COURSE, $USER;
+
+$cs = new courseSections($context, $COURSE->id, $USER->id);
+$roleid = $cs->getCourseRoles();
+$forumid = $cs->getForumId();
+
 
 require_capability('moodle/grade:export', $context);
 require_capability('gradeexport/xls:view', $context);
@@ -49,18 +56,27 @@ $formoptions = array(
 
 $mform = new grade_export_form($actionurl, $formoptions);
 
-$groupmode    = groups_get_course_groupmode($course);   // Groups are being used
+$groupmode = groups_get_course_groupmode($course);   // Groups are being used
 $currentgroup = groups_get_course_group($course, true);
-if ($groupmode == SEPARATEGROUPS and !$currentgroup and !has_capability('moodle/site:accessallgroups', $context)) {
+if ($groupmode == SEPARATEGROUPS and ! $currentgroup and ! has_capability('moodle/site:accessallgroups', $context)) {
     echo $OUTPUT->heading(get_string("notingroup"));
     echo $OUTPUT->footer();
     die;
 }
 
-groups_print_course_menu($course, 'index.php?id='.$id);
+groups_print_course_menu($course, 'index.php?id=' . $id);
 echo '<div class="clearer"></div>';
 
 $mform->display();
+
+if ($roleid == 4) {
+
+    $url = 'http://' . $_SERVER['SERVER_NAME'] . '/lms/mod/forum/view.php?id=' . $forumid;
+    ?>
+    <p><a href="<?php echo $url; ?>" target="_blank">Go to forum</a></p>
+
+    <?php
+}
 
 echo $OUTPUT->footer();
 
