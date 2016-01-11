@@ -199,9 +199,11 @@ $(document).ready(function () {
                 $('.CSSTableGenerator').fadeTo("slow", 0.33);
                 $('#spinner').show();
                 $.post(url, query).done(function (data) {
-                    $("#signup_content").html(data);
-                }).fail(function () {
-                    $("#email_err").html('Provided email already in use');
+                    $("#signup_content").html('Thank you for signup. Confirmation email is sent to '+email);
+                }).fail(function (data) {
+                    console.log('Server response:'+data);
+                    // $("#signup_content").html('Ops something wrong ...');
+                    $("#signup_content").html('Thank you for signup. Confirmation email is sent to '+email);
                     return false;
                 })
                 return false;
