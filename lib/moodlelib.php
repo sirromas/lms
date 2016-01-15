@@ -28,6 +28,11 @@
  * @copyright  1999 onwards Martin Dougiamas  http://dougiamas.com
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+
+//require_once $_SERVER["DOCUMENT_ROOT"].'/lms/utils/utils.php';
+//require_once($_SERVER['DOCUMENT_ROOT'] . '/lms/class.database.php');
+//require_once($CFG->dirroot . '/utils/utils.php');
+
 defined('MOODLE_INTERNAL') || die();
 
 // CONSTANTS (Encased in phpdoc proper comments).
@@ -5803,6 +5808,34 @@ function get_user_group($user) {
     return $group_name->name;
 }
 
+function get_group_id ($group_name) {
+    global $DB;
+    //echo "Group name: " . $group_name ."<br/>";
+    $group_id = $DB->get_record('groups', array('name' => $group_name));
+    //print_r($group_id);
+    return $group_id->id;
+}
+
+function generateRandomString($length = 25) {
+        return substr(str_shuffle("0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"), 0, $length);
+    }
+
+function get_group_secret_code($user) {
+    global $DB;    
+    // Generate code for newly created group
+    $code=  generateRandomString();
+    $group_id=get_group_id($user->group);    
+    $group_code=new stdClass();
+    $group_code->groupid=$group_id;
+    $group_code->courseid=3;
+    $group_code->idnumber=0;
+    $group_code->name=$user->group;
+    $group_code->code=$code;
+    $DB->insert_record(group_codes, $group_code, false);    
+    $new_group_code = $DB->get_record('group_codes', array('name' => $user->group));    
+    return $new_group_code->code;
+}
+
 function getTutorWelcomeMessage($user) {
 
     global $CFG;
@@ -5812,11 +5845,12 @@ function getTutorWelcomeMessage($user) {
     $subject = "Account confirmation";
     $message_header = "<html><body>";
     $message_footer = "</body></html>";
-    $message_body = "<p align='center'>Dear $user->firstname $user->lastname !</p>"
-            . "<p align='center'>Thank you for signup!</p>"
+    $message_body = "<p align='left'>Dear $user->firstname $user->lastname !</p>"
+            . "<p align='left'>Thank you for signup!</p>"
             . "<p>Your username: $user->username </p>"
             . "<p>Your password: $CFG->purepassword </p>"
-            . "<p>Your group: " . get_user_group($user) . "</p>"
+            . "<p>Your group: " . $user->group . "</p>"
+            . "<p>Your group secret code: " . get_group_secret_code($user) . "</p>"
             . "<p>Because you are Professor you need to confirm your membership."
             . "Please go to http://globalizationplus.com/lms/tutors/ and use "
             . "your email: $user->email and group secret code to confirm your membership. </p>"
@@ -5826,6 +5860,15 @@ function getTutorWelcomeMessage($user) {
     $message = $message . $message_body;
     $message = $message . $message_footer;
     return $message;
+}
+
+function get_tutor_group_id($user) {
+    global $DB;
+    //echo "Group name: ".$user->group."<br/>";
+    $group = $DB->get_record('groups', array('name' => $user->group));
+    //echo "Tutor group id: ";
+    //prinr_r($group);
+    return $group->id;
 }
 
 /**
@@ -5848,23 +5891,25 @@ function send_confirmation_email($user) {
     $user->mailformat = 1;  // Always send HTML version as well.
     $message = get_string('emailconfirmation', '', $data);
 
-    if ($user->type== 'student') {
-
+    // We send confirmation email to student  only, since tutor groups are not exists yet
+    if ($user->type == 'student') {
         $username = urlencode($user->username);
         $username = str_replace('.', '%2E', $username); // Prevent problems with trailing dots.
         $data->link = $CFG->wwwroot . '/login/confirm.php?data=' . $user->secret . '/' . $username;
         $data->username = $user->username;
         $data->password = $CFG->purepassword;
         $data->group = get_user_group($user);
-        $data->user_type=$user->type;
-
+        $data->user_type = $user->type;
         $messagehtml = text_to_html(get_string('emailconfirmation', '', $data), false, false, true);
+        return email_to_user($user, $supportuser, $subject, $message, $messagehtml);
     } // end if $user->type!='tutor'
-    else {
+    /*
+    else {        
         $messagehtml = getTutorWelcomeMessage($user);
     }
-
-    return email_to_user($user, $supportuser, $subject, $message, $messagehtml);
+    */    
+    // We make this trick in order to simulate email sending even user is not tutor
+    return true;
 }
 
 function send_payment_confirmation_email($user) {

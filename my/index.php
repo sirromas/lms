@@ -37,7 +37,7 @@
 require_once(dirname(__FILE__) . '/../config.php');
 require_once($CFG->dirroot . '/my/lib.php');
 require_once './myCourses.php';
-require_once ($_SERVER['DOCUMENT_ROOT'] . '/lms/moodle/course/courseSections.php');
+require_once ($_SERVER['DOCUMENT_ROOT'] . '/lms/course/courseSections.php');
 
 redirect_if_major_upgrade_required();
 
@@ -172,7 +172,7 @@ if ($roleid!=2 || $roleid!=1) {
 
     if ($roleid == 4) {
         // Navigate directly to gradebook
-        $url = "http://" . $_SERVER['SERVER_NAME'] . "/lms/moodle/grade/report/grader/index.php?id=" . $courseid . "";
+        $url = "http://" . $_SERVER['SERVER_NAME'] . "/lms/grade/report/grader/index.php?id=" . $courseid . "";
         header("Location: $url");
     }
 
@@ -183,7 +183,7 @@ if ($roleid!=2 || $roleid!=1) {
         $cs = new courseSections($context, $courseid, $USER->id);
         $pageid = $cs->getPageId();
         if ($pageid > 1) {
-            $url = "http://" . $_SERVER['SERVER_NAME'] . "/lms/moodle/mod/page/view.php?id=" . $pageid . "";
+            $url = "http://" . $_SERVER['SERVER_NAME'] . "/lms/mod/page/view.php?id=" . $pageid . "";
             header("Location: $url");
         }
     }

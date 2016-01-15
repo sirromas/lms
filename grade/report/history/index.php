@@ -44,6 +44,8 @@ global $COURSE, $USER;
 $cs = new courseSections($context, $COURSE->id, $USER->id);
 $roleid = $cs->getCourseRoles();
 $forumid = $cs->getForumId();
+$quizid=$cs->getQuizId();
+$assid=$cs->getPageId();
 
 
 require_capability('gradereport/history:view', $context);
@@ -125,11 +127,18 @@ $event->trigger();
 
 if ($roleid == 4) {
 
-    $url = 'http://' . $_SERVER['SERVER_NAME'] . '/lms/mod/forum/view.php?id=' . $forumid;
+    $forum_url = 'http://' . $_SERVER['SERVER_NAME'] . '/lms/mod/forum/view.php?id=' . $forumid;
+    $quiz_url='http://' . $_SERVER['SERVER_NAME'] . '/lms/mod/quiz/view.php?id=' . $quizid;
+    $assesment_url='http://' . $_SERVER['SERVER_NAME'] . '/lms/mod/page/view.php?id=' . $assid;
+    
     ?>
-    <br/><br/><p><a href="<?php echo $url; ?>" target="_blank">Go to forum</a></p>
-
+<br/><br/>
+<p><span style="font-size: 16px;font-weight: bold;"><a href="<?php echo $assesment_url; ?>" target="_blank">Go to Assignment</a></span></p>
+<p><span style="font-size: 16px;font-weight: bold;"><a href="<?php echo $forum_url; ?>" target="_blank">Go to Discussion Board</a></span></p>
+<p><span style="font-size: 16px;font-weight: bold;"><a href="<?php echo $quiz_url; ?>" target="_blank">Go to Quiz</a></span></p>
     <?php
-}
+} // end if $roleid == 4
+
+
 
 echo $OUTPUT->footer();

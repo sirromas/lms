@@ -46,19 +46,27 @@ if (!$authplugin->can_signup()) {
 
 if ($_POST) {
 
-    /*
+    
+     /*
+      * 
       echo "<br/>-----------------------<br/>";
       print_r($_POST) ;
       echo "<br/>-----------------------<br/>";
-      die ('stopped');
-     */
+     die();
+      * 
+      */
 
     $user = new stdClass();
     $user->type = $_POST['user_type'];
+    
     if ($user->type == 'tutor') {
         $user->confirmed = 0;
+        $user->title=$_POST['title'];
+        $user->department=$_POST['department'];
+        $user->group_name=$_POST['group'];
     } else {
         $user->confirmed = 1;
+        $user->school=$_POST['school'];        
     }
     $user->username = $_POST['email'];
     $user->password = $_POST['password'];
@@ -68,11 +76,11 @@ if ($_POST) {
     $user->email2 = $_POST['email'];
     $user->firstname = $_POST['firstname'];
     $user->lastname = $_POST['lastname'];
-    $user->course = $_POST['course'];
-    $user->group = $_POST['group'];
+    $user->course = $_POST['course'];    
     $user->create_group = $_POST['create_groups'];
     $user->address = $_POST['address'];
     $user->lang = current_language();
+    $user->group = $_POST['group'];
     $user->firstaccess = 0;
     $user->timecreated = time();
     $user->mnethostid = $CFG->mnet_localhost_id;
@@ -98,7 +106,8 @@ if ($_POST) {
         $response = "<span style='color:#570101'>Thank you for Signup. "
                 . "Confirmation email is sent to " . $_POST['email'] . "</span>";
     }
-    die($response);
+    echo $response;
+    die();
 }
 
 

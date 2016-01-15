@@ -1,7 +1,8 @@
 <?php
 
-require_once '../payments/Classes/PlaceOrder.php';
-
+//require_once '../payments/Classes/PlaceOrder.php';
+//require_once '../payments/Classes/PlaceOrder.php';
+require_once ($_SERVER['DOCUMENT_ROOT'] . '/lms//payments/Classes/PlaceOrder.php');
 class utils {
 
     private $db;
