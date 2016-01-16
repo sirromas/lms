@@ -5863,11 +5863,8 @@ function getTutorWelcomeMessage($user) {
 }
 
 function get_tutor_group_id($user) {
-    global $DB;
-    //echo "Group name: ".$user->group."<br/>";
-    $group = $DB->get_record('groups', array('name' => $user->group));
-    //echo "Tutor group id: ";
-    //prinr_r($group);
+    global $DB;    
+    $group = $DB->get_record('groups', array('name' => $user->group));    
     return $group->id;
 }
 
