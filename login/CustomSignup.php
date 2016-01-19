@@ -214,7 +214,8 @@ class CustomSignup {
     function updateTutorData() {
         $query = "update mdl_user set                   
                   title='" . $this->user->title . "' ,
-                  department='" . $this->user->department . "'      
+                  department='" . $this->user->department . "' ,       
+                  school='" . $this->user->school . "'          
                   where id='" . $this->userid . "'";
         $result = $this->db->query($query);
     }

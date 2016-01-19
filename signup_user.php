@@ -167,7 +167,7 @@ class signup_user {
             <label for='school'>Schoolname*</label>
             </td>
             <td>
-            <input id='school' name='school' style='background-color: rgb(250, 255, 189);'>&nbsp;<span style='color:red;font-size:12px;' id='scholl_err'></span>
+            <input id='school' name='school' style='background-color: rgb(250, 255, 189);'>&nbsp;<span style='color:red;font-size:12px;' id='school_err'></span>
             </td>
             </tr>";
             $form = $form . "<input type='hidden' id='user_type' value='student'>";
@@ -176,6 +176,7 @@ class signup_user {
         } else {
             $form = $form . "<tr><td><label for='title'>Title*</label></td><td><input id='title' name='title' type='text' style='background-color: rgb(250, 255, 189);'></span>&nbsp;<span style='color:red;font-size:12px;' id='title_err'></span></td></tr>";
             $form = $form . "<tr><td><label for='department'>Department*</label></td><td><input id='department' name='department' type='text' style='background-color: rgb(250, 255, 189);'>&nbsp;<span style='color:red;font-size:12px;' id='department_err'></span></td></tr>";
+            $form = $form . "<tr><td><label for='school'>School’s online page*</label></td><td><input id='school' name='school' type='text' style='background-color: rgb(250, 255, 189);'>&nbsp;<span style='color:red;font-size:12px;' id='school_err'></span></td></tr>";
             $groups = $this->tutorGroup();
             $form = $form . "<input type='hidden' id='user_type' value='tutor'>";
             //$form = $form . "<tr><td><label for='course'>Course</label></td><td>" . $courses . "&nbsp;<span style='color:red;font-size:12px;' id='course_err'></span></td></tr>";

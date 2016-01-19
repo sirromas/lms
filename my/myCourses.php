@@ -94,4 +94,23 @@ class myCourses {
         }
     }
 
+    function getUserIdByFirstLastName($firstname, $lastname) {
+        $query = "select * from mdl_user "
+                . "where confirmed=1 "
+                . "and deleted=0 "
+                . "and firstname='$firstname' "
+                . "and lastname='$lastname' ";
+        $result = $this->db->query($query);
+        if ($num > 0) {
+            $result = $this->db->query($query);
+            while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+                $id = $row['id'];
+            }
+            return $id;
+        } // end if $num > 0
+        else {
+            return false;
+        }
+    }
+
 }

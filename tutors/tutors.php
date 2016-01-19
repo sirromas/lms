@@ -23,11 +23,12 @@ class Tutors {
         return $list;
     }
 
-    function confirmTutor($email, $code, $groupid) {
+    function confirmTutor($email, $code, $groupid, $page) {
         $status = '';
         $codeStatus = $this->checkTutorCode($code, $groupid);
         $emailStatus = $this->checkEmailStatus($email);
-        if ($codeStatus > 0 && $emailStatus > 0) {
+        $pageStatus = $this->checkTutorPage($page, $email);
+        if ($codeStatus > 0 && $emailStatus > 0 && $pageStatus > 0) {
             $this->updateTutorStatus($email);
             $status = $status . "Your membership is confirmed";
         } else {
@@ -51,6 +52,15 @@ class Tutors {
     function checkEmailStatus($email) {
         $query = "select username from mdl_user where username='$email'";
         return $this->db->numrows($query);
+    }
+
+    function checkTutorPage($page, $email) {
+        $pagecontent = file_get_contents($page);
+        if (strpos($pagecontent, $email) !== false) {
+            return 1;
+        } else {
+            return 0;
+        }
     }
 
 }

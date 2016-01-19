@@ -23,8 +23,8 @@
         
         ?>
         
-        <p align="center"><strong>Please provide your email, group secret code you 
-            received from Manager and select desired group</strong></p>
+        <p align="center"><strong>Please provide your email, group secret code 
+                and School’s online page. It should contain your email.</strong></p>
 
         <div class="wrapper clearfix">
             <div align="center">
@@ -50,6 +50,13 @@
                                         <td><input id='code' name='code' 
                                                    style='background-color: rgb(250, 255, 189);width:173px;'/>
                                             &nbsp;<span style='color: red; font-size: 12px;width:173px;' id='code_err'></span></td>
+                                    </tr>
+                                    
+                                    <tr>
+                                        <td><label for='code'>School’s online page*</label></td>
+                                        <td><input id='page' name='page' 
+                                                   style='background-color: rgb(250, 255, 189);width:173px;'/>
+                                            &nbsp;<span style='color: red; font-size: 12px;width:173px;' id='page_err'></span></td>
                                     </tr>
                                     
                                     <tr>

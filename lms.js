@@ -85,7 +85,7 @@ $(document).ready(function () {
         $("#group_err").html('');
         $("#new_group_err").html('');
         $("#department_err").html('');
-        $("#scholl_err").html('');
+        $("#school_err").html('');
         $("#addr_err").html('');
         $("#title_err").html('');
 
@@ -140,19 +140,12 @@ $(document).ready(function () {
             $("#pwd_err").html('Please provide password at least 5 symbols');
             return false;
         }
-        
+
         var address = $('#address').val();
         if (address == '') {
             $("#addr_err").html('Please provide address');
             return false;
         }
-
-        var school = $("#school").val();
-        console.log ('School: '+school);
-        if (school == '') {
-            $("#scholl_err").html('Please provide school name');
-            return false;
-        }       
 
         var prof_title = $("#title").val();
         if (prof_title == '') {
@@ -164,6 +157,20 @@ $(document).ready(function () {
         if (department == '') {
             $("#department_err").html('Please provide department');
             return false;
+        }
+
+        var school = $("#school").val();
+        console.log('School: ' + school);
+        console.log('User type: ' + user_type);
+        if (school == '') {
+            if (user_type == 'student') {
+                $("#school_err").html('Please provide school name');
+                return false;
+            }
+            else {
+                $("#school_err").html('Please provide online page');
+                return false;
+            }
         }
 
 
@@ -210,6 +217,7 @@ $(document).ready(function () {
                 username: email,
                 password: password,
                 email: email,
+                school: school,
                 title: prof_title,
                 department: department,
                 course: courses,

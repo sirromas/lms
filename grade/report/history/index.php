@@ -22,14 +22,16 @@
  * @author     Adam Olley <adam.olley@netspot.com.au>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-require_once(__DIR__ . '/../../../config.php');
-require_once($CFG->libdir . '/gradelib.php');
-require_once($CFG->dirroot . '/grade/lib.php');
-require_once($CFG->dirroot . '/course/courseSections.php');
 
-$download = optional_param('download', '', PARAM_ALPHA);
-$courseid = required_param('id', PARAM_INT);        // Course id.
-$page = optional_param('page', 0, PARAM_INT);   // Active page.
+require_once(__DIR__ . '/../../../config.php');
+require_once($CFG->libdir.'/gradelib.php');
+require_once($CFG->dirroot.'/grade/lib.php');
+
+
+
+$download      = optional_param('download', '', PARAM_ALPHA);
+$courseid      = required_param('id', PARAM_INT);        // Course id.
+$page          = optional_param('page', 0, PARAM_INT);   // Active page.
 
 $PAGE->set_pagelayout('report');
 $url = new moodle_url('/grade/report/history/index.php', array('id' => $courseid));
@@ -38,15 +40,6 @@ $PAGE->set_url($url);
 $course = $DB->get_record('course', array('id' => $courseid), '*', MUST_EXIST);
 require_login($course);
 $context = context_course::instance($course->id);
-
-global $COURSE, $USER;
-
-$cs = new courseSections($context, $COURSE->id, $USER->id);
-$roleid = $cs->getCourseRoles();
-$forumid = $cs->getForumId();
-$quizid=$cs->getQuizId();
-$assid=$cs->getPageId();
-
 
 require_capability('gradereport/history:view', $context);
 require_capability('moodle/grade:viewall', $context);
@@ -67,7 +60,7 @@ $params = array('course' => $course, 'itemids' => $itemids, 'graders' => $grader
 $mform = new \gradereport_history\filter_form(null, $params);
 $filters = array();
 if ($data = $mform->get_data()) {
-    $filters = (array) $data;
+    $filters = (array)$data;
 
     if (!empty($filters['datetill'])) {
         $filters['datetill'] += DAYSECS - 1; // Set to end of the chosen day.
@@ -86,10 +79,17 @@ if ($data = $mform->get_data()) {
 
 $table = new \gradereport_history\output\tablelog('gradereport_history', $context, $url, $filters, $download, $page);
 
+/*
+echo "Main table: <pre>";
+print_r($table);
+echo "</pre>";
+*/
+
 $names = array();
-foreach ($table->get_selected_users() as $key => $user) {
+foreach ($table->get_selected_users() as $key => $user) {    
     $names[$key] = fullname($user);
 }
+//print_r($filters);
 $filters['userfullnames'] = implode(',', $names);
 
 // Set up js.
@@ -112,33 +112,20 @@ if ($table->is_downloading()) {
 
 // Print header.
 print_grade_page_head($COURSE->id, 'report', 'history', get_string('pluginname', 'gradereport_history'), false, '');
+
+
+
 $mform->display();
 
 // Render table.
 echo $output->render($table);
 
 $event = \gradereport_history\event\grade_report_viewed::create(
-                array(
-                    'context' => $context,
-                    'courseid' => $courseid
-                )
+    array(
+        'context' => $context,
+        'courseid' => $courseid
+    )
 );
 $event->trigger();
-
-if ($roleid == 4) {
-
-    $forum_url = 'http://' . $_SERVER['SERVER_NAME'] . '/lms/mod/forum/view.php?id=' . $forumid;
-    $quiz_url='http://' . $_SERVER['SERVER_NAME'] . '/lms/mod/quiz/view.php?id=' . $quizid;
-    $assesment_url='http://' . $_SERVER['SERVER_NAME'] . '/lms/mod/page/view.php?id=' . $assid;
-    
-    ?>
-<br/><br/>
-<p><span style="font-size: 16px;font-weight: bold;"><a href="<?php echo $assesment_url; ?>" target="_blank">Go to Assignment</a></span></p>
-<p><span style="font-size: 16px;font-weight: bold;"><a href="<?php echo $forum_url; ?>" target="_blank">Go to Discussion Board</a></span></p>
-<p><span style="font-size: 16px;font-weight: bold;"><a href="<?php echo $quiz_url; ?>" target="_blank">Go to Quiz</a></span></p>
-    <?php
-} // end if $roleid == 4
-
-
 
 echo $OUTPUT->footer();
