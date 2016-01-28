@@ -41,19 +41,23 @@ class block_settings_renderer extends plugin_renderer_base {
         }
 
         $context = context_course::instance($COURSE->id);
+        
+        
+        $content=$content.'<p class="tree_item leaf active_tree_node">
+         <a href="http://'.$_SERVER['SERVER_NAME'].'/lms/trgoup" target="_blank">         
+         Create new course</a></p>';
+        
         $cs = new courseSections($context, $COURSE->id, $USER->id);
         $roleid = $cs->getCourseRoles();
         //echo "Role id: ".$roleid."<br/>";
         if ($roleid == 4) {
-            $item_to_remove = 'Grade history';
+            $item_to_remove = array('Grade history', 'Enrolment methods');
             $clean_content = $cs->remove_navigation_tutor_navigation_items($content, $item_to_remove);
             /*
-             * 
             echo "<pre>";
             print_r($clean_content);
             echo "</pre>";
-             * 
-             */
+            */
             return $clean_content;
         }
         return $content;
