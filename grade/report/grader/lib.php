@@ -716,6 +716,7 @@ class grade_report_grader extends grade_report {
         }
 
         $rows = $this->get_left_range_row($rows, $colspan);
+        //print_r($rows);
         if ($displayaverages) {
             $rows = $this->get_left_avg_row($rows, $colspan, true);
             $rows = $this->get_left_avg_row($rows, $colspan);
@@ -1700,6 +1701,7 @@ class grade_report_grader extends grade_report {
      */
     protected static function get_collapsed_preferences($courseid) {
         if ($collapsed = get_user_preferences('grade_report_grader_collapsed_categories'.$courseid)) {
+            //print_r($collapsed);
             return json_decode($collapsed, true);
         }
 

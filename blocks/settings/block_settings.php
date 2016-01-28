@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -23,7 +24,6 @@
  * @copyright 2009 Sam Hemelryk
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-
 /**
  * The settings navigation tree block class
  *
@@ -33,13 +33,17 @@
  * @copyright 2009 Sam Hemelryk
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+
+
 class block_settings extends block_base {
 
     /** @var string */
     public static $navcount;
     public $blockname = null;
+
     /** @var bool */
     protected $contentgenerated = false;
+
     /** @var bool|null */
     protected $docked = null;
 
@@ -65,7 +69,7 @@ class block_settings extends block_base {
      *
      * @return false
      */
-    function  instance_can_be_hidden() {
+    function instance_can_be_hidden() {
         return false;
     }
 
@@ -86,7 +90,7 @@ class block_settings extends block_base {
     }
 
     function instance_can_be_docked() {
-        return (parent::instance_can_be_docked() && (empty($this->config->enabledock) || $this->config->enabledock=='yes'));
+        return (parent::instance_can_be_docked() && (empty($this->config->enabledock) || $this->config->enabledock == 'yes'));
     }
 
     function get_required_javascript() {
@@ -103,7 +107,8 @@ class block_settings extends block_base {
      * Gets the content for this block by grabbing it from $this->page
      */
     function get_content() {
-        global $CFG, $OUTPUT;
+
+        global $CFG, $OUTPUT, $COURSE, $USER;
         // First check if we have already generated, don't waste cycles
         if ($this->contentgenerated === true) {
             return true;
@@ -114,36 +119,37 @@ class block_settings extends block_base {
 
         // Check if this block has been docked
         if ($this->docked === null) {
-            $this->docked = get_user_preferences('nav_in_tab_panel_settingsnav'.block_settings::$navcount, 0);
+            $this->docked = get_user_preferences('nav_in_tab_panel_settingsnav' . block_settings::$navcount, 0);
         }
 
         // Check if there is a param to change the docked state
-        if ($this->docked && optional_param('undock', null, PARAM_INT)==$this->instance->id) {
-            unset_user_preference('nav_in_tab_panel_settingsnav'.block_settings::$navcount, 0);
+        if ($this->docked && optional_param('undock', null, PARAM_INT) == $this->instance->id) {
+            unset_user_preference('nav_in_tab_panel_settingsnav' . block_settings::$navcount, 0);
             $url = $this->page->url;
             $url->remove_params(array('undock'));
             redirect($url);
-        } else if (!$this->docked && optional_param('dock', null, PARAM_INT)==$this->instance->id) {
-            set_user_preferences(array('nav_in_tab_panel_settingsnav'.block_settings::$navcount=>1));
+        } else if (!$this->docked && optional_param('dock', null, PARAM_INT) == $this->instance->id) {
+            set_user_preferences(array('nav_in_tab_panel_settingsnav' . block_settings::$navcount => 1));
             $url = $this->page->url;
             $url->remove_params(array('dock'));
             redirect($url);
         }
-
+        
+        
         $renderer = $this->page->get_renderer('block_settings');
         $this->content = new stdClass();
         $this->content->text = $renderer->settings_tree($this->page->settingsnav);
 
         // only do search if you have moodle/site:config
         if (!empty($this->content->text)) {
-            if (has_capability('moodle/site:config',context_system::instance()) ) {
+            if (has_capability('moodle/site:config', context_system::instance())) {
                 $this->content->footer = $renderer->search_form(new moodle_url("$CFG->wwwroot/$CFG->admin/search.php"), optional_param('query', '', PARAM_RAW));
             } else {
                 $this->content->footer = '';
             }
 
             if (!empty($this->config->enabledock) && $this->config->enabledock == 'yes') {
-                user_preference_allow_ajax_update('nav_in_tab_panel_settingsnav'.block_settings::$navcount, PARAM_INT);
+                user_preference_allow_ajax_update('nav_in_tab_panel_settingsnav' . block_settings::$navcount, PARAM_INT);
             }
         }
 
@@ -159,4 +165,5 @@ class block_settings extends block_base {
     public function get_aria_role() {
         return 'navigation';
     }
+
 }

@@ -28,6 +28,7 @@ require_once($CFG->dirroot . '/grade/lib.php');
 require_once($CFG->dirroot . '/grade/report/grader/lib.php');
 require_once($CFG->dirroot . '/course/courseSections.php');
 
+
 $courseid = required_param('id', PARAM_INT);        // course id
 $page = optional_param('page', 0, PARAM_INT);   // active page
 $edit = optional_param('edit', -1, PARAM_BOOL); // sticky editting mode
@@ -62,7 +63,6 @@ require_login($course);
 $context = context_course::instance($course->id);
 
 // Get forum link
-
 global $COURSE, $USER;
 
 $cs = new courseSections($context, $COURSE->id, $USER->id);
@@ -157,6 +157,9 @@ if ($data = data_submitted() and confirm_sesskey() and has_capability('moodle/gr
 } else {
     $warnings = array();
 }
+
+$navbar_obj=$PAGE->navbar;
+
 
 // final grades MUST be loaded after the processing
 $report->load_users();

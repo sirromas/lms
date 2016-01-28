@@ -2877,6 +2877,7 @@ abstract class grade_helper {
             }
 
             $pluginstr = get_string('pluginname', 'gradereport_' . $plugin);
+            //$pluginstr="Professor's Gradebook";
             $url = new moodle_url('/grade/report/' . $plugin . '/index.php', array('id' => $courseid));
             $gradereports[$plugin] = new grade_plugin_info($plugin, $url, $pluginstr);
 

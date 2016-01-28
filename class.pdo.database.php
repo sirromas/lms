@@ -20,7 +20,7 @@ class pdo_db {
     private $db;
 
     function __construct() {
-        $config_data = file_get_contents($_SERVER['DOCUMENT_ROOT'] . '/lms/moodle/db.xml');
+        $config_data = file_get_contents($_SERVER['DOCUMENT_ROOT'] . '/lms/db.xml');
         $config = new SimpleXMLElement($config_data);
         $this->databaseName = $config->db_name;
         $this->host = $config->db_host;
