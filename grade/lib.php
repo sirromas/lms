@@ -2630,16 +2630,16 @@ function grade_button($type, $courseid, $object) {
  * @global moodle_page $PAGE
  */
 function grade_extend_settings($plugininfo, $courseid) {
-    global $PAGE;
+    global $PAGE, $COURSE, $USER;
 
     $gradenode = $PAGE->settingsnav->prepend(get_string('gradeadministration', 'grades'), null, navigation_node::TYPE_CONTAINER);
 
     $strings = array_shift($plugininfo);
-
     if ($reports = grade_helper::get_plugins_reports($courseid)) {
+
         foreach ($reports as $report) {
             $gradenode->add($report->string, $report->link, navigation_node::TYPE_SETTING, null, $report->id, new pix_icon('i/report', ''));
-        }
+        } 
     }
 
     if ($settings = grade_helper::get_info_manage_settings($courseid)) {
@@ -2859,6 +2859,8 @@ abstract class grade_helper {
         $context = context_course::instance($courseid);
         $gradereports = array();
         $gradepreferences = array();
+        $mc = new myCourses($USER->id);
+        $roleid = $mc->getUserRole();
         foreach (core_component::get_plugin_list('gradereport') as $plugin => $plugindir) {
             //some reports make no sense if we're not within a course
             if ($courseid == $SITE->id && ($plugin == 'grader' || $plugin == 'user')) {
@@ -2879,18 +2881,19 @@ abstract class grade_helper {
             $pluginstr = get_string('pluginname', 'gradereport_' . $plugin);
             //$pluginstr="Professor's Gradebook";
             $url = new moodle_url('/grade/report/' . $plugin . '/index.php', array('id' => $courseid));
+            
+            if ($plugin!='history') {
             $gradereports[$plugin] = new grade_plugin_info($plugin, $url, $pluginstr);
+            }
 
-            // Add link to preferences tab if such a page exists
-            $mc = new myCourses($USER->id);
-            $roleid = $mc->getUserRole();
+            // Add link to preferences tab if such a page exists            
             if ($roleid != 4) {
                 if (file_exists($plugindir . '/preferences.php')) {
                     $url = new moodle_url('/grade/report/' . $plugin . '/preferences.php', array('id' => $courseid));
                     $gradepreferences[$plugin] = new grade_plugin_info($plugin, $url, get_string('preferences', 'grades') . ': ' . $pluginstr);
                 }
             }
-        }
+        } // end foreach
         if (count($gradereports) == 0) {
             $gradereports = false;
             $gradepreferences = false;
