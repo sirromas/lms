@@ -82,6 +82,12 @@ $(document).ready(function () {
         $("#pwd_err").html('');
         $("#course_err").html('');
         $("#group_err").html('');
+        $("#group_err").html('');
+        $("#new_group_err").html('');
+        $("#department_err").html('');
+        $("#school_err").html('');
+        $("#addr_err").html('');
+        $("#title_err").html('');
 
         var create_groups = $('#new_gr').is(':checked');
         //console.log('Create groups: ' + create_groups);
@@ -96,20 +102,22 @@ $(document).ready(function () {
     });
 
     $('#signupform').live('submit', function () {
+
+        var user_type = $('#user_type').val();
+
         var fn = $('#firstname').val();
-        // console.log('Fisrt name:' + fn);
-        if (fn.length == 0) {
+        if (fn == '') {
             $("#fn_err").html('Please provide firstname');
             return false;
         }
         var ln = $('#lastname').val();
-        if (ln.length == 0) {
+        if (ln == '') {
             $("#ln_err").html('Please provide lastname');
             return false;
         }
 
         var email = $('#email').val();
-        if (email.length == 0) {
+        if (email == '') {
             $("#email_err").html('Please provide email');
             return false;
         }
@@ -125,7 +133,7 @@ $(document).ready(function () {
                 $("#email_err").html('Provided email is incorrect');
                 return false;
             }
-        })
+        });
 
         var password = $('#password').val();
         if (password.length == 0 || password.length <= 5) {
@@ -133,30 +141,63 @@ $(document).ready(function () {
             return false;
         }
 
-        if ($("#user_type").val() == 'student') {
-            // var school = $('#school').val();
-            var school = 'My school';
-            // console.log('School: ' + school);
-        }
-
         var address = $('#address').val();
-
-        var courses = $('#courses').val();
-        if ($('#courses').val() == 0) {
-            $("#course_err").html('Please select course');
+        if (address == '') {
+            $("#addr_err").html('Please provide address');
             return false;
         }
 
-        var create_groups = $('#new_gr').is(':checked');
+        var prof_title = $("#title").val();
+        if (prof_title == '') {
+            $("#title_err").html('Please provide title');
+            return false;
+        }
+
+        var department = $("#department").val();
+        if (department == '') {
+            $("#department_err").html('Please provide department');
+            return false;
+        }
+
+        var school = $("#school").val();
+        console.log('School: ' + school);
+        console.log('User type: ' + user_type);
+        if (school == '') {
+            if (user_type == 'student') {
+                $("#school_err").html('Please provide school name');
+                return false;
+            }
+            else {
+                $("#school_err").html('Please provide online page');
+                return false;
+            }
+        }
+
+
+        /*
+         var courses = $('#courses').val();        
+         if ($('#courses').val() == 0) {
+         $("#course_err").html('Please select course');
+         return false;
+         }
+         */
+
+        // For now we have only one course
+        var courses = 3;
+
         var groups = $('#groups').val();
-        if (groups == 0 && create_groups != true) {
+        if (groups == 0 && user_type == 'student') {
             $("#group_err").html('Please select group');
             return false;
         }
 
+        var new_group_name = $('#new_group').val();
+        if (new_group_name == '' && user_type == 'tutor') {
+            $("#new_group_err").html('Please provide course name');
+            return false;
+        }
 
-        var user_type = $("#user_type").val();
-        var url = 'https://globalizationplus.com/lms/login/signup.php';
+        var url = 'http://globalizationplus.com/lms/login/signup.php';
         if (user_type == 'student') {
             query = {user_type: user_type,
                 firstname: fn,
@@ -170,27 +211,25 @@ $(document).ready(function () {
                 address: address};
         }
         else {
-
-
-            if (create_groups) {
-                groups = $('#new_groups').val();
-            }
             query = {user_type: user_type,
                 firstname: fn,
                 lastname: ln,
                 username: email,
                 password: password,
                 email: email,
+                school: school,
+                title: prof_title,
+                department: department,
                 course: courses,
-                group: groups,
-                create_groups: create_groups,
+                group: new_group_name,
                 address: address};
         }
 
         $.post("lms/getGroups.php", {
             email: email
         }).done(function (data) {
-            console.log('Email status: ' + data);
+            console.log('Data: ' + data);
+            console.log('Done Email status: ' + data);
             if (data != 0) {
                 $("#email_err").html('Provided email already in use');
                 return false;
@@ -199,11 +238,12 @@ $(document).ready(function () {
                 $('.CSSTableGenerator').fadeTo("slow", 0.33);
                 $('#spinner').show();
                 $.post(url, query).done(function (data) {
-                    $("#signup_content").html('Thank you for signup. Confirmation email is sent to '+email);
+                    console.log('Else data: ' + data);
+                    $("#signup_content").html(data);
                 }).fail(function (data) {
-                    console.log('Server response:'+data);
-                    // $("#signup_content").html('Ops something wrong ...');
-                    $("#signup_content").html('Thank you for signup. Confirmation email is sent to '+email);
+                    console.log('Fail data: ' + data);
+                    $("#signup_content").html('Ops something wrong ...');
+                    //$("#signup_content").html(data);
                     return false;
                 })
                 return false;

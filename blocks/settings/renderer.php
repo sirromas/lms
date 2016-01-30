@@ -27,7 +27,7 @@ require_once($CFG->dirroot . '/course/courseSections.php');
 class block_settings_renderer extends plugin_renderer_base {
 
     public function settings_tree(settings_navigation $navigation) {
-        global $COURSE, $USER;
+        global $USER;
         $count = 0;
         foreach ($navigation->children as &$child) {
             $child->preceedwithhr = ($count !== 0);
@@ -35,31 +35,32 @@ class block_settings_renderer extends plugin_renderer_base {
                 $count++;
             }
         }
+
+        $courseid=3; // we have only one course
+        $context = context_course::instance($courseid);
+        $cs = new courseSections($context, $courseid, $USER->id);
+        $roleid = $cs->getCourseRoles();
+        $secret_code = $cs->get_group_secret_code($USER->id);
+
         $content = $this->navigation_node($navigation, array('class' => 'block_tree list'));
         if (isset($navigation->id) && !is_numeric($navigation->id) && !empty($content)) {
             $content = $this->output->box($content, 'block_tree_box', $navigation->id);
         }
 
-        $context = context_course::instance($COURSE->id);
-        
-        
-        $content=$content.'<p class="tree_item leaf active_tree_node">
-         <a href="http://'.$_SERVER['SERVER_NAME'].'/lms/trgoup" target="_blank">         
-         Create new course</a></p>';
-        
-        $cs = new courseSections($context, $COURSE->id, $USER->id);
-        $roleid = $cs->getCourseRoles();
-        //echo "Role id: ".$roleid."<br/>";
         if ($roleid == 4) {
+            $content = $content . '<p class="tree_item leaf active_tree_node">
+         <a href="http://' . $_SERVER['SERVER_NAME'] . '/lms/trgoup/index.php?secret_code=' . $secret_code . '" target="_blank">         
+         Create new course</a></p>';
             $item_to_remove = array('Grade history', 'Enrolment methods');
             $clean_content = $cs->remove_navigation_tutor_navigation_items($content, $item_to_remove);
             /*
-            echo "<pre>";
-            print_r($clean_content);
-            echo "</pre>";
-            */
+              echo "<pre>";
+              print_r($clean_content);
+              echo "</pre>";
+             */
             return $clean_content;
         }
+
         return $content;
     }
 

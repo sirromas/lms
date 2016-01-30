@@ -26,7 +26,7 @@
         if ($_SESSION['username'] == 'manager' && $_SESSION['loggedin'] == true) {
 
             require_once './utils.php';
-            $util = new utils();
+            $util = new utils();            
             echo "<p align='center'>Welcome, Manager of the system </p>";
             $tbl = "";
             $tbl = $tbl . "<table align='center' width='675px;' border='0'>";

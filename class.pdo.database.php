@@ -36,6 +36,7 @@ class pdo_db {
     }
 
     public function numrows($query) {
+        //echo "Query: ".$query."<br/>";
         $result = $this->db->query($query); 
         return $result->rowCount();
     }

@@ -166,8 +166,9 @@ if (empty($CFG->forcedefaultmymoodle) && $PAGE->user_allowed_editing()) {
 
 $mc = new myCourses($USER->id);
 $roleid = $mc->getUserRole();
-$courseid = $mc->getInstanceId();
+//$courseid = $mc->getInstanceId();
 //echo "Roleid: ".$roleid."<br/>";
+$courseid=3; // we have only one course;
 if ($roleid!=2 || $roleid!=1) {
 
     if ($roleid == 4) {

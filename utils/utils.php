@@ -3,6 +3,7 @@
 //require_once '../payments/Classes/PlaceOrder.php';
 //require_once '../payments/Classes/PlaceOrder.php';
 require_once ($_SERVER['DOCUMENT_ROOT'] . '/lms//payments/Classes/PlaceOrder.php');
+
 class utils {
 
     private $db;
@@ -58,7 +59,43 @@ class utils {
         return $group;
     }
 
+    function getGroupCodesIds() {
+        $query = "select groupid from mdl_group_codes";
+        $result = $this->db->query($query);
+        while ($row = mysql_fetch_assoc($result)) {
+            $groupid[] = $row['groupid'];
+        }
+        return $groupid;
+    }
+
+    function isGroupExists($groupid) {
+        $query = "select id, name "
+                . "from mdl_groups where id=$groupid";
+        //echo "Select group code Query: " . $query . "<br/>";
+        $num = $this->db->numrows($query);
+        //echo "Group num " . $num . "<br/>";
+        return $num;
+    }
+
+    function deleteGroupCodeEntry($groupid) {
+        $query = "delete from mdl_group_codes "
+                . "where groupid=$groupid";
+        //echo "Delete group code Query: " . $query . "<br/>";
+        $result = $this->db->query($query);
+    }
+
+    function removeDeletedGroupsCodes() {
+        $groups = $this->getGroupCodesIds();
+        foreach ($groups as $groupid) {
+            $group_exists = $this->isGroupExists($groupid);
+            if ($group_exists == 0) {
+                $this->deleteGroupCodeEntry($groupid);
+            }
+        }
+    }
+
     function createGrpoupCodes() {
+        $this->removeDeletedGroupsCodes();
         $groups = $this->getGrpoupIds();
         $group_codes = $this->geGroupCodesIds();
         $missed_groups = array_diff($groups, $group_codes);
@@ -80,7 +117,7 @@ class utils {
 
     function getGroupPage() {
         $this->createGrpoupCodes();
-        $list = ""; 
+        $list = "";
         $list = $list . "<div class='wrapper clearfix'>
            <div align='center'>
               <section class='userLogin userForm clearfix oneCol'>
@@ -91,7 +128,7 @@ class utils {
         $list = $list . "<tr>";
         $list = $list . "<th>ID</th><th>Course Name</th>"
                 . "<th>Group Name</th><th>Group Code</th>";
-        $list = $list. "</tr>";        
+        $list = $list . "</tr>";
 
         $query = "select * from mdl_group_codes";
         $result = $this->db->query($query);
@@ -103,12 +140,12 @@ class utils {
                     . "<td style='font-size: 14px;'>" . $row['code'] . "</td>";
             $list = $list . "</tr>";
         }
-        $list = $list . "</table></div></div></div></div >";        
+        $list = $list . "</table></div></div></div></div >";
         return $list;
     }
 
     function getPromoPage() {
-        $list = "";                 
+        $list = "";
         $list = $list . "<div class='wrapper clearfix'>
            <div align='center' id='promo'>
               <section class='userLogin userForm clearfix oneCol'>
@@ -119,19 +156,19 @@ class utils {
         $list = $list . "<tr>";
         $list = $list . "<th>Code</th>"
                 . "<th>Status</th><th>Expire Date</th>";
-        $list = $list. "</tr>";     
-        
-        $query = "select * from mdl_promo_code order by expire_date desc limit 0,10";        
+        $list = $list . "</tr>";
+
+        $query = "select * from mdl_promo_code order by expire_date desc limit 0,10";
         $result = $this->db->query($query);
         while ($row = mysql_fetch_assoc($result)) {
-            $status=($row['active']==1) ? "Yes" : "No";
+            $status = ($row['active'] == 1) ? "Yes" : "No";
             $list = $list . "<tr>";
             $list = $list . "<td style='font-size: 14px;'>" . $row['code'] . "</td>"
                     . "<td style='font-size: 14px;'>" . $status . "</td>"
-                    . "<td style='font-size: 14px;'>" . date('m/d/Y H:i:s', $row['expire_date']) . "</td>";                    
+                    . "<td style='font-size: 14px;'>" . date('m/d/Y H:i:s', $row['expire_date']) . "</td>";
             $list = $list . "</tr>";
         }
-        $list = $list . "</table></div></div></div></div>";        
+        $list = $list . "</table></div></div></div></div>";
         return $list;
     }
 

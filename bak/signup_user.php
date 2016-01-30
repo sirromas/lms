@@ -56,7 +56,7 @@ class signup_user {
     }
 
     function getGroupsListNew() {
-        $course=3; // we always have one course
+        $course = 3; // we always have one course
         $list = "";
         $list = $list . "<select id='groups' name='groups' style='background-color: rgb(250, 255, 189);width:153px'>";
         $list = $list . "<option value='0' selected>---------------------</option>";
@@ -100,6 +100,12 @@ class signup_user {
             $list = $list . "</span>";
             return $list;
         }
+    }
+
+    function tutorGroup() {
+        $list = "";
+        $list = $list . "<input id='new_group' name='new_group' type='text' style='background-color: rgb(250, 255, 189);'>&nbsp;<span style='color:red;font-size:12px;' id='new_group_err'></span>";
+        return $list;
     }
 
     function getSignUpForm() {
@@ -147,35 +153,33 @@ class signup_user {
                     </tr>                    
                      <tr>
                         <td>
-                            <label for='city'>Street, city, state, zip</label>
+                            <label for='city'>Street, city, state, zip*</label>
                         </td>
                         <td>
-                            <input id='address' name='address' style='background-color: rgb(250, 255, 189);'>
+                            <input id='address' name='address' style='background-color: rgb(250, 255, 189);'>&nbsp;<span style='color:red;font-size:12px;' id='addr_err'></span>
                         </td>                        
                     </tr> ";
 
-        if ($this->user_type == 'student') {
-            //$courses = $this->getCoursesList();
-            //$groups = $this->getGroupsList('student', null);
-            $groups=$this->getGroupsListNew();
+        if ($this->user_type == 'student') {            
+            $groups = $this->getGroupsListNew();
             $form = $form . "<tr>
             <td>
-            <label for='school'>Schoolname</label>
+            <label for='school'>Schoolname*</label>
             </td>
             <td>
-            <input id='school' name='school' style='background-color: rgb(250, 255, 189);'>
+            <input id='school' name='school' style='background-color: rgb(250, 255, 189);'>&nbsp;<span style='color:red;font-size:12px;' id='school_err'></span>
             </td>
             </tr>";
             $form = $form . "<input type='hidden' id='user_type' value='student'>";
             //$form = $form . "<tr><td><label for='course'>Course</label></td><td>" . $courses . "&nbsp;<span style='color:red;font-size:12px;' id='course_err'></span></td></tr>";
-            $form = $form . "<tr><td><label for='group'>Group</label></td><td>" . $groups . "&nbsp;<span style='color:red;font-size:12px;' id='group_err'></span></td></tr>";
+            $form = $form . "<tr><td><label for='group'>Group*</label></td><td>" . $groups . "&nbsp;<span style='color:red;font-size:12px;' id='group_err'></span></td></tr>";
         } else {
-            //$courses = $this->getCoursesList();
-            //$groups = $this->getGroupsList('tutor', null);
-            $groups=$this->getGroupsListNew();
-            $form = $form . "<input type='hidden' id='user_type' value='tutor'>";
-            //$form = $form . "<tr><td><label for='course'>Course</label></td><td>" . $courses . "&nbsp;<span style='color:red;font-size:12px;' id='course_err'></span></td></tr>";
-            $form = $form . "<tr><td><label for='group'>Group</label></td><td>" . $groups . "&nbsp;<span style='color:red;font-size:12px;' id='group_err'></span></td></tr>";
+            $form = $form . "<tr><td><label for='title'>Title*</label></td><td><input id='title' name='title' type='text' style='background-color: rgb(250, 255, 189);'></span>&nbsp;<span style='color:red;font-size:12px;' id='title_err'></span></td></tr>";
+            $form = $form . "<tr><td><label for='department'>Department*</label></td><td><input id='department' name='department' type='text' style='background-color: rgb(250, 255, 189);'>&nbsp;<span style='color:red;font-size:12px;' id='department_err'></span></td></tr>";
+            $form = $form . "<tr><td><label for='school'>School’s online page*</label></td><td><input id='school' name='school' type='text' style='background-color: rgb(250, 255, 189);'>&nbsp;<span style='color:red;font-size:12px;' id='school_err'></span></td></tr>";
+            $groups = $this->tutorGroup();
+            $form = $form . "<input type='hidden' id='user_type' value='tutor'>";            
+            $form = $form . "<tr><td><label for='group'>Course *</label></td><td>" . $groups . "</td></tr>";
         }
 
         $form = $form . "<tr><td colspan='2'><input class='submit' type='submit' value='Submit'></td></tr></table></form>

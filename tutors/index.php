@@ -20,6 +20,7 @@
         require_once './tutors.php';
         $tutor=new Tutors();
         $groups=$tutor->getGroupsList();
+        $code=$_GET['secret_code'];
         
         ?>
         
@@ -47,7 +48,7 @@
                                     </tr>												
                                     <tr>
                                         <td><label for='code'>Secret code*</label></td>
-                                        <td><input id='code' name='code' 
+                                        <td><input id='code' name='code' value="<?php echo $code; ?>"
                                                    style='background-color: rgb(250, 255, 189);width:173px;'/>
                                             &nbsp;<span style='color: red; font-size: 12px;width:173px;' id='code_err'></span></td>
                                     </tr>

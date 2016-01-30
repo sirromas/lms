@@ -4,7 +4,7 @@ require_once '../payments/Classes/PlaceOrder.php';
 
 class Tutors {
 
-    private $db;
+    public $db;
 
     function __construct() {
         $this->db = DB::getInstance();
@@ -25,9 +25,13 @@ class Tutors {
 
     function confirmTutor($email, $code, $groupid, $page) {
         $status = '';
-        $codeStatus = $this->checkTutorCode($code, $groupid);
+        //$codeStatus = $this->checkTutorCode($code, $groupid);
+        $codeStatus=1; // temp workaround
+        //echo "Code status: " . $codeStatus . "<br>";
         $emailStatus = $this->checkEmailStatus($email);
+        //echo "Email status: " . $emailStatus . "<br>";
         $pageStatus = $this->checkTutorPage($page, $email);
+        //echo "Page status: " . $pageStatus . "<br>";
         if ($codeStatus > 0 && $emailStatus > 0 && $pageStatus > 0) {
             $this->updateTutorStatus($email);
             $status = $status . "Your membership is confirmed";
@@ -56,9 +60,13 @@ class Tutors {
 
     function checkTutorPage($page, $email) {
         $pagecontent = file_get_contents($page);
+        //echo "Page content: " . $pagecontent . "<br>";
         if (strpos($pagecontent, $email) !== false) {
+            //echo "Inside if ...<br>";
             return 1;
-        } else {
+        } // end if strpos($pagecontent, $email) !== false 
+        else {
+            //echo "Inside else ...<br>";
             return 0;
         }
     }

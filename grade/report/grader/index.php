@@ -65,7 +65,7 @@ $context = context_course::instance($course->id);
 // Get forum link
 global $COURSE, $USER;
 
-$cs = new courseSections($context, $COURSE->id, $USER->id);
+$cs = new courseSections($context, $courseid, $USER->id);
 $roleid = $cs->getCourseRoles();
 $forumid = $cs->getForumId();
 $quizid=$cs->getQuizId();

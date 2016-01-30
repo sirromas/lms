@@ -54,11 +54,17 @@ class signup_user {
         $query = "select username from mdl_user where username='$username'";
         return $this->db->numrows($query);
     }
+    
+    function isGroupExists($name) {
+        $query="select id, name from mdl_groups "
+                . "where name='$name'";
+        return $this->db->numrows($query);
+    }
 
     function getGroupsListNew() {
         $course = 3; // we always have one course
         $list = "";
-        $list = $list . "<select id='groups' name='groups' style='background-color: rgb(250, 255, 189);width:153px'>";
+        $list = $list . "<select id='groups' name='groups' style='background-color: rgb(250, 255, 189);width:153px;>";
         $list = $list . "<option value='0' selected>---------------------</option>";
         $query = "select id, courseid, name from mdl_groups where courseid=" . $course . "";
         $result = $this->db->query($query);
@@ -81,7 +87,7 @@ class signup_user {
             return $list;
         } elseif ($user == 'student' && $course != null) {
             $list = $list . "<span id='for_gr'>";
-            $list = $list . "<select id='groups' name='groups' style='background-color: rgb(250, 255, 189);width:153px'>";
+            $list = $list . "<select id='groups' name='groups' style='background-color: rgb(250, 255, 189);width:153px;'>";
             $list = $list . "<option value='0' selected>---------------------</option>";
             $query = "select id, courseid, name from mdl_groups where courseid=" . $course . "";
             $result = $this->db->query($query);
@@ -178,9 +184,8 @@ class signup_user {
             $form = $form . "<tr><td><label for='department'>Department*</label></td><td><input id='department' name='department' type='text' style='background-color: rgb(250, 255, 189);'>&nbsp;<span style='color:red;font-size:12px;' id='department_err'></span></td></tr>";
             $form = $form . "<tr><td><label for='school'>School’s online page*</label></td><td><input id='school' name='school' type='text' style='background-color: rgb(250, 255, 189);'>&nbsp;<span style='color:red;font-size:12px;' id='school_err'></span></td></tr>";
             $groups = $this->tutorGroup();
-            $form = $form . "<input type='hidden' id='user_type' value='tutor'>";
-            //$form = $form . "<tr><td><label for='course'>Course</label></td><td>" . $courses . "&nbsp;<span style='color:red;font-size:12px;' id='course_err'></span></td></tr>";
-            $form = $form . "<tr><td><label for='group'>New group name*</label></td><td>" . $groups . "</td></tr>";
+            $form = $form . "<input type='hidden' id='user_type' value='tutor'>";            
+            $form = $form . "<tr><td><label for='group'>Course *</label></td><td>" . $groups . "</td></tr>";
         }
 
         $form = $form . "<tr><td colspan='2'><input class='submit' type='submit' value='Submit'></td></tr></table></form>

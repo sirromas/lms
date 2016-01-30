@@ -32,7 +32,8 @@ $context = context_course::instance($id);
 
 global $COURSE, $USER;
 
-$cs = new courseSections($context, $COURSE->id, $USER->id);
+$courseid=3; // we have only one course
+$cs = new courseSections($context, $courseid , $USER->id);
 $roleid = $cs->getCourseRoles();
 $forumid = $cs->getForumId();
 
