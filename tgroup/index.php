@@ -86,6 +86,6 @@
                     <br/>
             </div>
         </div>
-        <div style="margin: auto;width: 60%;padding: 10px;" id="group_created"></div>
+        <div style="margin: auto;width: 60%;padding:10px;text-align:center;" id="group_created"></div>
     </body>
 </html>
