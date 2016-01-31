@@ -28,9 +28,28 @@ class Course extends Tutors {
         return $id;
     }
 
+    function generateRandomString($length = 25) {
+        return substr(str_shuffle("0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"), 0, $length);
+    }
+
+    function create_group_code($groupid, $group_name) {
+        $courseid = 3;
+        $code = $this->generateRandomString();
+        $query = "insert into mdl_group_codes (groupid,"
+                . "courseid,"
+                . "name,"
+                . "code) "
+                . "values ($groupid, "
+                . "$courseid , "
+                . "'$group_name', "
+                . "'$code')";
+        $this->db->query($query);
+    }
+
     function create_tutor_group($group_name, $email) {
         $userid = $this->get_user_id($email);
         $courseid = 3; // we have only one course
+        
         // 1. Insert into mdl_groups
         $query = "insert into mdl_groups
                      (courseid,
@@ -56,41 +75,31 @@ class Course extends Tutors {
                 . " values ('" . $groupid . "' , '" . $userid . "' ,'" . time() . "')";
         //echo "Query: " . $query . "<br/>";
         $this->db->query($query);
+
+        // 3. Create group secret code 
+        $this->create_group_code($groupid, $group_name);
         return 0;
     }
 
     function create_new_groups($email, $code, $page, $groups) {
-        $responses = array();
-        $email_status = $this->checkEmailStatus($email);
-        //echo "Email status: " . $email_status . "<br/>";
-        $code_status = 1; // Call was made by authorized user, so need to check
-        //echo "Code status: " . $code_status . "<br/>";
-        $page_status = $this->checkTutorPage($page, $email);
-        // echo "Page status: " . $page_status . "<br/>";
-        // print_r($groups);
-        //echo "<br/>";
-        //echo "Groups number: " . count($groups) . "<br/>";
+        
+        $email_status = $this->checkEmailStatus($email);        
+        $code_status = 1; // Call was made by authorized user, so need to check        
+        $page_status = $this->checkTutorPage($page, $email);      
 
         if ($email_status == 1 && $code_status == 1 && $page_status == 1) {
-            for ($i = 0; $i < count($groups); $i++) {
-                //echo "Group name: " . $groups[$i] . "<br/>";
-                $status = $this->check_group($groups[$i]);
-                //echo "Group status ($groups[$i]): " . $status . "<br/>";
-                if ($status == 0) {
-                    //echo "Inside if  status == 0....<br/>";
-                    $response = $this->create_tutor_group($groups[$i], $email);
-                    $responses[] = $response;
-                } // end if $status==0
-                else {
-                    //echo "Inside else ....<br/>";
-                    $responses[] = 1;
-                }
+            for ($i = 0; $i < count($groups); $i++) {                
+                $status = $this->check_group($groups[$i]);                
+                if ($status == 0) {                    
+                    $response = $this->create_tutor_group($groups[$i], $email);                    
+                } // end if $status==0                
             } // end for
+            $response="<span align='center'>New courses has been created</span>";
         } // end if $email_status == 1 && $code_status == 1 && $page_status == 1
         else {
-            $responses = array('--', '--', '--', '--');
+            $response="<span align='center'>Wrong tutor  data</span>";
         } // end else
-        return $responses;
+        return $response;
     }
 
 }
