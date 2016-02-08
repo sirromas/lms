@@ -49,7 +49,6 @@ class Course extends Tutors {
     function create_tutor_group($group_name, $email) {
         $userid = $this->get_user_id($email);
         $courseid = 3; // we have only one course
-        
         // 1. Insert into mdl_groups
         $query = "insert into mdl_groups
                      (courseid,
@@ -82,23 +81,83 @@ class Course extends Tutors {
     }
 
     function create_new_groups($email, $code, $page, $groups) {
-        
-        $email_status = $this->checkEmailStatus($email);        
-        $code_status = 1; // Call was made by authorized user, so need to check        
-        $page_status = $this->checkTutorPage($page, $email);      
+
+        $email_status = $this->checkEmailStatus($email);
+        $code_status = 1; // Call was made by authorized user, so no need to check        
+        $page_status = $this->checkTutorPage($page, $email);
 
         if ($email_status == 1 && $code_status == 1 && $page_status == 1) {
-            for ($i = 0; $i < count($groups); $i++) {                
-                $status = $this->check_group($groups[$i]);                
-                if ($status == 0) {                    
-                    $response = $this->create_tutor_group($groups[$i], $email);                    
+            for ($i = 0; $i < count($groups); $i++) {
+                $status = $this->check_group($groups[$i]);
+                if ($status == 0) {
+                    $response = $this->create_tutor_group($groups[$i], $email);
                 } // end if $status==0                
             } // end for
-            $response="<span align='center'>New courses has been created</span>";
+            $response = "<span align='center'>New courses has been created</span>";
         } // end if $email_status == 1 && $code_status == 1 && $page_status == 1
         else {
-            $response="<span align='center'>Wrong tutor  data</span>";
+            $response = "<span align='center'>Wrong user  data</span>";
         } // end else
+        return $response;
+    }
+
+    function getGroupNameById($id) {
+        $query = "select id, name from mdl_groups where id=$id";
+        $result = $this->db->query($query);
+        while ($row = mysql_fetch_assoc($result)) {
+            $name = $row['name'];
+        }
+        return $name;
+    }
+
+    function removeGroupMembers($groupid) {
+        $query = "delete from mdl_groups_members "
+                . "where groupid=$groupid";
+        $this->db->query($query);
+    }
+
+    function deleteGroup($groupid) {
+        $query = "delete from mdl_groups where id=$groupid";
+        $this->db->query($query);
+    }
+
+    function deleteGroupCodes($groupid) {
+        $query = "delete from mdl_group_codes where groupid=$groupid";
+        $this->db->query($query);
+    }
+
+    function getTutorGroups($userid) {
+        $list = '';
+        $groups = array();
+        $query = "select groupid, userid from mdl_groups_members "
+                . "where userid=$userid";
+        $result = $this->db->query($query);
+        while ($row = mysql_fetch_assoc($result)) {
+            $groups[] = $row['groupid'];
+        }
+        
+        foreach ($groups as $groupid) {
+            $group_name = $this->getGroupNameById($groupid);            
+            $list.="<input type='checkbox' id='$groupid' class='tcourse' value='$groupid' ><span style='font: 13.3333px Arial;'>$group_name</span><br/>";            
+        } // end foreach                
+        return $list;
+    }
+
+    function deleteTutorGroups($email, $code, $page, $groups) {       
+        $email_status = $this->checkEmailStatus($email);
+        $code_status = 1; // Call was made by authorized user, so no need to check        
+        $page_status = $this->checkTutorPage($page, $email);
+        if ($email_status == 1 && $code_status == 1 && $page_status == 1) {
+            foreach ($groups as $groupid) {
+                $this->removeGroupMembers($groupid);
+                $this->deleteGroupCodes($groupid);
+                $this->deleteGroup($groupid);
+            }
+            $response = "<span align='center'>Selected courses were deleted</span>";
+        } // end if $email_status == 1 && $code_status == 1 && $page_status == 1
+        else {
+            $response = "<span align='center'>Wrong user  data</span>";
+        }
         return $response;
     }
 

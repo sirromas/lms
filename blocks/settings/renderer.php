@@ -48,9 +48,14 @@ class block_settings_renderer extends plugin_renderer_base {
         }
 
         if ($roleid == 4) {
+            
             $content = $content . '<p class="tree_item leaf active_tree_node">
-         <a href="http://' . $_SERVER['SERVER_NAME'] . '/lms/trgoup/index.php?secret_code=' . $secret_code . '" target="_blank">         
+         <a href="http://' . $_SERVER['SERVER_NAME'] . '/lms/trgoup/index.php?secret_code=' . $secret_code . '&userid='.$USER->id.'" target="_blank">         
          Create new course</a></p>';
+            $content = $content  .'<p class="tree_item leaf active_tree_node">
+         <a href="http://' . $_SERVER['SERVER_NAME'] . '/lms/trgoup/remove.php?secret_code=' . $secret_code . '&userid='.$USER->id.'" target="_blank">         
+         Remove courses</a></p>';
+            
             $item_to_remove = array('Grade history', 'Enrolment methods');
             $clean_content = $cs->remove_navigation_tutor_navigation_items($content, $item_to_remove);
             /*

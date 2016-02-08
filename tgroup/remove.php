@@ -17,18 +17,18 @@
         <?php
         require_once './Course.php';
         $cs = new Course();
+        $code = $_GET['secret_code'];
         $userid = $_GET['userid'];
         if ($userid != '') {
-         
+            $groups = $cs->getTutorGroups($userid);
         } // end if $userid!=''
         else {
             echo "<p align='center' style='color:red;'>Invalid user credentials</p>";
         }
-        $code = $_GET['secret_code'];
         ?>
 
 
-        <p align="center">You can create up to four new courses.Please provide at least one course name to be created for you.</p>
+        <p align="center">Please select courses you want to delete </p>
         <div class="wrapper clearfix">
             <div align="center">
                 <section class="userLogin userForm clearfix oneCol">
@@ -37,10 +37,10 @@
                         <div class='CSSTableGenerator' id='signupwrap'
                              style='table-layout: fixed; width: 620px; align: center;'>
 
-                            <form class='cmxform' id='groupform' method="post" action=''>
+                            <form class='cmxform' id='delete_group_form' method="post" action=''>
                                 <table>
                                     <tr>
-                                        <td colspan='2'>Create new course</td>
+                                        <td colspan='2'>Delete old course</td>
                                     </tr>
                                     <tr>
                                         <td style='width: 250px;'><label for='email'>Email*</label></td>
@@ -65,24 +65,15 @@
                                     </tr>
 
                                     <tr>
-                                        <td><label for='group1'>Course*</label></td>
-                                        <td><input id="group1" style='background-color: rgb(250, 255, 189);width:173px;' /><span style='color: red; font-size: 12px;width:173px;' id='group1_err'></span></td>
+                                        <td><label for='groups'>Courses do be deleted*</label></td>
+                                        <td><?php echo $groups; ?> </td>                                        
+                                    </tr>
+                                    
+                                    <tr>
+                                        <td>&nbsp;</td>
+                                        <td style='font: 13.3333px Arial;'><span id="group_err" style="color:red;"></span></td>
                                     </tr>
 
-                                    <tr>
-                                        <td><label for='group2'>Course</label></td>
-                                        <td><input id="group2" style='background-color: rgb(250, 255, 189);width:173px;' /><span style='color: red; font-size: 12px;width:173px;' id='group2_err'></span></td>
-                                    </tr>
-
-                                    <tr>
-                                        <td><label for='group3'>Course</label></td>
-                                        <td><input id="group3" style='background-color: rgb(250, 255, 189);width:173px;' /><span style='color: red; font-size: 12px;width:173px;' id='group3_err'></span></td>
-                                    </tr>
-
-                                    <tr>
-                                        <td><label for='group4'>Course</label></td>
-                                        <td><input id="group4" style='background-color: rgb(250, 255, 189);width:173px;' /><span style='color: red; font-size: 12px;width:173px;' id='group4_err'></span></td>
-                                    </tr>
                                     <tr>
                                         <td colspan='2'><input class='submit' type='submit' value='Submit'/></td>
                                     </tr>
