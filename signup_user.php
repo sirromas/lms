@@ -54,24 +54,40 @@ class signup_user {
         $query = "select username from mdl_user where username='$username'";
         return $this->db->numrows($query);
     }
-    
+
     function isGroupExists($name) {
-        $query="select id, name from mdl_groups "
+        $query = "select id, name from mdl_groups "
                 . "where name='$name'";
         return $this->db->numrows($query);
     }
 
     function getGroupsListNew() {
-        $course = 3; // we always have one course
         $list = "";
-        $list = $list . "<select id='groups' name='groups' style='background-color: rgb(250, 255, 189);width:153px;>";
-        $list = $list . "<option value='0' selected>---------------------</option>";
+        $dir_path = $_SERVER['DOCUMENT_ROOT'] . "/lms";
+        $file_name = 'groups.json';
+        $full_file_path = $dir_path . "/" . $file_name;
+        $list.="<div id='the-basics'><input class='typeahead' type='text' placeholder='Courses'></div>";
+        $course = 3; // we have only one course     
         $query = "select id, courseid, name from mdl_groups where courseid=" . $course . "";
         $result = $this->db->query($query);
         while ($row = mysql_fetch_assoc($result)) {
-            $list = $list . "<option value='" . $row['id'] . "'>" . $row['name'] . "</option>";
+            $group_names[] = $row['name'];
         }
-        $list = $list . "</select>";
+        $myfile = fopen($full_file_path, "w");
+        fwrite($myfile, "[");
+        for ($i = 0; $i <= count($group_names); $i++) {
+            if ($i < count($group_names)) {
+                $write_item = json_encode($group_names[$i]) . ",";
+            }
+            if ($i == count($group_names) - 1) {
+                $write_item = json_encode($group_names[$i]);
+            }
+            if ($group_names[$i] != null) {
+                fwrite($myfile, $write_item);
+            }
+        } // end for
+        fwrite($myfile, "]");
+        fclose($myfile);
         return $list;
     }
 
@@ -166,7 +182,7 @@ class signup_user {
                         </td>                        
                     </tr> ";
 
-        if ($this->user_type == 'student') {            
+        if ($this->user_type == 'student') {
             $groups = $this->getGroupsListNew();
             $form = $form . "<tr>
             <td>
@@ -176,14 +192,14 @@ class signup_user {
             <input id='school' name='school' style='background-color: rgb(250, 255, 189);'>&nbsp;<span style='color:red;font-size:12px;' id='school_err'></span>
             </td>
             </tr>";
-            $form = $form . "<input type='hidden' id='user_type' value='student'>";            
+            $form = $form . "<input type='hidden' id='user_type' value='student'>";
             $form = $form . "<tr><td><label for='group'>Course*</label></td><td>" . $groups . "&nbsp;<span style='color:red;font-size:12px;' id='group_err'></span></td></tr>";
         } else {
             $form = $form . "<tr><td><label for='title'>Title*</label></td><td><input id='title' name='title' type='text' style='background-color: rgb(250, 255, 189);'></span>&nbsp;<span style='color:red;font-size:12px;' id='title_err'></span></td></tr>";
             $form = $form . "<tr><td><label for='department'>Department*</label></td><td><input id='department' name='department' type='text' style='background-color: rgb(250, 255, 189);'>&nbsp;<span style='color:red;font-size:12px;' id='department_err'></span></td></tr>";
             $form = $form . "<tr><td><label for='school'>School’s online page*</label></td><td><input id='school' name='school' type='text' style='background-color: rgb(250, 255, 189);'>&nbsp;<span style='color:red;font-size:12px;' id='school_err'></span></td></tr>";
             $groups = $this->tutorGroup();
-            $form = $form . "<input type='hidden' id='user_type' value='tutor'>";            
+            $form = $form . "<input type='hidden' id='user_type' value='tutor'>";
             $form = $form . "<tr><td><label for='group'>Course *</label></td><td>" . $groups . "</td></tr>";
         }
 

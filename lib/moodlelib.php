@@ -5838,7 +5838,7 @@ function get_group_secret_code($user) {
 
 function getTutorWelcomeMessage($user) {
 
-    global $CFG ;    
+    global $CFG,$COURSE,$USER ;    
     $secret_code=get_group_secret_code($user);
     $message = "";
     $message_header = "<html><body>";

@@ -46,28 +46,27 @@ if (!$authplugin->can_signup()) {
 
 if ($_POST) {
 
-    
-     /*
-      * 
+    /*
       echo "<br/>-----------------------<br/>";
       print_r($_POST) ;
       echo "<br/>-----------------------<br/>";
-     die();
-      * 
-      */
+      die();
+     */
 
     $user = new stdClass();
     $user->type = $_POST['user_type'];
-    
+
     if ($user->type == 'tutor') {
         $user->confirmed = 0;
-        $user->title=$_POST['title'];
-        $user->department=$_POST['department'];
-        $user->group_name=$_POST['group'];
-    } else {
+        $user->title = $_POST['title'];
+        $user->department = $_POST['department'];
+        $user->group_name = $_POST['group'];
+    } // end if $user->type == 'tutor'
+    else {
         $user->confirmed = 1;
-        $user->school=$_POST['school'];        
     }
+
+    $user->school = $_POST['school'];
     $user->username = $_POST['email'];
     $user->password = $_POST['password'];
     $CFG->purepassword = $_POST['password'];
@@ -76,7 +75,7 @@ if ($_POST) {
     $user->email2 = $_POST['email'];
     $user->firstname = $_POST['firstname'];
     $user->lastname = $_POST['lastname'];
-    $user->course = $_POST['course'];    
+    $user->course = $_POST['course'];
     $user->create_group = $_POST['create_groups'];
     $user->address = $_POST['address'];
     $user->lang = current_language();
@@ -86,6 +85,14 @@ if ($_POST) {
     $user->mnethostid = $CFG->mnet_localhost_id;
     $user->secret = random_string(15);
     $user->auth = $CFG->registerauth;
+    
+    /*
+    echo "<pre>";
+    print_r($user);
+    echo "</pre>";
+    die();
+    */
+    
     // Initialize alternate name fields to empty strings.
     $namefields = array_diff(get_all_user_name_fields(), useredit_get_required_name_fields());
     foreach ($namefields as $namefield) {
@@ -94,18 +101,8 @@ if ($_POST) {
     $authplugin->user_signup($user, false);
     $csignup = new CustomSignup($user);
     $csignup->processCourseRequest();
-    if ($_POST['user_type'] == 'student') {
-        $response = "<span style='color:#570101'>Thank you for Signup. "
-                . "Confirmation email is sent to " . $_POST['email'] . ". "
-                . "&nbsp;Next step is to get <a href='https://globalizationplus.com/subscription.html' "
-                . "style='color: #570101;cursor:pointer;text-decoration:underline;'>enrollment key</a></span>."
-                . "Please be aware key is attached to email you just signed up,"
-                . "so please provide this email (" . $_POST['email'] . ") when you buy"
-                . " a key.";
-    } else {
-        $response = "<span style='color:#570101'>Thank you for Signup. "
-                . "Confirmation email is sent to " . $_POST['email'] . "</span>";
-    }
+    $response = "<span style='color:#570101'>Thank you for Signup. "
+            . "Confirmation email is sent to " . $_POST['email'] . "</span>";
     echo $response;
     die();
 }

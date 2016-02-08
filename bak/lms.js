@@ -173,15 +173,6 @@ $(document).ready(function () {
             }
         }
 
-
-        /*
-         var courses = $('#courses').val();        
-         if ($('#courses').val() == 0) {
-         $("#course_err").html('Please select course');
-         return false;
-         }
-         */
-
         // For now we have only one course
         var courses = 3;
 
@@ -197,58 +188,72 @@ $(document).ready(function () {
             return false;
         }
 
-        var url = 'http://globalizationplus.com/lms/login/signup.php';
-        if (user_type == 'student') {
-            query = {user_type: user_type,
-                firstname: fn,
-                lastname: ln,
-                username: email,
-                password: password,
-                email: email,
-                school: school,
-                course: courses,
-                group: groups,
-                address: address};
-        }
-        else {
-            query = {user_type: user_type,
-                firstname: fn,
-                lastname: ln,
-                username: email,
-                password: password,
-                email: email,
-                school: school,
-                title: prof_title,
-                department: department,
-                course: courses,
-                group: new_group_name,
-                address: address};
-        }
-
-        $.post("lms/getGroups.php", {
+        // Check is group name exists
+        $.post("lms/checkCourseName.php", {
             email: email
         }).done(function (data) {
-            console.log('Data: ' + data);
-            console.log('Done Email status: ' + data);
-            if (data != 0) {
-                $("#email_err").html('Provided email already in use');
+            console.log('Response: ' + data);
+            if (data == 0) {
+                // Place here AJAX request
+                var url = 'http://globalizationplus.com/lms/login/signup.php';
+                if (user_type == 'student') {
+                    query = {user_type: user_type,
+                        firstname: fn,
+                        lastname: ln,
+                        username: email,
+                        password: password,
+                        email: email,
+                        school: school,
+                        course: courses,
+                        group: groups,
+                        address: address};
+                } // end if user_type == 'student'
+                else {
+                    query = {user_type: user_type,
+                        firstname: fn,
+                        lastname: ln,
+                        username: email,
+                        password: password,
+                        email: email,
+                        school: school,
+                        title: prof_title,
+                        department: department,
+                        course: courses,
+                        group: new_group_name,
+                        address: address};
+                } // end else
+
+                $.post("lms/getGroups.php", {
+                    email: email
+                }).done(function (data) {
+                    console.log('Data: ' + data);
+                    console.log('Done Email status: ' + data);
+                    if (data != 0) {
+                        $("#email_err").html('Provided email already in use');
+                        return false;
+                    } // end if data != 0 
+                    else {
+                        $('.CSSTableGenerator').fadeTo("slow", 0.33);
+                        $('#spinner').show();
+                        $.post(url, query).done(function (data) {
+                            console.log('Else data: ' + data);
+                            $("#signup_content").html(data);
+                        }).fail(function (data) {
+                            console.log('Fail data: ' + data);
+                            $("#signup_content").html('Ops something wrong ...');                            
+                            return false;
+                        }); // end fail
+                        return false;
+                    } // end else
+                }); // end .done(function (data)
                 return false;
-            } // end if data != 0 
+            } // end if data==0
             else {
-                $('.CSSTableGenerator').fadeTo("slow", 0.33);
-                $('#spinner').show();
-                $.post(url, query).done(function (data) {
-                    console.log('Else data: ' + data);
-                    $("#signup_content").html(data);
-                }).fail(function (data) {
-                    console.log('Fail data: ' + data);
-                    $("#signup_content").html('Ops something wrong ...');
-                    //$("#signup_content").html(data);
-                    return false;
-                })
+                $("#new_group_err").html('Name already exists');
                 return false;
             } // end else
-        }) // end .done(function (data)
+            return false;
+        }); // end done function
         return false;
     }); // end of signup form submit event
 

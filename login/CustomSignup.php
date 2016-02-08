@@ -165,7 +165,6 @@ class CustomSignup {
         $result = $this->db->query($query);
         $last_insert_id = mysql_insert_id();
         //$this->setGroupName($courseid, mysql_insert_id());
-
         // 2. Insert into mdl_tutor_groups
         $query = "insert into mdl_tutor_groups
                          (courseid, 
@@ -180,15 +179,15 @@ class CustomSignup {
 
     function addUserToGroups($userid, $courseid, $groupid, $user_type) {
 
-          /*  
-           * 
+        /*
+         * 
           echo "User id: ".$userid."<br/>";
           echo "User type: ".$this->user->type."<br/>";
           echo "Course id: ".$courseid."<br/>";
           echo "Group id:".$groupid."<br/>";
-           * 
-           */
-                   
+         * 
+         */
+
         if ($this->user->type == 'tutor') {
             // echo "Inside get Tutors groups list ...<br/>";
             $groups = $this->getTutorGroups();
@@ -196,10 +195,10 @@ class CustomSignup {
                 groups_add_member($groupid, $userid);
             }
         } // end if $this->user->user_type == 'tutor' 
-        
         else {
             // echo "<br/>GroupID inside else when user is not tutor: $groupid<br/>";
-            groups_add_member($groupid, $userid);
+            $student_groupid=$this->getGroupIdByName($groupid);
+            groups_add_member($student_groupid, $userid);
         }
     }
 
@@ -227,15 +226,25 @@ class CustomSignup {
         $result = $this->db->query($query);
     }
 
+    function getGroupIdByName($group_name) {
+        $query="select id, name from mdl_groups "
+                . "where name='$group_name'";
+        $result = $this->db->query($query);
+        while ($row = mysql_fetch_assoc($result)) {
+            $id=$row['id'];
+        }
+        return $id;        
+    }
+
     function processCourseRequest() {
         $this->updateUserAddress();
-        
+
         /*
-        echo "User object: <pre>";
-        print_r($this->user);
-        echo "</pre>";
-        */
-        
+          echo "User object: <pre>";
+          print_r($this->user);
+          echo "</pre>";
+         */
+
         if ($this->user->type == 'tutor') {
             $this->updateTutorData();
             $this->createNewGroup($this->user->course, $this->user->group_name);
@@ -245,7 +254,7 @@ class CustomSignup {
         }
         $this->assignRoles($this->userid, $this->user->course, $this->user->type);
         $this->addUserToGroups($this->userid, $this->user->course, $this->user->group, $this->user->type);
-        
+
         // We call this condition second time because 
         // tutor groups must be exits and tutor must be already added to it
         if ($this->user->type == 'tutor') {
@@ -253,7 +262,7 @@ class CustomSignup {
             $supportuser = core_user::get_support_user();
             $subject = get_string('emailconfirmationsubject', '', format_string($site->fullname));
             $messagehtml = getTutorWelcomeMessage($this->user);
-            $message='';
+            $message = '';
             return email_to_user($this->user, $supportuser, $subject, $message, $messagehtml);
         }
     }

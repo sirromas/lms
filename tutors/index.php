@@ -6,6 +6,7 @@
 
     <head>
         <script src="https://code.jquery.com/jquery-1.7.2.min.js"></script>
+        <script type="text/javascript" src="../typehead.js"></script>
         <script type="text/javascript" src="tutors.js"></script>          
         <link rel="stylesheet" href="../register.css" />
 
@@ -61,8 +62,8 @@
                                     </tr>
                                     
                                     <tr>
-                                        <td><label for='groups'>Group*</label></td>
-                                        <td> <?php echo $groups; ?>
+                                        <td><label for='groups'>Course*</label></td>
+                                        <td> <div id='the-basics'><input class='typeahead' type='text' placeholder='Courses' id="groups" style='background-color: rgb(250, 255, 189);width:173px;' /></div>
                                             &nbsp;<span style='color: red; font-size: 12px;width:173px;' id='group_err'></span></td>
                                     </tr>
                                     

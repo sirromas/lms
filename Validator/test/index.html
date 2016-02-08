@@ -144,7 +144,7 @@
 		<input name="testForm12text" id="testForm12text" data-rule-required="true">
 	</form>
 	<form id="testForm13">
-		<select id="cars-select" name="cars" title="Please select at least two cars, but no more than three" required rangelength="[2,3]" multiple="multiple">
+		<select id="cars-select" name="cars" title="Please select at least two cars, but no more than three" multiple="multiple">
 			<option value="m_sl">Mercedes SL</option>
 			<option value="o_c">Opel Corsa</option>
 			<option value="vw_p">VW Polo</option>
@@ -178,7 +178,7 @@
 	</form>
 	<form id="testForm19">
 	<!-- test id/name containing $ -->
-	<input name="testForm19$text" id="testForm19$text" required>
+	<input name="testForm19$text" id="testForm19" required>
 	</form>
 	<form id="dataMessages">
 		<input name="dataMessagesName" id="dataMessagesName" class="required" data-msg-required="You must enter a value here">
@@ -264,8 +264,7 @@
 		<input id="v2-i1" name="v2-i1" class="required">
 		<input id="v2-i2" name="v2-i2" class="required email">
 		<input id="v2-i3" name="v2-i3" class="url">
-		<input id="v2-i4" name="v2-i4" class="required" minlength="2">
-		<input id="v2-i5" name="v2-i5" class="required" minlength="2" maxlength="5" customMethod1="123">
+		
 		<input id="v2-i6" name="v2-i6" class="required customMethod2" data-rule-maxlength="5" data-rule-minlength="2">
 		<input id="v2-i7" name="v2-i7">
 	</form>
@@ -317,12 +316,6 @@
 			 the value.
 			 Type absent is treated like type="text".
 		  -->
-		<input type="text" id="rangeTextInvalidGreater" name="rangeTextInvalidGreater" min="50" max="200" value="1000">
-		<input type="text" id="rangeTextInvalidLess" name="rangeTextInvalidLess" min="200" max="1000" value="50">
-		<input id="rangeAbsentInvalidGreater" name="rangeAbsentInvalidGreater" min="50" max="200" value="1000">
-		<input id="rangeAbsentInvalidLess" name="rangeAbsentInvalidLess" min="200" max="1000" value="50">
-		<input type="text" id="rangeTextValid" name="rangeTextValid" min="50" max="1000" value="200">
-		<input type="text" id="rangeTextDataRuleValid" name="rangeTextValid" min="50" data-rule-max="1000.00" value="200">
 		<input id="rangeAbsentValid" name="rangeAbsentValid" min="50" max="1000" value="200">
 		<!-- ranges are like numbers in html5, except that browser is not required
 			 to demand an exact value.  User interface could be a slider.
@@ -363,12 +356,7 @@
 		<input name="test" class="required" value="">
 	</form>
 	<form id="radiocheckbox" autocomplete="off">
-		<input id="radiocheckbox-0-1" autocomplete="off" type="radio" name="radiocheckbox-0" required="required">
-		<input id="radiocheckbox-0-2" autocomplete="off" type="radio" name="radiocheckbox-0" required="required">
-		<input id="radiocheckbox-0-3" autocomplete="off" type="radio" name="radiocheckbox-0" required="required">
-		<input id="radiocheckbox-1-1" autocomplete="off" type="checkbox" name="radiocheckbox-1" required="required">
-		<input id="radiocheckbox-1-2" autocomplete="off" type="checkbox" name="radiocheckbox-1" required="required">
-		<input id="radiocheckbox-1-3" autocomplete="off" type="checkbox" name="radiocheckbox-1" required="required">
+		
 	</form>
 </div>
 </body>
