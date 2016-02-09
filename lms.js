@@ -42,9 +42,9 @@ $(document).ready(function () {
 
     // **************Student Form submit event **************
     $('#signupform_student').submit(function (event) {
-        
+
         event.preventDefault();
-        
+
         var fn = $('#firstname').val();
         if (fn == '') {
             $("#fn_err").html('Please provide firstname');
@@ -83,7 +83,7 @@ $(document).ready(function () {
         if (school == '') {
             $("#school_err").html('Please provide school name');
             return false;
-        }        
+        }
 
         var groups = $('#group').val();
         if (groups == '') {
@@ -92,7 +92,7 @@ $(document).ready(function () {
         }
 
         if (fn != '' && ln != '' && email != '' && validateEmail(email) == true && password != '' && address != '' && school != '' && groups != '') {
-            console.log ('Inside if when all data are provided ...');
+            console.log('Inside if when all data are provided ...');
             $("#group_err").html('');
             // Check is email already in use?
             $.post("lms/getGroups.php", {
@@ -103,7 +103,7 @@ $(document).ready(function () {
                     $("#email_err").html('Provided email already in use');
                     return false;
                 }
-                else {                    
+                else {
                     var courses = 3; // We have only one course
                     // If email is not used we could proceed with signup
                     var url = 'http://globalizationplus.com/lms/login/signup.php';
@@ -123,6 +123,7 @@ $(document).ready(function () {
                     $.post(url, query).done(function (data) {
                         console.log('Server response: ' + data);
                         $('#signupwrap_student').fadeTo("slow", 1);
+                        $('#signupwrap_student').height(30);
                         $("#signupwrap_student").html(data);
                         return false;
                     }).fail(function (data) {
@@ -164,7 +165,7 @@ $(document).ready(function () {
     $('#signupform_prof').submit(function (event) {
 
         event.preventDefault();
-        
+
         var fn = $('#firstname_prof').val();
         if (fn == '') {
             $("#fn_err").html('Please provide firstname');
@@ -232,12 +233,12 @@ $(document).ready(function () {
                 email: email
             }).done(function (data) {
                 console.log('Response (email exists): ' + data);
-                if (data > 0) {                    
+                if (data > 0) {
                     $("#email_err").html('Provided email already in use');
                     return false;
                 }
                 else {
-                    
+
                     // Email is not used so we can proceed with signup
                     var courses = 3;
 
@@ -265,8 +266,9 @@ $(document).ready(function () {
                                 address: address};
                             $('#signupwrap_professor').fadeTo("slow", 0.33);
                             $.post(url, query).done(function (data) {
-                            $('#signupwrap_professor').fadeTo("slow", 1);    
-                             $("#signupwrap_professor").html(data);
+                                $('#signupwrap_professor').fadeTo("slow", 1);
+                                $('#signupwrap_professor').height(30);
+                                $("#signupwrap_professor").html(data);
                             }).fail(function () {
                                 $("#signupwrap_professor").html('Ops something goes wrong ...');
                             });
@@ -332,56 +334,16 @@ $(document).ready(function () {
      * Code related to signing process
      * 
      ******************************************************************************/
-    $("#user_type").on('change', function () {
-        var user_type = $("#user_type").val();
-        // console.log(user_type);
-        if (user_type == 5) {
-            $("#tr_code").show();
-        } else {
-            $("#tr_code").hide();
-        }
-
-    });
-
     $('#loginform').on('change', function () {
         $("#email_err").html('');
         $("#pwd_err").html('');
-        $("#user_err").html('');
-        $("#code_err").html('');
     });
 
-    function checkTypeCode(email, user_type, code) {
-        var query = {user_type: user_type,
-            username: email,
-            code: code};
-        $.post('lms/login_verify.php', query).done(function (data) {
-            var user_data = $.parseJSON(data);
-            var status = [user_data.type, user_data.code];
-            //console.log('checkTypeCode' + status);
-            return status;
-        }); // .post('lms/login_verify.php', query).done
-    }
-
-    function signinSubmit(user_data) {
-        console.log('signinSubmit: ' + user_data);
-        if (user_data[0] == 0) {
-            $("#user_err").html('Invalid user type');
-            return false;
-        }
-        if (user_data[1] == 0) {
-            $("#code_err").html('Invalid enrollment code');
-            return false;
-        }
-        if (user_data[0] == 1 && user_data[1] == 1) {
-            return true;
-        }
-    }
-
     $('#loginform').on('submit', function () {
-        var user_type = $("#user_type").val();
+
         var email = $('#username').val();
         var password = $('#password').val();
-        var code = $('#code').val();
+
 
         if (email.length == 0) {
             $("#email_err").html('Please provide email');
@@ -393,39 +355,40 @@ $(document).ready(function () {
             return false;
         }
 
-        if (user_type == 0) {
-            $("#user_err").html('Please select user type');
-            return false;
+        if (email.length > 0 && password.length > 0) {
+            //HTMLFormElement.prototype.submit.call($('#loginform')[0]);
+            return true;
         }
 
-        if (user_type == 5) {
-            if (code.length == 0) {
-                $("#code_err").html('Please provide enroll key');
-                return false;
-            }
-        }
-
-        var query = {user_type: user_type,
-            username: email,
-            code: code};
-        $.post('lms/login_verify.php', query).done(function (data) {
-            console.log(data);
-            var user_data = $.parseJSON(data);
-            if (user_data.type == 0) {
-                $("#user_err").html('Invalid user type');
-                return false;
-            }
-            if (user_data.code == 0) {
-                $("#code_err").html('Invalid enrollment code');
-                return false;
-            }
-            if (user_data.type == 1 && user_data.code == 1) {
-                //("#loginform").submit();
-                HTMLFormElement.prototype.submit.call($('#loginform')[0]);
-            }
-        }); // .post('lms/login_verify.php', query).done
-        return false;
     }) // ('#loginform').on('submit', function ()    
+
+    /*******************************************************************************
+     * 
+     *               Code related to enroll key form
+     * 
+     ******************************************************************************/
+
+    $('#enrol_form').on('submit', function (event) {
+        event.preventDefault();
+        var userid = $('#userid').val();
+        var key = $('#key').val();
+        if (key == '') {
+            $('#key_err').html('Please provide enroll key');
+        }
+        else {
+            var query = {userid: userid,
+                code: key};
+            $.post('../../update_enroll_key.php', query).done(function (data) {
+                if (data == 'ok') {
+                    $('#key_err').html('Ok');
+                    location.reload();
+                }
+                else {
+                    $('#key_err').html('Enroll key expired or invalid');
+                }
+            });
+        } // end else
+    });
 }); // end of $(document).ready(function ()
 
 

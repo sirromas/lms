@@ -93,8 +93,19 @@ if ($inpopup and $page->display == RESOURCELIB_DISPLAY_POPUP) {
     $PAGE->set_activity_record($page);
 }
 
+/* * *************************************************************************
+ *   
+ *             Here we should add enroll key verification *
+ *  
+ * ************************************************************************* */
+$key_status = $cs->checkStudentEnrollKey($USER->id);
+if ($key_status !== true) {
+    $enroll_form = $cs->getStudentEnrollForm($USER->id);
+    echo $enroll_form;
+    die();
+} // end if $key_status!==true
 
-
+/* * ************************************************************************** */
 echo $OUTPUT->header();
 if (!isset($options['printheading']) || !empty($options['printheading'])) {
     echo $OUTPUT->heading(format_string($page->name), 2);
@@ -119,7 +130,7 @@ echo $OUTPUT->box($content, "generalbox center clearfix");
 $strlastmodified = get_string("lastmodified");
 echo "<div class=\"modified\">$strlastmodified: " . userdate($page->timemodified) . "</div>";
 
-/* ******************************************************************************
+/* * *****************************************************************************
  *  Here should be added forum functionality directly after page * 
  * **************************************************************************** */
 //echo "Role id: ".$roleid."<br/>";
@@ -129,23 +140,22 @@ if ($roleid == 5) {
         $url = 'http://' . $_SERVER['SERVER_NAME'] . '/lms/mod/forum/view.php?id=' . $forumid;
         ?>
         <iframe src="<?php echo $url; ?>" onload="this.width = screen.width * 0.9;
-                this.height = screen.height;" frameBorder="0"></iframe>
-        <?php
-    }
+                        this.height = screen.height;" frameBorder="0"></iframe>
+                <?php
+            }
 
 
-    /* ******************************************************************************
-     *  Here should be added link to quiz * 
-     * **************************************************************************** */
-    if ($quizid != false) {
-        $qizurl = "http://" . $_SERVER['SERVER_NAME'] . "/lms/mod/quiz/view.php?id=" . $quizid . "";
-        ?>
+            /*             * *****************************************************************************
+             *  Here should be added link to quiz * 
+             * **************************************************************************** */
+            if ($quizid != false) {
+                $qizurl = "http://" . $_SERVER['SERVER_NAME'] . "/lms/mod/quiz/view.php?id=" . $quizid . "";
+                ?>
         <br/><br/>
         <div style="text-align: center;"><a href="<?php echo $qizurl; ?>" >Go to Quiz</a></div>
         <?php
     }
 } // end if $roleid==5
-
 ?>
 
 

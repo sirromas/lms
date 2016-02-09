@@ -25,7 +25,7 @@ class Login {
 
     function verifyUserType($username) {
 
-        /*****************************************************
+        /*         * ***************************************************
          *          1 manager
          *          2 coursecreator
          *          3 editingteacher 
@@ -66,7 +66,6 @@ class Login {
                 . "from mdl_promo_code "
                 . "where active=1 and code='" . $code . "' "
                 . "and expire_date>'.$now.'";
-        //echo "Query: ".$query."<br/>";
         return $this->db->numrows($query);
     }
 
@@ -77,7 +76,6 @@ class Login {
                 . "where enrol_key='" . $code . "' "
                 . "and email='" . $email . "' "
                 . "and exp_date>'" . $now . "'";
-        // echo "Query: ".$query."<br/>";
         return $this->db->numrows($query);
     }
 
@@ -89,7 +87,6 @@ class Login {
     }
 
     function verifyUser($username, $code) {
-        //echo "User type: ".$this->user_type."<br/>";
         $type = $this->verifyUserType($username);
         if ($type == 1) {
             // User type is match
@@ -104,6 +101,31 @@ class Login {
             $code_status = 0;
         }
         return array('type' => $type, 'code' => $code_status);
+    }
+
+    function getUserEmailById($userid) {
+        $query = "select id, email from mdl_user where id=$userid";
+        $result = $this->db->query($query);
+        while ($row = mysql_fetch_assoc($result)) {
+            $email = $row['email'];
+        }
+        return $email;
+    }
+
+    function updateStudentEnrollKey($userid, $code) {
+        $email = $this->getUserEmailById($userid);
+        $promo_status = $this->verifyPromoCode($code);
+        $paid_status = $this->verifyPaidCode($email, $code);
+        if ($promo_status > 0 || $paid_status > 0) {
+            $query = "update mdl_user set enroll_key='$code' "
+                    . "where id=$userid";
+            $this->db->query($query);
+            $status = 'ok';
+        } // end if $promo_status>0 || $paid_status>0
+        else {
+            $status = 'failed';
+        }
+        return $status;
     }
 
 }
