@@ -59,13 +59,7 @@
                                         <td><input id='page' name='page' 
                                                    style='background-color: rgb(250, 255, 189);width:173px;'/>
                                             &nbsp;<span style='color: red; font-size: 12px;width:173px;' id='page_err'></span></td>
-                                    </tr>
-                                    
-                                    <tr>
-                                        <td><label for='groups'>Course*</label></td>
-                                        <td> <div id='the-basics'><input class='typeahead' type='text' placeholder='Courses' id="groups" style='background-color: rgb(250, 255, 189);width:173px;' /></div>
-                                            &nbsp;<span style='color: red; font-size: 12px;width:173px;' id='group_err'></span></td>
-                                    </tr>
+                                    </tr>                                    
                                     
                                     <td colspan='2'><input class='submit' type='submit' value='Submit'/></td>
                                     </tr>

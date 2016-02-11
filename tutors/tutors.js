@@ -30,19 +30,14 @@ $(document).ready(function () {
         if (page == '') {
             $("#page_err").html('Please provide online page');
             return false;
-        }
+        }        
 
-        if (group == '') {
-            $("#group_err").html('Please select course');
-            return false;
-        }
-
-        if (email != '' && code != '' && group != '' && page != '') {
+        if (email != '' && code != '' && page != '') {
             $("#group_err").html('');
             $.post("confirm.php", {
                 email: email,
                 code: code,
-                group: group,
+                group: 'aa',
                 page: page
             }).done(function (data) {
                 $("#confirm_status").html(data);

@@ -8,6 +8,9 @@ $(document).ready(function () {
 
     $('#a_student').on('click', function () {
         console.log("Student signup clicked");
+        $.post("lms/update_groups.php", function (data) {
+            console.log('Groups updated: ' + data);
+        });
         $('#signupwrap_professor').hide();
         $('#signupwrap_student').show();
     });
@@ -292,42 +295,46 @@ $(document).ready(function () {
     }
 
     // Code related to groups typehead
-    $.getJSON("lms/groups.json", function (data) {
+    $.post("lms/update_groups.php", function () {
+        console.log('Groups updated ... ');
+        $.getJSON("lms/groups.json", function (data) {
 
-        var substringMatcher = function (strs) {
-            return function findMatches(q, cb) {
-                var matches, substringRegex;
+            var substringMatcher = function (strs) {
+                return function findMatches(q, cb) {
+                    var matches, substringRegex;
 
-                // an array that will be populated with substring matches
-                matches = [];
+                    // an array that will be populated with substring matches
+                    matches = [];
 
-                // regex used to determine if a string contains the substring `q`
-                substrRegex = new RegExp(q, 'i');
+                    // regex used to determine if a string contains the substring `q`
+                    substrRegex = new RegExp(q, 'i');
 
-                // iterate through the pool of strings and for any string that
-                // contains the substring `q`, add it to the `matches` array
-                $.each(strs, function (i, str) {
-                    if (substrRegex.test(str)) {
-                        matches.push(str);
-                    }
-                });
+                    // iterate through the pool of strings and for any string that
+                    // contains the substring `q`, add it to the `matches` array
+                    $.each(strs, function (i, str) {
+                        if (substrRegex.test(str)) {
+                            matches.push(str);
+                        }
+                    });
 
-                cb(matches);
+                    cb(matches);
+                };
             };
-        };
 
-        var groups = data;
+            var groups = data;
 
-        $('#the-basics .typeahead').typeahead({
-            hint: true,
-            highlight: true,
-            minLength: 1
-        },
-        {
-            name: 'groups',
-            source: substringMatcher(groups)
-        });
-    }); // end of $.getJSON
+            $('#the-basics .typeahead').typeahead({
+                hint: true,
+                highlight: true,
+                minLength: 1
+            },
+            {
+                name: 'groups',
+                source: substringMatcher(groups)
+            });
+        }); // end of $.getJSON
+
+    }); // end of $.post("lms/update_groups.php"
 
     /*******************************************************************************
      * 
@@ -380,7 +387,7 @@ $(document).ready(function () {
                 code: key};
             $.post('../../update_enroll_key.php', query).done(function (data) {
                 if (data == 'ok') {
-                    $('#key_err').html('Ok');
+                    $('#key_err').html('<span style="green">Ok</span>');
                     location.reload();
                 }
                 else {

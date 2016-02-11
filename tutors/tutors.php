@@ -26,7 +26,7 @@ class Tutors {
     function confirmTutor($email, $code, $groupid, $page) {
         $status = '';
         //$codeStatus = $this->checkTutorCode($code, $groupid);
-        $codeStatus=1; // temp workaround
+        $codeStatus=$this->checkTutorCode($code, $groupid); 
         //echo "Code status: " . $codeStatus . "<br>";
         $emailStatus = $this->checkEmailStatus($email);
         //echo "Email status: " . $emailStatus . "<br>";
@@ -46,10 +46,8 @@ class Tutors {
         $this->db->query($query);
     }
 
-    function checkTutorCode($code, $groupid) {
-        $query = "select groupid, code "
-                . "from mdl_group_codes "
-                . "where groupid=$groupid and code='$code'";
+    function checkTutorCode($code, $groupid) {        
+        $query = "select code from mdl_group_codes where code='$code'";                
         return $this->db->numrows($query);
     }
 

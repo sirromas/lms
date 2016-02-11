@@ -64,8 +64,9 @@ class Login {
         $now = time();
         $query = "select code, active, expire_date "
                 . "from mdl_promo_code "
-                . "where active=1 and code='" . $code . "' "
-                . "and expire_date>'.$now.'";
+                . "where active=1 and code='" .$code . "' "
+                . "and expire_date>$now";
+        //echo "Query: ".$query."<br/>";
         return $this->db->numrows($query);
     }
 
@@ -75,7 +76,8 @@ class Login {
                 . "from mdl_enrol_key "
                 . "where enrol_key='" . $code . "' "
                 . "and email='" . $email . "' "
-                . "and exp_date>'" . $now . "'";
+                . "and exp_date>$now";
+        //echo "Query: ".$query."<br/>";
         return $this->db->numrows($query);
     }
 

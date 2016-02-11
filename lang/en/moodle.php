@@ -580,8 +580,8 @@ using your email address.
 
 Your username: \'{$a->username}\' 
 Your password: \'{$a->password}\'    
-Your group: \'{$a->group}\'    
-Your user type: \'{$a->user_type}\'    
+
+Next step is to get <a href="https://globalizationplus.com/subscription.html" target="_blank">enroll key</a> using your email \'{$a->username}\'. 
 
 If you need help, please contact the site administrator,
 {$a->admin}';
