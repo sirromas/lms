@@ -45,18 +45,40 @@ class block_settings_renderer extends plugin_renderer_base {
         $content = $this->navigation_node($navigation, array('class' => 'block_tree list'));
         if (isset($navigation->id) && !is_numeric($navigation->id) && !empty($content)) {
             $content = $this->output->box($content, 'block_tree_box', $navigation->id);
-        }
+        }       
+        
 
         if ($roleid == 4) {
             
-            $content = $content . '<p class="tree_item leaf active_tree_node">
+            /*
+            $content.= '<p class="tree_item leaf active_tree_node">
          <a href="http://' . $_SERVER['SERVER_NAME'] . '/lms/trgoup/index.php?secret_code=' . $secret_code . '&userid='.$USER->id.'" target="_blank">         
          Create new course</a></p>';
-            $content = $content  .'<p class="tree_item leaf active_tree_node">
+            
+            $content.= '<p class="tree_item leaf active_tree_node">
          <a href="http://' . $_SERVER['SERVER_NAME'] . '/lms/trgoup/remove.php?secret_code=' . $secret_code . '&userid='.$USER->id.'" target="_blank">         
          Remove courses</a></p>';
+            */           
             
-            $item_to_remove = array('Grade history', 'Enrolment methods');
+            
+            $content.= '<p class="tree_item leaf active_tree_node">
+         <a href="http://' . $_SERVER['SERVER_NAME'] . '/lms/enrol/users.php?id=3' . $secret_code . '&userid='.$USER->id.'" target="_blank">         
+         Users</a></p>';  
+            
+          $content.= '<p class="tree_item leaf active_tree_node">
+         <a href="http://' . $_SERVER['SERVER_NAME'] . '/lms/mod/page/view.php?id=5' . $secret_code . '&userid='.$USER->id.'" target="_blank">         
+         Assignment</a></p>';  
+          
+          $content.= '<p class="tree_item leaf active_tree_node">
+         <a href="http://' . $_SERVER['SERVER_NAME'] . '/lms/mod/forum/view.php?id=13' . $secret_code . '&userid='.$USER->id.'" target="_blank">         
+         Discussion Board</a></p>';  
+          
+          $content.= '<p class="tree_item leaf active_tree_node">
+         <a href="http://' . $_SERVER['SERVER_NAME'] . '/lms/mod/quiz/view.php?id=7' . $secret_code . '&userid='.$USER->id.'" target="_blank">         
+         Quiz</a></p>';  
+            
+            
+            $item_to_remove = array('Grade history', 'Enrolment methods', 'Grade administration', 'Course Management');
             $clean_content = $cs->remove_navigation_tutor_navigation_items($content, $item_to_remove);
             /*
               echo "<pre>";

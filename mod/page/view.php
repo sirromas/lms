@@ -98,12 +98,16 @@ if ($inpopup and $page->display == RESOURCELIB_DISPLAY_POPUP) {
  *             Here we should add enroll key verification *
  *  
  * ************************************************************************* */
-$key_status = $cs->checkStudentEnrollKey($USER->id);
-if ($key_status !== true) {
-    $enroll_form = $cs->getStudentEnrollForm($USER->id);
-    echo $enroll_form;
-    die();
-} // end if $key_status!==true
+$roleid = $cs->getCourseRoles();
+//echo "Role id: " . $roleid . "<br>";
+if ($roleid == 5) {
+    $key_status = $cs->checkStudentEnrollKey($USER->id);
+    if ($key_status !== true) {
+        $enroll_form = $cs->getStudentEnrollForm($USER->id);
+        echo $enroll_form;
+        die();
+    } // end if $key_status!==true
+} // end if $roleid == 5
 
 /* * ************************************************************************** */
 echo $OUTPUT->header();
@@ -145,7 +149,7 @@ if ($roleid == 5) {
             }
 
 
-            /*             * *****************************************************************************
+            /*  ******************************************************************************
              *  Here should be added link to quiz * 
              * **************************************************************************** */
             if ($quizid != false) {

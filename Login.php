@@ -64,7 +64,7 @@ class Login {
         $now = time();
         $query = "select code, active, expire_date "
                 . "from mdl_promo_code "
-                . "where active=1 and code='" .$code . "' "
+                . "where active=1 and code='" . $code . "' "
                 . "and expire_date>$now";
         //echo "Query: ".$query."<br/>";
         return $this->db->numrows($query);
@@ -89,6 +89,7 @@ class Login {
     }
 
     function verifyUser($username, $code) {
+        /*
         $type = $this->verifyUserType($username);
         if ($type == 1) {
             // User type is match
@@ -102,7 +103,9 @@ class Login {
         else {
             $code_status = 0;
         }
-        return array('type' => $type, 'code' => $code_status);
+        */
+        //return array('type' => $type, 'code' => $code_status);
+        return array('type' => 1, 'code' => 1);
     }
 
     function getUserEmailById($userid) {

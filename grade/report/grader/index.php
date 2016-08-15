@@ -185,11 +185,16 @@ if (!empty($studentsperpage)) {
     echo $OUTPUT->paging_bar($numusers, $report->page, $studentsperpage, $report->pbarurl);
 }
 
+/*
+ * 
 $displayaverages = true;
 if ($numusers == 0) {
     $displayaverages = false;
 }
+ * 
+ */
 
+$displayaverages = false; // do not display any averages
 $reporthtml = $report->get_grade_table($displayaverages);
 
 // print submit button
@@ -228,9 +233,13 @@ if ($roleid == 4) {
     $assesment_url='http://' . $_SERVER['SERVER_NAME'] . '/lms/mod/page/view.php?id=' . $assid;
     
     ?>
+
+<!--
 <p><span style="font-size: 16px;font-weight: bold;"><a href="<?php echo $assesment_url; ?>" target="_blank">Go to Assignment</a></span></p>
 <p><span style="font-size: 16px;font-weight: bold;"><a href="<?php echo $forum_url; ?>" target="_blank">Go to Discussion Board</a></span></p>
 <p><span style="font-size: 16px;font-weight: bold;"><a href="<?php echo $quiz_url; ?>" target="_blank">Go to Quiz</a></span></p>
+-->
+
     <?php
 } // end if $roleid == 4
 

@@ -65,4 +65,3 @@ foreach($authsequence as $authname) {
 }
 
 require_logout();
-redirect('http://mycodebusters.com/lms/moodle/signin.html');
