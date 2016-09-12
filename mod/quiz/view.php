@@ -245,15 +245,4 @@ if (isguestuser()) {
     echo $output->view_page($course, $quiz, $cm, $context, $viewobj);
 }
 
-if ($roleid == 5) {
-
-    if ($forumid != false) {
-        $url = 'http://' . $_SERVER['SERVER_NAME'] . '/lms/mod/forum/view.php?id=' . $forumid;
-        ?>
-        <iframe src="<?php echo $url; ?>" onload="this.width = screen.width * 0.9;
-                    this.height = screen.height;" frameBorder="0"></iframe>
-        <?php
-    }
-}
-
 echo $OUTPUT->footer();
