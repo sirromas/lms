@@ -14,36 +14,20 @@ $(document).ready(function () {
 
 
     function sendReport(result) {
-        var title = $('#title').val();
         var email = $('#email').val();
-
-        if (title == '' || email == '') {
-            $('#survey_err').html('Please provide your title and email');
-        } // end if title=='' || email==''
-        else {
-            if (!isValidEmailAddress(email)) {
-                $('#survey_err').html('Please provide correct email address');
-            } // end if !isValidEmailAddress(email)
-            else {
-                $('#survey_err').html('');
-                // Make ajax request
-                var url = "/survey/send_survey_results.php";
-                $.post(url, {title: title, email: email, result: result}).done(function (data) {
-                    $('#survey_err').html(data);
-                });
-            } // end else 
-        } // end else 
+        var url = "http://globalizationplus.com/survey/";
+        $.post(url, {email: email, result: result}).done(function (data) {
+            alert('Thank you!');
+        });
     }
-
-
+    
+    /*
     $(document).on('click', function (event) {
-        //console.log('Event ID: ' + event.target.id);
-
         if (event.target.id == '20' || event.target.id == '50' || event.target.id == '80' || event.target.id == '100') {
             sendReport(event.target.id);
         }
-
     });
+    */
 
 });
 

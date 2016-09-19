@@ -6,14 +6,15 @@
         <title>Survey</title>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <link rel="stylesheet" type="text/css" href="./me.css">
-        <script   src="https://code.jquery.com/jquery-1.12.4.js"   integrity="sha256-Qw82+bXyGq6MydymqBxNPYTaUXXq7c8v3CwiYwLLNXU="  crossorigin="anonymous"></script>
-        <script type="text/javascript" src="./me.js"></script>
+        <link rel="stylesheet" type="text/css" href="http://globalizationplus.com/survey/me.css">
+        <script   src="https://code.jquery.com/jquery-1.12.4.js" ></script>
+        <script type="text/javascript" src="http://globalizationplus.com/survey/me.js"></script>
     </head>
     <body>
         <br>
         <div style="text-align: center;margin: auto;" class="main">
 
+            <input type="hidden" id="email" value="sirromas@gmail.com">
 
             <div style="width:800px;text-align: center;margin: auto;">
                 <p align="left" style="font-weight: bold;">Dear Colleague, </p>
@@ -46,27 +47,19 @@
                 <table align="center" border="0">
 
                     <tr>
-                        <td style="padding: 35px;text-align: left;">Your title*</td> 
-                        <td style="padding: 35px;text-align: left;"><input type="text"  class="rounded" id='title'></td> 
 
-                    </tr>    
+                        <!--
+                        <td style="padding: 35px;"><image src="http://globalizationplus.com/survey/20.jpg" id="20" style="cursor: pointer;"></td>
+                        <td style="padding: 35px;"><image src="http://globalizationplus.com/survey/50.jpg" id="50" style="cursor: pointer;"></td>
+                        <td style="padding: 35px;"><image src="http://globalizationplus.com/survey/80.jpg" id="80" style="cursor: pointer;"></td>
+                        <td style="padding: 35px;"><image src="http://globalizationplus.com/survey/100.jpg" id="100" style="cursor: pointer;"></td>
+                        -->
 
-                    <tr>
-                        <td style="padding: 35px;text-align: left;">Your email*</td> 
-                        <td style="padding: 35px;text-align: left;"><input type="text"  class="rounded" id='email' ></td> 
+                        <td style='padding: 35px;'><image src='http://globalizationplus.com/survey/20.jpg' alt='20' title='20' id='20' style='cursor: pointer;' onclick="location.href='http://globalizationplus.com/survey/receive.php?email=$email&resuslt=20'"></td>
+                        <td style='padding: 35px;'><a href='http://globalizationplus.com/survey/receive.php?email=$email&resuslt=50' target='_bkank'><image src='http://globalizationplus.com/survey/50.jpg'  id='50' style='cursor: pointer;'></a></td>
+                        <td style='padding: 35px;'><a href='http://globalizationplus.com/survey/receive.php?email=$email&resuslt=80' target='_bkank'><image src='http://globalizationplus.com/survey/80.jpg'  id='80' style='cursor: pointer;'></a></td>
+                        <td style='padding: 35px;'><a href='http://globalizationplus.com/survey/receive.php?email=$email&resuslt=100' target='_bkank'><image src='http://globalizationplus.com/survey/100.jpg' id='100' style='cursor: pointer;'></a></td>
 
-                    </tr>
-
-                    <tr>
-                        <td style="padding: 35px;text-align: left;" colspan="2"><span id='survey_err'></span></td> 
-                    </tr>
-
-                    <tr>
-
-                        <td style="padding: 35px;"><image src="./20.jpg" id="20" style="cursor: pointer;"></td>
-                        <td style="padding: 35px;"><image src="./50.jpg" id="50" style="cursor: pointer;"></td>
-                        <td style="padding: 35px;"><image src="./80.jpg" id="80" style="cursor: pointer;"></td>
-                        <td style="padding: 35px;"><image src="./100.jpg" id="100" style="cursor: pointer;"></td>
 
                     </tr>
 
