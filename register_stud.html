@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+
+<html>
+    <head>
+        <title>GLOBALIZATION PLUS</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+        <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+
+        <!-- Latest compiled and minified CSS -->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" >
+
+        <!-- Optional theme -->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" >
+        <link rel="stylesheet" href="./assets/css/nav.css">
+
+        <!-- Latest compiled and minified JavaScript -->
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+    </head>
+    <body>
+
+        <div class="container">
+            <div class="header clearfix">
+                <nav>
+                    <ul class="nav nav-pills pull-right">
+                        <li role="presentation" ><a href="index.html">Home</a></li>
+                        <li role="presentation" ><a href="about.html">About</a></li>
+                        <li role="presentation" ><a href="login.html">Login</a></li>
+                        <li class="dropdown">
+                            <a href="#" class="active" data-toggle="dropdown">
+                                Register <b class="caret"></b></a>
+                            <ul class="dropdown-menu">
+                                <li><a href="register_prof.html">Professors</a></li>
+                                <li><a href="register_stud.html">Students</a></li>
+                            </ul>
+                    </ul>
+                </nav>
+                <h3 class="text-muted">GLOBALIZATION PLUS</h3>
+
+            </div>
+
+            <div class="panel panel-default">
+
+                <div class="panel-heading"><div class='text-center'>Student Enrollment<br> Registration Fee: $27 per semester</div></div>
+                <div class="panel-body">
+                    <form>
+                        <div class="form-group">
+                            <label for="first">First*</label>
+                            <input type="text" class="form-control" id="first" placeholder="Enter Your Firstname">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="last">Last*</label>
+                            <input type="text" class="form-control" id="last" placeholder="Enter Your Lastname">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="email">Email*</label>
+                            <input type="email" class="form-control" id="email" aria-describedby="emailHelp" placeholder="Enter email">
+                            <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="pwd">Password*</label>
+                            <input type="password" class="form-control" id="pwd" placeholder="Password">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="street">Street*</label>
+                            <input type="text" class="form-control" id="street" placeholder="Enter Your Street">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="city">City*</label>
+                            <input type="text" class="form-control" id="city" placeholder="Enter Your City">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="state">State*</label>
+                            <select id="state" class='form-control'>
+                                <option value="0" selected="">State</option>
+                                <option value="1">Alabama</option>
+                                <option value="2">Alaska</option>
+                                <option value="3">Arkansas</option>
+                                <option value="4">Arizona</option>
+                                <option value="5">California</option>
+                                <option value="6">Colorado</option>
+                                <option value="7">Connecticut</option>
+                                <option value="8">Delaware</option>
+                                <option value="9">District of Colombia</option>
+                                <option value="10">Florida</option>
+                                <option value="11">Georgia</option>
+                                <option value="12">Hawaii</option>
+                                <option value="13">Idaho</option>
+                                <option value="14">Illinois</option>
+                                <option value="15">Indiana</option>
+                                <option value="16">Iowa</option>
+                                <option value="17">Kansas</option>
+                                <option value="18">Kentucky</option>
+                                <option value="19">Louisiana</option>
+                                <option value="20">Maine</option>
+                                <option value="21">Maryland</option>
+                                <option value="22">Massachusetts</option>
+                                <option value="23">Michigan</option>
+                                <option value="24">Minnesota</option>
+                                <option value="25">Mississippi</option>
+                                <option value="26">Missouri</option>
+                                <option value="27">Montana</option>
+                                <option value="28">Nebraska</option>
+                                <option value="29">Nevada</option>
+                                <option value="30">New Hampshire</option>
+                                <option value="31">New Jersey</option>
+                                <option value="32">New Mexico</option>
+                                <option value="33">New York</option>
+                                <option value="34">North Carolina</option>
+                                <option value="35">North Dakota</option>
+                                <option value="36">Ohio</option>
+                                <option value="37">Oklahoma</option>
+                                <option value="38">Oregon</option>
+                                <option value="39">Pennsylvania</option>
+                                <option value="40">Rhode Island</option>
+                                <option value="41">South Carolina</option>
+                                <option value="42">South Dakota</option>
+                                <option value="43">Tennessee</option>
+                                <option value="44">Texas</option>
+                                <option value="45">Utah</option>
+                                <option value="46">Vermont</option>
+                                <option value="47">Virginia</option>
+                                <option value="48">Washington</option>
+                                <option value="49">West Virginia</option>
+                                <option value="50">Wisconsin</option>
+                                <option value="51">Wyoming</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="zip">ZIP*</label>
+                            <input type="text" class="form-control" id="zip" placeholder="Enter Your ZIP">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="school">School Name*</label>
+                            <input type="text" class="form-control" id="school" placeholder="Enter Your School Name">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="school">Course Name*</label>
+                            <input type="text" class="form-control" id="course" placeholder="Enter Your Course Name">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="card_type">Card Type*</label>
+                            <select id="card_type" class="form-control">
+                                <option value="American Express">American Express</option>
+                                <option value="Discover">Discover</option>
+                                <option value="Master">Master</option>
+                                <option value="Visa">Visa</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="cardnumber">Card Number*</label>
+                            <input type="text" class="form-control" id="cardnumber" placeholder="Enter Your Card Number">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="cvv">CVV code*</label>
+                            <input type="text" class="form-control" id="cvv" placeholder="Enter Your Card CVV">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="card_month">Expiration Month*</label>
+                            <select id="card_month" class="form-control">
+                                <option value="--" selected="">Month</option>
+                                <option value="01">01</option>
+                                <option value="03">02</option>
+                                <option value="03">03</option>
+                                <option value="04">04</option>
+                                <option value="05">05</option>
+                                <option value="06">06</option>
+                                <option value="07">07</option>
+                                <option value="08">08</option>
+                                <option value="09">09</option>
+                                <option value="10">10</option>
+                                <option value="11">11</option>
+                                <option value="12">12</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="card_year">Expiration Year*</label>
+                            <select id="card_year" class="form-control">
+                                <option value="--" selected="">Year</option>
+                                <option value="2016">2016</option>
+                                <option value="2017">2017</option>
+                                <option value="2018">2018</option>
+                                <option value="2019">2019</option>
+                                <option value="2020">2020</option>
+                                <option value="2021">2021</option>
+                                <option value="2022">2022</option>
+                                <option value="2023">2023</option>
+                                <option value="2024">2024</option>
+                                <option value="2025">2025</option>
+                                <option value="2026">2026</option>
+                                <option value="2027">2027</option>
+                                <option value="2028">2028</option>
+                                <option value="2029">2029</option>
+                                <option value="2030">2030</option>
+                            </select>
+                        </div>   
+
+
+                        <button type="submit" class="btn btn-default">Submit</button>
+                    </form>
+                </div>
+
+            </div>
+
+
+
+            <footer class="footer">
+                <div class="text-center"><p>&copy; 2016 GLOBALIZATION PLUS.</p></div>
+            </footer>
+
+        </div> <!-- /container -->
+
+    </body>
+</html>
