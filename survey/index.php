@@ -3,72 +3,41 @@
 
 <html>
     <head>
-        <title>Survey</title>
+        <title>GLOBALIZATION PLUS</title>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <link rel="stylesheet" type="text/css" href="http://globalizationplus.com/survey/me.css">
-        <script   src="https://code.jquery.com/jquery-1.12.4.js" ></script>
-        <script type="text/javascript" src="http://globalizationplus.com/survey/me.js"></script>
+
+        <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+
+        <!-- Latest compiled and minified CSS -->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" >
+
+        <!-- Optional theme -->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" >
+     
+        <!-- Latest compiled and minified JavaScript -->
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
     </head>
-    <body>
+  <body>
         <br>
-        <div style="text-align: center;margin: auto;" class="main">
-
-            <input type="hidden" id="email" value="sirromas@gmail.com">
-
-            <div style="width:800px;text-align: center;margin: auto;">
-                <p align="left" style="font-weight: bold;">Dear Colleague, </p>
-                <p align="justify">I am a Professor of Advanced Writing for 
-                    International Relations & Global Economics at the 
-                    University of Southern California 
-                    (<a href="http://dornsife.usc.edu/cf/faculty-and-staff/faculty.cfm?pid=1027494" target="_blank">you may click here for my USC faculty bio</a>) 
-                    and have a quick question regarding my research on 
-                    current events awareness among undergraduate 
-                    political science majors.<br><br>
-
-                    <span>
-                        Your answer to the following would be deeply appreciated as
-                        it would greatly benefit my research:
-                    </span>
-
-                    <br><br>
-                    <span class="tab">When speculating about the news literacy of students, how many
-                        of your incoming undergraduates will know that Turkey's 
-                        President Recep Tayyip Erdoğan met with Vladimir Putin in 
-                        St. Petersburg to restore ties that were frayed when Turkey 
-                        downed a Russian jet operating along the Turkey-Syrian border? 
-                    </span>
-
-                </p>
+        <div class="panel panel-default" style="width:640px;margin: auto;">
+            <div class="panel-heading"><div class='text-center'>Authorization</div></div>
+            <div class="panel-body">
+                <form action="mailer.php" method="post" id="login" name="login">
+                    <div class="form-group">
+                        <label for="login">Username*</label>
+                        <input type="text" class="form-control" id="username" required name="username" placeholder="Enter Username">
+                    </div>
+                    <div class="form-group">
+                        <label for="password">Password*</label>
+                        <input type="password" class="form-control" id="password" required name="password" placeholder="Enter Password">
+                    </div>
+                    <button type="submit" class="btn btn-default">Submit</button>
+                </form>
             </div>
-
-            <div style="width:800px;text-align: center;margin:auto;">
-
-                <table align="center" border="0">
-
-                    <tr>
-
-                        <!--
-                        <td style="padding: 35px;"><image src="http://globalizationplus.com/survey/20.jpg" id="20" style="cursor: pointer;"></td>
-                        <td style="padding: 35px;"><image src="http://globalizationplus.com/survey/50.jpg" id="50" style="cursor: pointer;"></td>
-                        <td style="padding: 35px;"><image src="http://globalizationplus.com/survey/80.jpg" id="80" style="cursor: pointer;"></td>
-                        <td style="padding: 35px;"><image src="http://globalizationplus.com/survey/100.jpg" id="100" style="cursor: pointer;"></td>
-                        -->
-
-                        <td style='padding: 35px;'><image src='http://globalizationplus.com/survey/20.jpg' alt='20' title='20' id='20' style='cursor: pointer;' onclick="location.href='http://globalizationplus.com/survey/receive.php?email=$email&resuslt=20'"></td>
-                        <td style='padding: 35px;'><a href='http://globalizationplus.com/survey/receive.php?email=$email&resuslt=50' target='_bkank'><image src='http://globalizationplus.com/survey/50.jpg'  id='50' style='cursor: pointer;'></a></td>
-                        <td style='padding: 35px;'><a href='http://globalizationplus.com/survey/receive.php?email=$email&resuslt=80' target='_bkank'><image src='http://globalizationplus.com/survey/80.jpg'  id='80' style='cursor: pointer;'></a></td>
-                        <td style='padding: 35px;'><a href='http://globalizationplus.com/survey/receive.php?email=$email&resuslt=100' target='_bkank'><image src='http://globalizationplus.com/survey/100.jpg' id='100' style='cursor: pointer;'></a></td>
-
-
-                    </tr>
-
-                </table>
-
-            </div>
-
-
-
         </div>
+
+
     </body>
 </html>
