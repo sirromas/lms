@@ -20,10 +20,10 @@ require_once 'mailer/vendor/PHPMailerAutoload.php';
 
 class Survey {
 
-    public $mail_smtp_host = 'smtp.1and1.com';
-    public $mail_smtp_port = 25;
-    public $mail_smtp_user = 'survey@globalizationplus.com';
-    public $mail_smtp_pwd = 'aK6SKymc';
+    public $mail_smtp_host;
+    public $mail_smtp_port;
+    public $mail_smtp_user;
+    public $mail_smtp_pwd;
     public $db;
     public $upload_path;
 
