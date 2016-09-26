@@ -17,7 +17,7 @@
 
         <!-- Latest compiled and minified JavaScript -->
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-        
+
         <!-- Custom JS script -->
         <script src="http://globalizationplus.com/assets/js/custom.js"></script>
 
@@ -47,7 +47,7 @@
 
                 <div class="panel-heading"><div class='text-center'>Complimentary<br> Professor Registration</div></div>
                 <div class="panel-body">
-                    <form action="" method="post">
+                    <form action="" method="post" id='prof_signup'>
                         <div class="form-group">
                             <label for="first">First*</label>
                             <input type="text" class="form-control" id="first" required name="first" placeholder="Enter Your Firstname">
@@ -105,10 +105,21 @@
                         </div>
 
                         <div class="form-group">
-                            <label for="course">Course Name *</label>
-                            <input type="text" class="form-control" id="course" name='course' required placeholder="Enter Course  Name">
+                            <label for="class">Class Name *</label>
+                            <input type="text" class="form-control" id="class" name='class' required placeholder="Enter Course  Name">
                         </div>
 
+                        <div class="form-group">
+                            <div class="text-error" id="form_err"></div>    
+                        </div>
+
+                        <div class="form-group">
+                            <div class="text-info" id="form_info"></div>    
+                        </div>
+
+                        <div class="form-group">
+                            <div class="text-info" id="ajax_loader" style="display:none;text-align: center;"><img src="assets/images/ajax.gif"></div>    
+                        </div>
 
                         <button type="submit" class="btn btn-default">Submit</button>
                     </form>

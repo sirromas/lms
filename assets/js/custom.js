@@ -42,7 +42,7 @@ $(document).ready(function () {
         }
     });
 
-// Process email sender form
+    // Process email sender form
     $("#launcher").submit(function (event) {
         event.preventDefault();
         var email = $('#email').val();
@@ -81,9 +81,66 @@ $(document).ready(function () {
                 $('#form_err').html('You can upload file or provide recipient email, but not both');
             }
         } // end else
-
-
     });
+
+    /**********************************************************************
+     * 
+     *  
+     *                     Code related to LMS
+     *   
+     *    
+     **********************************************************************/
+
+    // Professors signup
+    $("#prof_signup").submit(function (event) {
+        event.preventDefault();
+        var email = $('#email').val();
+        var url = 'http://globalizationplus.com/lms/custom/tutors/is_email_exists.php';
+        $.post(url, {email: email}).done(function (data) {
+            if (data == 0) {
+                $('#form_err').html('');
+                $('#form_info').html('');
+                var groupname = $('#class').val();
+                var url = 'http://globalizationplus.com/lms/custom/tutors/is_group_exists.php';
+                $.post(url, {groupname: groupname}).done(function (data) {
+                    if (data == 0) {
+                        $('#form_err').html('');
+                        $('#form_info').html('');
+                        $('#ajax_loader').show();
+                        var user = {
+                            firstname: $('#first').val(),
+                            lastname: $('#last').val(),
+                            email: $('#email').val(),
+                            pwd: $('#pwd').val(),
+                            street: $('#street').val(),
+                            city: $('#city').val(),
+                            zip: $('#zip').val(),
+                            title: $('#title').val(),
+                            school: $('#school').val(),
+                            dep: $('#dep').val(),
+                            site: $('#site').val(),
+                            class: $('#class').val()
+                        };
+                        var url = 'http://globalizationplus.com/lms/custom/tutors/signup.php';
+                        $.post(url, {user: JSON.stringify(user)}).done(function (data) {
+                            $('#ajax_loader').hide();
+                            $('#form_info').html(data);
+                        });
+                    } // end if data==0
+                    else {
+                        $('#form_info').html('');
+                        $('#form_err').html('Class name already exists');
+                    }
+                }); // end of post
+            } // end if data==0
+            else {
+                $('#form_info').html('');
+                $('#form_err').html('Provided email already exists');
+            } // end else 
+        }); // end of post
+    });
+
+
 }); // end of document ready
 
 
