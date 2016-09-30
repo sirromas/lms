@@ -18,6 +18,25 @@
         <!-- Latest compiled and minified JavaScript -->
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-3-typeahead/4.0.1/bootstrap3-typeahead.js"></script>
+
+        <script src="assets/js/custom.js"></script>
+
+        <script type="text/javascript">
+
+            var request = {id: 1};
+            var url = 'http://globalizationplus.com/lms/custom/students/create_typehead_data.php';
+            $.post(url, request).done(function (data) {
+                console.log(data);
+            }); // end of post
+
+            $.get('http://globalizationplus.com/lms/custom/students/groups.json', function (data) {
+                $("#class").typeahead({source: data, items: 256});
+            }, 'json');
+
+
+        </script>
+
     </head>
     <body>
 
@@ -45,36 +64,36 @@
 
                 <div class="panel-heading"><div class='text-center'>Student Enrollment<br> Registration Fee: $27 per semester</div></div>
                 <div class="panel-body">
-                    <form>
+                    <form id="student_signup" method="post">
                         <div class="form-group">
                             <label for="first">First*</label>
-                            <input type="text" class="form-control" id="first" placeholder="Enter Your Firstname">
+                            <input type="text" class="form-control" id="first" name="first" required placeholder="Enter Your Firstname">
                         </div>
 
                         <div class="form-group">
                             <label for="last">Last*</label>
-                            <input type="text" class="form-control" id="last" placeholder="Enter Your Lastname">
+                            <input type="text" class="form-control" id="last" name="last" required placeholder="Enter Your Lastname">
                         </div>
 
                         <div class="form-group">
                             <label for="email">Email*</label>
-                            <input type="email" class="form-control" id="email" aria-describedby="emailHelp" placeholder="Enter email">
+                            <input type="email" class="form-control" id="email" name="email" required aria-describedby="emailHelp" placeholder="Enter email">
                             <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
                         </div>
 
                         <div class="form-group">
                             <label for="pwd">Password*</label>
-                            <input type="password" class="form-control" id="pwd" placeholder="Password">
+                            <input type="password" class="form-control" required id="pwd" name="pwd" placeholder="Password">
                         </div>
 
                         <div class="form-group">
                             <label for="street">Street*</label>
-                            <input type="text" class="form-control" id="street" placeholder="Enter Your Street">
+                            <input type="text" class="form-control" required id="street" name="street" placeholder="Enter Your Street">
                         </div>
 
                         <div class="form-group">
                             <label for="city">City*</label>
-                            <input type="text" class="form-control" id="city" placeholder="Enter Your City">
+                            <input type="text" class="form-control" id="city" name="city" required placeholder="Enter Your City">
                         </div>
 
                         <div class="form-group">
@@ -137,43 +156,43 @@
 
                         <div class="form-group">
                             <label for="zip">ZIP*</label>
-                            <input type="text" class="form-control" id="zip" placeholder="Enter Your ZIP">
+                            <input type="text" class="form-control" id="zip" name="zip" required placeholder="Enter Your ZIP">
                         </div>
 
                         <div class="form-group">
                             <label for="school">School Name*</label>
-                            <input type="text" class="form-control" id="school" placeholder="Enter Your School Name">
+                            <input type="text" class="form-control" id="school" name="school" placeholder="Enter Your School Name">
                         </div>
 
                         <div class="form-group">
-                            <label for="school">Course Name*</label>
-                            <input type="text" class="form-control" id="course" placeholder="Enter Your Course Name">
-                        </div>
-
-                        <div class="form-group">
-                            <label for="card_type">Card Type*</label>
-                            <select id="card_type" class="form-control">
-                                <option value="American Express">American Express</option>
-                                <option value="Discover">Discover</option>
-                                <option value="Master">Master</option>
-                                <option value="Visa">Visa</option>
-                            </select>
+                            <label for="class">Class Name*</label>
+                            <input type="text" class="typeahead" autocomplete="off" spellcheck="false" id="class" name="class" required placeholder="Enter Your Class Name" style="display: block;
+                                   width: 100%;
+                                   height: @input-height-base; 
+                                   padding: @padding-base-vertical @padding-base-horizontal;
+                                   font-size: @font-size-base;
+                                   line-height: @line-height-base;
+                                   color: @input-color;
+                                   background-color: @input-bg;
+                                   background-image: none; 
+                                   border: 1px solid @input-border;
+                                   border-radius: @input-border-radius; ">
                         </div>
 
                         <div class="form-group">
                             <label for="cardnumber">Card Number*</label>
-                            <input type="text" class="form-control" id="cardnumber" placeholder="Enter Your Card Number">
+                            <input type="text" class="form-control" id="cardnumber" name="cardnumber" required placeholder="Enter Your Card Number">
                         </div>
 
                         <div class="form-group">
                             <label for="cvv">CVV code*</label>
-                            <input type="text" class="form-control" id="cvv" placeholder="Enter Your Card CVV">
+                            <input type="text" class="form-control" id="cvv" name="cvv" required placeholder="Enter Your Card CVV">
                         </div>
 
                         <div class="form-group">
                             <label for="card_month">Expiration Month*</label>
-                            <select id="card_month" class="form-control">
-                                <option value="--" selected="">Month</option>
+                            <select id="cardmonth" class="form-control">
+                                <option value="0" selected="">Month</option>
                                 <option value="01">01</option>
                                 <option value="03">02</option>
                                 <option value="03">03</option>
@@ -191,8 +210,8 @@
 
                         <div class="form-group">
                             <label for="card_year">Expiration Year*</label>
-                            <select id="card_year" class="form-control">
-                                <option value="--" selected="">Year</option>
+                            <select id="cardyear" class="form-control">
+                                <option value="0" selected="">Year</option>
                                 <option value="2016">2016</option>
                                 <option value="2017">2017</option>
                                 <option value="2018">2018</option>
@@ -209,7 +228,19 @@
                                 <option value="2029">2029</option>
                                 <option value="2030">2030</option>
                             </select>
-                        </div>   
+                        </div>
+
+                        <div class="form-group">
+                            <div class="text-error" id="form_err"></div>    
+                        </div>
+
+                        <div class="form-group">
+                            <div class="text-info" id="form_info"></div>    
+                        </div>
+
+                        <div class="form-group">
+                            <div class="text-info" id="ajax_loader" style="display:none;text-align: center;"><img src="assets/images/ajax.gif"></div>    
+                        </div>
 
 
                         <button type="submit" class="btn btn-default">Submit</button>

@@ -43,7 +43,8 @@ class Utils {
     }
 
     function is_email_exists($email) {
-        $query = "select * from mdl_user where email='$email' and confirmed=1";
+        $query = "select * from mdl_user where email='$email' "
+                . "and confirmed=1 and deleted=0";
         $num = $this->db->numrows($query);
         return $num;
     }
@@ -136,6 +137,7 @@ class Utils {
 
         $mail = new PHPMailer;
         $recipient = 'sirromas@gmail.com'; // temp workaround
+        //$mail->SMTPDebug = 2;
 
         $mail->isSMTP();
         $mail->Host = $this->mail_smtp_host;
@@ -156,8 +158,58 @@ class Utils {
 
         if (!$mail->send()) {
             $list = 'Mailer Error: ' . $mail->ErrorInfo . "\n";
+            return $list;
         } // end if !$mail->send()
+        else {
+            return true;
+        }
+    }
+
+    function get_group_id($groupname) {
+        $query = "select * from mdl_groups where name='$groupname'";
+        $result = $this->db->query($query);
+        while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+            $id = $row['id'];
+        }
+        return $id;
+    }
+
+    function get_user_details($userid) {
+        $query = "select * from mdl_user where id=$userid";
+        $result = $this->db->query($query);
+        while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+            $user = new stdClass();
+            foreach ($row as $key => $value) {
+                $user->$key = $value;
+            }
+        }
+        return $user;
+    }
+
+    function get_payment_detailes($userid, $groupid) {
+        $query = "select * from mdl_card_payments "
+                . "where userid=$userid and groupid=$groupid";
+        $result = $this->db->query($query);
+        while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+            $payment = new stdClass();
+            foreach ($row as $key => $value) {
+                $payment->$key = $value;
+            }
+        }
+        return $payment;
+    }
+
+    function update_user_detailes($user) {
         
+    }
+
+    function get_group_name($groupid) {
+        $query = "select * from mdl_groups where id=$groupid";
+        $result = $this->db->query($query);
+        while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+            $name = $row['name'];
+        }
+        return $name;
     }
 
 }

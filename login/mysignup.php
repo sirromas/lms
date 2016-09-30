@@ -16,7 +16,7 @@ if ($_REQUEST) {
     $posted_user = json_decode($user_data);
 
     $user = new stdClass();
-    $user->confirmed = 1; // It is alwayes confirmed, but we check payment status after user login
+    $user->confirmed = 1; // It is always confirmed, but we check payment status after user login
     $user->username = strtolower($posted_user->email);
     $user->password = $posted_user->pwd;
     $user->purepassword = $posted_user->pwd;
@@ -29,6 +29,7 @@ if ($_REQUEST) {
     $user->address = $posted_user->street . " " . $posted_user->city . " " . $posted_user->zip;
     $user->zip = $posted_user->zip;
     $user->city = $posted_user->city;
+    $user->state = $posted_user->state;
     $user->idnumber=$posted_user->title;
     $user->institution=$posted_user->school;
     $user->department=$posted_user->dep;
@@ -40,15 +41,11 @@ if ($_REQUEST) {
     $user->secret = random_string(15);
     $user->auth = $CFG->registerauth;
 
-    /*
-     * 
-      echo "<br>----------------<br>";
-      print_r($user);
-      echo "<br>----------------<br>";
-      die();
-     * 
-     */
-
+      //echo "<br>----------------<br>";
+      //print_r($user);
+      //echo "<br>----------------<br>";
+      //die();
+    
     // Initialize alternate name fields to empty strings.
     $namefields = array_diff(get_all_user_name_fields(), useredit_get_required_name_fields());
     foreach ($namefields as $namefield) {

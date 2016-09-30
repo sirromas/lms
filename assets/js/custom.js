@@ -1,6 +1,7 @@
 
 $(document).ready(function () {
     console.log("ready!");
+
     /**********************************************************************
      * 
      *  
@@ -138,6 +139,68 @@ $(document).ready(function () {
                 $('#form_err').html('Provided email already exists');
             } // end else 
         }); // end of post
+    });
+
+    // Students signup
+    $("#student_signup").submit(function (event) {
+        event.preventDefault();
+        var state = $('#state').val();
+        var cardmonth = $('#cardmonth').val();
+        var cardyear = $('#cardyear').val();
+        $('#form_err').html('');
+        $('#form_info').html('');
+        if (state > 0 && cardmonth > 0 && cardyear > 0) {
+            var groupname = $('#class').val();
+            var email = $('#email').val();
+            var url = 'http://globalizationplus.com/lms/custom/tutors/is_email_exists.php';
+            $.post(url, {email: email}).done(function (data) {
+                if (data == 0) {
+                    $('#form_err').html('');
+                    var url = 'http://globalizationplus.com/lms/custom/tutors/is_group_exists.php';
+                    $.post(url, {groupname: groupname}).done(function (data) {
+                        if (data > 0) {
+                            $('#ajax_loader').show();
+                            var user = {
+                                item: 'Globalization Plus - Tuition',
+                                courseid: 2,
+                                amount: 27,
+                                firstname: $('#first').val(),
+                                lastname: $('#last').val(),
+                                email: $('#email').val(),
+                                pwd: $('#pwd').val(),
+                                street: $('#street').val(),
+                                city: $('#city').val(),
+                                state: $('#state').val(),
+                                zip: $('#zip').val(),
+                                school: $('#school').val(),
+                                title: 'Student',
+                                dep: 'n/a',
+                                site: 'n/a',
+                                class: $('#class').val(),
+                                cardnumber: $('#cardnumber').val(),
+                                cvv: $('#cvv').val(),
+                                cardmonth: $('#cardmonth').val(),
+                                cardyear: $('#cardyear').val()
+                            };
+                            var url = 'http://globalizationplus.com/lms/custom/students/students_signup.php';
+                            $.post(url, {user: JSON.stringify(user)}).done(function (data) {
+                                $('#ajax_loader').hide();
+                                $('#form_info').html("<span style='color:black;'>" + data + "</span>");
+                            }); // end of post
+                        } // end if data>0 (group exists)
+                        else {
+                            $('#form_err').html('Class does not exist');
+                        } // end else
+                    }); // end of group post
+                } // end if data==0 (email is not in use)
+                else {
+                    $('#form_err').html('This email is already in use');
+                } // end else
+            }); // end of email post
+        } // end if all form inputs are ok
+        else {
+            $('#form_err').html('Please provide all required fields');
+        }
     });
 
 

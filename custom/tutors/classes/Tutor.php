@@ -35,8 +35,13 @@ class Tutor extends Utils {
             $this->enrol_user($userid, $roleid);
             $groupid = $this->create_group($groupname);
             $this->add_to_group($groupid, $userid);
-            $this->send_tutor_confirmation_email($userObj);
-            $list.="Thank you for signup. Confirmation email is sent to $userObj->email .";
+            $email_status = $this->send_tutor_confirmation_email($userObj);
+            if ($email_status === true) {
+                $list.="Thank you for signup. Confirmation email is sent to $userObj->email .";
+            } // end if
+            else {
+                $list.="Signup is ok, but confirmation email was not sent ($email_status). Please contact us by email <a href='mailto:info@globalizationplus.com'>info@globalizationplus.com</a>";
+            }
         } // end if $result!==false
         else {
             $list.="Signup error happened.ß";
@@ -72,12 +77,16 @@ class Tutor extends Utils {
             <td>Class name:</td><td>$user->class</td>
             </tr>
             <tr>
+            <td colspan='2'>Please be aware your access to the system is limited until you confirm your title.</td>
+            </tr>
+            <tr>
             <td colspan='2'>With best regards, Globalization plus team</td>
             </tr>
             </table>
         </body>
         </html>";
-        $this->send_email($subject, $msg, $user->email);
+        $result = $this->send_email($subject, $msg, $user->email);
+        return $result;
     }
 
 }
