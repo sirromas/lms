@@ -63,10 +63,7 @@ class Payment extends Utils {
         return $merchantAuthentication;
     }
 
-    function generateRandomString($length = 25) {
-        return substr(str_shuffle("0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"), 0, $length);
-    }
-
+ 
     function add_student_payment($user, $status) {
         $key = $this->generateRandomString();
         $card_last_four = substr($user->cardnumber, -4);
@@ -95,14 +92,13 @@ class Payment extends Utils {
                 . "'" . strtotime($key_dates->end) . "',"
                 . "'$user->amount',"
                 . "'$added')";
-        //echo "Query: " . $query . "<br>";
         $this->db->query($query);
     }
 
     function get_key_expiration_dates() {
         $m = date('m');
         $key = new stdClass();
-        if ($m >= 2 && $m <= 9) {
+        if ($m >= 2 && $m < 9) {
             // Second semestr
             $key->start = $this->second_semestr_start;
             $key->end = $this->second_semestr_end;

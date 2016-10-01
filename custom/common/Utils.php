@@ -211,5 +211,9 @@ class Utils {
         }
         return $name;
     }
+    
+    function generateRandomString($length = 25) {
+        return substr(str_shuffle("0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"), 0, $length);
+    }
 
 }

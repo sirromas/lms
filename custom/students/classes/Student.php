@@ -26,15 +26,7 @@ class Student extends Utils {
         $list = "";
         $class = $this->get_group_name($groupid);
         $payment_detailes = $this->get_payment_detailes($userid, $groupid);
-        
-        /*
-         * 
-        echo "<pre>";
-        print_r($payment_detailes);
-        echo "</pre>";
-         * 
-         */
-        
+
         $list.="<html>";
         $list.="<body>";
         $list.="<br>";
@@ -58,9 +50,9 @@ class Student extends Utils {
         $list.="<td style='padding:15px'>Access key</td><td style='padding:15px'>$payment_detailes->auth_key</td>";
         $list.="</tr>";
 
-        //$list.="<tr>";
-        //$list.="<td style='padding:15px'>Key validation period</td><td style='padding:15px'>From " . date('m/d/Y', $payment_detailes->start_date) . " to " . date('m/d/Y', $payment_detailes->exp_date) . "</td>";
-        //$list.="</tr>";
+        $list.="<tr>";
+        $list.="<td style='padding:15px'>Key validation period</td><td style='padding:15px'>From " . date('m/d/Y', $payment_detailes->start_date) . " to " . date('m/d/Y', $payment_detailes->exp_date) . "</td>";
+        $list.="</tr>";
 
         $list.="</table>";
 
@@ -88,7 +80,6 @@ class Student extends Utils {
                 $subject = 'Signup confirmation';
                 $message = $this->get_confirmation_message($userid, $groupid, $userobj);
                 $email_status = $this->send_email($subject, $message, $userobj->email);
-                //$email_status = true;
                 if ($email_status === true) {
                     $list.="Thank you for signup! Confirmation email is sent to $userobj->email";
                 } // end if
