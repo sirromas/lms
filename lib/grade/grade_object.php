@@ -228,9 +228,6 @@ abstract class grade_object {
         foreach($rs as $data) {
             $instance = new $classname();
             grade_object::set_properties($instance, $data);
-            //echo "<pre>";
-            //print_r($instance);
-            //echo "</pre>";
             $result[$instance->id] = $instance;
         }
         $rs->close();

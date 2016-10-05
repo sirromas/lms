@@ -156,6 +156,7 @@ if (!empty($add)) {
     $data->completionexpected = $cm->completionexpected;
     $data->completionusegrade = is_null($cm->completiongradeitemnumber) ? 0 : 1;
     $data->showdescription    = $cm->showdescription;
+    $data->tags               = core_tag_tag::get_item_tags_array('core', 'course_modules', $cm->id);
     if (!empty($CFG->enableavailability)) {
         $data->availabilityconditionsjson = $cm->availability;
     }
@@ -187,14 +188,13 @@ if (!empty($add)) {
 
     if ($items = grade_item::fetch_all(array('itemtype'=>'mod', 'itemmodule'=>$data->modulename,
                                              'iteminstance'=>$data->instance, 'courseid'=>$course->id))) {
-        // add existing outcomes
+        // Add existing outcomes.
         foreach ($items as $item) {
-            if (!empty($item->gradepass)) {
+            if (!empty($item->outcomeid)) {
+                $data->{'outcome_' . $item->outcomeid} = 1;
+            } else if (!empty($item->gradepass)) {
                 $decimalpoints = $item->get_decimals();
                 $data->gradepass = format_float($item->gradepass, $decimalpoints);
-            }
-            if (!empty($item->outcomeid)) {
-                $data->{'outcome_'.$item->outcomeid} = 1;
             }
         }
 

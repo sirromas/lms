@@ -21,6 +21,8 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+defined('MOODLE_INTERNAL') || die();
+
 // Some constants
 define ('DATA_MAX_ENTRIES', 50);
 define ('DATA_PERPAGE_SINGLE', 1);
@@ -553,7 +555,7 @@ function data_generate_default_template(&$data, $template, $recordid=0, $form=fa
     if ($fields = $DB->get_records('data_fields', array('dataid'=>$data->id), 'id')) {
 
         $table = new html_table();
-        $table->attributes['class'] = 'mod-data-default-template';
+        $table->attributes['class'] = 'mod-data-default-template ##approvalstatus##';
         $table->colclasses = array('template-field', 'template-token');
         $table->data = array();
         foreach ($fields as $field) {
@@ -1208,14 +1210,13 @@ function data_print_template($template, $records, $data, $search='', $page=0, $r
     $cm = get_coursemodule_from_instance('data', $data->id);
     $context = context_module::instance($cm->id);
 
-    static $fields = NULL;
-    static $isteacher;
-    static $dataid = NULL;
+    static $fields = array();
+    static $dataid = null;
 
     if (empty($dataid)) {
         $dataid = $data->id;
     } else if ($dataid != $data->id) {
-        $fields = NULL;
+        $fields = array();
     }
 
     if (empty($fields)) {
@@ -1223,7 +1224,6 @@ function data_print_template($template, $records, $data, $search='', $page=0, $r
         foreach ($fieldrecords as $fieldrecord) {
             $fields[]= data_get_field($fieldrecord, $data);
         }
-        $isteacher = has_capability('mod/data:managetemplates', $context);
     }
 
     if (empty($records)) {
@@ -1234,9 +1234,6 @@ function data_print_template($template, $records, $data, $search='', $page=0, $r
         $jumpurl = new moodle_url('/mod/data/view.php', array('d' => $data->id));
     }
     $jumpurl = new moodle_url($jumpurl, array('page' => $page, 'sesskey' => sesskey()));
-
-    // Check whether this activity is read-only at present
-    $readonly = data_in_readonly_period($data);
 
     foreach ($records as $record) {   // Might be just one for the single template
 
@@ -1255,7 +1252,7 @@ function data_print_template($template, $records, $data, $search='', $page=0, $r
     // Replacing special tags (##Edit##, ##Delete##, ##More##)
         $patterns[]='##edit##';
         $patterns[]='##delete##';
-        if ($canmanageentries || (!$readonly && data_isowner($record->id))) {
+        if (data_user_can_manage_entry($record, $data, $context)) {
             $replacement[] = '<a href="'.$CFG->wwwroot.'/mod/data/edit.php?d='
                              .$data->id.'&amp;rid='.$record->id.'&amp;sesskey='.sesskey().'"><img src="'.$OUTPUT->pix_url('t/edit') . '" class="iconsmall" alt="'.get_string('edit').'" title="'.get_string('edit').'" /></a>';
             $replacement[] = '<a href="'.$CFG->wwwroot.'/mod/data/view.php?d='
@@ -1331,6 +1328,15 @@ function data_print_template($template, $records, $data, $search='', $page=0, $r
                     array('class' => 'disapprove'));
         } else {
             $replacement[] = '';
+        }
+
+        $patterns[] = '##approvalstatus##';
+        if (!$data->approval) {
+            $replacement[] = '';
+        } else if ($record->approved) {
+            $replacement[] = get_string('approved', 'data');
+        } else {
+            $replacement[] = get_string('notapproved', 'data');
         }
 
         $patterns[]='##comments##';
@@ -1560,6 +1566,11 @@ function mod_data_rating_can_see_item_ratings($params) {
         throw new rating_exception('invaliditemid');
     }
 
+    // User can see ratings of all participants.
+    if ($info->groupid == 0) {
+        return true;
+    }
+
     $course = $DB->get_record('course', array('id' => $info->course), '*', MUST_EXIST);
     $cm = get_coursemodule_from_instance('data', $info->dataid, $course->id, false, MUST_EXIST);
 
@@ -1687,14 +1698,13 @@ function data_print_preference_form($data, $perpage, $search, $sort='', $order='
         data_generate_default_template($data, 'asearchtemplate');
     }
 
-    static $fields = NULL;
-    static $isteacher;
-    static $dataid = NULL;
+    static $fields = array();
+    static $dataid = null;
 
     if (empty($dataid)) {
         $dataid = $data->id;
     } else if ($dataid != $data->id) {
-        $fields = NULL;
+        $fields = array();
     }
 
     if (empty($fields)) {
@@ -1702,8 +1712,6 @@ function data_print_preference_form($data, $perpage, $search, $sort='', $order='
         foreach ($fieldrecords as $fieldrecord) {
             $fields[]= data_get_field($fieldrecord, $data);
         }
-
-        $isteacher = has_capability('mod/data:managetemplates', $context);
     }
 
     // Replacing tags
@@ -1725,9 +1733,9 @@ function data_print_preference_form($data, $perpage, $search, $sort='', $order='
     $fn = !empty($search_array[DATA_FIRSTNAME]->data) ? $search_array[DATA_FIRSTNAME]->data : '';
     $ln = !empty($search_array[DATA_LASTNAME]->data) ? $search_array[DATA_LASTNAME]->data : '';
     $patterns[]    = '/##firstname##/';
-    $replacement[] = '<label class="accesshide" for="u_fn">'.get_string('authorfirstname', 'data').'</label><input type="text" size="16" id="u_fn" name="u_fn" value="'.$fn.'" />';
+    $replacement[] = '<label class="accesshide" for="u_fn">'.get_string('authorfirstname', 'data').'</label><input type="text" size="16" id="u_fn" name="u_fn" value="'.s($fn).'" />';
     $patterns[]    = '/##lastname##/';
-    $replacement[] = '<label class="accesshide" for="u_ln">'.get_string('authorlastname', 'data').'</label><input type="text" size="16" id="u_ln" name="u_ln" value="'.$ln.'" />';
+    $replacement[] = '<label class="accesshide" for="u_ln">'.get_string('authorlastname', 'data').'</label><input type="text" size="16" id="u_ln" name="u_ln" value="'.s($ln).'" />';
 
     // actual replacement of the tags
     $newtext = preg_replace($patterns, $replacement, $data->asearchtemplate);
@@ -2167,6 +2175,44 @@ function data_user_can_add_entry($data, $currentgroup, $groupmode, $context = nu
             return false;
         }
     }
+}
+
+/**
+ * Check whether the current user is allowed to manage the given record considering manageentries capability,
+ * data_in_readonly_period() result, ownership (determined by data_isowner()) and manageapproved setting.
+ * @param mixed $record record object or id
+ * @param object $data data object
+ * @param object $context context object
+ * @return bool returns true if the user is allowd to edit the entry, false otherwise
+ */
+function data_user_can_manage_entry($record, $data, $context) {
+    global $DB;
+
+    if (has_capability('mod/data:manageentries', $context)) {
+        return true;
+    }
+
+    // Check whether this activity is read-only at present.
+    $readonly = data_in_readonly_period($data);
+
+    if (!$readonly) {
+        // Get record object from db if just id given like in data_isowner.
+        // ...done before calling data_isowner() to avoid querying db twice.
+        if (!is_object($record)) {
+            if (!$record = $DB->get_record('data_records', array('id' => $record))) {
+                return false;
+            }
+        }
+        if (data_isowner($record)) {
+            if ($data->approval && $record->approved) {
+                return $data->manageapproved == 1;
+            } else {
+                return true;
+            }
+        }
+    }
+
+    return false;
 }
 
 /**
@@ -3310,6 +3356,7 @@ function data_presets_generate_xml($course, $cm, $data) {
         'maxentries',
         'rssarticles',
         'approval',
+        'manageapproved',
         'defaultsortdir'
     );
 
@@ -3604,6 +3651,11 @@ function data_get_all_recordids($dataid, $selectdata = '', $params = null) {
  * @return array $recordids   An array of record ids.
  */
 function data_get_advance_search_ids($recordids, $searcharray, $dataid) {
+    // Check to see if we have any record IDs.
+    if (empty($recordids)) {
+        // Send back an empty search.
+        return array();
+    }
     $searchcriteria = array_keys($searcharray);
     // Loop through and reduce the IDs one search criteria at a time.
     foreach ($searchcriteria as $key) {

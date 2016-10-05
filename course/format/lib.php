@@ -350,7 +350,23 @@ abstract class format_base {
         } else {
             $sectionnum = $section;
         }
-        return get_string('sectionname', 'format_'.$this->format) . ' ' . $sectionnum;
+
+        if (get_string_manager()->string_exists('sectionname', 'format_' . $this->format)) {
+            return get_string('sectionname', 'format_' . $this->format) . ' ' . $sectionnum;
+        }
+
+        // Return an empty string if there's no available section name string for the given format.
+        return '';
+    }
+
+    /**
+     * Returns the default section using format_base's implementation of get_section_name.
+     *
+     * @param int|stdClass $section Section object from database or just field course_sections section
+     * @return string The default value for the section name based on the given course format.
+     */
+    public function get_default_section_name($section) {
+        return self::get_section_name($section);
     }
 
     /**
@@ -968,14 +984,14 @@ abstract class format_base {
         }
         if (!is_object($section)) {
             $section = $DB->get_record('course_sections', array('course' => $this->get_courseid(), 'section' => $section),
-                'id,section,sequence');
+                'id,section,sequence,summary');
         }
         if (!$section || !$section->section) {
             // Not possible to delete 0-section.
             return false;
         }
 
-        if (!$forcedeleteifnotempty && !empty($section->sequence)) {
+        if (!$forcedeleteifnotempty && (!empty($section->sequence) || !empty($section->summary))) {
             return false;
         }
 
@@ -1013,6 +1029,76 @@ abstract class format_base {
         }
 
         return true;
+    }
+
+    /**
+     * Prepares the templateable object to display section name
+     *
+     * @param \section_info|\stdClass $section
+     * @param bool $linkifneeded
+     * @param bool $editable
+     * @param null|lang_string|string $edithint
+     * @param null|lang_string|string $editlabel
+     * @return \core\output\inplace_editable
+     */
+    public function inplace_editable_render_section_name($section, $linkifneeded = true,
+                                                         $editable = null, $edithint = null, $editlabel = null) {
+        global $USER, $CFG;
+        require_once($CFG->dirroot.'/course/lib.php');
+
+        if ($editable === null) {
+            $editable = !empty($USER->editing) && has_capability('moodle/course:update',
+                    context_course::instance($section->course));
+        }
+
+        $displayvalue = $title = get_section_name($section->course, $section);
+        if ($linkifneeded) {
+            // Display link under the section name if the course format setting is to display one section per page.
+            $url = course_get_url($section->course, $section->section, array('navigation' => true));
+            if ($url) {
+                $displayvalue = html_writer::link($url, $title);
+            }
+            $itemtype = 'sectionname';
+        } else {
+            // If $linkifneeded==false, we never display the link (this is used when rendering the section header).
+            // Itemtype 'sectionnamenl' (nl=no link) will tell the callback that link should not be rendered -
+            // there is no other way callback can know where we display the section name.
+            $itemtype = 'sectionnamenl';
+        }
+        if (empty($edithint)) {
+            $edithint = new lang_string('editsectionname');
+        }
+        if (empty($editlabel)) {
+            $editlabel = new lang_string('newsectionname', '', $title);
+        }
+
+        return new \core\output\inplace_editable('format_' . $this->format, $itemtype, $section->id, $editable,
+            $displayvalue, $section->name, $edithint, $editlabel);
+    }
+
+    /**
+     * Updates the value in the database and modifies this object respectively.
+     *
+     * ALWAYS check user permissions before performing an update! Throw exceptions if permissions are not sufficient
+     * or value is not legit.
+     *
+     * @param stdClass $section
+     * @param string $itemtype
+     * @param mixed $newvalue
+     * @return \core\output\inplace_editable
+     */
+    public function inplace_editable_update_section_name($section, $itemtype, $newvalue) {
+        if ($itemtype === 'sectionname' || $itemtype === 'sectionnamenl') {
+            $context = context_course::instance($section->course);
+            external_api::validate_context($context);
+            require_capability('moodle/course:update', $context);
+
+            $newtitle = clean_param($newvalue, PARAM_TEXT);
+            if (strval($section->name) !== strval($newtitle)) {
+                course_update_section($section->course, $section, array('name' => $newtitle));
+            }
+            return $this->inplace_editable_render_section_name($section, ($itemtype === 'sectionname'), true);
+        }
     }
 }
 

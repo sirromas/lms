@@ -53,7 +53,7 @@ if ($USER->id != $user->id and has_capability('moodle/user:viewuseractivitiesrep
 
 if (!report_stats_can_access_user_report($user, $course, true)) {
     // this should never happen
-    error('Can not access user statistics report');
+    print_error('nocapability', 'report_stats');
 }
 
 $stractivityreport = get_string('activityreport');
@@ -127,7 +127,7 @@ $params = $param->params;
 
 $param->table = 'user_'.$param->table;
 
-$sql = 'SELECT timeend,'.$param->fields.' FROM {stats_'.$param->table.'} WHERE '
+$sql = 'SELECT id, timeend,'.$param->fields.' FROM {stats_'.$param->table.'} WHERE '
 .(($course->id == SITEID) ? '' : ' courseid = '.$course->id.' AND ')
     .' userid = '.$user->id.' AND timeend >= '.$param->timeafter .$param->extras
     .' ORDER BY timeend DESC';

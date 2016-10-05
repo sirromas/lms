@@ -33,8 +33,9 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+defined('MOODLE_INTERNAL') || die();
+
 require_once($CFG->dirroot . '/mod/wiki/edit_form.php');
-require_once($CFG->dirroot . '/tag/lib.php');
 
 /**
  * Class page_wiki contains the common code between all pages
@@ -570,18 +571,9 @@ class page_wiki_edit extends page_wiki {
             $params['filearea']   = 'attachments';
         }
 
+        $data->tags = core_tag_tag::get_item_tags_array('mod_wiki', 'wiki_pages', $this->page->id);
+
         $form = new mod_wiki_edit_form($url, $params);
-
-        if ($formdata = $form->get_data()) {
-            if (!empty($CFG->usetags)) {
-                $data->tags = $formdata->tags;
-            }
-        } else {
-            if (!empty($CFG->usetags)) {
-                $data->tags = tag_get_tags_array('wiki_pages', $this->page->id);
-            }
-        }
-
         $form->set_data($data);
         $form->display();
     }
@@ -2060,9 +2052,7 @@ class page_wiki_save extends page_wiki_edit {
         }
 
         if ($save && $data) {
-            if (!empty($CFG->usetags)) {
-                tag_set('wiki_pages', $this->page->id, $data->tags, 'mod_wiki', $this->modcontext->id);
-            }
+            core_tag_tag::set_item_tags('mod_wiki', 'wiki_pages', $this->page->id, $this->modcontext, $data->tags);
 
             $message = '<p>' . get_string('saving', 'wiki') . '</p>';
 

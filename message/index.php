@@ -57,6 +57,11 @@ $addcontact     = optional_param('addcontact',     0, PARAM_INT); // adding a co
 $removecontact  = optional_param('removecontact',  0, PARAM_INT); // removing a contact
 $blockcontact   = optional_param('blockcontact',   0, PARAM_INT); // blocking a contact
 $unblockcontact = optional_param('unblockcontact', 0, PARAM_INT); // unblocking a contact
+$deletemessageid = optional_param('deletemessageid', 0, PARAM_INT);
+$deletemessageconfirm = optional_param('deletemessageconfirm', 0, PARAM_BOOL);
+if ($deletemessageid) {
+    $deletemessagetype = required_param('deletemessagetype', PARAM_ALPHAEXT);
+}
 
 //for search
 $advancedsearch = optional_param('advanced', 0, PARAM_INT);
@@ -135,6 +140,17 @@ if (!empty($user2->id) && $user2realuser && ($user2->id != $USER->id)) {
     $PAGE->navigation->extend_for_user($user2);
 }
 
+$strmessages = get_string('messages', 'message');
+if ($user2realuser) {
+    $user2fullname = fullname($user2);
+
+    $PAGE->set_title("$strmessages: $user2fullname");
+    $PAGE->set_heading("$strmessages: $user2fullname");
+} else {
+    $PAGE->set_title("{$SITE->shortname}: $strmessages");
+    $PAGE->set_heading("{$SITE->shortname}: $strmessages");
+}
+
 /// Process any contact maintenance requests there may be
 if ($addcontact and confirm_sesskey()) {
     message_add_contact($addcontact);
@@ -149,22 +165,40 @@ if ($blockcontact and confirm_sesskey()) {
 if ($unblockcontact and confirm_sesskey()) {
     message_unblock_contact($unblockcontact);
 }
+if ($deletemessageid and confirm_sesskey()) {
+    // Check that the message actually exists.
+    if ($message = $DB->get_record($deletemessagetype, array('id' => $deletemessageid))) {
+        // Check that we are allowed to delete this message.
+        if (message_can_delete_message($message, $user1->id)) {
+            if (!$deletemessageconfirm) {
+                $confirmurl = new moodle_url('/message/index.php', array('user1' => $user1->id, 'user2' => $user2->id,
+                    'viewing' => $viewing, 'deletemessageid' => $message->id, 'deletemessagetype' => $deletemessagetype,
+                    'deletemessageconfirm' => 1, 'sesskey' => sesskey()));
+                $confirmbutton = new single_button($confirmurl, get_string('delete'), 'post');
+                $strdeletemessage = get_string('deletemessage', 'message');
+                $PAGE->set_title($strdeletemessage);
+                echo $OUTPUT->header();
+                echo $OUTPUT->heading($strdeletemessage);
+                echo $OUTPUT->confirm(get_string('deletemessageconfirmation', 'message'), $confirmbutton, $url);
+                echo $OUTPUT->footer();
+                exit();
+            }
+            message_delete_message($message, $user1->id);
+        }
+    }
+    redirect($url);
+}
 
 //was a message sent? Do NOT allow someone looking at someone else's messages to send them.
 $messageerror = null;
 if ($currentuser && !empty($user2) && has_capability('moodle/site:sendmessage', $systemcontext)) {
     // Check that the user is not blocking us!!
-    if ($contact = $DB->get_record('message_contacts', array('userid' => $user2->id, 'contactid' => $user1->id))) {
-        if ($contact->blocked and !has_capability('moodle/site:readallmessages', $systemcontext)) {
-            $messageerror = get_string('userisblockingyou', 'message');
-        }
+    if (message_is_user_blocked($user2, $user1)) {
+        $messageerror = get_string('userisblockingyou', 'message');
     }
-    $userpreferences = get_user_preferences(NULL, NULL, $user2->id);
-
-    if (!empty($userpreferences['message_blocknoncontacts'])) {  // User is blocking non-contacts
-        if (empty($contact)) {   // We are not a contact!
-            $messageerror = get_string('userisblockingyounoncontact', 'message', fullname($user2));
-        }
+    // Check that we're not non-contact block by the user.
+    if (message_is_user_non_contact_blocked($user2, $user1)) {
+        $messageerror = get_string('userisblockingyounoncontact', 'message', fullname($user2));
     }
 
     if (empty($messageerror)) {
@@ -315,13 +349,9 @@ echo html_writer::start_tag('div', array('class' => 'messagearea mdl-align'));
                 } else {
                     // Display a warning if the current user is blocking non-contacts and is about to message to a non-contact
                     // Otherwise they may wonder why they never get a reply
-                    $blocknoncontacts = get_user_preferences('message_blocknoncontacts', '', $user1->id);
-                    if (!empty($blocknoncontacts)) {
-                        $contact = $DB->get_record('message_contacts', array('userid' => $user1->id, 'contactid' => $user2->id));
-                        if (empty($contact)) {
-                            $msg = get_string('messagingblockednoncontact', 'message', fullname($user2));
-                            echo html_writer::tag('span', $msg, array('id' => 'messagewarning'));
-                        }
+                    if (message_is_user_non_contact_blocked($user1, $user2)) {
+                        $msg = get_string('messagingblockednoncontact', 'message', fullname($user2));
+                        echo html_writer::tag('span', $msg, array('id' => 'messagewarning'));
                     }
 
                     $mform = new send_form();

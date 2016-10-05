@@ -15,6 +15,7 @@ class Utils {
     public $db;
     public $user;
     public $course;
+    public $group;
     public $session;
     public $signup_url;
     public $courseid = 2;
@@ -24,10 +25,11 @@ class Utils {
     public $mail_smtp_pwd;
 
     function __construct() {
-        global $USER, $COURSE, $SESSION;
+        global $USER, $COURSE, $GROUP, $SESSION;
         $this->db = new pdo_db();
         $this->user = $USER;
         $this->course = $COURSE;
+        $this->group = $GROUP;
         $this->session = $SESSION;
         $this->signup_url = 'http://' . $_SERVER['SERVER_NAME'] . '/lms/login/mysignup.php';
         $this->mail_smtp_host = 'smtp.1and1.com';
@@ -211,9 +213,16 @@ class Utils {
         }
         return $name;
     }
-    
+
     function generateRandomString($length = 25) {
         return substr(str_shuffle("0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"), 0, $length);
+    }
+
+    function get_user_role() {
+        context_helper::preload_course($this->course->id);
+        $context = context_course::instance($this->course->id, MUST_EXIST);
+        $role = get_user_roles($context, $this->user->id);
+        return $role->id;
     }
 
 }

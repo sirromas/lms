@@ -338,7 +338,18 @@ function calendar_get_mini($courses, $groups, $users, $calmonth = false, $calyea
             $class = 'day';
         }
 
-        if (isset($eventsbyday[$day])) {
+        $eventids = array();
+        if (!empty($eventsbyday[$day])) {
+            $eventids = $eventsbyday[$day];
+        }
+
+        if (!empty($durationbyday[$day])) {
+            $eventids = array_unique(array_merge($eventids, $durationbyday[$day]));
+        }
+
+        $finishclass = false;
+
+        if (!empty($eventids)) {
             // There is at least one event on this day.
 
             $class .= ' hasevent';
@@ -346,7 +357,7 @@ function calendar_get_mini($courses, $groups, $users, $calmonth = false, $calyea
             $dayhref = calendar_get_link_href(new moodle_url(CALENDAR_URL . 'view.php', $hrefparams), 0, 0, 0, $daytime);
 
             $popupcontent = '';
-            foreach($eventsbyday[$day] as $eventid) {
+            foreach ($eventids as $eventid) {
                 if (!isset($events[$eventid])) {
                     continue;
                 }
@@ -367,26 +378,47 @@ function calendar_get_mini($courses, $groups, $users, $calmonth = false, $calyea
                     $popupicon = 'i/userevent';
                 }
 
+                if ($event->timeduration) {
+                    $startdate = $calendartype->timestamp_to_date_array($event->timestart);
+                    $enddate = $calendartype->timestamp_to_date_array($event->timestart + $event->timeduration - 1);
+                    if ($enddate['mon'] == $m && $enddate['year'] == $y && $enddate['mday'] == $day) {
+                        $finishclass = true;
+                    }
+                }
+
                 $dayhref->set_anchor('event_'.$event->id);
 
                 $popupcontent .= html_writer::start_tag('div');
                 $popupcontent .= $OUTPUT->pix_icon($popupicon, $popupalt, $component);
-                $name = format_string($event->name, true);
                 // Show ical source if needed.
                 if (!empty($event->subscription) && $CFG->calendar_showicalsource) {
                     $a = new stdClass();
-                    $a->name = $name;
+                    $a->name = format_string($event->name, true);
                     $a->source = $event->subscription->name;
                     $name = get_string('namewithsource', 'calendar', $a);
+                } else {
+                    if ($finishclass) {
+                        $samedate = $startdate['mon'] == $enddate['mon'] &&
+                                    $startdate['year'] == $enddate['year'] &&
+                                    $startdate['mday'] == $enddate['mday'];
+
+                        if ($samedate) {
+                            $name = format_string($event->name, true);
+                        } else {
+                            $name = format_string($event->name, true) . ' (' . get_string('eventendtime', 'calendar') . ')';
+                        }
+                    } else {
+                        $name = format_string($event->name, true);
+                    }
                 }
                 $popupcontent .= html_writer::link($dayhref, $name);
                 $popupcontent .= html_writer::end_tag('div');
             }
 
             if ($display->thismonth && $day == $d) {
-                $popupdata = calendar_get_popup(true, $events[$eventid]->timestart, $popupcontent);
+                $popupdata = calendar_get_popup(true, $daytime, $popupcontent);
             } else {
-                $popupdata = calendar_get_popup(false, $events[$eventid]->timestart, $popupcontent);
+                $popupdata = calendar_get_popup(false, $daytime, $popupcontent);
             }
             $cellattributes = array_merge($cellattributes, $popupdata);
 
@@ -399,6 +431,9 @@ function calendar_get_mini($courses, $groups, $users, $calmonth = false, $calyea
                 $class .= ' calendar_event_group';
             } else if(isset($typesbyday[$day]['startuser'])) {
                 $class .= ' calendar_event_user';
+            }
+            if ($finishclass) {
+                $class .= ' duration_finish';
             }
             $cell = html_writer::link($dayhref, $day);
         } else {
@@ -439,7 +474,7 @@ function calendar_get_mini($courses, $groups, $users, $calmonth = false, $calyea
             $class .= ' today';
             $today = get_string('today', 'calendar').' '.userdate(time(), get_string('strftimedayshort'));
 
-            if (!isset($eventsbyday[$day])) {
+            if (!isset($eventsbyday[$day]) && !isset($durationbyday[$day])) {
                 $class .= ' eventnone';
                 $popupdata = calendar_get_popup(true, false);
                 $cellattributes = array_merge($cellattributes, $popupdata);
@@ -693,8 +728,8 @@ function calendar_get_events($tstart, $tend, $users, $groups, $courses, $withdur
 
     $whereclause = '';
     $params = array();
-    // Quick test
-    if(is_bool($users) && is_bool($groups) && is_bool($courses)) {
+    // Quick test.
+    if (empty($users) && empty($groups) && empty($courses)) {
         return array();
     }
 
@@ -2174,8 +2209,8 @@ class calendar_event {
      * Pass in a object containing the event properties and this function will
      * insert it into the database and deal with any associated files
      *
-     * @see add_event()
-     * @see update_event()
+     * @see self::create()
+     * @see self::update()
      *
      * @param stdClass $data object of event
      * @param bool $checkcapability if moodle should check calendar managing capability or not
@@ -2391,7 +2426,7 @@ class calendar_event {
      * This function deletes an event, any associated events if $deleterepeated=true,
      * and cleans up any files associated with the events.
      *
-     * @see delete_event()
+     * @see self::delete()
      *
      * @param bool $deleterepeated  delete event repeatedly
      * @return bool succession of deleting event
@@ -2670,6 +2705,36 @@ class calendar_event {
         } else {
             return false;
         }
+    }
+
+    /**
+     * Format the text using the external API.
+     * This function should we used when text formatting is required in external functions.
+     *
+     * @return array an array containing the text formatted and the text format
+     */
+    public function format_external_text() {
+
+        if ($this->editorcontext === null) {
+            // Switch on the event type to decide upon the appropriate context to use for this event.
+            $this->editorcontext = $this->properties->context;
+
+            if ($this->properties->eventtype != 'user' && $this->properties->eventtype != 'course'
+                    && $this->properties->eventtype != 'site' && $this->properties->eventtype != 'group') {
+                // We don't have a context here, do a normal format_text.
+                return array(format_text($this->properties->description, $this->properties->format), $this->properties->format);
+            }
+        }
+
+        // Work out the item id for the editor, if this is a repeated event then the files will be associated with the original.
+        if (!empty($this->properties->repeatid) && $this->properties->repeatid > 0) {
+            $itemid = $this->properties->repeatid;
+        } else {
+            $itemid = $this->properties->id;
+        }
+
+        return external_format_text($this->properties->description, $this->properties->format, $this->editorcontext->id,
+                                    'calendar', 'event_description', $itemid);
     }
 }
 

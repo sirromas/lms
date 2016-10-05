@@ -22,15 +22,16 @@
  * @copyright 1999 onwards Martin Dougiamas  {@link http://moodle.com}
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+
+
 require_once(dirname(__FILE__) . '/../../config.php');
-require_once($CFG->libdir . '/gradelib.php');
-require_once($CFG->dirroot . '/mod/quiz/locallib.php');
+require_once($CFG->libdir.'/gradelib.php');
+require_once($CFG->dirroot.'/mod/quiz/locallib.php');
 require_once($CFG->libdir . '/completionlib.php');
 require_once($CFG->dirroot . '/course/format/lib.php');
-require_once($CFG->dirroot . '/course/courseSections.php');
 
 $id = optional_param('id', 0, PARAM_INT); // Course Module ID, or ...
-$q = optional_param('q', 0, PARAM_INT);  // Quiz ID.
+$q = optional_param('q',  0, PARAM_INT);  // Quiz ID.
 
 if ($id) {
     if (!$cm = get_coursemodule_from_id('quiz', $id)) {
@@ -56,12 +57,6 @@ require_login($course, false, $cm);
 $context = context_module::instance($cm->id);
 require_capability('mod/quiz:view', $context);
 
-// Get forrum link
-$cs = new courseSections($context, $COURSE->id, $USER->id);
-$roleid = $cs->getCourseRoles();
-$forumid = $cs->getForumId();
-
-
 // Cache some other capabilities we use several times.
 $canattempt = has_capability('mod/quiz:attempt', $context);
 $canreviewmine = has_capability('mod/quiz:reviewmyattempts', $context);
@@ -70,20 +65,12 @@ $canpreview = has_capability('mod/quiz:preview', $context);
 // Create an object to manage all the other (non-roles) access rules.
 $timenow = time();
 $quizobj = quiz::create($cm->instance, $USER->id);
-$accessmanager = new quiz_access_manager($quizobj, $timenow, has_capability('mod/quiz:ignoretimelimits', $context, null, false));
+$accessmanager = new quiz_access_manager($quizobj, $timenow,
+        has_capability('mod/quiz:ignoretimelimits', $context, null, false));
 $quiz = $quizobj->get_quiz();
 
-// Log this request.
-$params = array(
-    'objectid' => $quiz->id,
-    'context' => $context
-);
-$event = \mod_quiz\event\course_module_viewed::create($params);
-$event->add_record_snapshot('quiz', $quiz);
-$event->trigger();
-
-$completion = new completion_info($course);
-$completion->set_module_viewed($cm);
+// Trigger course_module_viewed event and completion.
+quiz_view($quiz, $course, $cm, $context);
 
 // Initialize $PAGE, compute blocks.
 $PAGE->set_url('/mod/quiz/view.php', array('id' => $cm->id));
@@ -97,6 +84,7 @@ $viewobj->canreviewmine = $canreviewmine;
 $attempts = quiz_get_user_attempts($quiz->id, $USER->id, 'finished', true);
 $lastfinishedattempt = end($attempts);
 $unfinished = false;
+$unfinishedattemptid = null;
 if ($unfinishedattempt = quiz_get_user_attempt_unfinished($quiz->id, $USER->id)) {
     $attempts[] = $unfinishedattempt;
 
@@ -109,6 +97,7 @@ if ($unfinishedattempt = quiz_get_user_attempt_unfinished($quiz->id, $USER->id))
     if (!$unfinished) {
         $lastfinishedattempt = $unfinishedattempt;
     }
+    $unfinishedattemptid = $unfinishedattempt->id;
     $unfinishedattempt = null; // To make it clear we do not use this again.
 }
 $numattempts = count($attempts);
@@ -157,14 +146,14 @@ $output = $PAGE->get_renderer('mod_quiz');
 // Print table with existing attempts.
 if ($attempts) {
     // Work out which columns we need, taking account what data is available in each attempt.
-    list($someoptions, $alloptions) = quiz_get_combined_reviewoptions($quiz, $attempts, $context);
+    list($someoptions, $alloptions) = quiz_get_combined_reviewoptions($quiz, $attempts);
 
-    $viewobj->attemptcolumn = $quiz->attempts != 1;
+    $viewobj->attemptcolumn  = $quiz->attempts != 1;
 
-    $viewobj->gradecolumn = $someoptions->marks >= question_display_options::MARK_AND_MAX &&
+    $viewobj->gradecolumn    = $someoptions->marks >= question_display_options::MARK_AND_MAX &&
             quiz_has_grades($quiz);
-    $viewobj->markcolumn = $viewobj->gradecolumn && ($quiz->grade != $quiz->sumgrades);
-    $viewobj->overallstats = $lastfinishedattempt && $alloptions->marks >= question_display_options::MARK_AND_MAX;
+    $viewobj->markcolumn     = $viewobj->gradecolumn && ($quiz->grade != $quiz->sumgrades);
+    $viewobj->overallstats   = $lastfinishedattempt && $alloptions->marks >= question_display_options::MARK_AND_MAX;
 
     $viewobj->feedbackcolumn = quiz_has_feedback($quiz) && $alloptions->overallfeedback;
 }
@@ -181,14 +170,19 @@ $viewobj->canedit = has_capability('mod/quiz:manage', $context);
 $viewobj->editurl = new moodle_url('/mod/quiz/edit.php', array('cmid' => $cm->id));
 $viewobj->backtocourseurl = new moodle_url('/course/view.php', array('id' => $course->id));
 $viewobj->startattempturl = $quizobj->start_attempt_url();
-$viewobj->startattemptwarning = $quizobj->confirm_start_attempt_message($unfinished);
+
+if ($accessmanager->is_preflight_check_required($unfinishedattemptid)) {
+    $viewobj->preflightcheckform = $accessmanager->get_preflight_check_form(
+            $viewobj->startattempturl, $unfinishedattemptid);
+}
 $viewobj->popuprequired = $accessmanager->attempt_must_be_in_popup();
 $viewobj->popupoptions = $accessmanager->get_popup_options();
 
 // Display information about this quiz.
 $viewobj->infomessages = $viewobj->accessmanager->describe_rules();
 if ($quiz->attempts != 1) {
-    $viewobj->infomessages[] = get_string('gradingmethod', 'quiz', quiz_get_grading_option_name($quiz->grademethod));
+    $viewobj->infomessages[] = get_string('gradingmethod', 'quiz',
+            quiz_get_grading_option_name($quiz->grademethod));
 }
 
 // Determine wheter a start attempt button should be displayed.
@@ -196,6 +190,7 @@ $viewobj->quizhasquestions = $quizobj->has_questions();
 $viewobj->preventmessages = array();
 if (!$viewobj->quizhasquestions) {
     $viewobj->buttontext = '';
+
 } else {
     if ($unfinished) {
         if ($canattempt) {
@@ -203,6 +198,7 @@ if (!$viewobj->quizhasquestions) {
         } else if ($canpreview) {
             $viewobj->buttontext = get_string('continuepreview', 'quiz');
         }
+
     } else {
         if ($canattempt) {
             $viewobj->preventmessages = $viewobj->accessmanager->prevent_new_attempt(
@@ -214,6 +210,7 @@ if (!$viewobj->quizhasquestions) {
             } else {
                 $viewobj->buttontext = get_string('reattemptquiz', 'quiz');
             }
+
         } else if ($canpreview) {
             $viewobj->buttontext = get_string('previewquiznow', 'quiz');
         }
@@ -224,7 +221,8 @@ if (!$viewobj->quizhasquestions) {
     if ($viewobj->buttontext) {
         if (!$viewobj->moreattempts) {
             $viewobj->buttontext = '';
-        } else if ($canattempt && $viewobj->preventmessages = $viewobj->accessmanager->prevent_access()) {
+        } else if ($canattempt
+                && $viewobj->preventmessages = $viewobj->accessmanager->prevent_access()) {
             $viewobj->buttontext = '';
         }
     }
@@ -238,7 +236,8 @@ echo $OUTPUT->header();
 if (isguestuser()) {
     // Guests can't do a quiz, so offer them a choice of logging in or going back.
     echo $output->view_page_guest($course, $quiz, $cm, $context, $viewobj->infomessages);
-} else if (!isguestuser() && !($canattempt || $canpreview || $viewobj->canreviewmine)) {
+} else if (!isguestuser() && !($canattempt || $canpreview
+          || $viewobj->canreviewmine)) {
     // If they are not enrolled in this course in a good enough role, tell them to enrol.
     echo $output->view_page_notenrolled($course, $quiz, $cm, $context, $viewobj->infomessages);
 } else {

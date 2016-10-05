@@ -40,39 +40,39 @@ class login_signup_form extends moodleform {
 
 
         $mform->addElement('text', 'username', get_string('username'), 'maxlength="100" size="12"');
-        $mform->setType('username', PARAM_NOTAGS);
-        $mform->addRule('username', get_string('missingusername'), 'required', null, 'server');
+        $mform->setType('username', PARAM_RAW);
+        $mform->addRule('username', get_string('missingusername'), 'required', null, 'client');
 
         if (!empty($CFG->passwordpolicy)){
             $mform->addElement('static', 'passwordpolicyinfo', '', print_password_policy());
         }
         $mform->addElement('passwordunmask', 'password', get_string('password'), 'maxlength="32" size="12"');
-        $mform->setType('password', PARAM_RAW);
-        $mform->addRule('password', get_string('missingpassword'), 'required', null, 'server');
+        $mform->setType('password', core_user::get_property_type('password'));
+        $mform->addRule('password', get_string('missingpassword'), 'required', null, 'client');
 
         $mform->addElement('header', 'supplyinfo', get_string('supplyinfo'),'');
 
         $mform->addElement('text', 'email', get_string('email'), 'maxlength="100" size="25"');
-        $mform->setType('email', PARAM_RAW_TRIMMED);
-        $mform->addRule('email', get_string('missingemail'), 'required', null, 'server');
+        $mform->setType('email', core_user::get_property_type('email'));
+        $mform->addRule('email', get_string('missingemail'), 'required', null, 'client');
 
         $mform->addElement('text', 'email2', get_string('emailagain'), 'maxlength="100" size="25"');
-        $mform->setType('email2', PARAM_RAW_TRIMMED);
-        $mform->addRule('email2', get_string('missingemail'), 'required', null, 'server');
+        $mform->setType('email2', core_user::get_property_type('email'));
+        $mform->addRule('email2', get_string('missingemail'), 'required', null, 'client');
 
         $namefields = useredit_get_required_name_fields();
         foreach ($namefields as $field) {
             $mform->addElement('text', $field, get_string($field), 'maxlength="100" size="30"');
-            $mform->setType($field, PARAM_TEXT);
+            $mform->setType($field, core_user::get_property_type('firstname'));
             $stringid = 'missing' . $field;
             if (!get_string_manager()->string_exists($stringid, 'moodle')) {
                 $stringid = 'required';
             }
-            $mform->addRule($field, get_string($stringid), 'required', null, 'server');
+            $mform->addRule($field, get_string($stringid), 'required', null, 'client');
         }
 
         $mform->addElement('text', 'city', get_string('city'), 'maxlength="120" size="20"');
-        $mform->setType('city', PARAM_TEXT);
+        $mform->setType('city', core_user::get_property_type('city'));
         if (!empty($CFG->defaultcity)) {
             $mform->setDefault('city', $CFG->defaultcity);
         }
@@ -101,7 +101,7 @@ class login_signup_form extends moodleform {
             $mform->setExpanded('policyagreement');
             $mform->addElement('static', 'policylink', '', '<a href="'.$CFG->sitepolicy.'" onclick="this.target=\'_blank\'">'.get_String('policyagreementclick').'</a>');
             $mform->addElement('checkbox', 'policyagreed', get_string('policyaccept'));
-            $mform->addRule('policyagreed', get_string('policyagree'), 'required', null, 'server');
+            $mform->addRule('policyagreed', get_string('policyagree'), 'required', null, 'client');
         }
 
         // buttons
@@ -112,6 +112,11 @@ class login_signup_form extends moodleform {
     function definition_after_data(){
         $mform = $this->_form;
         $mform->applyFilter('username', 'trim');
+
+        // Trim required name fields.
+        foreach (useredit_get_required_name_fields() as $field) {
+            $mform->applyFilter($field, 'trim');
+        }
     }
 
     function validation($data, $files) {
@@ -127,7 +132,7 @@ class login_signup_form extends moodleform {
             if ($data['username'] !== core_text::strtolower($data['username'])) {
                 $errors['username'] = get_string('usernamelowercase');
             } else {
-                if ($data['username'] !== clean_param($data['username'], PARAM_USERNAME)) {
+                if ($data['username'] !== core_user::clean_field($data['username'], 'username')) {
                     $errors['username'] = get_string('invalidusername');
                 }
 
@@ -192,7 +197,8 @@ class login_signup_form extends moodleform {
      */
     function signup_captcha_enabled() {
         global $CFG;
-        return !empty($CFG->recaptchapublickey) && !empty($CFG->recaptchaprivatekey) && get_config('auth/email', 'recaptcha');
+        $authplugin = get_auth_plugin($CFG->registerauth);
+        return !empty($CFG->recaptchapublickey) && !empty($CFG->recaptchaprivatekey) && $authplugin->is_captcha_enabled();
     }
 
 }

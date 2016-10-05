@@ -53,6 +53,27 @@ class file_storage {
     private $dirpermissions;
     /** @var int Permissions for new files */
     private $filepermissions;
+    /** @var array List of formats supported by unoconv */
+    private $unoconvformats;
+
+    // Unoconv constants.
+    /** No errors */
+    const UNOCONVPATH_OK = 'ok';
+    /** Not set */
+    const UNOCONVPATH_EMPTY = 'empty';
+    /** Does not exist */
+    const UNOCONVPATH_DOESNOTEXIST = 'doesnotexist';
+    /** Is a dir */
+    const UNOCONVPATH_ISDIR = 'isdir';
+    /** Not executable */
+    const UNOCONVPATH_NOTEXECUTABLE = 'notexecutable';
+    /** Test file missing */
+    const UNOCONVPATH_NOTESTFILE = 'notestfile';
+    /** Version not supported */
+    const UNOCONVPATH_VERSIONNOTSUPPORTED = 'versionnotsupported';
+    /** Any other error */
+    const UNOCONVPATH_ERROR = 'error';
+
 
     /**
      * Constructor - do not use directly use {@link get_file_storage()} call instead.
@@ -154,6 +175,247 @@ class file_storage {
     public function get_file_instance(stdClass $filerecord) {
         $storedfile = new stored_file($this, $filerecord, $this->filedir);
         return $storedfile;
+    }
+
+    /**
+     * Get converted document.
+     *
+     * Get an alternate version of the specified document, if it is possible to convert.
+     *
+     * @param stored_file $file the file we want to preview
+     * @param string $format The desired format - e.g. 'pdf'. Formats are specified by file extension.
+     * @param boolean $forcerefresh If true, the file will be converted every time (not cached).
+     * @return stored_file|bool false if unable to create the conversion, stored file otherwise
+     */
+    public function get_converted_document(stored_file $file, $format, $forcerefresh = false) {
+
+        $context = context_system::instance();
+        $path = '/' . $format . '/';
+        $conversion = $this->get_file($context->id, 'core', 'documentconversion', 0, $path, $file->get_contenthash());
+
+        if (!$conversion || $forcerefresh) {
+            $conversion = $this->create_converted_document($file, $format, $forcerefresh);
+            if (!$conversion) {
+                return false;
+            }
+        }
+
+        return $conversion;
+    }
+
+    /**
+     * Verify the format is supported.
+     *
+     * @param string $format The desired format - e.g. 'pdf'. Formats are specified by file extension.
+     * @return bool - True if the format is supported for input.
+     */
+    protected function is_format_supported_by_unoconv($format) {
+        global $CFG;
+
+        if (!isset($this->unoconvformats)) {
+            // Ask unoconv for it's list of supported document formats.
+            $cmd = escapeshellcmd(trim($CFG->pathtounoconv)) . ' --show';
+            $pipes = array();
+            $pipesspec = array(2 => array('pipe', 'w'));
+            $proc = proc_open($cmd, $pipesspec, $pipes);
+            $programoutput = stream_get_contents($pipes[2]);
+            fclose($pipes[2]);
+            proc_close($proc);
+            $matches = array();
+            preg_match_all('/\[\.(.*)\]/', $programoutput, $matches);
+
+            $this->unoconvformats = $matches[1];
+            $this->unoconvformats = array_unique($this->unoconvformats);
+        }
+
+        $sanitized = trim(core_text::strtolower($format));
+        return in_array($sanitized, $this->unoconvformats);
+    }
+
+    /**
+     * Check if the installed version of unoconv is supported.
+     *
+     * @return bool true if the present version is supported, false otherwise.
+     */
+    public static function can_convert_documents() {
+        global $CFG;
+        $currentversion = 0;
+        $supportedversion = 0.7;
+        $unoconvbin = \escapeshellarg($CFG->pathtounoconv);
+        $command = "$unoconvbin --version";
+        exec($command, $output);
+        // If the command execution returned some output, then get the unoconv version.
+        if ($output) {
+            foreach ($output as $response) {
+                if (preg_match('/unoconv (\\d+\\.\\d+)/', $response, $matches)) {
+                    $currentversion = (float)$matches[1];
+                }
+            }
+            if ($currentversion < $supportedversion) {
+                return false;
+            }
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * Regenerate the test pdf and send it direct to the browser.
+     */
+    public static function send_test_pdf() {
+        global $CFG;
+        require_once($CFG->libdir . '/filelib.php');
+
+        $filerecord = array(
+            'contextid' => \context_system::instance()->id,
+            'component' => 'test',
+            'filearea' => 'assignfeedback_editpdf',
+            'itemid' => 0,
+            'filepath' => '/',
+            'filename' => 'unoconv_test.docx'
+        );
+
+        // Get the fixture doc file content and generate and stored_file object.
+        $fs = get_file_storage();
+        $fixturefile = $CFG->libdir . '/tests/fixtures/unoconv-source.docx';
+        $fixturedata = file_get_contents($fixturefile);
+        $testdocx = $fs->get_file($filerecord['contextid'], $filerecord['component'], $filerecord['filearea'],
+                $filerecord['itemid'], $filerecord['filepath'], $filerecord['filename']);
+        if (!$testdocx) {
+            $testdocx = $fs->create_file_from_string($filerecord, $fixturedata);
+
+        }
+
+        // Convert the doc file to pdf and send it direct to the browser.
+        $result = $fs->get_converted_document($testdocx, 'pdf', true);
+        readfile_accel($result, 'application/pdf', true);
+    }
+
+    /**
+     * Check if unoconv configured path is correct and working.
+     *
+     * @return \stdClass an object with the test status and the UNOCONVPATH_ constant message.
+     */
+    public static function test_unoconv_path() {
+        global $CFG;
+        $unoconvpath = $CFG->pathtounoconv;
+
+        $ret = new \stdClass();
+        $ret->status = self::UNOCONVPATH_OK;
+        $ret->message = null;
+
+        if (empty($unoconvpath)) {
+            $ret->status = self::UNOCONVPATH_EMPTY;
+            return $ret;
+        }
+        if (!file_exists($unoconvpath)) {
+            $ret->status = self::UNOCONVPATH_DOESNOTEXIST;
+            return $ret;
+        }
+        if (is_dir($unoconvpath)) {
+            $ret->status = self::UNOCONVPATH_ISDIR;
+            return $ret;
+        }
+        if (!file_is_executable($unoconvpath)) {
+            $ret->status = self::UNOCONVPATH_NOTEXECUTABLE;
+            return $ret;
+        }
+        if (!\file_storage::can_convert_documents()) {
+            $ret->status = self::UNOCONVPATH_VERSIONNOTSUPPORTED;
+            return $ret;
+        }
+
+        return $ret;
+    }
+
+    /**
+     * Perform a file format conversion on the specified document.
+     *
+     * @param stored_file $file the file we want to preview
+     * @param string $format The desired format - e.g. 'pdf'. Formats are specified by file extension.
+     * @return stored_file|bool false if unable to create the conversion, stored file otherwise
+     */
+    protected function create_converted_document(stored_file $file, $format, $forcerefresh = false) {
+        global $CFG;
+
+        if (empty($CFG->pathtounoconv) || !file_is_executable(trim($CFG->pathtounoconv))) {
+            // No conversions are possible, sorry.
+            return false;
+        }
+
+        $fileextension = core_text::strtolower(pathinfo($file->get_filename(), PATHINFO_EXTENSION));
+        if (!self::is_format_supported_by_unoconv($fileextension)) {
+            return false;
+        }
+
+        if (!self::is_format_supported_by_unoconv($format)) {
+            return false;
+        }
+
+        // Copy the file to the tmp dir.
+        $uniqdir = "core_file/conversions/" . uniqid($file->get_id() . "-", true);
+        $tmp = make_temp_directory($uniqdir);
+        $ext = pathinfo($file->get_filename(), PATHINFO_EXTENSION);
+        // Safety.
+        $localfilename = $file->get_id() . '.' . $ext;
+
+        $filename = $tmp . '/' . $localfilename;
+        try {
+            // This function can either return false, or throw an exception so we need to handle both.
+            if ($file->copy_content_to($filename) === false) {
+                throw new file_exception('storedfileproblem', 'Could not copy file contents to temp file.');
+            }
+        } catch (file_exception $fe) {
+            remove_dir($tmp);
+            throw $fe;
+        }
+
+        $newtmpfile = pathinfo($filename, PATHINFO_FILENAME) . '.' . $format;
+
+        // Safety.
+        $newtmpfile = $tmp . '/' . clean_param($newtmpfile, PARAM_FILE);
+
+        $cmd = escapeshellcmd(trim($CFG->pathtounoconv)) . ' ' .
+               escapeshellarg('-f') . ' ' .
+               escapeshellarg($format) . ' ' .
+               escapeshellarg('-o') . ' ' .
+               escapeshellarg($newtmpfile) . ' ' .
+               escapeshellarg($filename);
+
+        $output = null;
+        $currentdir = getcwd();
+        chdir($tmp);
+        $result = exec($cmd, $output);
+        chdir($currentdir);
+        touch($newtmpfile);
+        if (filesize($newtmpfile) === 0) {
+            remove_dir($tmp);
+            // Cleanup.
+            return false;
+        }
+
+        $context = context_system::instance();
+        $path = '/' . $format . '/';
+        $record = array(
+            'contextid' => $context->id,
+            'component' => 'core',
+            'filearea'  => 'documentconversion',
+            'itemid'    => 0,
+            'filepath'  => $path,
+            'filename'  => $file->get_contenthash(),
+        );
+
+        if ($forcerefresh) {
+            $existing = $this->get_file($context->id, 'core', 'documentconversion', 0, $path, $file->get_contenthash());
+            if ($existing) {
+                $existing->delete();
+            }
+        }
+
+        $convertedfile = $this->create_file_from_pathname($record, $newtmpfile);
+        // Cleanup.
+        remove_dir($tmp);
+        return $convertedfile;
     }
 
     /**
@@ -1521,7 +1783,6 @@ class file_storage {
 
         $width    = $imageinfo['width'];
         $height   = $imageinfo['height'];
-        $mimetype = $imageinfo['mimetype'];
 
         if ($keepaspectratio) {
             if (0 >= $newwidth and 0 >= $newheight) {
@@ -1553,15 +1814,53 @@ class file_storage {
             }
         }
 
+        // The original image.
         $img = imagecreatefromstring($file->get_content());
+
+        // A new true color image where we will copy our original image.
+        $newimg = imagecreatetruecolor($newwidth, $newheight);
+
+        // Determine if the file supports transparency.
+        $hasalpha = $filerecord['mimetype'] == 'image/png' || $filerecord['mimetype'] == 'image/gif';
+
+        // Maintain transparency.
+        if ($hasalpha) {
+            imagealphablending($newimg, true);
+
+            // Get the current transparent index for the original image.
+            $colour = imagecolortransparent($img);
+            if ($colour == -1) {
+                // Set a transparent colour index if there's none.
+                $colour = imagecolorallocatealpha($newimg, 255, 255, 255, 127);
+                // Save full alpha channel.
+                imagesavealpha($newimg, true);
+            }
+            imagecolortransparent($newimg, $colour);
+            imagefill($newimg, 0, 0, $colour);
+        }
+
+        // Process the image to be output.
         if ($height != $newheight or $width != $newwidth) {
-            $newimg = imagecreatetruecolor($newwidth, $newheight);
-            if (!imagecopyresized($newimg, $img, 0, 0, 0, 0, $newwidth, $newheight, $width, $height)) {
+            // Resample if the dimensions differ from the original.
+            if (!imagecopyresampled($newimg, $img, 0, 0, 0, 0, $newwidth, $newheight, $width, $height)) {
                 // weird
                 throw new file_exception('storedfileproblem', 'Can not resize image');
             }
             imagedestroy($img);
             $img = $newimg;
+
+        } else if ($hasalpha) {
+            // Just copy to the new image with the alpha channel.
+            if (!imagecopy($newimg, $img, 0, 0, 0, 0, $width, $height)) {
+                // Weird.
+                throw new file_exception('storedfileproblem', 'Can not copy image');
+            }
+            imagedestroy($img);
+            $img = $newimg;
+
+        } else {
+            // No particular processing needed for the original image.
+            imagedestroy($newimg);
         }
 
         ob_start();
@@ -1580,6 +1879,11 @@ class file_storage {
 
             case 'image/png':
                 $quality = (int)$quality;
+
+                // Woah nelly! Because PNG quality is in the range 0 - 9 compared to JPEG quality,
+                // the latter of which can go to 100, we need to make sure that quality here is
+                // in a safe range or PHP WILL CRASH AND DIE. You have been warned.
+                $quality = $quality > 9 ? (int)(max(1.0, (float)$quality / 100.0) * 9.0) : $quality;
                 imagepng($img, NULL, $quality, NULL);
                 break;
 
@@ -2154,7 +2458,7 @@ class file_storage {
         $now = time();
         foreach ($rs as $record) {
             $this->update_references($record->id, $now, null,
-                    $storedfile->get_contenthash(), $storedfile->get_filesize(), 0);
+                    $storedfile->get_contenthash(), $storedfile->get_filesize(), 0, $storedfile->get_timemodified());
         }
         $rs->close();
     }
@@ -2228,6 +2532,26 @@ class file_storage {
                   FROM {files} p
              LEFT JOIN {files} o ON (p.filename = o.contenthash)
                  WHERE p.contextid = ? AND p.component = 'core' AND p.filearea = 'preview' AND p.itemid = 0
+                       AND o.id IS NULL";
+        $syscontext = context_system::instance();
+        $rs = $DB->get_recordset_sql($sql, array($syscontext->id));
+        foreach ($rs as $orphan) {
+            $file = $this->get_file_instance($orphan);
+            if (!$file->is_directory()) {
+                $file->delete();
+            }
+        }
+        $rs->close();
+        mtrace('done.');
+
+        // Remove orphaned converted files (that is files in the core documentconversion filearea without
+        // the existing original file).
+        mtrace('Deleting orphaned document conversion files... ', '');
+        cron_trace_time_and_memory();
+        $sql = "SELECT p.*
+                  FROM {files} p
+             LEFT JOIN {files} o ON (p.filename = o.contenthash)
+                 WHERE p.contextid = ? AND p.component = 'core' AND p.filearea = 'documentconversion' AND p.itemid = 0
                        AND o.id IS NULL";
         $syscontext = context_system::instance();
         $rs = $DB->get_recordset_sql($sql, array($syscontext->id));
@@ -2372,8 +2696,9 @@ class file_storage {
      * @param string $contenthash
      * @param int $filesize
      * @param int $status 0 if ok or 666 if source is missing
+     * @param int $timemodified last time modified of the source, if known
      */
-    public function update_references($referencefileid, $lastsync, $lifetime, $contenthash, $filesize, $status) {
+    public function update_references($referencefileid, $lastsync, $lifetime, $contenthash, $filesize, $status, $timemodified = null) {
         global $DB;
         $referencefileid = clean_param($referencefileid, PARAM_INT);
         $lastsync = clean_param($lastsync, PARAM_INT);
@@ -2383,9 +2708,10 @@ class file_storage {
         $params = array('contenthash' => $contenthash,
                     'filesize' => $filesize,
                     'status' => $status,
-                    'referencefileid' => $referencefileid);
+                    'referencefileid' => $referencefileid,
+                    'timemodified' => $timemodified);
         $DB->execute('UPDATE {files} SET contenthash = :contenthash, filesize = :filesize,
-            status = :status
+            status = :status ' . ($timemodified ? ', timemodified = :timemodified' : '') . '
             WHERE referencefileid = :referencefileid', $params);
         $data = array('id' => $referencefileid, 'lastsync' => $lastsync);
         $DB->update_record('files_reference', (object)$data);

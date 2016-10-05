@@ -135,8 +135,10 @@ class manager {
         global $DB;
 
         $record = self::record_from_adhoc_task($task);
-        // Schedule it immediately.
-        $record->nextruntime = time() - 1;
+        // Schedule it immediately if nextruntime not explicitly set.
+        if (!$task->get_next_run_time()) {
+            $record->nextruntime = time() - 1;
+        }
         $result = $DB->insert_record('task_adhoc', $record);
 
         return $result;
@@ -489,6 +491,12 @@ class manager {
                         $lock->release();
                         continue;
                     }
+                }
+
+                // Make sure the task data is unchanged.
+                if (!$DB->record_exists('task_scheduled', (array) $record)) {
+                    $lock->release();
+                    continue;
                 }
 
                 if (!$task->is_blocking()) {

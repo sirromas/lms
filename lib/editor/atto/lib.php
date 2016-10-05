@@ -69,6 +69,16 @@ class atto_texteditor extends texteditor {
     /**
      * Use this editor for given element.
      *
+     * Available Atto-specific options:
+     *   atto:toolbar - set to a string to override the system config editor_atto/toolbar
+     *
+     * Available general options:
+     *   context - set to the current context object
+     *   enable_filemanagement - set false to get rid of the managefiles plugin
+     *   autosave - true/false to control autosave
+     *
+     * Options are also passed through to the plugins.
+     *
      * @param string $elementid
      * @param array $options
      * @param null $fpoptions
@@ -76,7 +86,11 @@ class atto_texteditor extends texteditor {
     public function use_editor($elementid, array $options=null, $fpoptions=null) {
         global $PAGE;
 
-        $configstr = get_config('editor_atto', 'toolbar');
+        if (array_key_exists('atto:toolbar', $options)) {
+            $configstr = $options['atto:toolbar'];
+        } else {
+            $configstr = get_config('editor_atto', 'toolbar');
+        }
 
         $grouplines = explode("\n", $configstr);
 
@@ -166,6 +180,10 @@ class atto_texteditor extends texteditor {
         }
         $contentcss     = $PAGE->theme->editor_css_url()->out(false);
 
+        // Autosave disabled for guests.
+        if (isguestuser()) {
+            $autosave = false;
+        }
         // Note <> is a safe separator, because it will not appear in the output of s().
         $pagehash = sha1($PAGE->url . '<>' . s($this->get_text()));
         $params = array(

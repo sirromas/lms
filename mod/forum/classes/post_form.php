@@ -138,6 +138,11 @@ class mod_forum_post_form extends moodleform {
             $mform->addHelpButton('attachments', 'attachment', 'forum');
         }
 
+        if (!$post->parent && has_capability('mod/forum:pindiscussions', $modcontext)) {
+            $mform->addElement('checkbox', 'pinned', get_string('discussionpinned', 'forum'));
+            $mform->addHelpButton('pinned', 'discussionpinned', 'forum');
+        }
+
         if (empty($post->id) && $manageactivities) {
             $mform->addElement('checkbox', 'mailnow', get_string('mailnow', 'forum'));
         }
@@ -145,10 +150,10 @@ class mod_forum_post_form extends moodleform {
         if (!empty($CFG->forum_enabletimedposts) && !$post->parent && has_capability('mod/forum:viewhiddentimedposts', $coursecontext)) { // hack alert
             $mform->addElement('header', 'displayperiod', get_string('displayperiod', 'forum'));
 
-            $mform->addElement('date_selector', 'timestart', get_string('displaystart', 'forum'), array('optional'=>true));
+            $mform->addElement('date_time_selector', 'timestart', get_string('displaystart', 'forum'), array('optional' => true));
             $mform->addHelpButton('timestart', 'displaystart', 'forum');
 
-            $mform->addElement('date_selector', 'timeend', get_string('displayend', 'forum'), array('optional'=>true));
+            $mform->addElement('date_time_selector', 'timeend', get_string('displayend', 'forum'), array('optional' => true));
             $mform->addHelpButton('timeend', 'displayend', 'forum');
 
         } else {
@@ -227,7 +232,7 @@ class mod_forum_post_form extends moodleform {
                 if (empty($post->groupid)) {
                     $groupname = get_string('allparticipants');
                 } else {
-                    $groupname = @format_string($groupdata[$post->groupid]->name);
+                    $groupname = format_string($groupdata[$post->groupid]->name);
                 }
                 $mform->addElement('static', 'groupinfo', get_string('group'), $groupname);
             }

@@ -1,5 +1,4 @@
 <?php
-
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -24,8 +23,6 @@
  */
 
 namespace gradereport_history;
-
-require_once ($CFG->dirroot . '/my/myCourses.php');
 
 defined('MOODLE_INTERNAL') || die;
 
@@ -58,25 +55,27 @@ class helper {
             'foundnusers',
             'loadmoreusers',
             'selectusers',
-                ), 'gradereport_history');
+        ), 'gradereport_history');
         $PAGE->requires->strings_for_js(array(
             'loading'
-                ), 'admin');
+        ), 'admin');
         $PAGE->requires->strings_for_js(array(
             'noresults',
             'search'
-                ), 'moodle');
+        ), 'moodle');
 
         $arguments = array(
-            'courseid' => $courseid,
-            'ajaxurl' => '/grade/report/history/users_ajax.php',
-            'url' => $PAGE->url->out(false),
-            'selectedUsers' => $currentusers,
+            'courseid'            => $courseid,
+            'ajaxurl'             => '/grade/report/history/users_ajax.php',
+            'url'                 => $PAGE->url->out(false),
+            'selectedUsers'       => $currentusers,
         );
 
         // Load the yui module.
         $PAGE->requires->yui_module(
-                'moodle-gradereport_history-userselector', 'Y.M.gradereport_history.UserSelector.init', array($arguments)
+            'moodle-gradereport_history-userselector',
+            'Y.M.gradereport_history.UserSelector.init',
+            array($arguments)
         );
     }
 
@@ -116,6 +115,7 @@ class helper {
 
         list($sql, $params) = self::get_users_sql_and_params($context, $search, true);
         return $DB->count_records_sql($sql, $params);
+
     }
 
     /**
@@ -139,7 +139,7 @@ class helper {
             $filtersql = '';
         }
 
-        $ufields = \user_picture::fields('u', $extrafields) . ',u.username';
+        $ufields = \user_picture::fields('u', $extrafields).',u.username';
         if ($count) {
             $select = "SELECT COUNT(DISTINCT u.id) ";
             $orderby = "";
@@ -158,12 +158,6 @@ class helper {
         return array($sql, $params);
     }
 
-    public static function is_student_in_tutor_group($student) {
-        global $USER;
-        $mc = new \myCourses($USER->id);
-        return $mc->insideGroup($student->id);
-    }
-
     /**
      * Get a list of graders.
      *
@@ -172,34 +166,22 @@ class helper {
      * @return array list of graders.
      */
     public static function get_graders($courseid) {
-        global $DB, $USER;
+        global $DB;
 
-        $mc = new \myCourses($USER->id);
-        $roleid = $mc->getUserRole();        
         $ufields = get_all_user_name_fields(true, 'u');
-
-        $sql = "SELECT u.id, u.email, $ufields
+        $sql = "SELECT u.id, $ufields
                   FROM {user} u
                   JOIN {grade_grades_history} ggh ON ggh.usermodified = u.id
                   JOIN {grade_items} gi ON gi.id = ggh.itemid
-                 WHERE gi.courseid = :courseid and u.email like '%@%'
+                 WHERE gi.courseid = :courseid
               GROUP BY u.id, $ufields
               ORDER BY u.lastname ASC, u.firstname ASC";
 
         $graders = $DB->get_records_sql($sql, array('courseid' => $courseid));
         $return = array(0 => get_string('allgraders', 'gradereport_history'));
         foreach ($graders as $grader) {
-            // For tutors we select only group members for history report
-            if ($roleid == 4) {
-                if (self::is_student_in_tutor_group($grader)) {
-                    $return[$grader->id] = fullname($grader);
-                } // end if self::is_student_in_tutor_group($grader)
-            } // end if $roleid == 4            
-            else {
-                $return[$grader->id] = fullname($grader);
-            }
-        } // end foreach
+            $return[$grader->id] = fullname($grader);
+        }
         return $return;
     }
-
 }

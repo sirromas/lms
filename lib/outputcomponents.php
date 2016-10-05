@@ -1386,28 +1386,23 @@ class html_writer {
         if (!$currenttime) {
             $currenttime = time();
         }
-        $currentdate = usergetdate($currenttime);
+        $calendartype = \core_calendar\type_factory::get_calendar_instance();
+        $currentdate = $calendartype->timestamp_to_date_array($currenttime);
         $userdatetype = $type;
         $timeunits = array();
 
         switch ($type) {
             case 'years':
-                for ($i=1970; $i<=2020; $i++) {
-                    $timeunits[$i] = $i;
-                }
+                $timeunits = $calendartype->get_years();
                 $userdatetype = 'year';
                 break;
             case 'months':
-                for ($i=1; $i<=12; $i++) {
-                    $timeunits[$i] = userdate(gmmktime(12,0,0,$i,15,2000), "%B");
-                }
+                $timeunits = $calendartype->get_months();
                 $userdatetype = 'month';
                 $currentdate['month'] = (int)$currentdate['mon'];
                 break;
             case 'days':
-                for ($i=1; $i<=31; $i++) {
-                    $timeunits[$i] = $i;
-                }
+                $timeunits = $calendartype->get_days();
                 $userdatetype = 'mday';
                 break;
             case 'hours':
@@ -2464,7 +2459,7 @@ class paging_bar implements renderable {
 
             $pagenum = $this->page + 1;
 
-            if ($pagenum != $displaypage) {
+            if ($pagenum != $lastpage) {
                 $this->nextlink = html_writer::link(new moodle_url($this->baseurl, array($this->pagevar=>$pagenum)), get_string('next'), array('class'=>'next'));
             }
         }

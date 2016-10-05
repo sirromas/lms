@@ -25,6 +25,7 @@
  */
 
 require_once("$CFG->libdir/externallib.php");
+require_once($CFG->dirroot . "/message/lib.php");
 
 /**
  * Message external functions
@@ -69,7 +70,6 @@ class core_message_external extends external_api {
      */
     public static function send_instant_messages($messages = array()) {
         global $CFG, $USER, $DB;
-        require_once($CFG->dirroot . "/message/lib.php");
 
         // Check if messaging is enabled.
         if (!$CFG->messaging) {
@@ -137,7 +137,8 @@ class core_message_external extends external_api {
             if ($success && empty($contactlist[$message['touserid']]) && !empty($blocknoncontacts)) {
                 // The user isn't a contact and they have selected to block non contacts so this message won't be sent.
                 $success = false;
-                $errormessage = get_string('userisblockingyounoncontact', 'message');
+                $errormessage = get_string('userisblockingyounoncontact', 'message',
+                        fullname(core_user::get_user($message['touserid'])));
             }
 
             //now we can send the message (at least try)
@@ -425,7 +426,7 @@ class core_message_external extends external_api {
      * @since Moodle 2.5
      */
     public static function get_contacts() {
-        global $CFG;
+        global $CFG, $PAGE;
 
         // Check if messaging is enabled.
         if (!$CFG->messaging) {
@@ -444,16 +445,11 @@ class core_message_external extends external_api {
                     'unread' => $contact->messagecount
                 );
 
-                $usercontext = context_user::instance($contact->id, IGNORE_MISSING);
-                if ($usercontext) {
-                    $newcontact['profileimageurl'] = moodle_url::make_webservice_pluginfile_url(
-                                                        $usercontext->id, 'user', 'icon', null, '/', 'f1')->out(false);
-                    $newcontact['profileimageurlsmall'] = moodle_url::make_webservice_pluginfile_url(
-                                                            $usercontext->id, 'user', 'icon', null, '/', 'f2')->out(false);
-                } else {
-                    $newcontact['profileimageurl'] = '';
-                    $newcontact['profileimageurlsmall'] = '';
-                }
+                $userpicture = new user_picture($contact);
+                $userpicture->size = 1; // Size f1.
+                $newcontact['profileimageurl'] = $userpicture->get_url($PAGE)->out(false);
+                $userpicture->size = 0; // Size f2.
+                $newcontact['profileimageurlsmall'] = $userpicture->get_url($PAGE)->out(false);
 
                 $allcontacts[$mode][$key] = $newcontact;
             }
@@ -535,7 +531,7 @@ class core_message_external extends external_api {
      * @since Moodle 2.5
      */
     public static function search_contacts($searchtext, $onlymycourses = false) {
-        global $CFG, $USER;
+        global $CFG, $USER, $PAGE;
         require_once($CFG->dirroot . '/user/lib.php');
 
         // Check if messaging is enabled.
@@ -581,17 +577,11 @@ class core_message_external extends external_api {
             $user->phone1 = null;
             $user->phone2 = null;
 
-            $usercontext = context_user::instance($user->id, IGNORE_MISSING);
-
-            if ($usercontext) {
-                $newuser['profileimageurl'] = moodle_url::make_webservice_pluginfile_url(
-                                                    $usercontext->id, 'user', 'icon', null, '/', 'f1')->out(false);
-                $newuser['profileimageurlsmall'] = moodle_url::make_webservice_pluginfile_url(
-                                                        $usercontext->id, 'user', 'icon', null, '/', 'f2')->out(false);
-            } else {
-                $newuser['profileimageurl'] = '';
-                $newuser['profileimageurlsmall'] = '';
-            }
+            $userpicture = new user_picture($user);
+            $userpicture->size = 1; // Size f1.
+            $newuser['profileimageurl'] = $userpicture->get_url($PAGE)->out(false);
+            $userpicture->size = 0; // Size f2.
+            $newuser['profileimageurlsmall'] = $userpicture->get_url($PAGE)->out(false);
 
             $user = $newuser;
         }
@@ -663,7 +653,6 @@ class core_message_external extends external_api {
     public static function get_messages($useridto, $useridfrom = 0, $type = 'both', $read = true,
                                         $newestfirst = true, $limitfrom = 0, $limitnum = 0) {
         global $CFG, $USER;
-        require_once($CFG->dirroot . "/message/lib.php");
 
         $warnings = array();
 
@@ -760,6 +749,14 @@ class core_message_external extends external_api {
                 $userfromfullname = fullname($userfrom, $canviewfullname);
             }
             foreach ($messages as $mid => $message) {
+
+                // Do not return deleted messages.
+                if (($useridto == $USER->id and $message->timeusertodeleted) or
+                        ($useridfrom == $USER->id and $message->timeuserfromdeleted)) {
+
+                    unset($messages[$mid]);
+                    continue;
+                }
 
                 // We need to get the user from the query.
                 if (empty($userfromfullname)) {
@@ -863,8 +860,7 @@ class core_message_external extends external_api {
      * @since 2.9
      */
     public static function get_blocked_users($userid) {
-        global $CFG, $USER;
-        require_once($CFG->dirroot . "/message/lib.php");
+        global $CFG, $USER, $PAGE;
 
         // Warnings array, it can be empty at the end but is mandatory.
         $warnings = array();
@@ -885,7 +881,8 @@ class core_message_external extends external_api {
             throw new moodle_exception('disabled', 'message');
         }
 
-        $user = core_user::get_user($userid, 'id', MUST_EXIST);
+        $user = core_user::get_user($userid, '*', MUST_EXIST);
+        core_user::require_active_user($user);
 
         // Check if we have permissions for retrieve the information.
         if ($userid != $USER->id and !has_capability('moodle/site:readallmessages', $context)) {
@@ -902,13 +899,9 @@ class core_message_external extends external_api {
                 'fullname' => fullname($user),
             );
 
-            $usercontext = context_user::instance($user->id, IGNORE_MISSING);
-            if ($usercontext) {
-                $newuser['profileimageurl'] = moodle_url::make_webservice_pluginfile_url(
-                                                $usercontext->id, 'user', 'icon', null, '/', 'f1')->out(false);
-            } else {
-                $newuser['profileimageurl'] = '';
-            }
+            $userpicture = new user_picture($user);
+            $userpicture->size = 1; // Size f1.
+            $newuser['profileimageurl'] = $userpicture->get_url($PAGE)->out(false);
 
             $blockedusers[] = $newuser;
         }
@@ -971,7 +964,6 @@ class core_message_external extends external_api {
      */
     public static function mark_message_read($messageid, $timeread) {
         global $CFG, $DB, $USER;
-        require_once($CFG->dirroot . "/message/lib.php");
 
         // Check if private messaging between users is allowed.
         if (empty($CFG->messaging)) {
@@ -1022,63 +1014,88 @@ class core_message_external extends external_api {
         );
     }
 
-}
-
-/**
- * Deprecated message external functions
- *
- * @package    core_message
- * @copyright  2011 Jerome Mouneyrac
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- * @since Moodle 2.1
- * @deprecated Moodle 2.2 MDL-29106 - Please do not use this class any more.
- * @see core_notes_external
- */
-class moodle_message_external extends external_api {
-
     /**
      * Returns description of method parameters
      *
      * @return external_function_parameters
-     * @since Moodle 2.1
-     * @deprecated Moodle 2.2 MDL-29106 - Please do not call this function any more.
-     * @see core_message_external::send_instant_messages_parameters()
+     * @since 3.1
      */
-    public static function send_instantmessages_parameters() {
-        return core_message_external::send_instant_messages_parameters();
+    public static function delete_message_parameters() {
+        return new external_function_parameters(
+            array(
+                'messageid' => new external_value(PARAM_INT, 'The message id'),
+                'userid' => new external_value(PARAM_INT, 'The user id of who we want to delete the message for'),
+                'read' => new external_value(PARAM_BOOL, 'If is a message read', VALUE_DEFAULT, true)
+            )
+        );
     }
 
     /**
-     * Send private messages from the current USER to other users
+     * Deletes a message
      *
-     * @param array $messages An array of message to send.
-     * @return array
-     * @since Moodle 2.1
-     * @deprecated Moodle 2.2 MDL-29106 - Please do not call this function any more.
-     * @see core_message_external::send_instant_messages()
+     * @param  int $messageid the message id
+     * @param  int $userid the user id of who we want to delete the message for
+     * @param  bool $read if is a message read (default to true)
+     * @return external_description
+     * @throws moodle_exception
+     * @since 3.1
      */
-    public static function send_instantmessages($messages = array()) {
-        return core_message_external::send_instant_messages($messages);
+    public static function delete_message($messageid, $userid, $read = true) {
+        global $CFG, $DB;
+
+        // Check if private messaging between users is allowed.
+        if (empty($CFG->messaging)) {
+            throw new moodle_exception('disabled', 'message');
+        }
+
+        // Warnings array, it can be empty at the end but is mandatory.
+        $warnings = array();
+
+        // Validate params.
+        $params = array(
+            'messageid' => $messageid,
+            'userid' => $userid,
+            'read' => $read
+        );
+        $params = self::validate_parameters(self::delete_message_parameters(), $params);
+
+        // Validate context.
+        $context = context_system::instance();
+        self::validate_context($context);
+
+        $messagestable = $params['read'] ? 'message_read' : 'message';
+        $message = $DB->get_record($messagestable, array('id' => $params['messageid']), '*', MUST_EXIST);
+
+        $user = core_user::get_user($params['userid'], '*', MUST_EXIST);
+        core_user::require_active_user($user);
+
+        $status = false;
+        if (message_can_delete_message($message, $user->id)) {
+            $status = message_delete_message($message, $user->id);;
+        } else {
+            throw new moodle_exception('You do not have permission to delete this message');
+        }
+
+        $results = array(
+            'status' => $status,
+            'warnings' => $warnings
+        );
+        return $results;
     }
 
     /**
      * Returns description of method result value
      *
      * @return external_description
-     * @since Moodle 2.1
-     * @deprecated Moodle 2.2 MDL-29106 - Please do not call this function any more.
-     * @see core_message_external::send_instant_messages_returns()
+     * @since 3.1
      */
-    public static function send_instantmessages_returns() {
-        return core_message_external::send_instant_messages_returns();
+    public static function delete_message_returns() {
+        return new external_single_structure(
+            array(
+                'status' => new external_value(PARAM_BOOL, 'True if the message was deleted, false otherwise'),
+                'warnings' => new external_warnings()
+            )
+        );
     }
 
-    /**
-     * Marking the method as deprecated.
-     *
-     * @return bool
-     */
-    public static function send_instantmessages_is_deprecated() {
-        return true;
-    }
 }

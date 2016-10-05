@@ -44,6 +44,7 @@ Feature: We can use calculated grade totals
     And I follow "Course 1"
     And I navigate to "Grades" node in "Course administration"
     And I turn editing mode on
+    And I change window size to "large"
     And I give the grade "60.00" to the user "Student 1" for the grade item "Test assignment one"
     And I give the grade "20.00" to the user "Student 1" for the grade item "Test assignment two"
     And I give the grade "40.00" to the user "Student 1" for the grade item "Test assignment three"
@@ -58,6 +59,7 @@ Feature: We can use calculated grade totals
       | Hidden | 1 |
     And I set the following settings for grade item "Test assignment eight":
       | Hidden | 1 |
+    And I change window size to "medium"
     And I navigate to "Course grade settings" node in "Grade administration > Setup"
     And I set the field "Grade display type" to "Real (percentage)"
     And I press "Save changes"
@@ -235,7 +237,7 @@ Feature: We can use calculated grade totals
       | itemname              | course | outcome | gradetype | scale      |
       | Test outcome item one | C1     | OT1     | Scale     | Test Scale |
     And I expand "Setup" node
-    And I follow "Categories and items"
+    And I follow "Gradebook setup"
     And I set the following settings for grade item "Course 1":
       | Aggregation                     | Natural |
       | Include outcomes in aggregation | 1       |
@@ -258,7 +260,7 @@ Feature: We can use calculated grade totals
     And I follow "Course 1"
     And I navigate to "Grades" node in "Course administration"
     And I expand "Setup" node
-    And I follow "Categories and items"
+    And I follow "Gradebook setup"
     And I set the following settings for grade item "Test outcome item one":
      | Extra credit     | 1   |
     And I log out
@@ -272,7 +274,7 @@ Feature: We can use calculated grade totals
     And I follow "Course 1"
     And I navigate to "Grades" node in "Course administration"
     And I expand "Setup" node
-    And I follow "Categories and items"
+    And I follow "Gradebook setup"
     And I set the following settings for grade item "Course 1":
       | Aggregation                     | Natural |
       | Include outcomes in aggregation | 0       |
@@ -297,7 +299,7 @@ Feature: We can use calculated grade totals
       | Test outcome item one | C1     | OT1     | Scale     | Test Scale |
     And I navigate to "Grades" node in "Course administration"
     And I expand "Setup" node
-    And I follow "Categories and items"
+    And I follow "Gradebook setup"
     And I set the following settings for grade item "Course 1":
       | Aggregation                     | Natural |
       | Include outcomes in aggregation | 1       |
@@ -387,7 +389,7 @@ Feature: We can use calculated grade totals
     And I set the following settings for grade item "Course 1":
       | Aggregation          | Natural |
       | Exclude empty grades | 0       |
-    And I navigate to "Categories and items" node in "Grade administration > Setup"
+    And I navigate to "Gradebook setup" node in "Grade administration > Setup"
     And I press "Add category"
     And I set the following fields to these values:
       | Category name | Sub category 3 |
@@ -425,6 +427,7 @@ Feature: We can use calculated grade totals
     And I set the following settings for grade item "Manual item 2":
       | Extra credit  | 0   |
       | Maximum grade | 200 |
+      | Rescale existing grades | No |
     And I give the grade "21.00" to the user "Student 1" for the grade item "Manual item 2"
     And I press "Save changes"
     And I give the grade "20.00" to the user "Student 1" for the grade item "Manual item 2"
@@ -435,13 +438,14 @@ Feature: We can use calculated grade totals
     And I set the following settings for grade item "Manual item 2":
       | Extra credit  | 0   |
       | Maximum grade | 100 |
+      | Rescale existing grades | No |
     And I give the grade "21.00" to the user "Student 1" for the grade item "Manual item 2"
     And I press "Save changes"
     And I give the grade "20.00" to the user "Student 1" for the grade item "Manual item 2"
     And I press "Save changes"
     And I turn editing mode off
     And I should see "250.00 (25.25 %)" in the ".course" "css_element"
-    And I navigate to "Categories and items" node in "Grade administration > Setup"
+    And I navigate to "Gradebook setup" node in "Grade administration > Setup"
     And I press "Add category"
     And I set the following fields to these values:
       | Category name | Sub sub category 1 |
@@ -452,7 +456,7 @@ Feature: We can use calculated grade totals
 
   @javascript
   Scenario: Natural aggregation from the setup screen
-    And I select "Categories and items" from the "Grade report" singleselect
+    And I select "Gradebook setup" from the "Grade report" singleselect
     And I set the following settings for grade item "Course 1":
       | Aggregation          | Natural |
     And I set the following settings for grade item "Sub category 1":
@@ -514,7 +518,7 @@ Feature: We can use calculated grade totals
       | Aggregation          | Natural |
       | Exclude empty grades | 0       |
     And I turn editing mode off
-    And I select "Categories and items" from the "Grade report" singleselect
+    And I select "Gradebook setup" from the "Grade report" singleselect
     And I set the field "Override weight of Test assignment one" to "1"
     And I set the field "Weight of Test assignment one" to "0"
     And I set the field "Override weight of Test assignment six" to "1"

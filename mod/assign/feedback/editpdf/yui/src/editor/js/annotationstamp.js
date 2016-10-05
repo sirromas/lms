@@ -42,7 +42,7 @@ Y.extend(ANNOTATIONSTAMP, M.assignfeedback_editpdf.annotation, {
      */
     draw : function() {
         var drawable = new M.assignfeedback_editpdf.drawable(this.editor),
-            drawingregion = Y.one(SELECTOR.DRAWINGREGION),
+            drawingregion = this.editor.get_dialogue_element(SELECTOR.DRAWINGREGION),
             node,
             position;
 
@@ -63,10 +63,13 @@ Y.extend(ANNOTATIONSTAMP, M.assignfeedback_editpdf.annotation, {
         node.setY(position.y);
         drawable.store_position(node, position.x, position.y);
 
-        // Pass throught the event handlers on the div.
-        node.on('gesturemovestart', this.editor.edit_start, null, this.editor);
-        node.on('gesturemove', this.editor.edit_move, null, this.editor);
-        node.on('gesturemoveend', this.editor.edit_end, null, this.editor);
+        // Bind events only when editing.
+        if (!this.editor.get('readonly')) {
+            // Pass through the event handlers on the div.
+            node.on('gesturemovestart', this.editor.edit_start, null, this.editor);
+            node.on('gesturemove', this.editor.edit_move, null, this.editor);
+            node.on('gesturemoveend', this.editor.edit_end, null, this.editor);
+        }
 
         drawable.nodes.push(node);
 
@@ -84,7 +87,7 @@ Y.extend(ANNOTATIONSTAMP, M.assignfeedback_editpdf.annotation, {
     draw_current_edit : function(edit) {
         var bounds = new M.assignfeedback_editpdf.rect(),
             drawable = new M.assignfeedback_editpdf.drawable(this.editor),
-            drawingregion = Y.one(SELECTOR.DRAWINGREGION),
+            drawingregion = this.editor.get_dialogue_element(SELECTOR.DRAWINGREGION),
             node,
             position;
 

@@ -55,7 +55,22 @@ class format_weeks extends format_base {
         if ((string)$section->name !== '') {
             // Return the name the user set.
             return format_string($section->name, true, array('context' => context_course::instance($this->courseid)));
-        } else if ($section->section == 0) {
+        } else {
+            return $this->get_default_section_name($section);
+        }
+    }
+
+    /**
+     * Returns the default section name for the weekly course format.
+     *
+     * If the section number is 0, it will use the string with key = section0name from the course format's lang file.
+     * Otherwise, the default format of "[start date] - [end date]" will be returned.
+     *
+     * @param stdClass $section Section object from database or just field course_sections section
+     * @return string The default value for the section name.
+     */
+    public function get_default_section_name($section) {
+        if ($section->section == 0) {
             // Return the general section.
             return get_string('section0name', 'format_weeks');
         } else {
@@ -416,5 +431,46 @@ class format_weeks extends format_base {
      */
     public function can_delete_section($section) {
         return true;
+    }
+
+    /**
+     * Prepares the templateable object to display section name
+     *
+     * @param \section_info|\stdClass $section
+     * @param bool $linkifneeded
+     * @param bool $editable
+     * @param null|lang_string|string $edithint
+     * @param null|lang_string|string $editlabel
+     * @return \core\output\inplace_editable
+     */
+    public function inplace_editable_render_section_name($section, $linkifneeded = true,
+                                                         $editable = null, $edithint = null, $editlabel = null) {
+        if (empty($edithint)) {
+            $edithint = new lang_string('editsectionname', 'format_weeks');
+        }
+        if (empty($editlabel)) {
+            $title = get_section_name($section->course, $section);
+            $editlabel = new lang_string('newsectionname', 'format_weeks', $title);
+        }
+        return parent::inplace_editable_render_section_name($section, $linkifneeded, $editable, $edithint, $editlabel);
+    }
+}
+
+/**
+ * Implements callback inplace_editable() allowing to edit values in-place
+ *
+ * @param string $itemtype
+ * @param int $itemid
+ * @param mixed $newvalue
+ * @return \core\output\inplace_editable
+ */
+function format_weeks_inplace_editable($itemtype, $itemid, $newvalue) {
+    global $DB, $CFG;
+    require_once($CFG->dirroot . '/course/lib.php');
+    if ($itemtype === 'sectionname' || $itemtype === 'sectionnamenl') {
+        $section = $DB->get_record_sql(
+            'SELECT s.* FROM {course_sections} s JOIN {course} c ON s.course = c.id WHERE s.id = ? AND c.format = ?',
+            array($itemid, 'weeks'), MUST_EXIST);
+        return course_get_format($section->course)->inplace_editable_update_section_name($section, $itemtype, $newvalue);
     }
 }

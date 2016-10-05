@@ -166,9 +166,8 @@ function uninstall_plugin($type, $name) {
 
     echo $OUTPUT->heading($pluginname);
 
-    // Delete all tag instances associated with this plugin.
-    require_once($CFG->dirroot . '/tag/lib.php');
-    tag_delete_instances($component);
+    // Delete all tag areas, collections and instances associated with this plugin.
+    core_tag_area::uninstall($component);
 
     // Custom plugin uninstall.
     $plugindirectory = core_component::get_plugin_directory($type, $name);
@@ -200,14 +199,14 @@ function uninstall_plugin($type, $name) {
     $DB->delete_records('event', array('modulename' => $pluginname));
 
     // Delete scheduled tasks.
-    $DB->delete_records('task_scheduled', array('component' => $pluginname));
+    $DB->delete_records('task_scheduled', array('component' => $component));
 
     // Delete Inbound Message datakeys.
     $DB->delete_records_select('messageinbound_datakeys',
-            'handler IN (SELECT id FROM {messageinbound_handlers} WHERE component = ?)', array($pluginname));
+            'handler IN (SELECT id FROM {messageinbound_handlers} WHERE component = ?)', array($component));
 
     // Delete Inbound Message handlers.
-    $DB->delete_records('messageinbound_handlers', array('component' => $pluginname));
+    $DB->delete_records('messageinbound_handlers', array('component' => $component));
 
     // delete all the logs
     $DB->delete_records('log', array('module' => $pluginname));
@@ -1459,7 +1458,11 @@ class admin_settingpage implements part_of_admin_tree {
             return false;
         }
 
-        $this->settings->{$setting->name} = $setting;
+        $name = $setting->name;
+        if ($setting->plugin) {
+            $name = $setting->plugin . $name;
+        }
+        $this->settings->{$name} = $setting;
         return true;
     }
 
@@ -2540,9 +2543,10 @@ class admin_setting_configexecutable extends admin_setting_configfile {
     public function output_html($data, $query='') {
         global $CFG;
         $default = $this->get_defaultsetting();
+        require_once("$CFG->libdir/filelib.php");
 
         if ($data) {
-            if (file_exists($data) and !is_dir($data) and is_executable($data)) {
+            if (file_exists($data) and !is_dir($data) and file_is_executable($data)) {
                 $executable = '<span class="pathok">&#x2714;</span>';
             } else {
                 $executable = '<span class="patherror">&#x2718;</span>';
@@ -4731,6 +4735,50 @@ class admin_setting_pickroles extends admin_setting_configmulticheckbox {
 
 
 /**
+ * Admin setting that is a list of installed filter plugins.
+ *
+ * @copyright 2015 The Open University
+ * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
+class admin_setting_pickfilters extends admin_setting_configmulticheckbox {
+
+    /**
+     * Constructor
+     *
+     * @param string $name unique ascii name, either 'mysetting' for settings
+     *      that in config, or 'myplugin/mysetting' for ones in config_plugins.
+     * @param string $visiblename localised name
+     * @param string $description localised long description
+     * @param array $default the default. E.g. array('urltolink' => 1, 'emoticons' => 1)
+     */
+    public function __construct($name, $visiblename, $description, $default) {
+        if (empty($default)) {
+            $default = array();
+        }
+        $this->load_choices();
+        foreach ($default as $plugin) {
+            if (!isset($this->choices[$plugin])) {
+                unset($default[$plugin]);
+            }
+        }
+        parent::__construct($name, $visiblename, $description, $default, null);
+    }
+
+    public function load_choices() {
+        if (is_array($this->choices)) {
+            return true;
+        }
+        $this->choices = array();
+
+        foreach (core_component::get_plugin_list('filter') as $plugin => $unused) {
+            $this->choices[$plugin] = filter_get_name($plugin);
+        }
+        return true;
+    }
+}
+
+
+/**
  * Text field with an advanced checkbox, that controls a additional $name.'_adv' setting.
  *
  * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
@@ -4892,9 +4940,19 @@ class admin_setting_special_gradelimiting extends admin_setting_configcheckbox {
     /**
      * Calls parent::__construct with specific arguments
      */
-    function admin_setting_special_gradelimiting() {
+    public function __construct() {
         parent::__construct('unlimitedgrades', get_string('unlimitedgrades', 'grades'),
             get_string('unlimitedgrades_help', 'grades'), '0', '1', '0');
+    }
+
+    /**
+     * Old syntax of class constructor. Deprecated in PHP7.
+     *
+     * @deprecated since Moodle 3.1
+     */
+    public function admin_setting_special_gradelimiting() {
+        debugging('Use of class name as constructor is deprecated', DEBUG_DEVELOPER);
+        self::__construct();
     }
 
     /**
@@ -6437,6 +6495,186 @@ class admin_setting_manageeditors extends admin_setting {
     }
 }
 
+/**
+ * Special class for antiviruses administration.
+ *
+ * @copyright  2015 Ruslan Kabalin, Lancaster University.
+ * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
+class admin_setting_manageantiviruses extends admin_setting {
+    /**
+     * Calls parent::__construct with specific arguments
+     */
+    public function __construct() {
+        $this->nosave = true;
+        parent::__construct('antivirusesui', get_string('antivirussettings', 'antivirus'), '', '');
+    }
+
+    /**
+     * Always returns true, does nothing
+     *
+     * @return true
+     */
+    public function get_setting() {
+        return true;
+    }
+
+    /**
+     * Always returns true, does nothing
+     *
+     * @return true
+     */
+    public function get_defaultsetting() {
+        return true;
+    }
+
+    /**
+     * Always returns '', does not write anything
+     *
+     * @param string $data Unused
+     * @return string Always returns ''
+     */
+    public function write_setting($data) {
+        // Do not write any setting.
+        return '';
+    }
+
+    /**
+     * Checks if $query is one of the available editors
+     *
+     * @param string $query The string to search for
+     * @return bool Returns true if found, false if not
+     */
+    public function is_related($query) {
+        if (parent::is_related($query)) {
+            return true;
+        }
+
+        $antivirusesavailable = \core\antivirus\manager::get_available();
+        foreach ($antivirusesavailable as $antivirus => $antivirusstr) {
+            if (strpos($antivirus, $query) !== false) {
+                return true;
+            }
+            if (strpos(core_text::strtolower($antivirusstr), $query) !== false) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Builds the XHTML to display the control
+     *
+     * @param string $data Unused
+     * @param string $query
+     * @return string
+     */
+    public function output_html($data, $query='') {
+        global $CFG, $OUTPUT;
+
+        // Display strings.
+        $txt = get_strings(array('administration', 'settings', 'edit', 'name', 'enable', 'disable',
+            'up', 'down', 'none'));
+        $struninstall = get_string('uninstallplugin', 'core_admin');
+
+        $txt->updown = "$txt->up/$txt->down";
+
+        $antivirusesavailable = \core\antivirus\manager::get_available();
+        $activeantiviruses = explode(',', $CFG->antiviruses);
+
+        $activeantiviruses = array_reverse($activeantiviruses);
+        foreach ($activeantiviruses as $key => $antivirus) {
+            if (empty($antivirusesavailable[$antivirus])) {
+                unset($activeantiviruses[$key]);
+            } else {
+                $name = $antivirusesavailable[$antivirus];
+                unset($antivirusesavailable[$antivirus]);
+                $antivirusesavailable[$antivirus] = $name;
+            }
+        }
+        $antivirusesavailable = array_reverse($antivirusesavailable, true);
+        $return = $OUTPUT->heading(get_string('actantivirushdr', 'antivirus'), 3, 'main', true);
+        $return .= $OUTPUT->box_start('generalbox antivirusesui');
+
+        $table = new html_table();
+        $table->head  = array($txt->name, $txt->enable, $txt->updown, $txt->settings, $struninstall);
+        $table->colclasses = array('leftalign', 'centeralign', 'centeralign', 'centeralign', 'centeralign');
+        $table->id = 'antivirusmanagement';
+        $table->attributes['class'] = 'admintable generaltable';
+        $table->data  = array();
+
+        // Iterate through auth plugins and add to the display table.
+        $updowncount = 1;
+        $antiviruscount = count($activeantiviruses);
+        $baseurl = new moodle_url('/admin/antiviruses.php', array('sesskey' => sesskey()));
+        foreach ($antivirusesavailable as $antivirus => $name) {
+            // Hide/show link.
+            $class = '';
+            if (in_array($antivirus, $activeantiviruses)) {
+                $hideshowurl = $baseurl;
+                $hideshowurl->params(array('action' => 'disable', 'antivirus' => $antivirus));
+                $hideshowimg = html_writer::img($OUTPUT->pix_url('t/hide'), 'disable', array('class' => 'iconsmall'));
+                $hideshow = html_writer::link($hideshowurl, $hideshowimg);
+                $enabled = true;
+                $displayname = $name;
+            } else {
+                $hideshowurl = $baseurl;
+                $hideshowurl->params(array('action' => 'enable', 'antivirus' => $antivirus));
+                $hideshowimg = html_writer::img($OUTPUT->pix_url('t/show'), 'enable', array('class' => 'iconsmall'));
+                $hideshow = html_writer::link($hideshowurl, $hideshowimg);
+                $enabled = false;
+                $displayname = $name;
+                $class = 'dimmed_text';
+            }
+
+            // Up/down link.
+            $updown = '';
+            if ($enabled) {
+                if ($updowncount > 1) {
+                    $updownurl = $baseurl;
+                    $updownurl->params(array('action' => 'up', 'antivirus' => $antivirus));
+                    $updownimg = html_writer::img($OUTPUT->pix_url('t/up'), 'up', array('class' => 'iconsmall'));
+                    $updown = html_writer::link($updownurl, $updownimg);
+                } else {
+                    $updown .= html_writer::img($OUTPUT->pix_url('spacer'), '', array('class' => 'iconsmall'));
+                }
+                if ($updowncount < $antiviruscount) {
+                    $updownurl = $baseurl;
+                    $updownurl->params(array('action' => 'down', 'antivirus' => $antivirus));
+                    $updownimg = html_writer::img($OUTPUT->pix_url('t/down'), 'down', array('class' => 'iconsmall'));
+                    $updown = html_writer::link($updownurl, $updownimg);
+                } else {
+                    $updown .= html_writer::img($OUTPUT->pix_url('spacer'), '', array('class' => 'iconsmall'));
+                }
+                ++ $updowncount;
+            }
+
+            // Settings link.
+            if (file_exists($CFG->dirroot.'/lib/antivirus/'.$antivirus.'/settings.php')) {
+                $eurl = new moodle_url('/admin/settings.php', array('section' => 'antivirussettings'.$antivirus));
+                $settings = html_writer::link($eurl, $txt->settings);
+            } else {
+                $settings = '';
+            }
+
+            $uninstall = '';
+            if ($uninstallurl = core_plugin_manager::instance()->get_uninstall_url('antivirus_'.$antivirus, 'manage')) {
+                $uninstall = html_writer::link($uninstallurl, $struninstall);
+            }
+
+            // Add a row to the table.
+            $row = new html_table_row(array($displayname, $hideshow, $updown, $settings, $uninstall));
+            if ($class) {
+                $row->attributes['class'] = $class;
+            }
+            $table->data[] = $row;
+        }
+        $return .= html_writer::table($table);
+        $return .= get_string('configantivirusplugins', 'antivirus') . html_writer::empty_tag('br') . get_string('tablenosave', 'admin');
+        $return .= $OUTPUT->box_end();
+        return highlight($query, $return);
+    }
+}
 
 /**
  * Special class for license administration.
@@ -6675,6 +6913,165 @@ class admin_setting_manageformats extends admin_setting {
         $link = html_writer::link(new moodle_url('/admin/settings.php', array('section' => 'coursesettings')), new lang_string('coursesettings'));
         $return .= html_writer::tag('p', get_string('manageformatsgotosettings', 'admin', $link));
         $return .= $OUTPUT->box_end();
+        return highlight($query, $return);
+    }
+}
+
+/**
+ * Data formats manager. Allow reorder and to enable/disable data formats and jump to settings
+ *
+ * @copyright  2016 Brendan Heywood (brendan@catalyst-au.net)
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
+class admin_setting_managedataformats extends admin_setting {
+
+    /**
+     * Calls parent::__construct with specific arguments
+     */
+    public function __construct() {
+        $this->nosave = true;
+        parent::__construct('managedataformats', new lang_string('managedataformats'), '', '');
+    }
+
+    /**
+     * Always returns true
+     *
+     * @return true
+     */
+    public function get_setting() {
+        return true;
+    }
+
+    /**
+     * Always returns true
+     *
+     * @return true
+     */
+    public function get_defaultsetting() {
+        return true;
+    }
+
+    /**
+     * Always returns '' and doesn't write anything
+     *
+     * @param mixed $data string or array, must not be NULL
+     * @return string Always returns ''
+     */
+    public function write_setting($data) {
+        // Do not write any setting.
+        return '';
+    }
+
+    /**
+     * Search to find if Query is related to format plugin
+     *
+     * @param string $query The string to search for
+     * @return bool true for related false for not
+     */
+    public function is_related($query) {
+        if (parent::is_related($query)) {
+            return true;
+        }
+        $formats = core_plugin_manager::instance()->get_plugins_of_type('dataformat');
+        foreach ($formats as $format) {
+            if (strpos($format->component, $query) !== false ||
+                    strpos(core_text::strtolower($format->displayname), $query) !== false) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Return XHTML to display control
+     *
+     * @param mixed $data Unused
+     * @param string $query
+     * @return string highlight
+     */
+    public function output_html($data, $query='') {
+        global $CFG, $OUTPUT;
+        $return = '';
+
+        $formats = core_plugin_manager::instance()->get_plugins_of_type('dataformat');
+
+        $txt = get_strings(array('settings', 'name', 'enable', 'disable', 'up', 'down', 'default'));
+        $txt->uninstall = get_string('uninstallplugin', 'core_admin');
+        $txt->updown = "$txt->up/$txt->down";
+
+        $table = new html_table();
+        $table->head  = array($txt->name, $txt->enable, $txt->updown, $txt->uninstall, $txt->settings);
+        $table->align = array('left', 'center', 'center', 'center', 'center');
+        $table->attributes['class'] = 'manageformattable generaltable admintable';
+        $table->data  = array();
+
+        $cnt = 0;
+        $spacer = $OUTPUT->pix_icon('spacer', '', 'moodle', array('class' => 'iconsmall'));
+        $totalenabled = 0;
+        foreach ($formats as $format) {
+            if ($format->is_enabled() && $format->is_installed_and_upgraded()) {
+                $totalenabled++;
+            }
+        }
+        foreach ($formats as $format) {
+            $status = $format->get_status();
+            $url = new moodle_url('/admin/dataformats.php',
+                    array('sesskey' => sesskey(), 'name' => $format->name));
+
+            $class = '';
+            if ($format->is_enabled()) {
+                $strformatname = $format->displayname;
+                if ($totalenabled == 1&& $format->is_enabled()) {
+                    $hideshow = '';
+                } else {
+                    $hideshow = html_writer::link($url->out(false, array('action' => 'disable')),
+                        $OUTPUT->pix_icon('t/hide', $txt->disable, 'moodle', array('class' => 'iconsmall')));
+                }
+            } else {
+                $class = 'dimmed_text';
+                $strformatname = $format->displayname;
+                $hideshow = html_writer::link($url->out(false, array('action' => 'enable')),
+                    $OUTPUT->pix_icon('t/show', $txt->enable, 'moodle', array('class' => 'iconsmall')));
+            }
+
+            $updown = '';
+            if ($cnt) {
+                $updown .= html_writer::link($url->out(false, array('action' => 'up')),
+                    $OUTPUT->pix_icon('t/up', $txt->up, 'moodle', array('class' => 'iconsmall'))). '';
+            } else {
+                $updown .= $spacer;
+            }
+            if ($cnt < count($formats) - 1) {
+                $updown .= '&nbsp;'.html_writer::link($url->out(false, array('action' => 'down')),
+                    $OUTPUT->pix_icon('t/down', $txt->down, 'moodle', array('class' => 'iconsmall')));
+            } else {
+                $updown .= $spacer;
+            }
+
+            $uninstall = '';
+            if ($status === core_plugin_manager::PLUGIN_STATUS_MISSING) {
+                $uninstall = get_string('status_missing', 'core_plugin');
+            } else if ($status === core_plugin_manager::PLUGIN_STATUS_NEW) {
+                $uninstall = get_string('status_new', 'core_plugin');
+            } else if ($uninstallurl = core_plugin_manager::instance()->get_uninstall_url('dataformat_'.$format->name, 'manage')) {
+                if ($totalenabled != 1 || !$format->is_enabled()) {
+                    $uninstall = html_writer::link($uninstallurl, $txt->uninstall);
+                }
+            }
+
+            $settings = '';
+            if ($format->get_settings_url()) {
+                $settings = html_writer::link($format->get_settings_url(), $txt->settings);
+            }
+
+            $row = new html_table_row(array($strformatname, $hideshow, $updown, $uninstall, $settings));
+            if ($class) {
+                $row->attributes['class'] = $class;
+            }
+            $table->data[] = $row;
+            $cnt++;
+        }
+        $return .= html_writer::table($table);
         return highlight($query, $return);
     }
 }
@@ -7558,28 +7955,16 @@ class admin_setting_managerepository extends admin_setting {
  */
 class admin_setting_enablemobileservice extends admin_setting_configcheckbox {
 
-    /** @var boolean True means that the capability 'webservice/xmlrpc:use' is set for authenticated user role */
-    private $xmlrpcuse;
     /** @var boolean True means that the capability 'webservice/rest:use' is set for authenticated user role */
     private $restuse;
 
     /**
-     * Return true if Authenticated user role has the capability 'webservice/xmlrpc:use' and 'webservice/rest:use', otherwise false.
+     * Return true if Authenticated user role has the capability 'webservice/rest:use', otherwise false.
      *
      * @return boolean
      */
     private function is_protocol_cap_allowed() {
         global $DB, $CFG;
-
-        // We keep xmlrpc enabled for backward compatibility.
-        // If the $this->xmlrpcuse variable is not set, it needs to be set.
-        if (empty($this->xmlrpcuse) and $this->xmlrpcuse!==false) {
-            $params = array();
-            $params['permission'] = CAP_ALLOW;
-            $params['roleid'] = $CFG->defaultuserroleid;
-            $params['capability'] = 'webservice/xmlrpc:use';
-            $this->xmlrpcuse = $DB->record_exists('role_capabilities', $params);
-        }
 
         // If the $this->restuse variable is not set, it needs to be set.
         if (empty($this->restuse) and $this->restuse!==false) {
@@ -7590,11 +7975,11 @@ class admin_setting_enablemobileservice extends admin_setting_configcheckbox {
             $this->restuse = $DB->record_exists('role_capabilities', $params);
         }
 
-        return ($this->xmlrpcuse && $this->restuse);
+        return $this->restuse;
     }
 
     /**
-     * Set the 'webservice/xmlrpc:use'/'webservice/rest:use' to the Authenticated user role (allow or not)
+     * Set the 'webservice/rest:use' to the Authenticated user role (allow or not)
      * @param type $status true to allow, false to not set
      */
     private function set_protocol_cap($status) {
@@ -7610,7 +7995,6 @@ class admin_setting_enablemobileservice extends admin_setting_configcheckbox {
         }
         if (!empty($assign)) {
             $systemcontext = context_system::instance();
-            assign_capability('webservice/xmlrpc:use', $permission, $CFG->defaultuserroleid, $systemcontext->id, true);
             assign_capability('webservice/rest:use', $permission, $CFG->defaultuserroleid, $systemcontext->id, true);
         }
     }
@@ -7649,6 +8033,12 @@ class admin_setting_enablemobileservice extends admin_setting_configcheckbox {
     public function get_setting() {
         global $CFG;
 
+        // First check if is not set.
+        $result = $this->config_read($this->name);
+        if (is_null($result)) {
+            return null;
+        }
+
         // For install cli script, $CFG->defaultuserroleid is not set so return 0
         // Or if web services aren't enabled this can't be,
         if (empty($CFG->defaultuserroleid) || empty($CFG->enablewebservices)) {
@@ -7659,7 +8049,7 @@ class admin_setting_enablemobileservice extends admin_setting_configcheckbox {
         $webservicemanager = new webservice();
         $mobileservice = $webservicemanager->get_external_service_by_shortname(MOODLE_OFFICIAL_MOBILE_SERVICE);
         if ($mobileservice->enabled and $this->is_protocol_cap_allowed()) {
-            return $this->config_read($this->name); //same as returning 1
+            return $result;
         } else {
             return 0;
         }
@@ -7695,13 +8085,8 @@ class admin_setting_enablemobileservice extends admin_setting_configcheckbox {
              $mobileservice->enabled = 1;
              $webservicemanager->update_external_service($mobileservice);
 
-             //enable xml-rpc server
+             // Enable REST server.
              $activeprotocols = empty($CFG->webserviceprotocols) ? array() : explode(',', $CFG->webserviceprotocols);
-
-             if (!in_array('xmlrpc', $activeprotocols)) {
-                 $activeprotocols[] = 'xmlrpc';
-                 $updateprotocol = true;
-             }
 
              if (!in_array('rest', $activeprotocols)) {
                  $activeprotocols[] = 'rest';
@@ -7712,7 +8097,7 @@ class admin_setting_enablemobileservice extends admin_setting_configcheckbox {
                  set_config('webserviceprotocols', implode(',', $activeprotocols));
              }
 
-             //allow xml-rpc:use capability for authenticated user
+             // Allow rest:use capability for authenticated user.
              $this->set_protocol_cap(true);
 
          } else {
@@ -7723,13 +8108,8 @@ class admin_setting_enablemobileservice extends admin_setting_configcheckbox {
              if (empty($otherenabledservices)) {
                  set_config('enablewebservices', false);
 
-                 //also disable xml-rpc server
+                 // Also disable REST server.
                  $activeprotocols = empty($CFG->webserviceprotocols) ? array() : explode(',', $CFG->webserviceprotocols);
-                 $protocolkey = array_search('xmlrpc', $activeprotocols);
-                 if ($protocolkey !== false) {
-                    unset($activeprotocols[$protocolkey]);
-                    $updateprotocol = true;
-                 }
 
                  $protocolkey = array_search('rest', $activeprotocols);
                  if ($protocolkey !== false) {
@@ -7741,7 +8121,7 @@ class admin_setting_enablemobileservice extends admin_setting_configcheckbox {
                     set_config('webserviceprotocols', implode(',', $activeprotocols));
                  }
 
-                 //disallow xml-rpc:use capability for authenticated user
+                 // Disallow rest:use capability for authenticated user.
                  $this->set_protocol_cap(false);
              }
 
@@ -9228,4 +9608,173 @@ class admin_setting_forcetimezone extends admin_setting_configselect {
 
         return true;
     }
+}
+
+
+/**
+ * Search setup steps info.
+ *
+ * @package core
+ * @copyright 2016 David Monllao {@link http://www.davidmonllao.com}
+ * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
+class admin_setting_searchsetupinfo extends admin_setting {
+
+    /**
+     * Calls parent::__construct with specific arguments
+     */
+    public function __construct() {
+        $this->nosave = true;
+        parent::__construct('searchsetupinfo', '', '', '');
+    }
+
+    /**
+     * Always returns true, does nothing
+     *
+     * @return true
+     */
+    public function get_setting() {
+        return true;
+    }
+
+    /**
+     * Always returns true, does nothing
+     *
+     * @return true
+     */
+    public function get_defaultsetting() {
+        return true;
+    }
+
+    /**
+     * Always returns '', does not write anything
+     *
+     * @param array $data
+     * @return string Always returns ''
+     */
+    public function write_setting($data) {
+        // Do not write any setting.
+        return '';
+    }
+
+    /**
+     * Builds the HTML to display the control
+     *
+     * @param string $data Unused
+     * @param string $query
+     * @return string
+     */
+    public function output_html($data, $query='') {
+        global $CFG, $OUTPUT;
+
+        $return = '';
+        $brtag = html_writer::empty_tag('br');
+
+        // Available search areas.
+        $searchareas = \core_search\manager::get_search_areas_list();
+        $anyenabled = false;
+        $anyindexed = false;
+        foreach ($searchareas as $areaid => $searcharea) {
+            list($componentname, $varname) = $searcharea->get_config_var_name();
+            if (!$anyenabled) {
+                $anyenabled = get_config($componentname, $varname . '_enabled');
+            }
+            if (!$anyindexed) {
+                $anyindexed = get_config($componentname, $varname . '_indexingstart');
+            }
+            if ($anyenabled && $anyindexed) {
+                break;
+            }
+        }
+
+        $return .= $OUTPUT->heading(get_string('searchsetupinfo', 'admin'), 3, 'main');
+
+        $table = new html_table();
+        $table->head = array(get_string('step', 'search'), get_string('status'));
+        $table->colclasses = array('leftalign step', 'leftalign status');
+        $table->id = 'searchsetup';
+        $table->attributes['class'] = 'admintable generaltable';
+        $table->data = array();
+
+        $return .= $brtag . get_string('searchsetupdescription', 'search') . $brtag . $brtag;
+
+        // Select a search engine.
+        $row = array();
+        $url = new moodle_url('/admin/settings.php?section=manageglobalsearch#admin-searchengine');
+        $row[0] = '1. ' . html_writer::tag('a', get_string('selectsearchengine', 'admin'),
+                        array('href' => $url));
+
+        $status = html_writer::tag('span', get_string('no'), array('class' => 'statuscritical'));
+        if (!empty($CFG->searchengine)) {
+            $status = html_writer::tag('span', get_string('pluginname', 'search_' . $CFG->searchengine),
+                array('class' => 'statusok'));
+
+        }
+        $row[1] = $status;
+        $table->data[] = $row;
+
+        // Available areas.
+        $row = array();
+        $url = new moodle_url('/admin/settings.php?section=manageglobalsearch#admin-searchengine');
+        $row[0] = '2. ' . html_writer::tag('a', get_string('enablesearchareas', 'admin'),
+                        array('href' => $url));
+
+        $status = html_writer::tag('span', get_string('no'), array('class' => 'statuscritical'));
+        if ($anyenabled) {
+            $status = html_writer::tag('span', get_string('yes'), array('class' => 'statusok'));
+
+        }
+        $row[1] = $status;
+        $table->data[] = $row;
+
+        // Setup search engine.
+        $row = array();
+        if (empty($CFG->searchengine)) {
+            $row[0] = '3. ' . get_string('setupsearchengine', 'admin');
+            $row[1] = html_writer::tag('span', get_string('no'), array('class' => 'statuscritical'));
+        } else {
+            $url = new moodle_url('/admin/settings.php?section=search' . $CFG->searchengine);
+            $row[0] = '3. ' . html_writer::tag('a', get_string('setupsearchengine', 'admin'),
+                            array('href' => $url));
+            // Check the engine status.
+            $searchengine = \core_search\manager::search_engine_instance();
+            $serverstatus = $searchengine->is_server_ready();
+            if ($serverstatus === true) {
+                $status = html_writer::tag('span', get_string('yes'), array('class' => 'statusok'));
+            } else {
+                $status = html_writer::tag('span', $serverstatus, array('class' => 'statuscritical'));
+            }
+            $row[1] = $status;
+        }
+        $table->data[] = $row;
+
+        // Indexed data.
+        $row = array();
+        $url = new moodle_url('/report/search/index.php#searchindexform');
+        $row[0] = '4. ' . html_writer::tag('a', get_string('indexdata', 'admin'), array('href' => $url));
+        if ($anyindexed) {
+            $status = html_writer::tag('span', get_string('yes'), array('class' => 'statusok'));
+        } else {
+            $status = html_writer::tag('span', get_string('no'), array('class' => 'statuscritical'));
+        }
+        $row[1] = $status;
+        $table->data[] = $row;
+
+        // Enable global search.
+        $row = array();
+        $url = new moodle_url("/admin/search.php?query=enableglobalsearch");
+        $row[0] = '5. ' . html_writer::tag('a', get_string('enableglobalsearch', 'admin'),
+                        array('href' => $url));
+        $status = html_writer::tag('span', get_string('no'), array('class' => 'statuscritical'));
+        if (\core_search\manager::is_global_search_enabled()) {
+            $status = html_writer::tag('span', get_string('yes'), array('class' => 'statusok'));
+        }
+        $row[1] = $status;
+        $table->data[] = $row;
+
+        $return .= html_writer::table($table);
+
+        return highlight($query, $return);
+    }
+
 }

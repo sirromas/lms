@@ -445,6 +445,8 @@ function file_prepare_draft_area(&$draftitemid, $contextid, $component, $fileare
 
 /**
  * Convert encoded URLs in $text from the @@PLUGINFILE@@/... form to an actual URL.
+ * Passing a new option reverse = true in the $options var will make the function to convert actual URLs in $text to encoded URLs
+ * in the @@PLUGINFILE@@ form.
  *
  * @category files
  * @global stdClass $CFG
@@ -454,7 +456,7 @@ function file_prepare_draft_area(&$draftitemid, $contextid, $component, $fileare
  * @param string $component
  * @param string $filearea helps identify the file area.
  * @param int $itemid helps identify the file area.
- * @param array $options text and file options ('forcehttps'=>false)
+ * @param array $options text and file options ('forcehttps'=>false), use reverse = true to reverse the behaviour of the function.
  * @return string the processed text.
  */
 function file_rewrite_pluginfile_urls($text, $file, $contextid, $component, $filearea, $itemid, array $options=null) {
@@ -479,7 +481,11 @@ function file_rewrite_pluginfile_urls($text, $file, $contextid, $component, $fil
         $baseurl = str_replace('http://', 'https://', $baseurl);
     }
 
-    return str_replace('@@PLUGINFILE@@/', $baseurl, $text);
+    if (!empty($options['reverse'])) {
+        return str_replace($baseurl, '@@PLUGINFILE@@/', $text);
+    } else {
+        return str_replace('@@PLUGINFILE@@/', $baseurl, $text);
+    }
 }
 
 /**
@@ -2154,7 +2160,6 @@ function send_file($path, $filename, $lifetime = null , $filter=0, $pathisstring
             $options->nocache = true; // temporary workaround for MDL-5136
             $text = $pathisstring ? $path : implode('', file($path));
 
-            $text = file_modify_html_header($text);
             $output = format_text($text, FORMAT_HTML, $options, $COURSE->id);
 
             readstring_accel($output, $mimetype, false);
@@ -2338,7 +2343,6 @@ function send_stored_file($stored_file, $lifetime=null, $filter=0, $forcedownloa
             $options->noclean = true;
             $options->nocache = true; // temporary workaround for MDL-5136
             $text = $stored_file->get_content();
-            $text = file_modify_html_header($text);
             $output = format_text($text, FORMAT_HTML, $options, $COURSE->id);
 
             readstring_accel($output, $mimetype, false);
@@ -2603,54 +2607,171 @@ function byteserving_send_file($handle, $mimetype, $ranges, $filesize) {
 }
 
 /**
- * add includes (js and css) into uploaded files
- * before returning them, useful for themes and utf.js includes
+ * Tells whether the filename is executable.
  *
- * @global stdClass $CFG
- * @param string $text text to search and replace
- * @return string text with added head includes
- * @todo MDL-21120
+ * @link http://php.net/manual/en/function.is-executable.php
+ * @link https://bugs.php.net/bug.php?id=41062
+ * @param string $filename Path to the file.
+ * @return bool True if the filename exists and is executable; otherwise, false.
  */
-function file_modify_html_header($text) {
-    // first look for <head> tag
-    global $CFG;
+function file_is_executable($filename) {
+    if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
+        if (is_executable($filename)) {
+            return true;
+        } else {
+            $fileext = strrchr($filename, '.');
+            // If we have an extension we can check if it is listed as executable.
+            if ($fileext && file_exists($filename) && !is_dir($filename)) {
+                $winpathext = strtolower(getenv('PATHEXT'));
+                $winpathexts = explode(';', $winpathext);
 
-    $stylesheetshtml = '';
-/*
-    foreach ($CFG->stylesheets as $stylesheet) {
-        //TODO: MDL-21120
-        $stylesheetshtml .= '<link rel="stylesheet" type="text/css" href="'.$stylesheet.'" />'."\n";
+                return in_array(strtolower($fileext), $winpathexts);
+            }
+
+            return false;
+        }
+    } else {
+        return is_executable($filename);
     }
-*/
-    // TODO The code below is actually a waste of CPU. When MDL-29738 will be implemented it should be re-evaluated too.
+}
 
-    preg_match('/\<head\>|\<HEAD\>/', $text, $matches);
-    if ($matches) {
-        $replacement = '<head>'.$stylesheetshtml;
-        $text = preg_replace('/\<head\>|\<HEAD\>/', $replacement, $text, 1);
-        return $text;
-    }
-
-    // if not, look for <html> tag, and stick <head> right after
-    preg_match('/\<html\>|\<HTML\>/', $text, $matches);
-    if ($matches) {
-        // replace <html> tag with <html><head>includes</head>
-        $replacement = '<html>'."\n".'<head>'.$stylesheetshtml.'</head>';
-        $text = preg_replace('/\<html\>|\<HTML\>/', $replacement, $text, 1);
-        return $text;
-    }
-
-    // if not, look for <body> tag, and stick <head> before body
-    preg_match('/\<body\>|\<BODY\>/', $text, $matches);
-    if ($matches) {
-        $replacement = '<head>'.$stylesheetshtml.'</head>'."\n".'<body>';
-        $text = preg_replace('/\<body\>|\<BODY\>/', $replacement, $text, 1);
-        return $text;
+/**
+ * Overwrite an existing file in a draft area.
+ *
+ * @param  stored_file $newfile      the new file with the new content and meta-data
+ * @param  stored_file $existingfile the file that will be overwritten
+ * @throws moodle_exception
+ * @since Moodle 3.1.1
+ */
+function file_overwrite_existing_draftfile(stored_file $newfile, stored_file $existingfile) {
+    if ($existingfile->get_component() != 'user' or $existingfile->get_filearea() != 'draft') {
+        throw new coding_exception('The file to overwrite is not in a draft area.');
     }
 
-    // if not, just stick a <head> tag at the beginning
-    $text = '<head>'.$stylesheetshtml.'</head>'."\n".$text;
-    return $text;
+    $fs = get_file_storage();
+    // Remember original file source field.
+    $source = @unserialize($existingfile->get_source());
+    // Remember the original sortorder.
+    $sortorder = $existingfile->get_sortorder();
+    if ($newfile->is_external_file()) {
+        // New file is a reference. Check that existing file does not have any other files referencing to it
+        if (isset($source->original) && $fs->search_references_count($source->original)) {
+            throw new moodle_exception('errordoublereference', 'repository');
+        }
+    }
+
+    // Delete existing file to release filename.
+    $newfilerecord = array(
+        'contextid' => $existingfile->get_contextid(),
+        'component' => 'user',
+        'filearea' => 'draft',
+        'itemid' => $existingfile->get_itemid(),
+        'timemodified' => time()
+    );
+    $existingfile->delete();
+
+    // Create new file.
+    $newfile = $fs->create_file_from_storedfile($newfilerecord, $newfile);
+    // Preserve original file location (stored in source field) for handling references.
+    if (isset($source->original)) {
+        if (!($newfilesource = @unserialize($newfile->get_source()))) {
+            $newfilesource = new stdClass();
+        }
+        $newfilesource->original = $source->original;
+        $newfile->set_source(serialize($newfilesource));
+    }
+    $newfile->set_sortorder($sortorder);
+}
+
+/**
+ * Add files from a draft area into a final area.
+ *
+ * Most of the time you do not want to use this. It is intended to be used
+ * by asynchronous services which cannot direcly manipulate a final
+ * area through a draft area. Instead they add files to a new draft
+ * area and merge that new draft into the final area when ready.
+ *
+ * @param int $draftitemid the id of the draft area to use.
+ * @param int $contextid this parameter and the next two identify the file area to save to.
+ * @param string $component component name
+ * @param string $filearea indentifies the file area
+ * @param int $itemid identifies the item id or false for all items in the file area
+ * @param array $options area options (subdirs=false, maxfiles=-1, maxbytes=0, areamaxbytes=FILE_AREA_MAX_BYTES_UNLIMITED)
+ * @see file_save_draft_area_files
+ * @since Moodle 3.1.1
+ */
+function file_merge_files_from_draft_area_into_filearea($draftitemid, $contextid, $component, $filearea, $itemid,
+                                                        array $options = null) {
+    // We use 0 here so file_prepare_draft_area creates a new one, finaldraftid will be updated with the new draft id.
+    $finaldraftid = 0;
+    file_prepare_draft_area($finaldraftid, $contextid, $component, $filearea, $itemid, $options);
+    file_merge_draft_area_into_draft_area($draftitemid, $finaldraftid);
+    file_save_draft_area_files($finaldraftid, $contextid, $component, $filearea, $itemid, $options);
+}
+
+/**
+ * Merge files from two draftarea areas.
+ *
+ * This does not handle conflict resolution, files in the destination area which appear
+ * to be more recent will be kept disregarding the intended ones.
+ *
+ * @param int $getfromdraftid the id of the draft area where are the files to merge.
+ * @param int $mergeintodraftid the id of the draft area where new files will be merged.
+ * @throws coding_exception
+ * @since Moodle 3.1.1
+ */
+function file_merge_draft_area_into_draft_area($getfromdraftid, $mergeintodraftid) {
+    global $USER;
+
+    $fs = get_file_storage();
+    $contextid = context_user::instance($USER->id)->id;
+
+    if (!$filestomerge = $fs->get_area_files($contextid, 'user', 'draft', $getfromdraftid)) {
+        throw new coding_exception('Nothing to merge or area does not belong to current user');
+    }
+
+    $currentfiles = $fs->get_area_files($contextid, 'user', 'draft', $mergeintodraftid);
+
+    // Get hashes of the files to merge.
+    $newhashes = array();
+    foreach ($filestomerge as $filetomerge) {
+        $filepath = $filetomerge->get_filepath();
+        $filename = $filetomerge->get_filename();
+
+        $newhash = $fs->get_pathname_hash($contextid, 'user', 'draft', $mergeintodraftid, $filepath, $filename);
+        $newhashes[$newhash] = $filetomerge;
+    }
+
+    // Calculate wich files must be added.
+    foreach ($currentfiles as $file) {
+        $filehash = $file->get_pathnamehash();
+        // One file to be merged already exists.
+        if (isset($newhashes[$filehash])) {
+            $updatedfile = $newhashes[$filehash];
+
+            // Avoid race conditions.
+            if ($file->get_timemodified() > $updatedfile->get_timemodified()) {
+                // The existing file is more recent, do not copy the suposedly "new" one.
+                unset($newhashes[$filehash]);
+                continue;
+            }
+            // Update existing file (not only content, meta-data too).
+            file_overwrite_existing_draftfile($updatedfile, $file);
+            unset($newhashes[$filehash]);
+        }
+    }
+
+    foreach ($newhashes as $newfile) {
+        $newfilerecord = array(
+            'contextid' => $contextid,
+            'component' => 'user',
+            'filearea' => 'draft',
+            'itemid' => $mergeintodraftid,
+            'timemodified' => time()
+        );
+
+        $fs->create_file_from_storedfile($newfilerecord, $newfile);
+    }
 }
 
 /**
@@ -4182,6 +4303,14 @@ function file_pluginfile($relativepath, $forcedownload, $preview = null) {
                 require_login();
             }
 
+            // Check if user can view this category.
+            if (!has_capability('moodle/category:viewhiddencategories', $context)) {
+                $coursecatvisible = $DB->get_field('course_categories', 'visible', array('id' => $context->instanceid));
+                if (!$coursecatvisible) {
+                    send_file_not_found();
+                }
+            }
+
             $filename = array_pop($args);
             $filepath = $args ? '/'.implode('/', $args).'/' : '/';
             if (!$file = $fs->get_file($context->id, 'coursecat', 'description', 0, $filepath, $filename) or $file->is_directory()) {
@@ -4239,6 +4368,35 @@ function file_pluginfile($relativepath, $forcedownload, $preview = null) {
         } else {
             send_file_not_found();
         }
+
+    } else if ($component === 'cohort') {
+
+        $cohortid = (int)array_shift($args);
+        $cohort = $DB->get_record('cohort', array('id' => $cohortid), '*', MUST_EXIST);
+        $cohortcontext = context::instance_by_id($cohort->contextid);
+
+        // The context in the file URL must be either cohort context or context of the course underneath the cohort's context.
+        if ($context->id != $cohort->contextid &&
+            ($context->contextlevel != CONTEXT_COURSE || !in_array($cohort->contextid, $context->get_parent_context_ids()))) {
+            send_file_not_found();
+        }
+
+        // User is able to access cohort if they have view cap on cohort level or
+        // the cohort is visible and they have view cap on course level.
+        $canview = has_capability('moodle/cohort:view', $cohortcontext) ||
+                ($cohort->visible && has_capability('moodle/cohort:view', $context));
+
+        if ($filearea === 'description' && $canview) {
+            $filename = array_pop($args);
+            $filepath = $args ? '/'.implode('/', $args).'/' : '/';
+            if (($file = $fs->get_file($cohortcontext->id, 'cohort', 'description', $cohort->id, $filepath, $filename))
+                    && !$file->is_directory()) {
+                \core\session\manager::write_close(); // Unlock session during file serving.
+                send_stored_file($file, 60 * 60, 0, $forcedownload, array('preview' => $preview));
+            }
+        }
+
+        send_file_not_found();
 
     } else if ($component === 'group') {
         if ($context->contextlevel != CONTEXT_COURSE) {
@@ -4475,6 +4633,14 @@ function file_pluginfile($relativepath, $forcedownload, $preview = null) {
             if ($birecord->blockname !== $blockname) {
                 // somebody tries to gain illegal access, cm type must match the component!
                 send_file_not_found();
+            }
+
+            if ($context->get_course_context(false)) {
+                // If block is in course context, then check if user has capability to access course.
+                require_course_login($course);
+            } else if ($CFG->forcelogin) {
+                // If user is logged out, bp record will not be visible, even if the user would have access if logged in.
+                require_login();
             }
 
             $bprecord = $DB->get_record('block_positions', array('contextid' => $context->id, 'blockinstanceid' => $context->instanceid));

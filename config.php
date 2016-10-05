@@ -6,9 +6,9 @@ $CFG = new stdClass();
 
 $CFG->dbtype    = 'mysqli';
 $CFG->dblibrary = 'native';
-$CFG->dbhost    = 'localhost';
-$CFG->dbname    = 'mycodebu_lms';
-$CFG->dbuser    = 'mycodebu_lms';
+$CFG->dbhost    = 'db598436755.db.1and1.com';
+$CFG->dbname    = 'db598436755';
+$CFG->dbuser    = 'dbo598436755';
 $CFG->dbpass    = 'aK6SKymc';
 $CFG->prefix    = 'mdl_';
 $CFG->dboptions = array (
@@ -17,8 +17,8 @@ $CFG->dboptions = array (
   'dbsocket' => '',
 );
 
-$CFG->wwwroot   = 'http://mycodebusters.com/lms/moodle';
-$CFG->dataroot  = '/home4/mycodebu/moodledata';
+$CFG->wwwroot   = 'http://globalizationplus.com/lms';
+$CFG->dataroot  = '/homepages/17/d212585247/htdocs/moodledata';
 $CFG->admin     = 'admin';
 
 $CFG->directorypermissions = 0777;

@@ -34,9 +34,19 @@ class auth_plugin_email extends auth_plugin_base {
     /**
      * Constructor.
      */
-    function auth_plugin_email() {
+    public function __construct() {
         $this->authtype = 'email';
         $this->config = get_config('auth/email');
+    }
+
+    /**
+     * Old syntax of class constructor. Deprecated in PHP7.
+     *
+     * @deprecated since Moodle 3.1
+     */
+    public function auth_plugin_email() {
+        debugging('Use of class name as constructor is deprecated', DEBUG_DEVELOPER);
+        self::__construct();
     }
 
     /**
@@ -235,12 +245,11 @@ class auth_plugin_email extends auth_plugin_base {
     }
 
     /**
-     * Returns whether or not the captcha element is enabled, and the admin settings fulfil its requirements.
+     * Returns whether or not the captcha element is enabled.
      * @return bool
      */
     function is_captcha_enabled() {
-        global $CFG;
-        return isset($CFG->recaptchapublickey) && isset($CFG->recaptchaprivatekey) && get_config("auth/{$this->authtype}", 'recaptcha');
+        return get_config("auth/{$this->authtype}", 'recaptcha');
     }
 
 }

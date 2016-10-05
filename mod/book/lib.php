@@ -429,8 +429,21 @@ function book_pluginfile($course, $cm, $context, $filearea, $args, $forcedownloa
     if ($args[0] == 'index.html') {
         $filename = "index.html";
 
+        // We need to rewrite the pluginfile URLs so the media filters can work.
+        $content = file_rewrite_pluginfile_urls($chapter->content, 'webservice/pluginfile.php', $context->id, 'mod_book', 'chapter',
+                                                $chapter->id);
+        $formatoptions = new stdClass;
+        $formatoptions->noclean = true;
+        $formatoptions->overflowdiv = true;
+        $formatoptions->context = $context;
+
+        $content = format_text($content, $chapter->contentformat, $formatoptions);
+
         // Remove @@PLUGINFILE@@/.
-        $content = str_replace('@@PLUGINFILE@@/', '', $chapter->content);
+        $options = array('reverse' => true);
+        $content = file_rewrite_pluginfile_urls($content, 'webservice/pluginfile.php', $context->id, 'mod_book', 'chapter',
+                                                $chapter->id, $options);
+        $content = str_replace('@@PLUGINFILE@@/', '', $content);
 
         $titles = "";
         // Format the chapter titles.
@@ -451,12 +464,7 @@ function book_pluginfile($course, $cm, $context, $filearea, $args, $forcedownloa
             }
         }
 
-        $formatoptions = new stdClass;
-        $formatoptions->noclean = true;
-        $formatoptions->overflowdiv = true;
-        $formatoptions->context = $context;
-
-        $content = $titles . format_text($content, $chapter->contentformat, $formatoptions);
+        $content = $titles . $content;
 
         send_file($content, $filename, 0, 0, true, true);
     } else {
@@ -563,7 +571,7 @@ function book_export_contents($cm, $baseurl) {
             $file = array();
             $file['type']         = 'file';
             $file['filename']     = $fileinfo->get_filename();
-            $file['filepath']     = "/{$chapter->id}/";
+            $file['filepath']     = "/{$chapter->id}" . $fileinfo->get_filepath();
             $file['filesize']     = $fileinfo->get_filesize();
             $file['fileurl']      = moodle_url::make_webservice_pluginfile_url(
                                         $context->id, 'mod_book', 'chapter', $chapter->id,
@@ -597,4 +605,32 @@ function book_export_contents($cm, $baseurl) {
     array_unshift($contents, $structurefile);
 
     return $contents;
+}
+
+/**
+ * Mark the activity completed (if required) and trigger the course_module_viewed event.
+ *
+ * @param  stdClass $book       book object
+ * @param  stdClass $chapter    chapter object
+ * @param  bool $islaschapter   is the las chapter of the book?
+ * @param  stdClass $course     course object
+ * @param  stdClass $cm         course module object
+ * @param  stdClass $context    context object
+ * @since Moodle 3.0
+ */
+function book_view($book, $chapter, $islastchapter, $course, $cm, $context) {
+
+    // First case, we are just opening the book.
+    if (empty($chapter)) {
+        \mod_book\event\course_module_viewed::create_from_book($book, $context)->trigger();
+
+    } else {
+        \mod_book\event\chapter_viewed::create_from_chapter($book, $context, $chapter)->trigger();
+
+        if ($islastchapter) {
+            // We cheat a bit here in assuming that viewing the last page means the user viewed the whole book.
+            $completion = new completion_info($course);
+            $completion->set_module_viewed($cm);
+        }
+    }
 }

@@ -1,4 +1,4 @@
-@core @core_grades
+@core @core_grades @javascript
 Feature: View gradebook when scales are used
   In order to use scales to grade activities
   As an teacher
@@ -49,18 +49,27 @@ Feature: View gradebook when scales are used
     And I set the field "grade[modgrade_type]" to "Scale"
     And I set the field "grade[modgrade_scale]" to "Letterscale"
     And I press "Save and display"
-    And I follow "View/grade all submissions"
-    And I click on "Grade Student 1" "link" in the "Student 1" "table_row"
+    And I follow "View all submissions"
+    And I click on "Grade" "link" in the "Student 1" "table_row"
     And I set the field "Grade" to "A"
-    And I press "Save and show next"
+    And I press "Save changes"
+    And I press "Ok"
+    And I click on "[data-action=next-user]" "css_element"
     And I set the field "Grade" to "B"
-    And I press "Save and show next"
+    And I press "Save changes"
+    And I press "Ok"
+    And I click on "[data-action=next-user]" "css_element"
     And I set the field "Grade" to "C"
-    And I press "Save and show next"
+    And I press "Save changes"
+    And I press "Ok"
+    And I click on "[data-action=next-user]" "css_element"
     And I set the field "Grade" to "D"
-    And I press "Save and show next"
+    And I press "Save changes"
+    And I press "Ok"
+    And I click on "[data-action=next-user]" "css_element"
     And I set the field "Grade" to "F"
     And I press "Save changes"
+    And I press "Ok"
     And I follow "Course 1"
     And I navigate to "Grades" node in "Course administration"
     And I navigate to "Course grade settings" node in "Grade administration > Setup"
@@ -90,7 +99,7 @@ Feature: View gradebook when scales are used
       | Test assignment one | C     | F–A   | 50.00 %    | 60.00 %                      |
       | Sub category 1 total      | 3.00  | 0–5   | 60.00 %    | -                            |
       | Course total        | 3.00  | 0–5   | 60.00 %    | -                            |
-    And I select "Categories and items" from the "Grade report" singleselect
+    And I select "Gradebook setup" from the "Grade report" singleselect
     And the following should exist in the "grade_edit_tree_table" table:
       | Name                | Max grade |
       | Test assignment one | 5.00      |
@@ -136,7 +145,7 @@ Feature: View gradebook when scales are used
       | Test assignment one          | C              | F–A   | 50.00 %       | <contrib3>                   |
       | Sub category (<aggregation>) total<aggregation>. | 3.00           | 1–5   | 50.00 %       | -                            |
       | Course total<aggregation>.   | <coursetotal3> | 0–100 | <courseperc3> | -                            |
-    And I select "Categories and items" from the "Grade report" singleselect
+    And I select "Gradebook setup" from the "Grade report" singleselect
     And the following should exist in the "grade_edit_tree_table" table:
       | Name                | Max grade |
       | Test assignment one | A (5)     |

@@ -129,8 +129,6 @@ Feature: Award badges
       | user | course | role |
       | teacher1 | C1 | editingteacher |
       | student1 | C1 | student |
-    And the following config values are set as admin:
-      | enablecompletion | 1 |
     And I log in as "teacher1"
     And I follow "Course 1"
     And I follow "Edit settings"
@@ -180,8 +178,6 @@ Feature: Award badges
       | user | course | role |
       | teacher1 | C1 | editingteacher |
       | student1 | C1 | student |
-    And the following config values are set as admin:
-      | enablecompletion | 1 |
     And I log in as "teacher1"
     And I follow "Course 1"
     And I follow "Edit settings"
@@ -221,16 +217,96 @@ Feature: Award badges
     And I follow "Course 1"
     And I press "Mark as complete: Test assignment name"
     And I log out
-    And I log in as "admin"
-    # We can't wait for cron to happen, so the admin manually triggers it.
-    And I trigger cron
-    # The admin needs to trigger cron twice to see the completion status as completed.
-    # We wait more than 1 minute because of the next cron run scheduled time.
-    And I wait "61" seconds
-    And I trigger cron
-    # Finally the admin goes back to homepage to continue the user story.
-    And I am on site homepage
-    And I log out
+    # Completion cron won't mark the whole course completed unless the
+    # individual criteria was marked completed more than a second ago. So
+    # run it twice, first to mark the criteria and second for the course.
+    And I run the scheduled task "core\task\completion_regular_task"
+    And I wait "1" seconds
+    And I run the scheduled task "core\task\completion_regular_task"
+    # The student should now see their badge.
     And I log in as "student1"
     And I follow "Profile" in the user menu
     Then I should see "Course Badge"
+
+  @javascript
+  Scenario: All of the selected roles can award badges
+    Given the following "users" exist:
+      | username | firstname | lastname | email |
+      | teacher1 | Teacher | 1 | teacher1@example.com |
+      | student1 | Student | 1 | student1@example.com |
+      | student2 | Student | 2 | student2@example.com |
+    And the following "courses" exist:
+      | fullname | shortname | category | groupmode |
+      | Course 1 | C1 | 0 | 1 |
+    And the following "course enrolments" exist:
+      | user | course | role |
+      | teacher1 | C1 | editingteacher |
+      | student1 | C1 | student |
+      | student2 | C1 | student |
+    And I log in as "teacher1"
+    And I follow "Course 1"
+    # Create course badge 1.
+    And I navigate to "Add a new badge" node in "Course administration > Badges"
+    And I follow "Add a new badge"
+    And I set the following fields to these values:
+      | Name | Course Badge 1 |
+      | Description | Course badge description |
+      | issuername | Tester of course badge |
+    And I upload "badges/tests/behat/badge.png" file to "Image" filemanager
+    And I press "Create badge"
+    And I set the field "type" to "Manual issue by role"
+    And I expand all fieldsets
+    # Set to ANY of the roles awards badge.
+    And I set the field "Teacher" to "1"
+    And I set the field "Any of the selected roles awards the badge" to "1"
+    And I press "Save"
+    And I press "Enable access"
+    And I press "Continue"
+    And I follow "Recipients (0)"
+    And I press "Award badge"
+    # Award course badge 1 to student 1.
+    And I set the field "potentialrecipients[]" to "Student 1 (student1@example.com)"
+    When I press "Award badge"
+    And I follow "Course Badge 1"
+    And I follow "Recipients (1)"
+    Then I should see "Recipients (1)"
+    # Add course badge 2.
+    And I navigate to "Add a new badge" node in "Course administration > Badges"
+    And I follow "Add a new badge"
+    And I set the following fields to these values:
+      | Name | Course Badge 2 |
+      | Description | Course badge description |
+      | issuername | Tester of course badge |
+    And I upload "badges/tests/behat/badge.png" file to "Image" filemanager
+    And I press "Create badge"
+    And I set the field "type" to "Manual issue by role"
+    And I expand all fieldsets
+    # Set to ALL of the selected roles award badge.
+    And I set the field "Teacher" to "1"
+    And I set the field "All of the selected roles award the badge" to "1"
+    And I press "Save"
+    And I press "Enable access"
+    And I press "Continue"
+    And I follow "Recipients (0)"
+    And I press "Award badge"
+    # Award course badge 2 to student 2.
+    And I set the field "potentialrecipients[]" to "Student 2 (student2@example.com)"
+    When I press "Award badge"
+    And I follow "Course Badge 2"
+    And I follow "Recipients (1)"
+    Then I should see "Recipients (1)"
+    And I log out
+    And I trigger cron
+    # Student 1 should have just course badge 1.
+    And I log in as "student1"
+    And I follow "Profile" in the user menu
+    When I follow "Course 1"
+    Then I should see "Course Badge 1"
+    And I should not see "Course Badge 2"
+    And I log out
+    # Student 2 should have just course badge 2.
+    And I log in as "student2"
+    And I follow "Profile" in the user menu
+    When I follow "Course 1"
+    Then I should see "Course Badge 2"
+    Then I should not see "Course Badge 1"

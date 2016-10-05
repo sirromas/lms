@@ -296,7 +296,7 @@ if (($mode == 'new') && (!empty($newtype)) && confirm_sesskey()) {          /// 
 
                 $table->data[] = array(
                     html_writer::link($displayurl, $field->field->name),
-                    $field->image() . '&nbsp;' . get_string($field->type, 'data'),
+                    $field->image() . '&nbsp;' . $field->name(),
                     $field->field->required ? get_string('yes') : get_string('no'),
                     shorten_text($field->field->description, 30),
                     html_writer::link($displayurl, $OUTPUT->pix_icon('t/edit', get_string('edit'))) .
@@ -310,9 +310,9 @@ if (($mode == 'new') && (!empty($newtype)) && confirm_sesskey()) {          /// 
 
 
     echo '<div class="fieldadd">';
-    echo '<label for="fieldform_jump">'.get_string('newfield','data').$OUTPUT->help_icon('newfield', 'data').'</label>';
     $popupurl = $CFG->wwwroot.'/mod/data/field.php?d='.$data->id.'&mode=new&sesskey='.  sesskey();
-    echo $OUTPUT->single_select(new moodle_url($popupurl), 'newtype', $menufield, null, array(''=>'choosedots'), 'fieldform');
+    echo $OUTPUT->single_select(new moodle_url($popupurl), 'newtype', $menufield, null, array('' => 'choosedots'),
+        'fieldform', array('label' => get_string('newfield', 'data') . $OUTPUT->help_icon('newfield', 'data')));
     echo '</div>';
 
     echo '<div class="sortdefault">';

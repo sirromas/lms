@@ -282,7 +282,7 @@ class report_log_renderable implements renderable {
                 'r' => get_string('view'),
                 'u' => get_string('update'),
                 'd' => get_string('delete'),
-                '' => get_string('allchanges')
+                'cud' => get_string('allchanges')
                 );
         return $actions;
     }
@@ -487,6 +487,12 @@ class report_log_renderable implements renderable {
      */
     public function download() {
         $filename = 'logs_' . userdate(time(), get_string('backupnameformat', 'langconfig'), 99, false);
+        if ($this->course->id !== SITEID) {
+            $courseshortname = format_string($this->course->shortname, true,
+                    array('context' => context_course::instance($this->course->id)));
+            $filename = clean_filename('logs_' . $courseshortname . '_' . userdate(time(),
+                    get_string('backupnameformat', 'langconfig'), 99, false));
+        }
         $this->tablelog->is_downloading($this->logformat, $filename);
         $this->tablelog->out($this->perpage, false);
     }

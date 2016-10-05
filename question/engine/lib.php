@@ -445,7 +445,7 @@ abstract class question_engine {
     /**
      * Returns the valid choices for the number of decimal places for showing
      * question marks. For use in the user interface.
-     * @return array suitable for passing to {@link choose_from_menu()} or similar.
+     * @return array suitable for passing to {@link html_writer::select()} or similar.
      */
     public static function get_dp_options() {
         return question_display_options::get_dp_options();
@@ -595,9 +595,11 @@ class question_display_options {
 
     /**
      * @since 2.9
-     * @var string extra HTML to include in the info box of the question display.
-     * This is normally shown after the information about the question, and before
-     * any controls like the flag or the edit icon.
+     * @var string extra HTML to include at the end of the outcome (feedback) box
+     * of the question display.
+     *
+     * This field is now badly named. The place it included is was changed
+     * (for the better) but the name was left unchanged for backwards compatibility.
      */
     public $extrainfocontent = '';
 
@@ -648,7 +650,7 @@ class question_display_options {
      * Calling code should probably use {@link question_engine::get_dp_options()}
      * rather than calling this method directly.
      *
-     * @return array suitable for passing to {@link choose_from_menu()} or similar.
+     * @return array suitable for passing to {@link html_writer::select()} or similar.
      */
     public static function get_dp_options() {
         $options = array();

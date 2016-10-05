@@ -168,7 +168,7 @@ class quiz_statistics_report extends quiz_default_report {
             }
 
             if (!$this->table->is_downloading() && $quizstats->s() == 0) {
-                echo $OUTPUT->notification(get_string('noattempts', 'quiz'));
+                echo $OUTPUT->notification(get_string('nogradedattempts', 'quiz_statistics'));
             }
 
             foreach ($questionstats->any_error_messages() as $errormessage) {
@@ -259,7 +259,7 @@ class quiz_statistics_report extends quiz_default_report {
             // On-screen display of overview report.
             echo $OUTPUT->heading(get_string('quizinformation', 'quiz_statistics'), 3);
             echo $this->output_caching_info($quizstats->timemodified, $quiz->id, $groupstudents, $whichattempts, $reporturl);
-            echo $this->everything_download_options();
+            echo $this->everything_download_options($reporturl);
             $quizinfo = $quizstats->get_formatted_quiz_info_data($course, $cm, $quiz);
             echo $this->output_quiz_info_table($quizinfo);
             if ($quizstats->s()) {
@@ -544,7 +544,7 @@ class quiz_statistics_report extends quiz_default_report {
     public function get_all_stats_and_analysis($quiz, $whichattempts, $whichtries, $groupstudents, $questions, $progress = null) {
 
         if ($progress === null) {
-            $progress = new \core\progress\null();
+            $progress = new \core\progress\none();
         }
 
         $qubaids = quiz_statistics_qubaids_condition($quiz->id, $groupstudents, $whichattempts);
@@ -595,7 +595,7 @@ class quiz_statistics_report extends quiz_default_report {
                 $this->progress = new \core\progress\display_if_slow(get_string('calculatingallstats', 'quiz_statistics'));
                 $this->progress->set_display_names();
             } else {
-                $this->progress = new \core\progress\null();
+                $this->progress = new \core\progress\none();
             }
         }
         return $this->progress;
@@ -613,7 +613,7 @@ class quiz_statistics_report extends quiz_default_report {
     protected function analyse_responses_for_all_questions_and_subquestions($questions, $subquestions, $qubaids,
                                                                             $whichtries, $progress = null) {
         if ($progress === null) {
-            $progress = new \core\progress\null();
+            $progress = new \core\progress\none();
         }
 
         // Starting response analysis tasks.
@@ -643,7 +643,7 @@ class quiz_statistics_report extends quiz_default_report {
             return array();
         }
         if ($progress === null) {
-            $progress = new \core\progress\null();
+            $progress = new \core\progress\none();
         }
         $progress->start_progress('', $countquestions, $countquestions);
         foreach ($questions as $question) {
@@ -664,24 +664,13 @@ class quiz_statistics_report extends quiz_default_report {
      * Return a little form for the user to request to download the full report, including quiz stats and response analysis for
      * all questions and sub-questions.
      *
+     * @param moodle_url $reporturl the base URL of the report.
      * @return string HTML.
      */
-    protected function everything_download_options() {
-        $downloadoptions = $this->table->get_download_menu();
-
-        $downloadelements = new stdClass();
-        $downloadelements->formatsmenu = html_writer::select($downloadoptions, 'download',
-                $this->table->defaultdownloadformat, false);
-        $downloadelements->downloadbutton = '<input type="submit" value="' .
-                get_string('download') . '"/>';
-
-        $output = '<form action="'. $this->table->baseurl .'" method="post">';
-        $output .= '<div class="mdl-align">';
-        $output .= '<input type="hidden" name="everything" value="1"/>';
-        $output .= html_writer::tag('label', get_string('downloadeverything', 'quiz_statistics', $downloadelements));
-        $output .= '</div></form>';
-
-        return $output;
+    protected function everything_download_options(moodle_url $reporturl) {
+        global $OUTPUT;
+        return $OUTPUT->download_dataformat_selector(get_string('downloadeverything', 'quiz_statistics'),
+            $reporturl->out_omit_querystring(), 'download', $reporturl->params() + array('everything' => 1));
     }
 
     /**

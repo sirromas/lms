@@ -128,12 +128,15 @@ class enrol_meta_plugin_testcase extends advanced_testcase {
         $this->assertEquals(7, $DB->count_records('user_enrolments'));
         $this->assertEquals(6, $DB->count_records('role_assignments'));
 
+        // Disable the plugin to prevent add_instance from calling enrol_meta_sync.
+        $this->disable_plugin();
         $e1 = $metalplugin->add_instance($course3, array('customint1'=>$course1->id));
         $e2 = $metalplugin->add_instance($course3, array('customint1'=>$course2->id));
         $e3 = $metalplugin->add_instance($course4, array('customint1'=>$course2->id));
         $enrol1 = $DB->get_record('enrol', array('id'=>$e1));
         $enrol2 = $DB->get_record('enrol', array('id'=>$e2));
         $enrol3 = $DB->get_record('enrol', array('id'=>$e3));
+        $this->enable_plugin();
 
         enrol_meta_sync($course4->id, false);
         $this->assertEquals(9, $DB->count_records('user_enrolments'));
@@ -847,6 +850,16 @@ class enrol_meta_plugin_testcase extends advanced_testcase {
         // Disable manual enrolment in course1 and make sure all user enrolments in course2 are suspended.
         $manplugin->update_status($manual1, ENROL_INSTANCE_DISABLED);
         $allsuspendedenrolemnts = array_combine(array_keys($expectedenrolments), array_fill(0, 5, ENROL_USER_SUSPENDED));
+        $enrolmentstatuses = $DB->get_records_menu('user_enrolments', array('enrolid' => $meta2id), '', 'userid, status');
+        $this->assertEquals($allsuspendedenrolemnts, $enrolmentstatuses);
+
+        $manplugin->update_status($manual1, ENROL_INSTANCE_ENABLED);
+        $enrolments = $DB->get_records('user_enrolments', array('enrolid' => $meta2id), '', 'userid, timestart, timeend, status');
+        $this->assertEquals($expectedenrolments, $enrolments);
+
+        // Disable events and repeat the same for course3 (testing sync):
+        $sink = $this->redirectEvents();
+        $manplugin->update_status($manual1, ENROL_INSTANCE_DISABLED);
         enrol_meta_sync($course3->id);
         $enrolmentstatuses = $DB->get_records_menu('user_enrolments', array('enrolid' => $meta3id), '', 'userid, status');
         $this->assertEquals($allsuspendedenrolemnts, $enrolmentstatuses);
@@ -855,5 +868,6 @@ class enrol_meta_plugin_testcase extends advanced_testcase {
         enrol_meta_sync($course3->id);
         $enrolments = $DB->get_records('user_enrolments', array('enrolid' => $meta3id), '', 'userid, timestart, timeend, status');
         $this->assertEquals($expectedenrolments, $enrolments);
+        $sink->close();
     }
 }

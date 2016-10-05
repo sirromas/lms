@@ -27,14 +27,13 @@ require_once(__DIR__ . '/../../../config.php');
 require_once($CFG->libdir.'/gradelib.php');
 require_once($CFG->dirroot.'/grade/lib.php');
 
-
-
 $download      = optional_param('download', '', PARAM_ALPHA);
 $courseid      = required_param('id', PARAM_INT);        // Course id.
 $page          = optional_param('page', 0, PARAM_INT);   // Active page.
+$showreport    = optional_param('showreport', 0, PARAM_INT);
 
 $PAGE->set_pagelayout('report');
-$url = new moodle_url('/grade/report/history/index.php', array('id' => $courseid));
+$url = new moodle_url('/grade/report/history/index.php', array('id' => $courseid, 'showreport' => 1));
 $PAGE->set_url($url);
 
 $course = $DB->get_record('course', array('id' => $courseid), '*', MUST_EXIST);
@@ -79,17 +78,10 @@ if ($data = $mform->get_data()) {
 
 $table = new \gradereport_history\output\tablelog('gradereport_history', $context, $url, $filters, $download, $page);
 
-/*
-echo "Main table: <pre>";
-print_r($table);
-echo "</pre>";
-*/
-
 $names = array();
-foreach ($table->get_selected_users() as $key => $user) {    
+foreach ($table->get_selected_users() as $key => $user) {
     $names[$key] = fullname($user);
 }
-//print_r($filters);
 $filters['userfullnames'] = implode(',', $names);
 
 // Set up js.
@@ -112,20 +104,19 @@ if ($table->is_downloading()) {
 
 // Print header.
 print_grade_page_head($COURSE->id, 'report', 'history', get_string('pluginname', 'gradereport_history'), false, '');
-
-
-
 $mform->display();
 
-// Render table.
-echo $output->render($table);
+if ($showreport) {
+    // Only display report after form has been submitted.
+    echo $output->render($table);
 
-$event = \gradereport_history\event\grade_report_viewed::create(
-    array(
-        'context' => $context,
-        'courseid' => $courseid
-    )
-);
-$event->trigger();
+    $event = \gradereport_history\event\grade_report_viewed::create(
+        array(
+            'context' => $context,
+            'courseid' => $courseid
+        )
+    );
+    $event->trigger();
+}
 
 echo $OUTPUT->footer();

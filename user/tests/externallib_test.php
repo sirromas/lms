@@ -64,13 +64,12 @@ class core_user_externallib_testcase extends externallib_advanced_testcase {
             'descriptionformat' => FORMAT_MOODLE,
             'city' => 'Perth',
             'url' => 'http://moodle.org',
-            'country' => 'au'
+            'country' => 'AU'
             );
 
         $user1 = self::getDataGenerator()->create_user($user1);
         set_config('usetags', 1);
         require_once($CFG->dirroot . '/user/editlib.php');
-        require_once($CFG->dirroot . '/tag/lib.php');
         $user1->interests = array('Cinema', 'Tennis', 'Dance', 'Guitar', 'Cooking');
         useredit_update_interests($user1, $user1->interests);
 
@@ -223,12 +222,11 @@ class core_user_externallib_testcase extends externallib_advanced_testcase {
             'descriptionformat' => FORMAT_MOODLE,
             'city' => 'Perth',
             'url' => 'http://moodle.org',
-            'country' => 'au'
+            'country' => 'AU'
             );
         $user1 = self::getDataGenerator()->create_user($user1);
         if (!empty($CFG->usetags)) {
             require_once($CFG->dirroot . '/user/editlib.php');
-            require_once($CFG->dirroot . '/tag/lib.php');
             $user1->interests = array('Cinema', 'Tennis', 'Dance', 'Guitar', 'Cooking');
             useredit_update_interests($user1, $user1->interests);
         }
@@ -356,16 +354,16 @@ class core_user_externallib_testcase extends externallib_advanced_testcase {
         $this->assertEquals(1, count($returnedusers));
     }
 
-    /**
-     * Test get_course_user_profiles
-     */
-    public function test_get_course_user_profiles() {
+    public function get_course_user_profiles_setup($capability) {
         global $USER, $CFG;
 
         $this->resetAfterTest(true);
 
-        $course = self::getDataGenerator()->create_course();
-        $user1 = array(
+        $return = new stdClass();
+
+        // Create the course and fetch its context.
+        $return->course = self::getDataGenerator()->create_course();
+        $return->user1 = array(
             'username' => 'usernametest1',
             'idnumber' => 'idnumbertest1',
             'firstname' => 'First Name User Test 1',
@@ -385,36 +383,56 @@ class core_user_externallib_testcase extends externallib_advanced_testcase {
             'descriptionformat' => FORMAT_MOODLE,
             'city' => 'Perth',
             'url' => 'http://moodle.org',
-            'country' => 'au'
-            );
-        $user1 = self::getDataGenerator()->create_user($user1);
+            'country' => 'AU'
+        );
+        $return->user1 = self::getDataGenerator()->create_user($return->user1);
         if (!empty($CFG->usetags)) {
             require_once($CFG->dirroot . '/user/editlib.php');
-            require_once($CFG->dirroot . '/tag/lib.php');
-            $user1->interests = array('Cinema', 'Tennis', 'Dance', 'Guitar', 'Cooking');
-            useredit_update_interests($user1, $user1->interests);
+            $return->user1->interests = array('Cinema', 'Tennis', 'Dance', 'Guitar', 'Cooking');
+            useredit_update_interests($return->user1, $return->user1->interests);
         }
-        $user2 = self::getDataGenerator()->create_user();
+        $return->user2 = self::getDataGenerator()->create_user();
 
-        $context = context_course::instance($course->id);
-        $roleid = $this->assignUserCapability('moodle/user:viewdetails', $context->id);
+        $context = context_course::instance($return->course->id);
+        $return->roleid = $this->assignUserCapability($capability, $context->id);
 
         // Enrol the users in the course.
-        $this->getDataGenerator()->enrol_user($user1->id, $course->id, $roleid, 'manual');
-        $this->getDataGenerator()->enrol_user($user2->id, $course->id, $roleid, 'manual');
-        $this->getDataGenerator()->enrol_user($USER->id, $course->id, $roleid, 'manual');
+        $this->getDataGenerator()->enrol_user($return->user1->id, $return->course->id, $return->roleid, 'manual');
+        $this->getDataGenerator()->enrol_user($return->user2->id, $return->course->id, $return->roleid, 'manual');
+        $this->getDataGenerator()->enrol_user($USER->id, $return->course->id, $return->roleid, 'manual');
+
+        return $return;
+    }
+
+    /**
+     * Test get_course_user_profiles
+     */
+    public function test_get_course_user_profiles() {
+        global $USER, $CFG;
+
+        $this->resetAfterTest(true);
+
+        $data = $this->get_course_user_profiles_setup('moodle/user:viewdetails');
 
         // Call the external function.
         $enrolledusers = core_user_external::get_course_user_profiles(array(
-                    array('userid' => $USER->id, 'courseid' => $course->id),
-                    array('userid' => $user1->id, 'courseid' => $course->id),
-                    array('userid' => $user2->id, 'courseid' => $course->id)));
+                    array('userid' => $USER->id, 'courseid' => $data->course->id)));
 
         // We need to execute the return values cleaning process to simulate the web service server.
         $enrolledusers = external_api::clean_returnvalue(core_user_external::get_course_user_profiles_returns(), $enrolledusers);
 
         // Check we retrieve the good total number of enrolled users + no error on capability.
-        $this->assertEquals(3, count($enrolledusers));
+        $this->assertEquals(1, count($enrolledusers));
+    }
+
+    public function test_get_user_course_profile_as_admin() {
+        global $USER, $CFG;
+
+        global $USER, $CFG;
+
+        $this->resetAfterTest(true);
+
+        $data = $this->get_course_user_profiles_setup('moodle/user:viewdetails');
 
         // Do the same call as admin to receive all possible fields.
         $this->setAdminUser();
@@ -422,36 +440,34 @@ class core_user_externallib_testcase extends externallib_advanced_testcase {
 
         // Call the external function.
         $enrolledusers = core_user_external::get_course_user_profiles(array(
-                    array('userid' => $USER->id, 'courseid' => $course->id),
-                    array('userid' => $user1->id, 'courseid' => $course->id),
-                    array('userid' => $user2->id, 'courseid' => $course->id)));
+            array('userid' => $data->user1->id, 'courseid' => $data->course->id)));
 
         // We need to execute the return values cleaning process to simulate the web service server.
         $enrolledusers = external_api::clean_returnvalue(core_user_external::get_course_user_profiles_returns(), $enrolledusers);
 
         foreach($enrolledusers as $enrolleduser) {
-            if ($enrolleduser['username'] == $user1->username) {
-                $this->assertEquals($user1->idnumber, $enrolleduser['idnumber']);
-                $this->assertEquals($user1->firstname, $enrolleduser['firstname']);
-                $this->assertEquals($user1->lastname, $enrolleduser['lastname']);
-                $this->assertEquals($user1->email, $enrolleduser['email']);
-                $this->assertEquals($user1->address, $enrolleduser['address']);
-                $this->assertEquals($user1->phone1, $enrolleduser['phone1']);
-                $this->assertEquals($user1->phone2, $enrolleduser['phone2']);
-                $this->assertEquals($user1->icq, $enrolleduser['icq']);
-                $this->assertEquals($user1->skype, $enrolleduser['skype']);
-                $this->assertEquals($user1->yahoo, $enrolleduser['yahoo']);
-                $this->assertEquals($user1->aim, $enrolleduser['aim']);
-                $this->assertEquals($user1->msn, $enrolleduser['msn']);
-                $this->assertEquals($user1->department, $enrolleduser['department']);
-                $this->assertEquals($user1->institution, $enrolleduser['institution']);
-                $this->assertEquals($user1->description, $enrolleduser['description']);
+            if ($enrolleduser['username'] == $data->user1->username) {
+                $this->assertEquals($data->user1->idnumber, $enrolleduser['idnumber']);
+                $this->assertEquals($data->user1->firstname, $enrolleduser['firstname']);
+                $this->assertEquals($data->user1->lastname, $enrolleduser['lastname']);
+                $this->assertEquals($data->user1->email, $enrolleduser['email']);
+                $this->assertEquals($data->user1->address, $enrolleduser['address']);
+                $this->assertEquals($data->user1->phone1, $enrolleduser['phone1']);
+                $this->assertEquals($data->user1->phone2, $enrolleduser['phone2']);
+                $this->assertEquals($data->user1->icq, $enrolleduser['icq']);
+                $this->assertEquals($data->user1->skype, $enrolleduser['skype']);
+                $this->assertEquals($data->user1->yahoo, $enrolleduser['yahoo']);
+                $this->assertEquals($data->user1->aim, $enrolleduser['aim']);
+                $this->assertEquals($data->user1->msn, $enrolleduser['msn']);
+                $this->assertEquals($data->user1->department, $enrolleduser['department']);
+                $this->assertEquals($data->user1->institution, $enrolleduser['institution']);
+                $this->assertEquals($data->user1->description, $enrolleduser['description']);
                 $this->assertEquals(FORMAT_HTML, $enrolleduser['descriptionformat']);
-                $this->assertEquals($user1->city, $enrolleduser['city']);
-                $this->assertEquals($user1->country, $enrolleduser['country']);
-                $this->assertEquals($user1->url, $enrolleduser['url']);
+                $this->assertEquals($data->user1->city, $enrolleduser['city']);
+                $this->assertEquals($data->user1->country, $enrolleduser['country']);
+                $this->assertEquals($data->user1->url, $enrolleduser['url']);
                 if (!empty($CFG->usetags)) {
-                    $this->assertEquals(implode(', ', $user1->interests), $enrolleduser['interests']);
+                    $this->assertEquals(implode(', ', $data->user1->interests), $enrolleduser['interests']);
                 }
             }
         }
@@ -478,7 +494,7 @@ class core_user_externallib_testcase extends externallib_advanced_testcase {
             'email' => 'usertest1@example.com',
             'description' => 'This is a description for user 1',
             'city' => 'Perth',
-            'country' => 'au'
+            'country' => 'AU'
             );
 
         $context = context_system::instance();
@@ -543,97 +559,6 @@ class core_user_externallib_testcase extends externallib_advanced_testcase {
     }
 
     /**
-     * Test get_users_by_id
-     */
-    public function test_get_users_by_id() {
-        global $USER, $CFG;
-
-        $this->resetAfterTest(true);
-
-        $user1 = array(
-            'username' => 'usernametest1',
-            'idnumber' => 'idnumbertest1',
-            'firstname' => 'First Name User Test 1',
-            'lastname' => 'Last Name User Test 1',
-            'email' => 'usertest1@example.com',
-            'address' => '2 Test Street Perth 6000 WA',
-            'phone1' => '01010101010',
-            'phone2' => '02020203',
-            'icq' => 'testuser1',
-            'skype' => 'testuser1',
-            'yahoo' => 'testuser1',
-            'aim' => 'testuser1',
-            'msn' => 'testuser1',
-            'department' => 'Department of user 1',
-            'institution' => 'Institution of user 1',
-            'description' => 'This is a description for user 1',
-            'descriptionformat' => FORMAT_MOODLE,
-            'city' => 'Perth',
-            'url' => 'http://moodle.org',
-            'country' => 'au'
-            );
-        $user1 = self::getDataGenerator()->create_user($user1);
-        if (!empty($CFG->usetags)) {
-            require_once($CFG->dirroot . '/user/editlib.php');
-            require_once($CFG->dirroot . '/tag/lib.php');
-            $user1->interests = array('Cinema', 'Tennis', 'Dance', 'Guitar', 'Cooking');
-            useredit_update_interests($user1, $user1->interests);
-        }
-        $user2 = self::getDataGenerator()->create_user();
-
-        $context = context_system::instance();
-        $roleid = $this->assignUserCapability('moodle/user:viewdetails', $context->id);
-
-        // Call the external function.
-        $returnedusers = core_user_external::get_users_by_id(array(
-                    $USER->id, $user1->id, $user2->id));
-
-        // We need to execute the return values cleaning process to simulate the web service server.
-        $returnedusers = external_api::clean_returnvalue(core_user_external::get_users_by_id_returns(), $returnedusers);
-
-        // Check we retrieve the good total number of enrolled users + no error on capability.
-        $this->assertEquals(3, count($returnedusers));
-
-        // Do the same call as admin to receive all possible fields.
-        $this->setAdminUser();
-        $USER->email = "admin@example.com";
-
-        // Call the external function.
-        $returnedusers = core_user_external::get_users_by_id(array(
-                    $USER->id, $user1->id, $user2->id));
-
-        // We need to execute the return values cleaning process to simulate the web service server.
-        $returnedusers = external_api::clean_returnvalue(core_user_external::get_users_by_id_returns(), $returnedusers);
-
-        foreach($returnedusers as $enrolleduser) {
-            if ($enrolleduser['username'] == $user1->username) {
-                $this->assertEquals($user1->idnumber, $enrolleduser['idnumber']);
-                $this->assertEquals($user1->firstname, $enrolleduser['firstname']);
-                $this->assertEquals($user1->lastname, $enrolleduser['lastname']);
-                $this->assertEquals($user1->email, $enrolleduser['email']);
-                $this->assertEquals($user1->address, $enrolleduser['address']);
-                $this->assertEquals($user1->phone1, $enrolleduser['phone1']);
-                $this->assertEquals($user1->phone2, $enrolleduser['phone2']);
-                $this->assertEquals($user1->icq, $enrolleduser['icq']);
-                $this->assertEquals($user1->skype, $enrolleduser['skype']);
-                $this->assertEquals($user1->yahoo, $enrolleduser['yahoo']);
-                $this->assertEquals($user1->aim, $enrolleduser['aim']);
-                $this->assertEquals($user1->msn, $enrolleduser['msn']);
-                $this->assertEquals($user1->department, $enrolleduser['department']);
-                $this->assertEquals($user1->institution, $enrolleduser['institution']);
-                $this->assertEquals($user1->description, $enrolleduser['description']);
-                $this->assertEquals(FORMAT_HTML, $enrolleduser['descriptionformat']);
-                $this->assertEquals($user1->city, $enrolleduser['city']);
-                $this->assertEquals($user1->country, $enrolleduser['country']);
-                $this->assertEquals($user1->url, $enrolleduser['url']);
-                if (!empty($CFG->usetags)) {
-                    $this->assertEquals(implode(', ', $user1->interests), $enrolleduser['interests']);
-                }
-            }
-        }
-    }
-
-    /**
      * Test update_users
      */
     public function test_update_users() {
@@ -657,7 +582,7 @@ class core_user_externallib_testcase extends externallib_advanced_testcase {
             'email' => 'usertest1@example.com',
             'description' => 'This is a description for user 1',
             'city' => 'Perth',
-            'country' => 'au'
+            'country' => 'AU'
             );
 
         $context = context_system::instance();
@@ -803,6 +728,7 @@ class core_user_externallib_testcase extends externallib_advanced_testcase {
         $device2['pushid'] = "0987654321";
         $device2['appid'] = "other.app.com";
 
+        $this->setAdminUser();
         // Create a user device using the external API function.
         core_user_external::add_user_device($device['appid'], $device['name'], $device['model'], $device['platform'],
                                             $device['version'], $device['pushid'], $device['uuid']);

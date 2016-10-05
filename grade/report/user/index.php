@@ -79,9 +79,8 @@ if (!isset($USER->grade_last_report)) {
 }
 $USER->grade_last_report[$course->id] = 'user';
 
-
-//first make sure we have proper final grades - this must be done before constructing of the grade tree
-grade_regrade_final_grades($courseid);
+// First make sure we have proper final grades.
+grade_regrade_final_grades_if_required($course);
 
 if (has_capability('moodle/grade:viewall', $context)) { //Teachers will see all student reports
     $groupmode    = groups_get_course_groupmode($course);   // Groups are being used
@@ -166,7 +165,12 @@ if (has_capability('moodle/grade:viewall', $context)) { //Teachers will see all 
     }
 }
 
-// Trigger report viewed event.
-$report->viewed();
+if (isset($report)) {
+    // Trigger report viewed event.
+    $report->viewed();
+} else {
+    echo html_writer::tag('div', '', array('class' => 'clearfix'));
+    echo $OUTPUT->notification(get_string('nostudentsyet'));
+}
 
 echo $OUTPUT->footer();

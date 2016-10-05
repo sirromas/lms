@@ -66,16 +66,16 @@ $string['aggregationhintexcluded'] = '( Excluded )';
 $string['aggregationhintextra'] = '( Extra credit )';
 $string['aggregation_link'] = 'grade/aggregation';
 $string['aggregationcoef'] = 'Aggregation coefficient';
-$string['aggregationcoefextra'] = 'Extra credit'; // for the header of the table at Edit categories and items page
+$string['aggregationcoefextra'] = 'Extra credit'; // For the header of the table on the 'Gradebook setup' page.
 $string['aggregationcoefextra_help'] = 'If the aggregation is \'Natural\' or \'Simple weighted mean\' and the extra credit checkbox is ticked, the grade item\'s maximum grade is not added to the category\'s maximum grade. This will result in the possibility of achieving the maximum grade in the category without having the maximum grade in all the grade items. If the site administrator has enabled grades over the maximum, there might be grades over the maximum.
 
 If the aggregation is \'Mean of grades (with extra credits)\' and the extra credit is set to a value greater than zero, the extra credit is the factor by which the grade is multiplied before adding it to the total after the computation of the mean.';
 $string['aggregationcoefextra_link'] = 'grade/aggregation';
-$string['aggregationcoefextrasum'] = 'Extra credit'; // for the form with checkboxes: Natural or Simple weighted mean
+$string['aggregationcoefextrasum'] = 'Extra credit'; // For the form with checkboxes: Natural or Simple weighted mean.
 $string['aggregationcoefextrasumabbr'] = '+';
 $string['aggregationcoefextrasum_help'] = 'If the extra credit checkbox is ticked, the grade item\'s maximum grade is not added to the category\'s maximum grade, resulting in the possibility of achieving the maximum grade (or grades over the maximum if enabled by the site administrator) in the category without having the maximum grade in all the grade items.';
 $string['aggregationcoefextrasum_link'] = 'grade/aggregation';
-$string['aggregationcoefextraweight'] = 'Extra credit weight'; // for the form with input: Mean of grades (with extra credits) only
+$string['aggregationcoefextraweight'] = 'Extra credit weight'; // For the form with input: Mean of grades (with extra credits) only.
 $string['aggregationcoefextraweight_help'] = 'If the extra credit weight is set to a value greater than zero, the grade acts as extra credit during aggregation. The number is the factor by which the grade is multiplied before adding it to the total for the computation of the mean.';
 $string['aggregationcoefextraweight_link'] = 'grade/aggregation';
 $string['aggregationcoefweight'] = 'Item weight';
@@ -112,7 +112,6 @@ $string['calculationsaved'] = 'Calculation saved';
 $string['calculationview'] = 'View calculation';
 $string['cannotaccessgroup'] = 'Can not access grades of selected group, sorry.';
 $string['categories'] = 'Categories';
-$string['categoriesanditems'] = 'Categories and items';
 $string['category'] = 'Category';
 $string['categoryedit'] = 'Edit category';
 $string['categoryname'] = 'Category name';
@@ -177,8 +176,9 @@ $string['editverbose'] = 'Edit {$a->category} {$a->itemmodule} {$a->itemname}';
 $string['enableajax'] = 'Enable AJAX';
 $string['enableajax_help'] = 'Adds a layer of AJAX functionality to the grader report, simplifying and speeding up common operations. Depends on Javascript being switched on at the user\'s browser level.';
 $string['enableoutcomes'] = 'Enable outcomes';
-$string['enableoutcomes_help'] = 'Support for Outcomes (also known as Competencies, Goals, Standards or Criteria) means that we can grade things using one or more scales that are tied to outcome statements. Enabling outcomes makes such special grading possible throughout the site.';
+$string['enableoutcomes_help'] = 'If enabled, grade items may be graded using one or more scales tied to outcome statements.';
 $string['encoding'] = 'Encoding';
+$string['encoding_help'] = 'Select the character encoding used for the data. (The standard encoding is UTF-8.) If the wrong encoding is selected by mistake, it will be noticeable when previewing the data for import.';
 $string['errorcalculationnoequal'] = 'Formula must start with equal sign (=1+2)';
 $string['errorcalculationunknown'] = 'Invalid formula';
 $string['errorcalculationbroken'] = 'Probably circular reference or broken calculation formula';
@@ -240,15 +240,18 @@ $string['gradeanalysis'] = 'Grade analysis';
 $string['gradebook'] = 'Gradebook';
 $string['gradebookcalculationsuptodate'] = 'The calculations in the gradebook are up to date. You may need to reload this page to see changes.';
 $string['gradebookcalculationsfixbutton'] = 'Accept grade changes and fix calculation errors';
-$string['gradebookcalculationswarning'] = 'Note: Some errors have been detected in calculating the grades displayed in the gradebook. It is recommended that the errors are fixed by clicking the button below, though this will result in some grades being changed. For details, see the changes between versions {$a->gradebookversion} and {$a->currentversion} in <a href="{$a->url}">Gradebook calculation changes</a>.';
+$string['gradebookcalculationswarning'] = 'Note: Some errors have been detected in calculating the grades displayed in the gradebook. If your course has not started or is in progress, it is recommended that the errors are fixed by clicking the button below, though this will result in some grades being changed. If your course has already ended and grades have been submitted, you probably do not want to fix this issue.
+
+The newer version is {$a->currentversion}; you are using gradebook version {$a->gradebookversion}. You can see a list of changes in <a href="{$a->url}">Gradebook calculation changes</a>.';
 $string['gradebookhiddenerror'] = 'The gradebook is currently set to hide everything from students.';
 $string['gradebookhistories'] = 'Grade histories';
+$string['gradebooksetup'] = 'Gradebook setup';
 $string['gradeboundary'] = 'Letter grade boundary';
 $string['gradeboundary_help'] = 'This setting determines the minimum percentage over which grades will be assigned the grade letter.';
 $string['gradecategories'] = 'Grade categories';
 $string['gradecategory'] = 'Grade category';
 $string['gradecategoryonmodform'] = 'Grade category';
-$string['gradecategoryonmodform_help'] =  'This setting controls the category in which this activity\'s grades are placed in the gradebook.';
+$string['gradecategoryonmodform_help'] = 'This setting controls the category in which this activity\'s grades are placed in the gradebook.';
 $string['gradecategorysettings'] = 'Grade category settings';
 $string['gradedisplay'] = 'Grade display';
 $string['gradedisplaytype'] = 'Grade display type';
@@ -307,7 +310,7 @@ $string['gradepass'] = 'Grade to pass';
 $string['gradepass_help'] = 'This setting determines the minimum grade required to pass. The value is used in activity and course completion, and in the gradebook, where pass grades are highlighted in green and fail grades in red.';
 $string['gradepassgreaterthangrade'] = 'The grade to pass can not be greater than the maximum possible grade {$a}';
 $string['gradepointdefault'] = 'Grade point default';
-$string['gradepointdefault_help'] = 'This setting determines the default value for the grade point value available in an activity.';
+$string['gradepointdefault_help'] = 'This setting determines the default value for the grade point value available in a grade item.';
 $string['gradepointdefault_validateerror'] = 'This setting must be an integer between 1 and the grade point maximum.';
 $string['gradepointmax'] = 'Grade point maximum';
 $string['gradepointmax_help'] = 'This setting determines the maximum grade point value available in an activity.';
@@ -318,8 +321,7 @@ $string['gradepublishing'] = 'Enable publishing';
 $string['gradepublishinglink'] = 'Download: {$a}';
 $string['gradepublishing_help'] = 'Enable publishing in exports and imports: Exported grades can be accessed by accessing a URL, without having to log on to a Moodle site. Grades can be imported by accessing such a URL (which means that a Moodle site can import grades published by another site). By default only administrators may use this feature, please educate users before adding required capabilities to other roles (dangers of bookmark sharing and download accelerators, IP restrictions, etc.).';
 $string['gradereport'] = 'Grade report';
-//$string['graderreport'] = 'Grader report';
-$string['graderreport'] = "Professor's Gradebook";
+$string['graderreport'] = 'Grader report';
 $string['grades'] = 'Grades';
 $string['gradesforuser'] = 'Grades for {$a->user}';
 $string['singleview'] = 'Single view for {$a}';
@@ -377,6 +379,15 @@ $string['idnumbers'] = 'ID numbers';
 $string['ignore'] = 'Ignore';
 $string['import'] = 'Import';
 $string['importcsv'] = 'Import CSV';
+$string['importcsv_help'] = 'Grades can be imported via a CSV file with format as follows:
+
+* Each line of the file contains one record
+* Each record is a series of data separated by commas or an alternative separator
+* The first record contains a list of fieldnames defining the format of the rest of the file
+* A fieldname containing user identity data is required - either username or ID number or email address
+
+A file of the correct format can be obtained by first exporting some grades. The file can then be edited and saved as a CSV file.';
+$string['importcsv_link'] = 'grade/import/csv/index';
 $string['importcustom'] = 'Import as custom outcomes (only this course)';
 $string['importerror'] = 'An error occurred, this script wasn\'t called with the right parameters.';
 $string['importfailed'] = 'Import failed. No data was imported.';
@@ -436,8 +447,11 @@ $string['lowest'] = 'Lowest';
 $string['lowgradeletter'] = 'Low';
 $string['manualitem'] = 'Manual item';
 $string['mapfrom'] = 'Map from';
+$string['mapfrom_help'] = 'Select the column in the spreadsheet containing data for identifying the user, such as username, user ID or email address.';
 $string['mappings'] = 'Grade item mappings';
+$string['mappings_help'] = 'For each column of grades in the spreadsheet, select the corresponding grade item to import the grades into.';
 $string['mapto'] = 'Map to';
+$string['mapto_help'] = 'Select the same identifying data as selected for \'Map from\'.';
 $string['max'] = 'Highest';
 $string['maxgrade'] = 'Max grade';
 $string['meanall'] = 'All grades';
@@ -455,13 +469,34 @@ $string['minmaxupgradefixbutton'] = 'Resolve inconsistencies';
 $string['minmaxupgradewarning'] = 'Note: An inconsistency has been detected with some grades due to a change in the minimum and maximum grades used when calculating the grade displayed in the gradebook. It is recommended that the inconsistency is resolved by clicking the button below, though this will result in some grades being changed.';
 $string['minimum_show'] = 'Show minimum grade';
 $string['minimum_show_help'] = 'Minimum grade is used in calculating grades and weights. If not shown, minimum grade will default to zero and cannot be edited.';
+$string['missingitemtypeoreid'] = 'Array key (itemtype or eid) missing from 2nd param of grade_edit_tree_column_select::get_item_cell($item, $params)';
 $string['missingscale'] = 'Scale must be selected';
 $string['mode'] = 'Mode';
-$string['modgradeerrorbadpoint'] = 'Invalid Grade Value. This must be an integer between 1 and {$a}';
-$string['modgradeerrorbadscale'] = 'Invalid scale selected. Please make sure you select a scale from the selections below.';
 $string['modgrade'] = 'Grade';
 $string['modgrade_help'] = 'Select the type of grading used for this activity. If "scale" is chosen, you can then choose the scale from the "scale" dropdown. If using "point" grading, you can then enter the maximum grade available for this activity.';
-$string['modgrademaxgrade'] = 'Maximum points';
+$string['modgradecantchangegradetype'] = 'You cannot change the type, as grades already exist for this item.';
+$string['modgradecantchangegradetypemsg'] = 'Some grades have already been awarded, so the grade type cannot be changed. If you wish to change the maximum grade, you must first choose whether or not to rescale existing grades.';
+$string['modgradecantchangegradetyporscalemsg'] = 'Some grades have already been awarded, so the grade type and scale cannot be changed.';
+$string['modgradecategorycantchangegradetypemsg'] = 'This category has associated grade items which have been overridden. Therefore some grades have already been awarded, so the grade type cannot be changed. If you wish to change the maximum grade, you must first choose whether or not to rescale existing grades.';
+$string['modgradecategorycantchangegradetyporscalemsg'] = 'This category has associated grade items which have been overridden. Therefore some grades have already been awarded, so the grade type and scale cannot be changed.';
+$string['modgradecantchangescale'] = 'You cannot change the scale, as grades already exist for this item.';
+$string['modgradecantchangeratingmaxgrade'] = 'You cannot change the maximum grade when grades already exist for an activity with ratings.';
+$string['modgradedonotmodify'] = 'Do not modify existing grades';
+$string['modgradeerrorbadpoint'] = 'Invalid grade value. This must be an integer between 1 and {$a}';
+$string['modgradeerrorbadscale'] = 'Invalid scale selected. Please make sure you select a scale from the selections below.';
+$string['modgrademaxgrade'] = 'Maximum grade';
+$string['modgraderescalegrades'] = 'Rescale existing grades';
+$string['modgraderescalegrades_help'] = 'When changing the maximum grades on a gradebook item you need to specify whether or not this will cause existing percentage grades to change as well.
+
+If this is set to \'Yes\', any existing grades will be rescaled so that the percentage grade remains the same.
+
+For example, if this option is set to \'Yes\', changing the maximum grade on an item from 10 to 20 would cause a grade of 6/10 (60%) to be rescaled to 12/20 (60%). With this option set to \'No\', the grade would change from 6/10 (60%) to 6/20 (30%), requiring manual adjustment of the grade items to ensure correct scores.';
+$string['modgradecategoryrescalegrades'] = 'Rescale overridden grades';
+$string['modgradecategoryrescalegrades_help'] = 'When changing the maximum grades on a gradebook item you need to specify whether or not this will cause existing percentage grades to change as well.
+
+If this is set to \'Yes\', any existing overridden grades will be rescaled so that the percentage grade remains the same.
+
+For example, if this option is set to \'Yes\', changing the maximum grade on an item from 10 to 20 would cause a grade of 6/10 (60%) to be rescaled to 12/20 (60%). With this option set to \'No\', the grade will remain unchanged, requiring manual adjustment of the grade items to ensure correct scores.';
 $string['modgradetype'] = 'Type';
 $string['modgradetypenone'] = 'None';
 $string['modgradetypepoint'] = 'Point';
@@ -476,6 +511,7 @@ $string['mygrades'] = 'User menu grades link';
 $string['mygrades_desc'] = 'This setting allows for the option of linking to an external gradebook from the user menu.';
 $string['mypreferences'] = 'My preferences';
 $string['myreportpreferences'] = 'My report preferences';
+$string['mustchooserescaleyesorno'] = 'You must choose whether to rescale existing grades or not.';
 $string['navmethod'] = 'Navigation method';
 $string['neverdeletehistory'] = 'Never delete history';
 $string['newcategory'] = 'New category';
@@ -588,6 +624,7 @@ $string['rawpct'] = 'Raw %';
 $string['real'] = 'Real';
 $string['realletter'] = 'Real (letter)';
 $string['realpercentage'] = 'Real (percentage)';
+$string['recalculatinggrades'] = 'Recalculating grades';
 $string['recovergradesdefault'] = 'Recover grades default';
 $string['recovergradesdefault_help'] = 'By default recover old grades when re-enrolling a user in a course.';
 $string['refreshpreview'] = 'Refresh preview';
@@ -605,6 +642,7 @@ $string['resetweightsshort'] = 'Reset weights';
 $string['resetweights'] = 'Reset weights of {$a->itemname}';
 $string['respectingcurrentdata'] = 'leaving current configuration unmodified';
 $string['rowpreviewnum'] = 'Preview rows';
+$string['rowpreviewnum_help'] = 'Data for import may be previewed before confirming the import. This setting determines how many rows are displayed in the preview.';
 $string['savechanges'] = 'Save changes';
 $string['savepreferences'] = 'Save preferences';
 $string['scaleconfirmdelete'] = 'Are you sure you wish to delete the scale "{$a}"?';
@@ -615,6 +653,7 @@ $string['selectalloroneuser'] = 'Select all or one user';
 $string['selectauser'] = 'Select a user';
 $string['selectdestination'] = 'Select destination of {$a}';
 $string['separator'] = 'Separator';
+$string['separator_help'] = 'Select the separator used in the CSV file. (Normally this is a comma.)';
 $string['sepcolon'] = 'Colon';
 $string['sepcomma'] = 'Comma';
 $string['sepsemicolon'] = 'Semicolon';
@@ -630,22 +669,22 @@ $string['showanalysisicon'] = 'Show grade analysis icon';
 $string['showanalysisicon_desc'] = 'Whether to show grade analysis icon by default. If the activity module supports it, the grade analysis icon links to a page with more detailed explanation of the grade and how it was obtained.';
 $string['showanalysisicon_help'] = 'If the activity module supports it, the grade analysis icon links to a page with more detailed explanation of the grade and how it was obtained.';
 $string['showaverage'] = 'Show average';
-$string['showaverage_help'] = 'Show the average column? Students may be able to estimate other student\'s grades if the average is calculated from a small number of grades. For performance reasons the average is approximate if it is dependent on any hidden items.';
+$string['showaverage_help'] = 'Whether to show an average column. Note that participants may be able to estimate others\' grades if the average is calculated from a small number of grades. For performance reasons the average is approximate if it is dependent on any hidden items.';
 $string['showcontributiontocoursetotal'] = 'Show contribution to course total';
 $string['showcontributiontocoursetotal_help'] = 'Whether to show a column of percentages indicating how much each grade item contributes to the user\'s course total percentage (after weighting is applied).';
 $string['showfeedback'] = 'Show feedback';
-$string['showfeedback_help'] = 'Show the feedback column?';
+$string['showfeedback_help'] = 'Whether to show a column for feedback.';
 $string['showgrade'] = 'Show grades';
-$string['showgrade_help'] = 'Show the grade column?';
+$string['showgrade_help'] = 'Whether to show a column for grades.';
 $string['showingaggregatesonly'] = 'Showing aggregates only';
 $string['showingfullmode'] = 'Showing full view';
 $string['showinggradesonly'] = 'Showing grades only';
 $string['showlettergrade'] = 'Show letter grades';
-$string['showlettergrade_help'] = 'Show the letter grade column?';
+$string['showlettergrade_help'] = 'Whether to show a column for letter grades.';
 $string['showrange'] = 'Show ranges';
-$string['showrange_help'] = 'Show the range column?';
+$string['showrange_help'] = 'Whether to show a column for the range.';
 $string['showweight'] = 'Show weightings';
-$string['showweight_help'] = 'Show the grade weight column?';
+$string['showweight_help'] = 'Whether to show a column for the grade weight.';
 $string['rangedecimals'] = 'Range decimal points';
 $string['rangedecimals_help'] = 'The number of decimal points to display for range.';
 $string['showactivityicons'] = 'Show activity icons';
@@ -675,7 +714,7 @@ $string['shownumberofgrades_help'] = 'If enabled, the number of grades used when
 $string['showonlyactiveenrol'] = 'Show only active enrolments';
 $string['showonlyactiveenrol_help'] = 'This setting determines, if only active enrolled users will be visible in gradebook report. If enabled suspended users will not be shown in gradebook.';
 $string['showpercentage'] = 'Show percentage';
-$string['showpercentage_help'] = 'Show the percentage value of each grade item?';
+$string['showpercentage_help'] = 'Whether to show the percentage value of each grade item.';
 $string['showquickfeedback'] = 'Show quick feedback';
 $string['showquickfeedback_help'] = 'If enabled, when editing is turned on, a feedback text input box with a dotted border appears for each grade, allowing the feedback for many grades to be edited at the same time. Changes are saved and highlighted when the update button is clicked.
 
@@ -683,7 +722,7 @@ Note that when feedback is edited in the grader report, an overridden flag is se
 $string['showranges'] = 'Show ranges';
 $string['showranges_help'] = 'If enabled, the grader report will contain an additional row displaying the range for each category and grade item.';
 $string['showrank'] = 'Show rank';
-$string['showrank_help'] = 'Show the position of the student in relation to the rest of the class for each grade item?';
+$string['showrank_help'] = 'Whether to show the position of the student in relation to the rest of the class for each grade item.';
 $string['showuserimage'] = 'Show user profile images';
 $string['showuserimage_help'] = 'Whether to show the user\'s profile image next to the name in the grader report.';
 $string['showverbose'] = 'Show {$a->category} {$a->itemmodule} {$a->itemname}';
@@ -726,7 +765,7 @@ $string['uncategorised'] = 'Uncategorised';
 $string['unenrolledusersinimport'] = 'This import included the following grades for users not currently enrolled in this course: {$a}';
 $string['unchangedgrade'] = 'Grade unchanged';
 $string['unlimitedgrades'] = 'Unlimited grades';
-$string['unlimitedgrades_help'] = 'By default grades are limited by the maximum and minimum values of the grade item. Enabling this setting removes this limit, and allows grades of over 100% to be entered directly in the gradebook. It is recommended that this setting is enabled at an off-peak time, as all grades will be recalculated, which may result in a high server load.';
+$string['unlimitedgrades_help'] = 'By default, grades are limited by the maximum and minimum values of the grade item. Enabling this setting removes this limit, and allows grades of over 100% to be entered directly in the gradebook.';
 $string['unlock'] = 'Unlock';
 $string['unlockverbose'] = 'Unlock {$a->category} {$a->itemmodule} {$a->itemname}';
 $string['unused'] = 'Unused';
@@ -751,6 +790,7 @@ $string['userpreferences'] = 'User preferences';
 $string['userenrolmentsuspended'] = 'User enrolment suspended';
 $string['useweighted'] = 'Use weighted';
 $string['verbosescales'] = 'Verbose scales';
+$string['verbosescales_help'] = 'A verbose scale uses words rather than numbers. Set to \'Yes\' if both numerical and verbose scales are to be imported. Set to \'No\' if only numerical scales are to be imported.';
 $string['viewbygroup'] = 'Group';
 $string['viewgrades'] = 'View grades';
 $string['weight'] = 'weight';
@@ -774,8 +814,5 @@ $string['xml'] = 'XML';
 $string['yes'] = 'Yes';
 $string['yourgrade'] = 'Your grade';
 
-// Deprecated since Moodle 2.8
-
-$string['categoriesedit'] = 'Edit setup';
-$string['fullview'] = 'Full view';
-$string['simpleview'] = 'Simple view';
+// Deprecated since 3.0.
+$string['categoriesanditems'] = 'Categories and items';

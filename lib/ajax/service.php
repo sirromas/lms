@@ -32,8 +32,6 @@ define('AJAX_SCRIPT', true);
 require_once(dirname(__FILE__) . '/../../config.php');
 require_once($CFG->libdir . '/externallib.php');
 
-require_sesskey();
-
 $rawjson = file_get_contents('php://input');
 
 $requests = json_decode($rawjson, true);
@@ -43,6 +41,12 @@ if ($requests === null) {
 }
 $responses = array();
 
+// Defines the external settings required for Ajax processing.
+$settings = external_settings::get_instance();
+$settings->set_file('pluginfile.php');
+$settings->set_fileurl(true);
+$settings->set_filter(true);
+$settings->set_raw(false);
 
 foreach ($requests as $request) {
     $response = array();
@@ -50,45 +54,9 @@ foreach ($requests as $request) {
     $index = clean_param($request['index'], PARAM_INT);
     $args = $request['args'];
 
-    try {
-        $externalfunctioninfo = external_function_info($methodname);
-
-        if (!$externalfunctioninfo->allowed_from_ajax) {
-            throw new moodle_exception('servicenotavailable', 'webservice');
-        }
-
-        // Do not allow access to write or delete webservices as a public user.
-        if ($externalfunctioninfo->loginrequired) {
-            if (!isloggedin()) {
-                error_log('This external function is not available to public users. Failed to call "' . $methodname . '"');
-                throw new moodle_exception('servicenotavailable', 'webservice');
-            }
-        }
-
-        // Validate params, this also sorts the params properly, we need the correct order in the next part.
-        $callable = array($externalfunctioninfo->classname, 'validate_parameters');
-        $params = call_user_func($callable,
-                                 $externalfunctioninfo->parameters_desc,
-                                 $args);
-
-        // Execute - gulp!
-        $callable = array($externalfunctioninfo->classname, $externalfunctioninfo->methodname);
-        $result = call_user_func_array($callable,
-                                       array_values($params));
-
-        $response['error'] = false;
-        $response['data'] = $result;
-        $responses[$index] = $response;
-    } catch (Exception $e) {
-        $jsonexception = get_exception_info($e);
-        unset($jsonexception->a);
-        if (!debugging('', DEBUG_DEVELOPER)) {
-            unset($jsonexception->debuginfo);
-            unset($jsonexception->backtrace);
-        }
-        $response['error'] = true;
-        $response['exception'] = $jsonexception;
-        $responses[$index] = $response;
+    $response = external_api::call_external_function($methodname, $args, true);
+    $responses[$index] = $response;
+    if ($response['error']) {
         // Do not process the remaining requests.
         break;
     }

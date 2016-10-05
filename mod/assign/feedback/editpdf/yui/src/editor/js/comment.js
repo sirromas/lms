@@ -159,7 +159,7 @@ var COMMENT = function(editor, gradeid, pageno, x, y, width, colour, rawtext) {
     this.draw = function(focus) {
         var drawable = new M.assignfeedback_editpdf.drawable(this.editor),
             node,
-            drawingregion = Y.one(SELECTOR.DRAWINGREGION),
+            drawingregion = this.editor.get_dialogue_element(SELECTOR.DRAWINGREGION),
             container,
             menu,
             position,
@@ -196,7 +196,7 @@ var COMMENT = function(editor, gradeid, pageno, x, y, width, colour, rawtext) {
         drawable.store_position(container, position.x, position.y);
         drawable.nodes.push(container);
         node.set('value', this.rawtext);
-        scrollheight = node.get('scrollHeight'),
+        scrollheight = node.get('scrollHeight');
         node.setStyles({
             'height' : scrollheight + 'px',
             'overflow': 'hidden'
@@ -265,43 +265,50 @@ var COMMENT = function(editor, gradeid, pageno, x, y, width, colour, rawtext) {
         });
 
         node.on('gesturemovestart', function(e) {
-            node.setData('dragging', true);
-            node.setData('offsetx', e.clientX - node.getX());
-            node.setData('offsety', e.clientY - node.getY());
+            if (editor.currentedit.tool === 'select') {
+                e.preventDefault();
+                node.setData('dragging', true);
+                node.setData('offsetx', e.clientX - node.getX());
+                node.setData('offsety', e.clientY - node.getY());
+            }
         });
         node.on('gesturemoveend', function() {
-            node.setData('dragging', false);
-            this.editor.save_current_page();
+            if (editor.currentedit.tool === 'select') {
+                node.setData('dragging', false);
+                this.editor.save_current_page();
+            }
         }, null, this);
         node.on('gesturemove', function(e) {
-            var x = e.clientX - node.getData('offsetx'),
-                y = e.clientY - node.getData('offsety'),
-                nodewidth,
-                nodeheight,
-                newlocation,
-                windowlocation,
-                bounds;
+            if (editor.currentedit.tool === 'select') {
+                var x = e.clientX - node.getData('offsetx'),
+                    y = e.clientY - node.getData('offsety'),
+                    nodewidth,
+                    nodeheight,
+                    newlocation,
+                    windowlocation,
+                    bounds;
 
-            nodewidth = parseInt(node.getStyle('width'), 10);
-            nodeheight = parseInt(node.getStyle('height'), 10);
+                nodewidth = parseInt(node.getStyle('width'), 10);
+                nodeheight = parseInt(node.getStyle('height'), 10);
 
-            newlocation = this.editor.get_canvas_coordinates(new M.assignfeedback_editpdf.point(x, y));
-            bounds = this.editor.get_canvas_bounds(true);
-            bounds.x = 0;
-            bounds.y = 0;
+                newlocation = this.editor.get_canvas_coordinates(new M.assignfeedback_editpdf.point(x, y));
+                bounds = this.editor.get_canvas_bounds(true);
+                bounds.x = 0;
+                bounds.y = 0;
 
-            bounds.width -= nodewidth + 42;
-            bounds.height -= nodeheight + 8;
-            // Clip to the window size - the comment size.
-            newlocation.clip(bounds);
+                bounds.width -= nodewidth + 42;
+                bounds.height -= nodeheight + 8;
+                // Clip to the window size - the comment size.
+                newlocation.clip(bounds);
 
-            this.x = newlocation.x;
-            this.y = newlocation.y;
+                this.x = newlocation.x;
+                this.y = newlocation.y;
 
-            windowlocation = this.editor.get_window_coordinates(newlocation);
-            node.ancestor().setX(windowlocation.x);
-            node.ancestor().setY(windowlocation.y);
-            this.drawable.store_position(node.ancestor(), windowlocation.x, windowlocation.y);
+                windowlocation = this.editor.get_window_coordinates(newlocation);
+                node.ancestor().setX(windowlocation.x);
+                node.ancestor().setY(windowlocation.y);
+                this.drawable.store_position(node.ancestor(), windowlocation.x, windowlocation.y);
+            }
         }, null, this);
 
         this.menu = new M.assignfeedback_editpdf.commentmenu({

@@ -176,7 +176,15 @@ class assign_grading_table extends table_sql implements renderable {
 
         $from .= 'LEFT JOIN {assign_user_flags} uf
                          ON u.id = uf.userid
-                        AND uf.assignment = :assignmentid3';
+                        AND uf.assignment = :assignmentid3 ';
+
+        if (!empty($this->assignment->get_instance()->blindmarking)) {
+            $from .= 'LEFT JOIN {assign_user_mapping} um
+                             ON u.id = um.userid
+                            AND um.assignment = :assignmentid4 ';
+            $params['assignmentid4'] = (int)$this->assignment->get_instance()->id;
+            $fields .= ', um.id as recordid ';
+        }
 
         $userparams = array();
         $userindex = 0;
@@ -198,7 +206,7 @@ class assign_grading_table extends table_sql implements renderable {
             } else if ($filter == ASSIGN_FILTER_REQUIRE_GRADING) {
                 $where .= ' AND (s.timemodified IS NOT NULL AND
                                  s.status = :submitted AND
-                                 (s.timemodified > g.timemodified OR g.timemodified IS NULL))';
+                                 (s.timemodified >= g.timemodified OR g.timemodified IS NULL OR g.grade IS NULL))';
                 $params['submitted'] = ASSIGN_SUBMISSION_STATUS_SUBMITTED;
 
             } else if (strpos($filter, ASSIGN_FILTER_SINGLE_USER) === 0) {
@@ -272,6 +280,14 @@ class assign_grading_table extends table_sql implements renderable {
             // Fullname.
             $columns[] = 'fullname';
             $headers[] = get_string('fullname');
+
+            // Participant # details if can view real identities.
+            if ($this->assignment->is_blind_marking()) {
+                if (!$this->is_downloading()) {
+                    $columns[] = 'recordid';
+                    $headers[] = get_string('recordid', 'assign');
+                }
+            }
 
             foreach ($extrauserfields as $extrafield) {
                 $columns[] = $extrafield;
@@ -402,8 +418,6 @@ class assign_grading_table extends table_sql implements renderable {
         foreach ($extrauserfields as $extrafield) {
              $this->column_class($extrafield, $extrafield);
         }
-        // We require at least one unique column for the sort.
-        $this->sortable(true, 'userid');
         $this->no_sorting('recordid');
         $this->no_sorting('finalgrade');
         $this->no_sorting('userid');
@@ -457,8 +471,10 @@ class assign_grading_table extends table_sql implements renderable {
      * @return string
      */
     public function col_recordid(stdClass $row) {
-        return get_string('hiddenuser', 'assign') .
-               $this->assignment->get_uniqueid_for_user($row->userid);
+        if (empty($row->recordid)) {
+            $row->recordid = $this->assignment->get_uniqueid_for_user($row->userid);
+        }
+        return get_string('hiddenuser', 'assign') . $row->recordid;
     }
 
 
@@ -637,6 +653,13 @@ class assign_grading_table extends table_sql implements renderable {
         $this->get_group_and_submission($row->id, $group, $submission, -1);
         if ($group) {
             return $group->name;
+        } else if ($this->assignment->get_instance()->preventsubmissionnotingroup) {
+            $usergroups = $this->assignment->get_all_groups($row->id);
+            if (count($usergroups) > 1) {
+                return get_string('multipleteamsgrader', 'assign');
+            } else {
+                return get_string('noteamgrader', 'assign');
+            }
         }
         return get_string('defaultteam', 'assign');
     }
@@ -761,6 +784,9 @@ class assign_grading_table extends table_sql implements renderable {
         $selectcol .= '<input type="hidden"
                               name="grademodified_' . $row->userid . '"
                               value="' . $row->timemarked . '"/>';
+        $selectcol .= '<input type="hidden"
+                              name="gradeattempt_' . $row->userid . '"
+                              value="' . $row->attemptnumber . '"/>';
         return $selectcol;
     }
 
@@ -817,15 +843,21 @@ class assign_grading_table extends table_sql implements renderable {
         $gradingdisabled = $this->assignment->grading_disabled($row->id);
 
         if (!$this->is_downloading() && $this->hasgrade) {
-            $name = $this->assignment->fullname($row);
-            $icon = $this->output->pix_icon('gradefeedback',
-                                            get_string('gradeuser', 'assign', $name),
-                                            'mod_assign');
             $urlparams = array('id' => $this->assignment->get_course_module()->id,
-                               'rownum'=>$this->rownum,
-                               'action'=>'grade');
+                               'rownum' => 0,
+                               'action' => 'grader');
+
+            if ($this->assignment->is_blind_marking()) {
+                if (empty($row->recordid)) {
+                    $row->recordid = $this->assignment->get_uniqueid_for_user($row->userid);
+                }
+                $urlparams['blindid'] = $row->recordid;
+            } else {
+                $urlparams['userid'] = $row->userid;
+            }
+
             $url = new moodle_url('/mod/assign/view.php', $urlparams);
-            $link = $this->output->action_link($url, $icon);
+            $link = '<a href="' . $url . '" class="btn btn-primary">' . get_string('grade') . '</a>';
             $grade .= $link . $separator;
         }
 
@@ -888,7 +920,7 @@ class assign_grading_table extends table_sql implements renderable {
         $this->get_group_and_submission($row->id, $group, $submission, -1);
         if ($submission && $submission->timemodified && $submission->status != ASSIGN_SUBMISSION_STATUS_NEW) {
             $o = userdate($submission->timemodified);
-        } else if ($row->timesubmitted) {
+        } else if ($row->timesubmitted && $row->status != ASSIGN_SUBMISSION_STATUS_NEW) {
             $o = userdate($row->timesubmitted);
         }
 
@@ -927,11 +959,16 @@ class assign_grading_table extends table_sql implements renderable {
             $status = $row->status;
         }
 
+        $displaystatus = $status;
+        if ($displaystatus == 'new') {
+            $displaystatus = '';
+        }
+
         if ($this->assignment->is_any_submission_plugin_enabled()) {
 
-            $o .= $this->output->container(get_string('submissionstatus_' . $status, 'assign'),
-                                           array('class'=>'submissionstatus' .$status));
-            if ($due && $timesubmitted > $due) {
+            $o .= $this->output->container(get_string('submissionstatus_' . $displaystatus, 'assign'),
+                                           array('class'=>'submissionstatus' .$displaystatus));
+            if ($due && $timesubmitted > $due && $status != ASSIGN_SUBMISSION_STATUS_NEW) {
                 $usertime = format_time($timesubmitted - $due);
                 $latemessage = get_string('submittedlateshort',
                                           'assign',
@@ -947,7 +984,7 @@ class assign_grading_table extends table_sql implements renderable {
             if (!$instance->markingworkflow) {
                 if ($row->grade !== null && $row->grade >= 0) {
                     $o .= $this->output->container(get_string('graded', 'assign'), 'submissiongraded');
-                } else if (!$timesubmitted) {
+                } else if (!$timesubmitted || $status == ASSIGN_SUBMISSION_STATUS_NEW) {
                     $now = time();
                     if ($due && ($now > $due)) {
                         $overduestr = get_string('overdue', 'assign', format_time($now - $due));
@@ -967,7 +1004,7 @@ class assign_grading_table extends table_sql implements renderable {
         }
 
         if ($this->is_downloading()) {
-            $o = strip_tags(str_replace('</div>', "\n", $o));
+            $o = strip_tags(rtrim(str_replace('</div>', ' - ', $o), '- '));
         }
 
         return $o;
@@ -986,9 +1023,18 @@ class assign_grading_table extends table_sql implements renderable {
 
         $actions = array();
 
-        $urlparams = array('id'=>$this->assignment->get_course_module()->id,
-                           'rownum'=>$this->rownum,
-                           'action'=>'grade');
+        $urlparams = array('id' => $this->assignment->get_course_module()->id,
+                               'rownum' => 0,
+                               'action' => 'grader');
+
+        if ($this->assignment->is_blind_marking()) {
+            if (empty($row->recordid)) {
+                $row->recordid = $this->assignment->get_uniqueid_for_user($row->userid);
+            }
+            $urlparams['blindid'] = $row->recordid;
+        } else {
+            $urlparams['userid'] = $row->userid;
+        }
         $url = new moodle_url('/mod/assign/view.php', $urlparams);
         $noimage = null;
 
@@ -1369,6 +1415,16 @@ class assign_grading_table extends table_sql implements renderable {
     }
 
     /**
+     * Always return a valid sort - even if the userid column is missing.
+     * @return array column name => SORT_... constant.
+     */
+    public function get_sort_columns() {
+        $result = parent::get_sort_columns();
+        $result = array_merge($result, array('userid' => SORT_ASC));
+        return $result;
+    }
+
+    /**
      * Override the table show_hide_link to not show for select column.
      *
      * @param string $column the column name, index into various names.
@@ -1380,5 +1436,17 @@ class assign_grading_table extends table_sql implements renderable {
             return parent::show_hide_link($column, $index);
         }
         return '';
+    }
+
+    /**
+     * Overides setup to ensure it will only run a single time.
+     */
+    public function setup() {
+        // Check if the setup function has been called before, we should not run it twice.
+        // If we do the sortorder of the table will be broken.
+        if (!empty($this->setup)) {
+            return;
+        }
+        parent::setup();
     }
 }

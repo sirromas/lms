@@ -649,13 +649,14 @@ function assign_print_recent_activity($course, $viewfullnames, $timestart) {
 
     $dbparams = array($timestart, $course->id, 'assign', ASSIGN_SUBMISSION_STATUS_SUBMITTED);
     $namefields = user_picture::fields('u', null, 'userid');
-    if (!$submissions = $DB->get_records_sql("SELECT asb.id, asb.timemodified, cm.id AS cmid,
+    if (!$submissions = $DB->get_records_sql("SELECT asb.id, asb.timemodified, cm.id AS cmid, um.id as recordid,
                                                      $namefields
                                                 FROM {assign_submission} asb
                                                      JOIN {assign} a      ON a.id = asb.assignment
                                                      JOIN {course_modules} cm ON cm.instance = a.id
                                                      JOIN {modules} md        ON md.id = cm.module
                                                      JOIN {user} u            ON u.id = asb.userid
+                                                LEFT JOIN {assign_user_mapping} um ON um.userid = u.id AND um.assignment = a.id
                                                WHERE asb.timemodified > ? AND
                                                      asb.latest = 1 AND
                                                      a.course = ? AND
@@ -735,7 +736,10 @@ function assign_print_recent_activity($course, $viewfullnames, $timestart) {
         // Obscure first and last name if blind marking enabled.
         if ($assign->is_blind_marking()) {
             $submission->firstname = get_string('participant', 'mod_assign');
-            $submission->lastname = $assign->get_uniqueid_for_user($submission->userid);
+            if (empty($submission->recordid)) {
+                $submission->recordid = $assign->get_uniqueid_for_user($submission->userid);
+            }
+            $submission->lastname = $submission->recordid;
         }
         print_recent_activity_note($submission->timemodified,
                                    $submission,
@@ -1316,6 +1320,52 @@ function assign_user_complete($course, $user, $coursemodule, $assign) {
 }
 
 /**
+ * Rescale all grades for this activity and push the new grades to the gradebook.
+ *
+ * @param stdClass $course Course db record
+ * @param stdClass $cm Course module db record
+ * @param float $oldmin
+ * @param float $oldmax
+ * @param float $newmin
+ * @param float $newmax
+ */
+function assign_rescale_activity_grades($course, $cm, $oldmin, $oldmax, $newmin, $newmax) {
+    global $DB;
+
+    if ($oldmax <= $oldmin) {
+        // Grades cannot be scaled.
+        return false;
+    }
+    $scale = ($newmax - $newmin) / ($oldmax - $oldmin);
+    if (($newmax - $newmin) <= 1) {
+        // We would lose too much precision, lets bail.
+        return false;
+    }
+
+    $params = array(
+        'p1' => $oldmin,
+        'p2' => $scale,
+        'p3' => $newmin,
+        'a' => $cm->instance
+    );
+
+    $sql = 'UPDATE {assign_grades} set grade = (((grade - :p1) * :p2) + :p3) where assignment = :a';
+    $dbupdate = $DB->execute($sql, $params);
+    if (!$dbupdate) {
+        return false;
+    }
+
+    // Now re-push all grades to the gradebook.
+    $dbparams = array('id' => $cm->instance);
+    $assign = $DB->get_record('assign', $dbparams);
+    $assign->cmidnumber = $cm->idnumber;
+
+    assign_update_grades($assign);
+
+    return true;
+}
+
+/**
  * Print the grade information for the assignment for this user.
  *
  * @param stdClass $course
@@ -1365,7 +1415,11 @@ function assign_get_completion_state($course, $cm, $userid, $type) {
 
     // If completion option is enabled, evaluate it and return true/false.
     if ($assign->get_instance()->completionsubmit) {
-        $submission = $assign->get_user_submission($userid, false);
+        if ($assign->get_instance()->teamsubmission) {
+            $submission = $assign->get_group_submission($userid, 0, false);
+        } else {
+            $submission = $assign->get_user_submission($userid, false);
+        }
         return $submission && $submission->status == ASSIGN_SUBMISSION_STATUS_SUBMITTED;
     } else {
         // Completion option is not enabled so just return $type.
@@ -1427,4 +1481,37 @@ function assign_pluginfile($course,
         return false;
     }
     send_stored_file($file, 0, 0, $forcedownload, $options);
+}
+
+/**
+ * Serve the grading panel as a fragment.
+ *
+ * @param array $args List of named arguments for the fragment loader.
+ * @return string
+ */
+function mod_assign_output_fragment_gradingpanel($args) {
+    global $CFG;
+
+    $context = $args['context'];
+
+    if ($context->contextlevel != CONTEXT_MODULE) {
+        return null;
+    }
+    require_once($CFG->dirroot . '/mod/assign/locallib.php');
+    $assign = new assign($context, null, null);
+
+    $userid = clean_param($args['userid'], PARAM_INT);
+    $attemptnumber = clean_param($args['attemptnumber'], PARAM_INT);
+    $formdata = array();
+    if (!empty($args['jsonformdata'])) {
+        $serialiseddata = json_decode($args['jsonformdata']);
+        parse_str($serialiseddata, $formdata);
+    }
+    $viewargs = array(
+        'userid' => $userid,
+        'attemptnumber' => $attemptnumber,
+        'formdata' => $formdata
+    );
+
+    return $assign->view('gradingpanel', $viewargs);
 }

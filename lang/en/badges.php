@@ -87,7 +87,7 @@ $string['backpackdetails'] = 'Backpack settings';
 $string['backpackemail'] = 'Email address';
 $string['backpackemail_help'] = 'The email address associated with your backpack. While you are connected, any badges earned on this site will be associated with this email address.';
 $string['personaconnection'] = 'Sign in with your email';
-$string['personaconnection_help'] = 'Persona is a system for identifying yourself across the web, using an email address that you own. The Open Badges backpack uses Persona as a login system, so to be able to connect to a backpack you with need a Persona account.
+$string['personaconnection_help'] = 'Persona is a system for identifying yourself across the web, using an email address that you own. The Open Badges backpack uses Persona as a login system, so to be able to connect to a backpack you will need a Persona account.
 
 For more information about Persona visit <a href="https://login.persona.org/about">https://login.persona.org/about</a>.';
 $string['backpackimport'] = 'Badge import settings';
@@ -106,7 +106,7 @@ $string['badgeprivacysetting_help'] = 'Badges you earn can be displayed on your 
 
 You can still control individual badge privacy settings on your badges page.';
 $string['badgeprivacysetting_str'] = 'Automatically show badges I earn on my profile page';
-$string['badgesalt'] = 'Salt for hashing the recepient\'s email address';
+$string['badgesalt'] = 'Salt for hashing the recipient\'s email address';
 $string['badgesalt_desc'] = 'Using a hash allows backpack services to confirm the badge earner without having to expose their email address. This setting should only use numbers and letters.
 
 Note: For recipient verification purposes, please avoid changing this setting once you start issuing badges.';
@@ -392,6 +392,3 @@ $string['visible'] = 'Visible';
 $string['warnexpired'] = ' (This badge has expired!)';
 $string['year'] = 'Year(s)';
 
-// Deprecated since Moodle 2.8.
-
-$string['hidden'] = 'Hidden';

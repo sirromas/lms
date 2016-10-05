@@ -136,6 +136,47 @@ function my_reset_page($userid, $private=MY_PAGE_PRIVATE, $pagetype='my-index') 
     return $systempage;
 }
 
+/**
+ * Resets the page customisations for all users.
+ *
+ * @param int $private Either MY_PAGE_PRIVATE or MY_PAGE_PUBLIC.
+ * @param string $pagetype Either my-index or user-profile.
+ * @return void
+ */
+function my_reset_page_for_all_users($private = MY_PAGE_PRIVATE, $pagetype = 'my-index') {
+    global $DB;
+
+    // This may take a while. Raise the execution time limit.
+    core_php_time_limit::raise();
+
+    // Find all the user pages and all block instances in them.
+    $sql = "SELECT bi.id
+        FROM {my_pages} p
+        JOIN {context} ctx ON ctx.instanceid = p.userid AND ctx.contextlevel = :usercontextlevel
+        JOIN {block_instances} bi ON bi.parentcontextid = ctx.id AND
+            bi.pagetypepattern = :pagetypepattern AND
+            (bi.subpagepattern IS NULL OR bi.subpagepattern = " . $DB->sql_concat("''", 'p.id') . ")
+        WHERE p.private = :private";
+    $params = array('private' => $private,
+        'usercontextlevel' => CONTEXT_USER,
+        'pagetypepattern' => $pagetype);
+    $blockids = $DB->get_fieldset_sql($sql, $params);
+
+    // Wrap the SQL queries in a transaction.
+    $transaction = $DB->start_delegated_transaction();
+
+    // Delete the block instances.
+    if (!empty($blockids)) {
+        blocks_delete_instances($blockids);
+    }
+
+    // Finally delete the pages.
+    $DB->delete_records_select('my_pages', 'userid IS NOT NULL AND private = :private', ['private' => $private]);
+
+    // We should be good to go now.
+    $transaction->allow_commit();
+}
+
 class my_syspage_block_manager extends block_manager {
     // HACK WARNING!
     // TODO: figure out a better way to do this

@@ -28,8 +28,6 @@
 require_once(__DIR__ . '/../../../lib/behat/behat_base.php');
 
 use Behat\Mink\Exception\ElementNotFoundException as ElementNotFoundException,
-    Behat\Behat\Context\Step\Given as Given,
-    Behat\Behat\Context\Step\Then as Then,
     Behat\Gherkin\Node\TableNode as TableNode;
 
 /**

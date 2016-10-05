@@ -257,7 +257,6 @@ class data_field_latlong extends data_field_base {
      * Validate values for this field.
      * Both the Latitude and the Longitude fields need to be filled in.
      *
-     * @since Moodle 2.9.2
      * @param array $values The entered values for the lat. and long.
      * @return string|bool Error message or false.
      */

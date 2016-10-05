@@ -27,7 +27,6 @@ namespace gradereport_history\output;
 defined('MOODLE_INTERNAL') || die;
 
 require_once($CFG->libdir . '/tablelib.php');
-require_once($CFG->dirroot.'/my/myCourses.php');
 
 /**
  * Renderable class for gradehistory report.
@@ -252,22 +251,13 @@ class tablelog extends \table_sql implements \renderable {
      * @return string HTML to display
      */
     public function col_grader(\stdClass $history) {
-        global $USER;
-        
         if (empty($history->usermodified)) {
             // Not every row has a valid usermodified.
             return '';
         }
-        $mc=new \myCourses($USER->id);
+
         $grader = new \stdClass();
         $grader = username_load_fields_from_object($grader, $history, 'grader');
-        
-        /*
-        echo "<pre>";
-        print_r($grader);
-        echo "</pre>";
-        */
-        
         $name = fullname($grader);
 
         if ($this->download) {
@@ -275,7 +265,6 @@ class tablelog extends \table_sql implements \renderable {
         }
 
         $userid = $history->usermodified;
-        //echo "User id: ".$userid."<br/>";
         $profileurl = new \moodle_url('/user/view.php', array('id' => $userid, 'course' => $this->courseid));
 
         return \html_writer::link($profileurl, $name);
@@ -340,7 +329,7 @@ class tablelog extends \table_sql implements \renderable {
         $coursecontext = $this->context;
         $filter = 'gi.courseid = :courseid';
         $params = array(
-            'courseid' => $coursecontext->instanceid,            
+            'courseid' => $coursecontext->instanceid,
         );
 
         if (!empty($this->filters->itemid)) {
@@ -349,10 +338,6 @@ class tablelog extends \table_sql implements \renderable {
         }
         if (!empty($this->filters->userids)) {
             $list = explode(',', $this->filters->userids);
-            echo "<pre>";
-            print_r($list);
-            echo "</pre>";
-            
             list($insql, $plist) = $DB->get_in_or_equal($list, SQL_PARAMS_NAMED);
             $filter .= " AND ggh.userid $insql";
             $params += $plist;
@@ -502,13 +487,11 @@ class tablelog extends \table_sql implements \renderable {
      * @return array returns an array in the format $userid => $userid
      */
     public function get_selected_users() {
-        global $DB, $USER;
-        $mc=new \myCourses($USER->id);
+        global $DB;
         $idlist = array();
-        if (!empty($this->filters->userids)) {           
-            
+        if (!empty($this->filters->userids)) {
+
             $idlist = explode(',', $this->filters->userids);
-            print_r($idlist);
             list($where, $params) = $DB->get_in_or_equal($idlist);
             return $DB->get_records_select('user', "id $where", $params);
 

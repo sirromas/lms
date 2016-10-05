@@ -250,7 +250,7 @@ class course_modinfo {
         $modnames = get_module_types_names($plural);
         $modnamesused = array();
         foreach ($this->get_cms() as $cmid => $mod) {
-            if (isset($modnames[$mod->modname]) && $mod->uservisible) {
+            if (!isset($modnamesused[$mod->modname]) && isset($modnames[$mod->modname]) && $mod->uservisible) {
                 $modnamesused[$mod->modname] = $modnames[$mod->modname];
             }
         }
@@ -492,7 +492,7 @@ class course_modinfo {
         // Loop through each piece of module data, constructing it
         static $modexists = array();
         foreach ($coursemodinfo->modinfo as $mod) {
-            if (strval($mod->name) === '') {
+            if (!isset($mod->name) || strval($mod->name) === '') {
                 // something is wrong here
                 continue;
             }

@@ -36,6 +36,7 @@ if (!$course = $DB->get_record('course', array('id' => $courseid))) {
     print_error('nocourseid');
 }
 require_login(null, false);
+$PAGE->set_course($course);
 
 $context = context_course::instance($course->id);
 $systemcontext = context_system::instance();
@@ -64,9 +65,9 @@ if (isset($personalcontext) && $courseid == SITEID) {
 if ($userid == $USER->id) {
     $settings = $PAGE->settingsnav->find('mygrades', null);
     $settings->make_active();
-} else if ($courseid != SITEID) {
+} else if ($courseid != SITEID && $userid) {
     // Show some other navbar thing.
-    $user = $DB->get_record('user', array('id' => $userid));
+    $user = $DB->get_record('user', array('id' => $userid), '*', MUST_EXIST);
     $PAGE->navigation->extend_for_user($user);
 }
 
@@ -106,8 +107,8 @@ if (!isset($USER->grade_last_report)) {
 }
 $USER->grade_last_report[$course->id] = 'overview';
 
-//first make sure we have proper final grades - this must be done before constructing of the grade tree
-grade_regrade_final_grades($courseid);
+// First make sure we have proper final grades.
+grade_regrade_final_grades_if_required($course);
 
 if (has_capability('moodle/grade:viewall', $context) && $courseid != SITEID) {
     // Please note this would be extremely slow if we wanted to implement this properly for all teachers.

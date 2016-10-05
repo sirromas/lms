@@ -141,10 +141,10 @@ class mod_data_external_testcase extends externallib_advanced_testcase {
         // Now, try as a teacher for getting all the additional fields.
         self::setUser($teacher);
 
-        $additionalfields = array('maxentries', 'rssarticles', 'singletemplate', 'listtemplate',
+        $additionalfields = array('maxentries', 'rssarticles', 'singletemplate', 'listtemplate', 'timemodified',
                                 'listtemplateheader', 'listtemplatefooter', 'addtemplate', 'rsstemplate', 'rsstitletemplate',
                                 'csstemplate', 'jstemplate', 'asearchtemplate', 'approval', 'scale', 'assessed', 'assesstimestart',
-                                'assesstimefinish', 'defaultsort', 'defaultsortdir', 'editany', 'notification');
+                                'assesstimefinish', 'defaultsort', 'defaultsortdir', 'editany', 'notification', 'manageapproved');
 
         foreach ($additionalfields as $field) {
             if ($field == 'approval' or $field == 'editany') {

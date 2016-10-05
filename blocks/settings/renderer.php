@@ -1,5 +1,4 @@
 <?php
-
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -22,137 +21,121 @@
  * @copyright  2010 Sam Hemelryk
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-require_once($CFG->dirroot . '/course/courseSections.php');
 
 class block_settings_renderer extends plugin_renderer_base {
 
     public function settings_tree(settings_navigation $navigation) {
-        global $USER;
         $count = 0;
         foreach ($navigation->children as &$child) {
-            $child->preceedwithhr = ($count !== 0);
+            $child->preceedwithhr = ($count!==0);
             if ($child->display) {
                 $count++;
             }
         }
-
-        $courseid=3; // we have only one course
-        $context = context_course::instance($courseid);
-        $cs = new courseSections($context, $courseid, $USER->id);
-        $roleid = $cs->getCourseRoles();
-        $secret_code = $cs->get_group_secret_code($USER->id);
-
-        $content = $this->navigation_node($navigation, array('class' => 'block_tree list'));
+        $navigationattrs = array(
+            'class' => 'block_tree list',
+            'role' => 'tree',
+            'data-ajax-loader' => 'block_navigation/site_admin_loader');
+        $content = $this->navigation_node($navigation, $navigationattrs);
         if (isset($navigation->id) && !is_numeric($navigation->id) && !empty($content)) {
             $content = $this->output->box($content, 'block_tree_box', $navigation->id);
-        }       
-        
-
-        if ($roleid == 4) {
-            
-            /*
-            $content.= '<p class="tree_item leaf active_tree_node">
-         <a href="http://' . $_SERVER['SERVER_NAME'] . '/lms/trgoup/index.php?secret_code=' . $secret_code . '&userid='.$USER->id.'" target="_blank">         
-         Create new course</a></p>';
-            
-            $content.= '<p class="tree_item leaf active_tree_node">
-         <a href="http://' . $_SERVER['SERVER_NAME'] . '/lms/trgoup/remove.php?secret_code=' . $secret_code . '&userid='.$USER->id.'" target="_blank">         
-         Remove courses</a></p>';
-            */           
-            
-            
-            $content.= '<p class="tree_item leaf active_tree_node">
-         <a href="http://' . $_SERVER['SERVER_NAME'] . '/lms/enrol/users.php?id=3' . $secret_code . '&userid='.$USER->id.'" target="_blank">         
-         Users</a></p>';  
-            
-          $content.= '<p class="tree_item leaf active_tree_node">
-         <a href="http://' . $_SERVER['SERVER_NAME'] . '/lms/mod/page/view.php?id=5' . $secret_code . '&userid='.$USER->id.'" target="_blank">         
-         Assignment</a></p>';  
-          
-          $content.= '<p class="tree_item leaf active_tree_node">
-         <a href="http://' . $_SERVER['SERVER_NAME'] . '/lms/mod/forum/view.php?id=13' . $secret_code . '&userid='.$USER->id.'" target="_blank">         
-         Discussion Board</a></p>';  
-          
-          $content.= '<p class="tree_item leaf active_tree_node">
-         <a href="http://' . $_SERVER['SERVER_NAME'] . '/lms/mod/quiz/view.php?id=7' . $secret_code . '&userid='.$USER->id.'" target="_blank">         
-         Quiz</a></p>';  
-            
-            
-            $item_to_remove = array('Grade history', 'Enrolment methods', 'Grade administration', 'Course Management');
-            $clean_content = $cs->remove_navigation_tutor_navigation_items($content, $item_to_remove);
-            /*
-              echo "<pre>";
-              print_r($clean_content);
-              echo "</pre>";
-             */
-            return $clean_content;
         }
-
         return $content;
     }
 
-    protected function navigation_node(navigation_node $node, $attrs = array()) {
+    /**
+     * Build the navigation node.
+     *
+     * @param navigation_node $node the navigation node object.
+     * @param array $attrs list of attributes.
+     * @param int $depth the depth, default to 1.
+     * @return string the navigation node code.
+     */
+    protected function navigation_node(navigation_node $node, $attrs=array(), $depth = 1) {
         $items = $node->children;
 
         // exit if empty, we don't want an empty ul element
-        if ($items->count() == 0) {
+        if ($items->count()==0) {
             return '';
         }
 
         // array of nested li elements
         $lis = array();
+        $number = 0;
         foreach ($items as $item) {
+            $number++;
             if (!$item->display) {
                 continue;
             }
 
-            $isbranch = ($item->children->count() > 0 || $item->nodetype == navigation_node::NODETYPE_BRANCH);
-            $hasicon = (!$isbranch && $item->icon instanceof renderable);
+            $isbranch = ($item->children->count()>0  || $item->nodetype==navigation_node::NODETYPE_BRANCH);
 
             if ($isbranch) {
                 $item->hideicon = true;
             }
-            $content = $this->output->render($item);
 
-            // this applies to the li item which contains all child lists too
-            $liclasses = array($item->get_css_type());
-            $liexpandable = array();
-            if (!$item->forceopen || (!$item->forceopen && $item->collapse) || ($item->children->count() == 0 && $item->nodetype == navigation_node::NODETYPE_BRANCH)) {
-                $liclasses[] = 'collapsed';
-            }
+            $content = $this->output->render($item);
+            $id = $item->id ? $item->id : html_writer::random_id();
+            $ulattr = ['id' => $id . '_group', 'role' => 'group'];
+            $liattr = ['class' => [$item->get_css_type(), 'depth_'.$depth], 'tabindex' => '-1'];
+            $pattr = ['class' => ['tree_item'], 'role' => 'treeitem'];
+            $pattr += !empty($item->id) ? ['id' => $item->id] : [];
+            $hasicon = (!$isbranch && $item->icon instanceof renderable);
+
             if ($isbranch) {
-                $liclasses[] = 'contains_branch';
-                $liexpandable = array('aria-expanded' => in_array('collapsed', $liclasses) ? "false" : "true");
+                $liattr['class'][] = 'contains_branch';
+                if (!$item->forceopen || (!$item->forceopen && $item->collapse) || ($item->children->count() == 0
+                        && $item->nodetype == navigation_node::NODETYPE_BRANCH)) {
+                    $pattr += ['aria-expanded' => 'false'];
+                } else {
+                    $pattr += ['aria-expanded' => 'true'];
+                }
+                if ($item->requiresajaxloading) {
+                    $pattr['data-requires-ajax'] = 'true';
+                    $pattr['data-loaded'] = 'false';
+                } else {
+                    $pattr += ['aria-owns' => $id . '_group'];
+                }
             } else if ($hasicon) {
-                $liclasses[] = 'item_with_icon';
+                $liattr['class'][] = 'item_with_icon';
+                $pattr['class'][] = 'hasicon';
             }
             if ($item->isactive === true) {
-                $liclasses[] = 'current_branch';
-            }
-            $liattr = array('class' => join(' ', $liclasses)) + $liexpandable;
-            // class attribute on the div item which only contains the item content
-            $divclasses = array('tree_item');
-            if ($isbranch) {
-                $divclasses[] = 'branch';
-            } else {
-                $divclasses[] = 'leaf';
+                $liattr['class'][] = 'current_branch';
             }
             if (!empty($item->classes) && count($item->classes) > 0) {
-                $divclasses[] = join(' ', $item->classes);
+                $pattr['class'] = array_merge($pattr['class'], $item->classes);
             }
-            $divattr = array('class' => join(' ', $divclasses));
-            if (!empty($item->id)) {
-                $divattr['id'] = $item->id;
+            $nodetextid = 'label_' . $depth . '_' . $number;
+
+            // class attribute on the div item which only contains the item content
+            $pattr['class'][] = 'tree_item';
+            if ($isbranch) {
+                $pattr['class'][] = 'branch';
+            } else {
+                $pattr['class'][] = 'leaf';
             }
-            $content = html_writer::tag('p', $content, $divattr) . $this->navigation_node($item);
-            if (!empty($item->preceedwithhr) && $item->preceedwithhr === true) {
+
+            $liattr['class'] = join(' ', $liattr['class']);
+            $pattr['class'] = join(' ', $pattr['class']);
+
+            if (isset($pattr['aria-expanded']) && $pattr['aria-expanded'] === 'false') {
+                $ulattr += ['aria-hidden' => 'true'];
+            }
+
+            $content = html_writer::tag('p', $content, $pattr) . $this->navigation_node($item, $ulattr, $depth + 1);
+            if (!empty($item->preceedwithhr) && $item->preceedwithhr===true) {
                 $content = html_writer::empty_tag('hr') . $content;
             }
+            $liattr['aria-labelledby'] = $nodetextid;
             $content = html_writer::tag('li', $content, $liattr);
             $lis[] = $content;
         }
 
         if (count($lis)) {
+            if (empty($attrs['role'])) {
+                $attrs['role'] = 'group';
+            }
             return html_writer::tag('ul', implode("\n", $lis), $attrs);
         } else {
             return '';
@@ -160,11 +143,11 @@ class block_settings_renderer extends plugin_renderer_base {
     }
 
     public function search_form(moodle_url $formtarget, $searchvalue) {
-        $content = html_writer::start_tag('form', array('class' => 'adminsearchform', 'method' => 'get', 'action' => $formtarget, 'role' => 'search'));
+        $content = html_writer::start_tag('form', array('class'=>'adminsearchform', 'method'=>'get', 'action'=>$formtarget, 'role' => 'search'));
         $content .= html_writer::start_tag('div');
-        $content .= html_writer::tag('label', s(get_string('searchinsettings', 'admin')), array('for' => 'adminsearchquery', 'class' => 'accesshide'));
-        $content .= html_writer::empty_tag('input', array('id' => 'adminsearchquery', 'type' => 'text', 'name' => 'query', 'value' => s($searchvalue)));
-        $content .= html_writer::empty_tag('input', array('type' => 'submit', 'value' => s(get_string('search'))));
+        $content .= html_writer::tag('label', s(get_string('searchinsettings', 'admin')), array('for'=>'adminsearchquery', 'class'=>'accesshide'));
+        $content .= html_writer::empty_tag('input', array('id'=>'adminsearchquery', 'type'=>'text', 'name'=>'query', 'value'=>s($searchvalue)));
+        $content .= html_writer::empty_tag('input', array('type'=>'submit', 'value'=>s(get_string('search'))));
         $content .= html_writer::end_tag('div');
         $content .= html_writer::end_tag('form');
         return $content;
