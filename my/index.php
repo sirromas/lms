@@ -36,6 +36,7 @@
 
 require_once(dirname(__FILE__) . '/../config.php');
 require_once($CFG->dirroot . '/my/lib.php');
+require_once $_SERVER['DOCUMENT_ROOT'].'/lms/custom/access/classes/Access.php';
 
 redirect_if_major_upgrade_required();
 
@@ -160,6 +161,23 @@ if (empty($CFG->forcedefaultmymoodle) && $PAGE->user_allowed_editing()) {
 } else {
     $USER->editing = $edit = 0;
 }
+
+$ac=new Access();
+$roleid=$ac->get_user_role();
+
+
+if ($roleid==4) {
+    // Navigate directly to gradebook
+    $url="http://".$_SERVER['SERVER_NAME']."/lms/grade/report/grader/index.php?id=".$ac->courseid."";
+    header("Location: $url");
+}
+
+if ($roleid==5 && $pageid>1) {
+    // Navigate directly to course section  
+    $url="http://".$_SERVER['SERVER_NAME']."/lms/mod/page/view.php?id=".$pageid."";
+    header("Location: $url");
+}
+
 
 echo $OUTPUT->header();
 

@@ -4,8 +4,6 @@
 require_once('../config.php');
 require_once('lib.php');
 require_once($CFG->libdir . '/completionlib.php');
-//require_once './courseSections.php';
-require_once $_SERVER['DOCUMENT_ROOT'].'/lms/custom/access/classes/Access.php';
 
 $id = optional_param('id', 0, PARAM_INT);
 $name = optional_param('name', '', PARAM_RAW);
@@ -50,27 +48,6 @@ $PAGE->set_cacheable(false);
 
 context_helper::preload_course($course->id);
 $context = context_course::instance($course->id, MUST_EXIST);
-
-/*
-$cs=new courseSections($context, $course->id, $USER->id);
-$roleid=$cs->getCourseRoles();
-$pageid=$cs->getPageId();
-
-if ($roleid==4) {
-    // Navigate directly to gradebook
-    $url="http://".$_SERVER['SERVER_NAME']."/lms/grade/report/grader/index.php?id=".$course->id."";
-    header("Location: $url");
-}
-
-if ($roleid==5 && $pageid>1) {
-    // Navigate directly to course section  
-    $url="http://".$_SERVER['SERVER_NAME']."/lms/mod/page/view.php?id=".$pageid."";
-    header("Location: $url");
-}
-*/
-
-
-
 
 // Remove any switched roles before checking login
 if ($switchrole == 0 && confirm_sesskey()) {

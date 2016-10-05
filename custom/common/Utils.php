@@ -219,10 +219,16 @@ class Utils {
     }
 
     function get_user_role() {
-        context_helper::preload_course($this->course->id);
-        $context = context_course::instance($this->course->id, MUST_EXIST);
-        $role = get_user_roles($context, $this->user->id);
-        return $role->id;
+        $contextid = $this->get_course_context();
+        $userid = $this->user->id;
+        $query = "select * from mdl_role_assignments "
+                . "where contextid=$contextid "
+                . "and userid=$userid";
+        $result = $this->db->query($query);
+        while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+            $roleid = $row['roleid'];
+        }
+        return $roleid;
     }
 
 }
