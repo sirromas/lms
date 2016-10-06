@@ -201,10 +201,6 @@ class Utils {
         return $payment;
     }
 
-    function update_user_detailes($user) {
-        
-    }
-
     function get_group_name($groupid) {
         $query = "select * from mdl_groups where id=$groupid";
         $result = $this->db->query($query);
@@ -229,6 +225,20 @@ class Utils {
             $roleid = $row['roleid'];
         }
         return $roleid;
+    }
+
+    function get_user_groups() {
+        $groups = array();
+        $userid = $this->user->id;
+        $query = "select * from mdl_groups_members where userid=$userid";
+        $num = $this->db->numrows($query);
+        if ($num > 0) {
+            $result = $this->db->query($query);
+            while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+                $groups[] = $row['groupid'];
+            }
+        } // end if
+        return $groups;
     }
 
 }
