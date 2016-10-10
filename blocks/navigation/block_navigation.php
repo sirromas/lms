@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -33,22 +34,30 @@
  * @category  navigation
  * @copyright 2009 Sam Hemelryk
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * 
  */
+
+require_once $_SERVER['DOCUMENT_ROOT'] . '/lms/custom/navigation/classes/Navigation.php';
 class block_navigation extends block_base {
 
     /** @var int This allows for multiple navigation trees */
     public static $navcount;
+
     /** @var string The name of the block */
     public $blockname = null;
+
     /** @var bool A switch to indicate whether content has been generated or not. */
     protected $contentgenerated = false;
-    /** @var bool|null variable for checking if the block is docked*/
+
+    /** @var bool|null variable for checking if the block is docked */
     protected $docked = null;
 
     /** @var int Trim characters from the right */
     const TRIM_RIGHT = 1;
+
     /** @var int Trim characters from the left */
     const TRIM_LEFT = 2;
+
     /** @var int Trim characters from the center */
     const TRIM_CENTER = 3;
 
@@ -90,7 +99,7 @@ class block_navigation extends block_base {
      *
      * @return false
      */
-    function  instance_can_be_hidden() {
+    function instance_can_be_hidden() {
         return false;
     }
 
@@ -100,7 +109,7 @@ class block_navigation extends block_base {
      * @return bool true or false depending on whether the instance can be docked or not.
      */
     function instance_can_be_docked() {
-        return (parent::instance_can_be_docked() && (empty($this->config->enabledock) || $this->config->enabledock=='yes'));
+        return (parent::instance_can_be_docked() && (empty($this->config->enabledock) || $this->config->enabledock == 'yes'));
     }
 
     /**
@@ -122,9 +131,16 @@ class block_navigation extends block_base {
      */
     function get_content() {
         global $CFG;
+        $nav=new Navigation();
+        $roleid=$nav->get_user_role();
+        $userid=$nav->user->id;
         // First check if we have already generated, don't waste cycles
         if ($this->contentgenerated === true) {
             return $this->content;
+        }
+        
+        if ($roleid == 5 && $userid!=2 && $userid!=3) {
+            return null;
         }
         // JS for navigation moved to the standard theme, the code will probably have to depend on the actual page structure
         // $this->page->requires->js('/lib/javascript-navigation.js');
@@ -135,17 +151,17 @@ class block_navigation extends block_base {
 
         // Check if this block has been docked
         if ($this->docked === null) {
-            $this->docked = get_user_preferences('nav_in_tab_panel_globalnav'.block_navigation::$navcount, 0);
+            $this->docked = get_user_preferences('nav_in_tab_panel_globalnav' . block_navigation::$navcount, 0);
         }
 
         // Check if there is a param to change the docked state
-        if ($this->docked && optional_param('undock', null, PARAM_INT)==$this->instance->id) {
-            unset_user_preference('nav_in_tab_panel_globalnav'.block_navigation::$navcount);
+        if ($this->docked && optional_param('undock', null, PARAM_INT) == $this->instance->id) {
+            unset_user_preference('nav_in_tab_panel_globalnav' . block_navigation::$navcount);
             $url = $this->page->url;
             $url->remove_params(array('undock'));
             redirect($url);
-        } else if (!$this->docked && optional_param('dock', null, PARAM_INT)==$this->instance->id) {
-            set_user_preferences(array('nav_in_tab_panel_globalnav'.block_navigation::$navcount=>1));
+        } else if (!$this->docked && optional_param('dock', null, PARAM_INT) == $this->instance->id) {
+            set_user_preferences(array('nav_in_tab_panel_globalnav' . block_navigation::$navcount => 1));
             $url = $this->page->url;
             $url->remove_params(array('dock'));
             redirect($url);
@@ -155,11 +171,11 @@ class block_navigation extends block_base {
         $trimlength = 50;
 
         if (!empty($this->config->trimmode)) {
-            $trimmode = (int)$this->config->trimmode;
+            $trimmode = (int) $this->config->trimmode;
         }
 
         if (!empty($this->config->trimlength)) {
-            $trimlength = (int)$this->config->trimlength;
+            $trimlength = (int) $this->config->trimlength;
         }
 
         // Get the navigation object or don't display the block if none provided.
@@ -171,13 +187,13 @@ class block_navigation extends block_base {
             $expansionlimit = $this->config->expansionlimit;
             $navigation->set_expansion_limit($this->config->expansionlimit);
         }
-        $this->trim($navigation, $trimmode, $trimlength, ceil($trimlength/2));
+        $this->trim($navigation, $trimmode, $trimlength, ceil($trimlength / 2));
 
         // Get the expandable items so we can pass them to JS
         $expandable = array();
         $navigation->find_expandable($expandable);
         if ($expansionlimit) {
-            foreach ($expandable as $key=>$node) {
+            foreach ($expandable as $key => $node) {
                 if ($node['type'] > $expansionlimit && !($expansionlimit == navigation_node::TYPE_COURSE && $node['type'] == $expansionlimit && $node['branchid'] == SITEID)) {
                     unset($expandable[$key]);
                 }
@@ -193,10 +209,10 @@ class block_navigation extends block_base {
             $expansionlimit = $this->config->expansionlimit;
         }
         $arguments = array(
-            'id'             => $this->instance->id,
-            'instance'       => $this->instance->id,
-            'candock'        => $this->instance_can_be_docked(),
-            'courselimit'    => $limit,
+            'id' => $this->instance->id,
+            'instance' => $this->instance->id,
+            'candock' => $this->instance_can_be_docked(),
+            'courselimit' => $limit,
             'expansionlimit' => $expansionlimit
         );
 
@@ -254,34 +270,34 @@ class block_navigation extends block_base {
      * @param int $short The length to trim shorttext to
      * @param bool $recurse Recurse all children
      */
-    public function trim(navigation_node $node, $mode=1, $long=50, $short=25, $recurse=true) {
+    public function trim(navigation_node $node, $mode = 1, $long = 50, $short = 25, $recurse = true) {
         switch ($mode) {
             case self::TRIM_RIGHT :
-                if (core_text::strlen($node->text)>($long+3)) {
+                if (core_text::strlen($node->text) > ($long + 3)) {
                     // Truncate the text to $long characters
                     $node->text = $this->trim_right($node->text, $long);
                 }
-                if (is_string($node->shorttext) && core_text::strlen($node->shorttext)>($short+3)) {
+                if (is_string($node->shorttext) && core_text::strlen($node->shorttext) > ($short + 3)) {
                     // Truncate the shorttext
                     $node->shorttext = $this->trim_right($node->shorttext, $short);
                 }
                 break;
             case self::TRIM_LEFT :
-                if (core_text::strlen($node->text)>($long+3)) {
+                if (core_text::strlen($node->text) > ($long + 3)) {
                     // Truncate the text to $long characters
                     $node->text = $this->trim_left($node->text, $long);
                 }
-                if (is_string($node->shorttext) && core_text::strlen($node->shorttext)>($short+3)) {
+                if (is_string($node->shorttext) && core_text::strlen($node->shorttext) > ($short + 3)) {
                     // Truncate the shorttext
                     $node->shorttext = $this->trim_left($node->shorttext, $short);
                 }
                 break;
             case self::TRIM_CENTER :
-                if (core_text::strlen($node->text)>($long+3)) {
+                if (core_text::strlen($node->text) > ($long + 3)) {
                     // Truncate the text to $long characters
                     $node->text = $this->trim_center($node->text, $long);
                 }
-                if (is_string($node->shorttext) && core_text::strlen($node->shorttext)>($short+3)) {
+                if (is_string($node->shorttext) && core_text::strlen($node->shorttext) > ($short + 3)) {
                     // Truncate the shorttext
                     $node->shorttext = $this->trim_center($node->shorttext, $short);
                 }
@@ -293,6 +309,7 @@ class block_navigation extends block_base {
             }
         }
     }
+
     /**
      * Truncate a string from the left
      * @param string $string The string to truncate
@@ -300,8 +317,9 @@ class block_navigation extends block_base {
      * @return string The truncated string
      */
     protected function trim_left($string, $length) {
-        return '...'.core_text::substr($string, core_text::strlen($string)-$length, $length);
+        return '...' . core_text::substr($string, core_text::strlen($string) - $length, $length);
     }
+
     /**
      * Truncate a string from the right
      * @param string $string The string to truncate
@@ -309,8 +327,9 @@ class block_navigation extends block_base {
      * @return string The truncated string
      */
     protected function trim_right($string, $length) {
-        return core_text::substr($string, 0, $length).'...';
+        return core_text::substr($string, 0, $length) . '...';
     }
+
     /**
      * Truncate a string in the center
      * @param string $string The string to truncate
@@ -318,10 +337,10 @@ class block_navigation extends block_base {
      * @return string The truncated string
      */
     protected function trim_center($string, $length) {
-        $trimlength = ceil($length/2);
+        $trimlength = ceil($length / 2);
         $start = core_text::substr($string, 0, $trimlength);
-        $end = core_text::substr($string, core_text::strlen($string)-$trimlength);
-        $string = $start.'...'.$end;
+        $end = core_text::substr($string, core_text::strlen($string) - $trimlength);
+        $string = $start . '...' . $end;
         return $string;
     }
 
@@ -333,4 +352,5 @@ class block_navigation extends block_base {
     public function get_aria_role() {
         return 'navigation';
     }
+
 }

@@ -175,9 +175,11 @@ if ($roleid == 4) {
 
 if ($roleid == 5) {
     // Navigate directly to course page section
-    $pageid = $nav->get_page_link();
-    $url = "http://" . $_SERVER['SERVER_NAME'] . "/lms/mod/page/view.php?id=" . $pageid . "";
-    header("Location: $url");
+    $pageid = $nav->get_page_id();
+    if ($pageid != 0) {
+        $url = "http://" . $_SERVER['SERVER_NAME'] . "/lms/mod/page/view.php?id=" . $pageid . "";
+        header("Location: $url");
+    }
 }
 
 
