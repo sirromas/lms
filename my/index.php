@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -33,16 +34,16 @@
  * @author     Olav Jordan <olav.jordan@remote-learner.net>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-
 require_once(dirname(__FILE__) . '/../config.php');
 require_once($CFG->dirroot . '/my/lib.php');
-require_once $_SERVER['DOCUMENT_ROOT'].'/lms/custom/access/classes/Access.php';
+require_once $_SERVER['DOCUMENT_ROOT'] . '/lms/custom/access/classes/Access.php';
+require_once $_SERVER['DOCUMENT_ROOT'] . '/lms/custom/navigation/classes/Navigation.php';
 
 redirect_if_major_upgrade_required();
 
 // TODO Add sesskey check to edit
-$edit   = optional_param('edit', null, PARAM_BOOL);    // Turn editing on and off
-$reset  = optional_param('reset', null, PARAM_BOOL);
+$edit = optional_param('edit', null, PARAM_BOOL);    // Turn editing on and off
+$reset = optional_param('reset', null, PARAM_BOOL);
 
 require_login();
 
@@ -65,7 +66,6 @@ if (isguestuser()) {  // Force them to see system default, no editing allowed
     $PAGE->set_blocks_editing_capability('moodle/my:configsyspages');  // unlikely :)
     $header = "$SITE->shortname: $strmymoodle (GUEST)";
     $pagetitle = $header;
-
 } else {        // We are trying to view or edit our own My Moodle page
     $userid = $USER->id;  // Owner of the page
     $context = context_user::instance($USER->id);
@@ -97,8 +97,7 @@ if (!isguestuser()) {   // Skip default home page for guests
         } else if (!empty($CFG->defaulthomepage) && $CFG->defaulthomepage == HOMEPAGE_USER) {
             $frontpagenode = $PAGE->settingsnav->add(get_string('frontpagesettings'), null, navigation_node::TYPE_SETTING, null);
             $frontpagenode->force_open();
-            $frontpagenode->add(get_string('makethismyhome'), new moodle_url('/my/', array('setdefaulthome' => true)),
-                    navigation_node::TYPE_SETTING);
+            $frontpagenode->add(get_string('makethismyhome'), new moodle_url('/my/', array('setdefaulthome' => true)), navigation_node::TYPE_SETTING);
         }
     }
 }
@@ -157,26 +156,27 @@ if (empty($CFG->forcedefaultmymoodle) && $PAGE->user_allowed_editing()) {
     $url = new moodle_url("$CFG->wwwroot/my/index.php", $params);
     $button = $OUTPUT->single_button($url, $editstring);
     $PAGE->set_button($resetbutton . $button);
-
 } else {
     $USER->editing = $edit = 0;
 }
 
-$ac=new Access();
-$roleid=$ac->get_user_role();
+$ac = new Access();
+$roleid = $ac->get_user_role();
+$nav = new Navigation();
 
 
-if ($roleid==4) {
+if ($roleid == 4) {
     // Navigate directly to gradebook
-    $groups=$ac->get_user_groups();
-    $groupid=$groups[0];
-    $url="http://".$_SERVER['SERVER_NAME']."/lms/grade/report/grader/index.php?id=".$ac->courseid."&group=$groupid";
+    $groups = $ac->get_user_groups();
+    $groupid = $groups[0];
+    $url = "http://" . $_SERVER['SERVER_NAME'] . "/lms/grade/report/grader/index.php?id=" . $ac->courseid . "&group=$groupid";
     header("Location: $url");
 }
 
-if ($roleid==5 && $pageid>1) {
-    // Navigate directly to course section  
-    $url="http://".$_SERVER['SERVER_NAME']."/lms/mod/page/view.php?id=".$pageid."";
+if ($roleid == 5) {
+    // Navigate directly to course page section
+    $pageid = $nav->get_page_link();
+    $url = "http://" . $_SERVER['SERVER_NAME'] . "/lms/mod/page/view.php?id=" . $pageid . "";
     header("Location: $url");
 }
 
