@@ -18,9 +18,12 @@ class Navigation extends Utils {
         $usergroups = $this->get_user_groups();
         $query = "select * from mdl_course_modules "
                 . "where module=$moduleid "
-                . "and visible=1 order by added desc limit 0,1";
+                . "and visible=1 and availability is not null "
+                . "order by added desc limit 0,1";
+        //echo "Query: ".$query."<br>";
         $num = $this->db->numrows($query);
         if ($num > 0) {
+            //echo "Inside num ...<br>";
             $result = $this->db->query($query);
             while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
                 $id = $row['id'];
@@ -31,7 +34,11 @@ class Navigation extends Utils {
             foreach ($section as $c) {
                 $sectiongroups[] = $c->id;
             }
-
+            
+            //echo "<br>";
+            //print_r($section);
+            //echo "<br>";
+            
             foreach ($usergroups as $g) {
                 if (in_array($g, $sectiongroups)) {
                     $pageid = $id; // If section and user are in same group

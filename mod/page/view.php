@@ -22,30 +22,29 @@
  * @copyright  2009 Petr Skoda (http://skodak.org)
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-
 require('../../config.php');
-require_once($CFG->dirroot.'/mod/page/lib.php');
-require_once($CFG->dirroot.'/mod/page/locallib.php');
-require_once($CFG->libdir.'/completionlib.php');
+require_once($CFG->dirroot . '/mod/page/lib.php');
+require_once($CFG->dirroot . '/mod/page/locallib.php');
+require_once($CFG->libdir . '/completionlib.php');
+require_once $_SERVER['DOCUMENT_ROOT'] . '/lms/custom/navigation/classes/Navigation.php';
 
-$id      = optional_param('id', 0, PARAM_INT); // Course Module ID
-$p       = optional_param('p', 0, PARAM_INT);  // Page instance ID
+$id = optional_param('id', 0, PARAM_INT); // Course Module ID
+$p = optional_param('p', 0, PARAM_INT);  // Page instance ID
 $inpopup = optional_param('inpopup', 0, PARAM_BOOL);
 
 if ($p) {
-    if (!$page = $DB->get_record('page', array('id'=>$p))) {
+    if (!$page = $DB->get_record('page', array('id' => $p))) {
         print_error('invalidaccessparameter');
     }
     $cm = get_coursemodule_from_instance('page', $page->id, $page->course, false, MUST_EXIST);
-
 } else {
     if (!$cm = get_coursemodule_from_id('page', $id)) {
         print_error('invalidcoursemodule');
     }
-    $page = $DB->get_record('page', array('id'=>$cm->instance), '*', MUST_EXIST);
+    $page = $DB->get_record('page', array('id' => $cm->instance), '*', MUST_EXIST);
 }
 
-$course = $DB->get_record('course', array('id'=>$cm->course), '*', MUST_EXIST);
+$course = $DB->get_record('course', array('id' => $cm->course), '*', MUST_EXIST);
 
 require_course_login($course, true, $cm);
 $context = context_module::instance($cm->id);
@@ -60,10 +59,10 @@ $options = empty($page->displayoptions) ? array() : unserialize($page->displayop
 
 if ($inpopup and $page->display == RESOURCELIB_DISPLAY_POPUP) {
     $PAGE->set_pagelayout('popup');
-    $PAGE->set_title($course->shortname.': '.$page->name);
+    $PAGE->set_title($course->shortname . ': ' . $page->name);
     $PAGE->set_heading($course->fullname);
 } else {
-    $PAGE->set_title($course->shortname.': '.$page->name);
+    $PAGE->set_title($course->shortname . ': ' . $page->name);
     $PAGE->set_heading($course->fullname);
     $PAGE->set_activity_record($page);
 }
@@ -89,6 +88,22 @@ $content = format_text($content, $page->contentformat, $formatoptions);
 echo $OUTPUT->box($content, "generalbox center clearfix");
 
 $strlastmodified = get_string("lastmodified");
-echo "<div class=\"modified\">$strlastmodified: ".userdate($page->timemodified)."</div>";
+echo "<div class=\"modified\">$strlastmodified: " . userdate($page->timemodified) . "</div>";
+
+$nav = new Navigation();
+$forumid = $nav->get_forum_id();
+$quizid=$nav->get_quiz_id();
+if ($forumid > 0) {
+    $forumurl = "http://globalizationplus.com/lms/mod/forum/view.php?id=$forumid";
+    echo "<div style='text-align:center;'><iframe src='$forumurl' height='430px;' width='100%' frameborder='0'></iframe></div>";
+} // end if $forumid>0
+
+if ($quizid>0) {
+    $quizurl="http://globalizationplus.com/lms/mod/quiz/view.php?id=$quizid";
+    echo "<div class='row-fluid'>";
+    echo "<div class='span6' style='padding-left:25px;font-weight:bold;font-size:28px;color:black;'><a href='$quizurl' target='_blank'>Quiz</a></span>";
+    echo "</div>";
+} // end if $quizid>0
+
 
 echo $OUTPUT->footer();
