@@ -525,12 +525,15 @@ function groups_print_course_menu($course, $urlroot, $return=false) {
     $activegroup = groups_get_course_group($course, true, $allowedgroups);
 
     $groupsmenu = array();
-    if (!$allowedgroups or $groupmode == VISIBLEGROUPS or $aag) {
-        $groupsmenu[0] = get_string('allparticipants');
-    }
-
-    $groupsmenu += groups_sort_menu_options($allowedgroups, $usergroups);
-
+    
+   
+    //if (!$allowedgroups or $groupmode == VISIBLEGROUPS or $aag) {
+      //  $groupsmenu[0] = get_string('allparticipants');
+    //}
+   
+    //$groupsmenu += groups_sort_menu_options($allowedgroups, $usergroups);
+    $groupsmenu += groups_sort_menu_options($usergroups);
+    
     if ($groupmode == VISIBLEGROUPS) {
         $grouplabel = get_string('groupsvisible');
     } else {
@@ -601,7 +604,7 @@ function groups_sort_menu_options($allowedgroups, $usergroups) {
     if ($useroptions && $allowedoptions) {
         return array(
             1 => array(get_string('mygroups', 'group') => $useroptions),
-            2 => array(get_string('othergroups', 'group') => $allowedoptions)
+            //2 => array(get_string('othergroups', 'group') => $allowedoptions)
         );
     } else if ($useroptions) {
         return $useroptions;
@@ -1020,6 +1023,10 @@ function groups_cache_groupdata($courseid, cache $cache = null) {
     } else {
         $mappings = array();
     }
+    
+    //echo "<pre>";
+    //print_r($groups);
+    //echo "</pre>";
 
     // Prepare the data array.
     $data = new stdClass;

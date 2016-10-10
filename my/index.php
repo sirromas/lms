@@ -168,7 +168,9 @@ $roleid=$ac->get_user_role();
 
 if ($roleid==4) {
     // Navigate directly to gradebook
-    $url="http://".$_SERVER['SERVER_NAME']."/lms/grade/report/grader/index.php?id=".$ac->courseid."";
+    $groups=$ac->get_user_groups();
+    $groupid=$groups[0];
+    $url="http://".$_SERVER['SERVER_NAME']."/lms/grade/report/grader/index.php?id=".$ac->courseid."&group=$groupid";
     header("Location: $url");
 }
 
