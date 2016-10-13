@@ -87,23 +87,30 @@ $formatoptions->context = $context;
 $content = format_text($content, $page->contentformat, $formatoptions);
 echo $OUTPUT->box($content, "generalbox center clearfix");
 
+$nav = new Navigation();
+$roleid = $nav->get_user_role();
+
+if ($roleid == 4) {
+    die();
+}
 $strlastmodified = get_string("lastmodified");
 echo "<div class=\"modified\">$strlastmodified: " . userdate($page->timemodified) . "</div>";
 
-$nav = new Navigation();
-$forumid = $nav->get_forum_id();
-$quizid=$nav->get_quiz_id();
-if ($forumid > 0) {
-    $forumurl = "http://globalizationplus.com/lms/mod/forum/view.php?id=$forumid";
-    echo "<div style='text-align:center;'><iframe src='$forumurl' height='430px;' width='100%' frameborder='0'></iframe></div>";
-} // end if $forumid>0
 
-if ($quizid>0) {
-    $quizurl="http://globalizationplus.com/lms/mod/quiz/view.php?id=$quizid";
-    echo "<div class='row-fluid'>";
-    echo "<div class='span6' style='padding-left:25px;font-weight:bold;font-size:28px;color:black;'><a href='$quizurl' target='_blank'>Quiz</a></span>";
-    echo "</div>";
-} // end if $quizid>0
+if ($roleid == 5) {
+    $forumid = $nav->get_forum_id();
+    $quizid = $nav->get_quiz_id();
+    if ($forumid > 0) {
+        $forumurl = "http://globalizationplus.com/lms/mod/forum/view.php?id=$forumid";
+        echo "<div style='text-align:center;'><iframe src='$forumurl' height='430px;' width='100%' frameborder='0'></iframe></div>";
+    } // end if $forumid>0
 
+    if ($quizid > 0) {
+        $quizurl = "http://globalizationplus.com/lms/mod/quiz/view.php?id=$quizid";
+        echo "<div class='row-fluid'>";
+        echo "<div class='span6' style='padding-left:25px;font-weight:bold;font-size:28px;color:black;'><a href='$quizurl' target='_blank'>Quiz</a></span>";
+        echo "</div>";
+    } // end if $quizid>0
+} // end if $roleid==5
 
 echo $OUTPUT->footer();

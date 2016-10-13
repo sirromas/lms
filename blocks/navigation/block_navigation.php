@@ -139,7 +139,7 @@ class block_navigation extends block_base {
             return $this->content;
         }
         
-        if ($roleid == 5 && $userid!=2 && $userid!=3) {
+        if (($roleid == 5 || $roleid==4) && $userid!=2 && $userid!=3) {
             return null;
         }
         // JS for navigation moved to the standard theme, the code will probably have to depend on the actual page structure

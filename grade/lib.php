@@ -24,6 +24,7 @@
  */
 require_once($CFG->libdir . '/gradelib.php');
 require_once($CFG->dirroot . '/grade/export/lib.php');
+require_once $_SERVER['DOCUMENT_ROOT'] . '/lms/custom/navigation/classes/Navigation.php';
 
 /**
  * This class iterates over all users that are graded in a course.
@@ -725,7 +726,7 @@ function print_grade_plugin_selector($plugin_info, $active_type, $active_plugin,
 
         foreach ($plugins as $plugin) {
             //echo "$plugin->string: <br>";
-            if ($plugin->string != 'Grade history' && $plugin->string != 'Outcomes report' && $plugin->string != 'User report' && $plugin->string != 'Preferences: Grader report' && $plugin->string!='OpenDocument spreadsheet' && $plugin->string!='XML file') {
+            if ($plugin->string != 'Grade history' && $plugin->string != 'Outcomes report' && $plugin->string != 'User report' && $plugin->string != 'Preferences: Grader report' && $plugin->string != 'OpenDocument spreadsheet' && $plugin->string != 'XML file') {
                 $link = $plugin->link->out(false);
                 $section[$link] = $plugin->string;
                 $count++;
@@ -2714,6 +2715,8 @@ function grade_button($type, $courseid, $object) {
  */
 function grade_extend_settings($plugininfo, $courseid) {
     global $PAGE;
+    $nav = new Navigation();
+    $roleid = $nav->get_user_role();
 
     $gradenode = $PAGE->settingsnav->prepend(get_string('gradeadministration', 'grades'), null, navigation_node::TYPE_CONTAINER);
 
@@ -2721,8 +2724,18 @@ function grade_extend_settings($plugininfo, $courseid) {
 
     if ($reports = grade_helper::get_plugins_reports($courseid)) {
         foreach ($reports as $report) {
-            $gradenode->add($report->string, $report->link, navigation_node::TYPE_SETTING, null, $report->id, new pix_icon('i/report', ''));
-        }
+
+            if ($roleid == 4) {
+
+                //echo "Report link: ". $report->link."<br>";
+                if ($report->id != 'history' && $report->id != 'outcomes' && $report->id != 'user') {
+                    $gradenode->add($report->string, $report->link, navigation_node::TYPE_SETTING, null, $report->id, new pix_icon('i/report', ''));
+                } // end if
+            } // end if
+            else {
+                $gradenode->add($report->string, $report->link, navigation_node::TYPE_SETTING, null, $report->id, new pix_icon('i/report', ''));
+            } // end else
+        } // end foreach
     }
 
     if ($settings = grade_helper::get_info_manage_settings($courseid)) {
@@ -2742,8 +2755,15 @@ function grade_extend_settings($plugininfo, $courseid) {
     if ($exports = grade_helper::get_plugins_export($courseid)) {
         $exportnode = $gradenode->add($strings['export'], null, navigation_node::TYPE_CONTAINER);
         foreach ($exports as $export) {
-            $exportnode->add($export->string, $export->link, navigation_node::TYPE_SETTING, null, $export->id, new pix_icon('i/export', ''));
-        }
+            if ($roleid == 4) {
+                if ($export->id != 'ods' && $export->id != 'xml') {
+                    $exportnode->add($export->string, $export->link, navigation_node::TYPE_SETTING, null, $export->id, new pix_icon('i/export', ''));
+                } // end if
+            } // end if
+            else {
+                $exportnode->add($export->string, $export->link, navigation_node::TYPE_SETTING, null, $export->id, new pix_icon('i/export', ''));
+            } // end else
+        } // end foreach
     }
 
     if ($letters = grade_helper::get_info_letters($courseid)) {
@@ -2770,7 +2790,30 @@ function grade_extend_settings($plugininfo, $courseid) {
         if ($coursenode = $PAGE->settingsnav->get('courseadmin', navigation_node::TYPE_COURSE)) {
             $coursenode->make_inactive();
             $coursenode->forceopen = false;
-        }
+        } // end if
+    }
+
+    $setionsnode = $PAGE->settingsnav->prepend('Navigation', null, navigation_node::TYPE_CONTAINER);
+
+    $pageid = $nav->get_page_id();
+
+    if ($pageid > 0) {
+        $link = "http://" . $_SERVER['SERVER_NAME'] . "/lms/mod/page/view.php?id=$pageid";
+        $setionsnode->add('Assignment', $link, navigation_node::TYPE_SETTING, null, 2, new pix_icon('i/report', ''));
+    }
+
+    $forumid = $nav->get_forum_id();
+
+    if ($forumid > 0) {
+        $link = "http://" . $_SERVER['SERVER_NAME'] . "/lms/mod/forum/view.php?id=$forumid";
+        $setionsnode->add('Discussion board', $link, navigation_node::TYPE_SETTING, null, 2, new pix_icon('i/report', ''));
+    }
+
+    $quizid = $nav->get_quiz_id();
+
+    if ($quizid > 0) {
+        $link = "http://" . $_SERVER['SERVER_NAME'] . "/lms/mod/quiz/view.php?id=$quizid";
+        $setionsnode->add('Quiz', $link, navigation_node::TYPE_SETTING, null, 2, new pix_icon('i/report', ''));
     }
 }
 
