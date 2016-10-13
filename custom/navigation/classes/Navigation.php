@@ -8,6 +8,7 @@ class Navigation extends Utils {
     public $assesment_module_id = 1;
     public $forum_module_id = 9;
     public $quiz_module_id = 16;
+    public $glossary_module_id = 10;
 
     function __construct() {
         parent::__construct();
@@ -20,7 +21,6 @@ class Navigation extends Utils {
                 . "where module=$moduleid "
                 . "and visible=1 and availability is not null "
                 . "order by added desc limit 0,1";
-        //echo "Query: ".$query."<br>";
         $num = $this->db->numrows($query);
         if ($num > 0) {
             //echo "Inside num ...<br>";
@@ -34,11 +34,7 @@ class Navigation extends Utils {
             foreach ($section as $c) {
                 $sectiongroups[] = $c->id;
             }
-            
-            //echo "<br>";
-            //print_r($section);
-            //echo "<br>";
-            
+
             foreach ($usergroups as $g) {
                 if (in_array($g, $sectiongroups)) {
                     $pageid = $id; // If section and user are in same group
@@ -64,6 +60,16 @@ class Navigation extends Utils {
     }
 
     function get_quiz_id() {
+        $pageid = $this->get_section_data($this->quiz_module_id);
+        return $pageid;
+    }
+
+    function get_glossary_id() {
+        $pageid = $this->get_section_data($this->quiz_module_id);
+        return $pageid;
+    }
+
+    function get_overrided_quiz_id() {
         $pageid = 0;
         $moduleid = $this->quiz_module_id;
         $usergroups = $this->get_user_groups();
@@ -89,7 +95,7 @@ class Navigation extends Utils {
                     $pageid = $id; // If section and user are in same group
                 }
             } // end foreach
-        } // end if $num > 0 \
+        } // end if $num > 0 
         return $pageid;
     }
 
