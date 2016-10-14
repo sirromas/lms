@@ -4155,6 +4155,11 @@ EOD;
         } else {
             $headings = $this->heading($contextheader->heading, $contextheader->headinglevel);
         }
+        
+        //echo "Headings: <pre>";
+        //print_r($headings);
+        //echo "</pre><br>";
+        $headings="<h1 style='text-align:center;'>Globalization Plus<br>Nonpartisan Current Events Reports for University Students & Faculty</h1>";
 
         $html .= html_writer::tag('div', $headings, array('class' => 'page-header-headings'));
 
@@ -4196,7 +4201,7 @@ EOD;
         $html = html_writer::start_tag('header', array('id' => 'page-header', 'class' => 'clearfix'));
         $html .= $this->context_header();
         $html .= html_writer::start_div('clearfix', array('id' => 'page-navbar'));
-        $html .= html_writer::tag('div', $this->navbar(), array('class' => 'breadcrumb-nav'));
+        //$html .= html_writer::tag('div', $this->navbar(), array('class' => 'breadcrumb-nav'));
         $html .= html_writer::div($this->page_heading_button(), 'breadcrumb-button');
         $html .= html_writer::end_div();
         $html .= html_writer::tag('div', $this->course_header(), array('id' => 'course-header'));

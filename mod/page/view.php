@@ -73,7 +73,7 @@ echo $OUTPUT->header();
 
 if ($roleid == 5) {
 
-    echo "<br><div class='row-fluid'>";
+    echo "<br><div class='row-fluid' style='text-align:center;'>";
 
     $quizid = $nav->get_quiz_id();
     if ($quizid > 0) {
