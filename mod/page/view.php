@@ -28,6 +28,9 @@ require_once($CFG->dirroot . '/mod/page/locallib.php');
 require_once($CFG->libdir . '/completionlib.php');
 require_once $_SERVER['DOCUMENT_ROOT'] . '/lms/custom/navigation/classes/Navigation.php';
 
+$nav = new Navigation();
+$roleid = $nav->get_user_role();
+
 $id = optional_param('id', 0, PARAM_INT); // Course Module ID
 $p = optional_param('p', 0, PARAM_INT);  // Page instance ID
 $inpopup = optional_param('inpopup', 0, PARAM_BOOL);
@@ -67,6 +70,32 @@ if ($inpopup and $page->display == RESOURCELIB_DISPLAY_POPUP) {
     $PAGE->set_activity_record($page);
 }
 echo $OUTPUT->header();
+
+if ($roleid == 5) {
+
+    echo "<br><div class='row-fluid'>";
+
+    $quizid = $nav->get_quiz_id();
+    if ($quizid > 0) {
+        $quizurl = "http://globalizationplus.com/lms/mod/quiz/view.php?id=$quizid";
+        echo "<div class='span4' style='padding-left:12px;font-weight:bold;font-size:20px;color:black;'><img src='http://" . $_SERVER['SERVER_NAME'] . "/assets/images/checkmark.png' width='20' height='20' valign='middle'>&nbsp;<a href='$quizurl' target='_blank'>News Quiz</a></div>";
+    } // end if $quizid>0
+    
+    $forumid = $nav->get_forum_id();
+    if ($forumid > 0) {
+        $forumurl = "http://globalizationplus.com/lms/mod/forum/view.php?id=$forumid";
+        echo "<div class='span4' style='padding-left:12px;font-weight:bold;font-size:20px;color:black;'><img src='http://" . $_SERVER['SERVER_NAME'] . "/assets/images/checkmark.png' width='20' height='20' valign='middle'>&nbsp;</span><a href='$forumurl' target='_blank'>Discussion Board</a></div>";
+    } // end if $forumid>0
+
+    $glossaryid = $nav->get_glossary_id();
+    if ($glossaryid > 0) {
+        $glossaryurl = "http://globalizationplus.com/lms/mod/glossary/view.php?id=$glossaryid";
+        echo "<div class='span4' style='padding-left:12px;font-weight:bold;font-size:20px;color:black;'><img src='http://" . $_SERVER['SERVER_NAME'] . "/assets/images/search.png' width='20' height='20' valign='middle'>&nbsp;<a href='$glossaryurl' target='_blank'>Political Dictionary</a></div>";
+    } // end if 
+
+    echo "</div>";
+} // end if $roleid == 5
+
 if (!isset($options['printheading']) || !empty($options['printheading'])) {
     echo $OUTPUT->heading(format_string($page->name), 2);
 }
@@ -87,30 +116,12 @@ $formatoptions->context = $context;
 $content = format_text($content, $page->contentformat, $formatoptions);
 echo $OUTPUT->box($content, "generalbox center clearfix");
 
-$nav = new Navigation();
-$roleid = $nav->get_user_role();
 
 if ($roleid == 4) {
     die();
 }
+
 $strlastmodified = get_string("lastmodified");
 echo "<div class=\"modified\">$strlastmodified: " . userdate($page->timemodified) . "</div>";
-
-
-if ($roleid == 5) {
-    $forumid = $nav->get_forum_id();
-    $quizid = $nav->get_quiz_id();
-    if ($forumid > 0) {
-        $forumurl = "http://globalizationplus.com/lms/mod/forum/view.php?id=$forumid";
-        echo "<div style='text-align:center;'><iframe src='$forumurl' height='430px;' width='100%' frameborder='0'></iframe></div>";
-    } // end if $forumid>0
-
-    if ($quizid > 0) {
-        $quizurl = "http://globalizationplus.com/lms/mod/quiz/view.php?id=$quizid";
-        echo "<div class='row-fluid'>";
-        echo "<div class='span6' style='padding-left:25px;font-weight:bold;font-size:28px;color:black;'><a href='$quizurl' target='_blank'>Quiz</a></span>";
-        echo "</div>";
-    } // end if $quizid>0
-} // end if $roleid==5
 
 echo $OUTPUT->footer();

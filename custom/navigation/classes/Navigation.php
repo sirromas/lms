@@ -65,7 +65,7 @@ class Navigation extends Utils {
     }
 
     function get_glossary_id() {
-        $pageid = $this->get_section_data($this->quiz_module_id);
+        $pageid = $this->get_section_data($this->glossary_module_id);
         return $pageid;
     }
 
