@@ -94,6 +94,10 @@ if ($roleid == 5) {
     } // end if 
 
     echo "</div>";
+    
+    echo "<div class='row-fluid' style='text-align:center;'>";
+    echo "<div class='span12'><hr></div>";
+    echo "</div>";
 } // end if $roleid == 5
 
 if (!isset($options['printheading']) || !empty($options['printheading'])) {
