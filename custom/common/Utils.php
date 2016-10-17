@@ -178,6 +178,7 @@ class Utils {
 
     function get_user_details($userid) {
         $query = "select * from mdl_user where id=$userid";
+        //echo "Query: ".$query."<br>";
         $result = $this->db->query($query);
         while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
             $user = new stdClass();

@@ -63,7 +63,6 @@ class Payment extends Utils {
         return $merchantAuthentication;
     }
 
- 
     function add_student_payment($user, $status) {
         $key = $this->generateRandomString();
         $card_last_four = substr($user->cardnumber, -4);
@@ -92,6 +91,7 @@ class Payment extends Utils {
                 . "'" . strtotime($key_dates->end) . "',"
                 . "'$user->amount',"
                 . "'$added')";
+        //echo "Query: " . $query . "<br>";
         $this->db->query($query);
     }
 
@@ -123,6 +123,11 @@ class Payment extends Utils {
     }
 
     function make_transaction($post_order) {
+
+        //echo "<pre>";
+        //print_r($post_order);
+        //echo "</pre><br>";
+        //die();
 
         $payment = $this->prepare_order($post_order);
         $merchantAuthentication = $this->authorize();
@@ -196,7 +201,17 @@ class Payment extends Utils {
             $tresponse = $response->getTransactionResponse();
             if (($tresponse != null) && ($tresponse->getResponseCode() == "1")) {
                 $userid = $this->get_user_id($post_order->email);
-                $groupid = $this->get_group_id($post_order->class);
+                if (!is_numeric($post_order->class)) {
+                    //echo "Inside group name ...<br>";
+                    $groupid = $this->get_group_id($post_order->class);
+                } // end if
+                else {
+                    //echo "Inside group id ...<br>";
+                    $groupid = $post_order->class;
+                }
+
+                //echo "Group ID: ".$groupid."<br>";
+
                 $status = new stdClass();
                 $status->auth_code = $tresponse->getAuthCode();
                 $status->trans_id = $tresponse->getTransId();

@@ -141,6 +141,8 @@ $(document).ready(function () {
         }); // end of post
     });
 
+
+
     // Students signup
     $("#student_signup").submit(function (event) {
         event.preventDefault();
@@ -203,6 +205,66 @@ $(document).ready(function () {
         }
     });
 
+    // Student subscription payment 
+    $("#student_payment").submit(function (event) {
+        event.preventDefault();
+        var holder = $('#holder').val();
+        var holder_arr = holder.split(" ");
+        var firstname = holder_arr[0];
+        var lastname = holder_arr[1];
+        var userid = $('#holder').data('userid');
+        var address = $('#address').val();
+        var city = $('#city').val();
+        var zip = $('#zip').val();
+        var state = $('#state').val();
+        var cardnumber = $('#cardnumber').val();
+        var cvv = $('#cvv').val();
+        var cardmonth = $('#cardmonth').val();
+        var cardyear = $('#cardyear').val();
+        var group = $('#class').val();
+        var sum = $('#amount').val();
+
+
+        console.log('Card month: ' + cardmonth);
+        console.log('Card year: ' + cardyear);
+
+        if (group == 0) {
+            $('#form_err').html('Please select class');
+            return;
+        }
+        if (state == 0) {
+            $('#form_err').html('Please select state');
+            return;
+        }
+        if (cardmonth == 0 || cardyear == 0) {
+            $('#form_err').html('Please put expiration date');
+            return;
+        }
+
+        if (group > 0 && state != 0 && cardmonth > 0 && cardyear > 0) {
+            $('#form_err').html('');
+            $('#ajax_loader').show();
+            var user = {firstname: firstname,
+                lastname: lastname,
+                userid: userid,
+                cardnumber: cardnumber,
+                cvv: cvv,
+                cardmonth: cardmonth,
+                cardyear: cardyear,
+                amount: sum,
+                item: 'Subscription payment',
+                class: group,
+                street: address,
+                state: state,
+                city: city,
+                zip: zip};
+            var url = "http://globalizationplus.com/lms/custom/students/students_prolong.php";
+            $.post(url, {user: JSON.stringify(user)}).done(function (data) {
+                $('#ajax_loader').hide();
+                $('#form_info').html(data);
+            }); // end of post
+        } // end if group>0 && state>0 && cardmonth>0 && cardyear>0
+    });
 
 }); // end of document ready
 
