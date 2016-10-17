@@ -78,6 +78,7 @@ if ($roleid == 5) {
 
     $groups = $ac->get_user_groups();
     $status = $ac->has_access($ac->user->id);
+    //echo "Payment Status: ".$status."<br>";
     if ($status == 0) {
         $dialog = $ac->get_acces_dialog($ac->user->id, $groups);
         echo $dialog;
