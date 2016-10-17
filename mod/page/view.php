@@ -27,8 +27,11 @@ require_once($CFG->dirroot . '/mod/page/lib.php');
 require_once($CFG->dirroot . '/mod/page/locallib.php');
 require_once($CFG->libdir . '/completionlib.php');
 require_once $_SERVER['DOCUMENT_ROOT'] . '/lms/custom/navigation/classes/Navigation.php';
+require_once $_SERVER['DOCUMENT_ROOT'] . '/lms/custom/access/classes/Access.php';
+
 
 $nav = new Navigation();
+$ac = new Access();
 $roleid = $nav->get_user_role();
 
 $id = optional_param('id', 0, PARAM_INT); // Course Module ID
@@ -73,6 +76,14 @@ echo $OUTPUT->header();
 
 if ($roleid == 5) {
 
+    $groups = $ac->get_user_groups();
+    $status = $ac->has_access($ac->user->id);
+    if ($status == 0) {
+        $dialog = $ac->get_acces_dialog($ac->user->id, $groups);
+        echo $dialog;
+        die();
+    } // end if $status == 0
+
     echo "<br><div class='row-fluid' style='text-align:center;'>";
 
     $quizid = $nav->get_quiz_id();
@@ -80,7 +91,7 @@ if ($roleid == 5) {
         $quizurl = "http://globalizationplus.com/lms/mod/quiz/view.php?id=$quizid";
         echo "<div class='span4' style='padding-left:12px;font-weight:bold;font-size:20px;color:black;'><img src='http://" . $_SERVER['SERVER_NAME'] . "/assets/images/checkmark.png' width='20' height='20' valign='middle'>&nbsp;<a href='$quizurl' target='_blank'>News Quiz</a></div>";
     } // end if $quizid>0
-    
+
     $forumid = $nav->get_forum_id();
     if ($forumid > 0) {
         $forumurl = "http://globalizationplus.com/lms/mod/forum/view.php?id=$forumid";
@@ -94,7 +105,7 @@ if ($roleid == 5) {
     } // end if 
 
     echo "</div>";
-    
+
     echo "<div class='row-fluid' style='text-align:center;'>";
     echo "<div class='span12'><hr></div>";
     echo "</div>";
