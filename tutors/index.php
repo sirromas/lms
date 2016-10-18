@@ -1,6 +1,8 @@
 <?php
-
-
+require_once './classes/Tutor.php';
+$t = new Tutor();
+$userid = $_REQUEST['userid'];
+$form = $t->get_confirmation_form($userid);
 ?>
 
 
@@ -19,27 +21,21 @@
 
         <!-- Optional theme -->
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" >
-     
+
         <!-- Latest compiled and minified JavaScript -->
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 
+        <!-- Custom JS script -->
+        <script type="text/javascript" src="http://globalizationplus.com/assets/js/custom.js"></script>
+
+
     </head>
-  <body>
+    <body>
         <br><br><br>
         <div class="panel panel-default" style="width:640px;margin: auto;">
             <div class="panel-heading"><div class='text-center'>Membership confirmation</div></div>
             <div class="panel-body">
-                <form action="" method="post" id="tutor" name="tutor">
-                    <div class="form-group">
-                        <label for="login">Username*</label>
-                        <input type="text" class="form-control" id="username" required name="username" placeholder="Enter Username">
-                    </div>
-                    <div class="form-group">
-                        <label for="password">Password*</label>
-                        <input type="password" class="form-control" id="password" required name="password" placeholder="Enter Password">
-                    </div>
-                    <button type="submit" class="btn btn-default">Submit</button>
-                </form>
+                <?php echo $form ?>
             </div>
         </div>
 

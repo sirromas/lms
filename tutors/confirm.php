@@ -1,16 +1,8 @@
 <?php
 
-require_once './tutors.php';
-
-$tutor = new Tutors();
+require_once './classes/Tutor.php';
+$t = new Tutor();
 $email = $_POST['email'];
-$code = $_POST['code'];
-$group = $_POST['group'];
-$page=$_POST['page'];
-
-if ($email != '' && $code != '' && $page!='') {
-    $status = $tutor->confirmTutor($email, $code, $group, $page);
-} else {
-    $status = 'Not all data are provided';
-}
-echo $status;
+$url = $_POST['url'];
+$list = $t->test_page($email, $url);
+echo $list;

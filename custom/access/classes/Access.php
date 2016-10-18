@@ -56,8 +56,27 @@ class Access extends Utils {
         return $list;
     }
 
-    function has_confirmed() {
-        
+    function has_confirmed($userid) {
+        $query = "select * from mdl_user where id=$userid";
+        $result = $this->db->query($query);
+        while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+            $confirmed = $row['policyagreed'];
+        }
+        return $confirmed;
+    }
+
+    function get_tutor_access_dialog($userid, $groups) {
+        $groups_list = implode(',', $groups);
+        $list = "";
+        $list.="<br><br>";
+        $list.="<div class='container-fluid' style='text-align:center;'>";
+        $list.="<span class='span12'><h1>Globalization Plus<br>Nonpartisan Current Events Reports for University Students & Faculty</h1></span>";
+        $list.="</div>";
+
+        $list.="<div class='container-fluid' style='text-align:center;'>";
+        $list.="<span class='span12'>You did not confirm your professor's membership. Please click <a href='http://" . $_SERVER['SERVER_NAME'] . "/lms/tutors/index.php?userid=$userid&groups=$groups_list' target='_blank'>here</a> to get confirmed.</span>";
+        $list.="</div>";
+        return $list;
     }
 
 }

@@ -141,8 +141,6 @@ $(document).ready(function () {
         }); // end of post
     });
 
-
-
     // Students signup
     $("#student_signup").submit(function (event) {
         event.preventDefault();
@@ -224,10 +222,6 @@ $(document).ready(function () {
         var group = $('#class').val();
         var sum = $('#amount').val();
 
-
-        console.log('Card month: ' + cardmonth);
-        console.log('Card year: ' + cardyear);
-
         if (group == 0) {
             $('#form_err').html('Please select class');
             return;
@@ -264,6 +258,29 @@ $(document).ready(function () {
                 $('#form_info').html(data);
             }); // end of post
         } // end if group>0 && state>0 && cardmonth>0 && cardyear>0
+    });
+
+    // Professors confirmation
+    $("#confirm").click(function () {
+        $('#form_err').html('');
+        $('#form_info').html('');
+        var email = $('#email').val();
+        var url = $('#page').val();
+        if (url == '') {
+            $('#form_err').html('Please provide your page URL');
+        } // end if
+        else {
+            $('#form_err').html('');
+            $('#form_info').html('');
+            $('#ajax_loader').show();
+            var post_url = "http://globalizationplus.com/lms/tutors/confirm.php";
+            $.post(post_url, {email: email, url: url}).done(function (data) {
+                $('#ajax_loader').hide();
+                $('#form_info').html(data);
+            }).fail(function () {
+                $('#form_info').html('Error happened ...');
+            }); // end of post
+        } // end else
     });
 
 }); // end of document ready

@@ -168,10 +168,15 @@ $roleid = $ac->get_user_role();
 if ($roleid == 4) {
 
     // Check tutor's access
-    
+    $groups = $ac->get_user_groups();
+    $status = $ac->has_confirmed($ac->user->id);
+    if ($status == 0) {
+        $dialog = $ac->get_tutor_access_dialog($ac->user->id, $groups);
+        echo $dialog;
+        die();
+    }
 
     // Navigate directly to gradebook
-    $groups = $ac->get_user_groups();
     $groupid = $groups[0];
     $url = "http://" . $_SERVER['SERVER_NAME'] . "/lms/grade/report/grader/index.php?id=" . $ac->courseid . "&group=$groupid";
     header("Location: $url");
