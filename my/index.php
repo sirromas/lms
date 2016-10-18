@@ -161,11 +161,15 @@ if (empty($CFG->forcedefaultmymoodle) && $PAGE->user_allowed_editing()) {
 }
 
 $ac = new Access();
-$roleid = $ac->get_user_role();
 $nav = new Navigation();
+$roleid = $ac->get_user_role();
 
 
 if ($roleid == 4) {
+
+    // Check tutor's access
+    
+
     // Navigate directly to gradebook
     $groups = $ac->get_user_groups();
     $groupid = $groups[0];
@@ -174,6 +178,16 @@ if ($roleid == 4) {
 }
 
 if ($roleid == 5) {
+
+    // Check student's access
+    $groups = $ac->get_user_groups();
+    $status = $ac->has_access($ac->user->id);
+    if ($status == 0) {
+        $dialog = $ac->get_acces_dialog($ac->user->id, $groups);
+        echo $dialog;
+        die();
+    }
+
     // Navigate directly to course page section
     $pageid = $nav->get_page_id();
     if ($pageid != 0) {

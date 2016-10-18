@@ -27,11 +27,8 @@ require_once($CFG->dirroot . '/mod/page/lib.php');
 require_once($CFG->dirroot . '/mod/page/locallib.php');
 require_once($CFG->libdir . '/completionlib.php');
 require_once $_SERVER['DOCUMENT_ROOT'] . '/lms/custom/navigation/classes/Navigation.php';
-require_once $_SERVER['DOCUMENT_ROOT'] . '/lms/custom/access/classes/Access.php';
-
 
 $nav = new Navigation();
-$ac = new Access();
 $roleid = $nav->get_user_role();
 
 $id = optional_param('id', 0, PARAM_INT); // Course Module ID
@@ -76,15 +73,6 @@ echo $OUTPUT->header();
 
 if ($roleid == 5) {
 
-    $groups = $ac->get_user_groups();
-    $status = $ac->has_access($ac->user->id);
-    //echo "Payment Status: ".$status."<br>";
-    if ($status == 0) {
-        $dialog = $ac->get_acces_dialog($ac->user->id, $groups);
-        echo $dialog;
-        die();
-    } // end if $status == 0
-
     echo "<br><div class='row-fluid' style='text-align:center;'>";
 
     $quizid = $nav->get_quiz_id();
@@ -110,6 +98,7 @@ if ($roleid == 5) {
     echo "<div class='row-fluid' style='text-align:center;'>";
     echo "<div class='span12'><hr></div>";
     echo "</div>";
+    
 } // end if $roleid == 5
 
 if (!isset($options['printheading']) || !empty($options['printheading'])) {

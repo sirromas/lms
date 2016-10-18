@@ -45,10 +45,19 @@ class Access extends Utils {
     function get_acces_dialog($userid, $groups) {
         $groups_list = implode(',', $groups);
         $list = "";
+        $list.="<br><br>";
+        $list.="<div class='container-fluid' style='text-align:center;'>";
+        $list.="<span class='span12'><h1>Globalization Plus<br>Nonpartisan Current Events Reports for University Students & Faculty</h1></span>";
+        $list.="</div>";
+
         $list.="<div class='container-fluid' style='text-align:center;'>";
         $list.="<span class='span12'>You do not have subscription or it is expired. Please click <a href='http://" . $_SERVER['SERVER_NAME'] . "/lms/payments/payment.php?userid=$userid&groups=$groups_list' target='_blank'>here</a> to get your subscription.</span>";
         $list.="</div>";
         return $list;
+    }
+
+    function has_confirmed() {
+        
     }
 
 }
