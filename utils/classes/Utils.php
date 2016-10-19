@@ -43,14 +43,17 @@ class Utils2 {
         if (count($groups) > 0) {
             if ($headers) {
                 $list.="<div class='container-fluid' style='font-weight:bold;'>";
-                $list.="<div class='col-sm-3'>Class Name</div><div class='col-sm-1' style='text-align:center;'>Students#</div>";
+                $list.="<div class='col-sm-3'>Class Name</div><div class='col-sm-2' style='text-align:center;'>Students Num</div>";
                 $list.="</div>";
             }
             $list.="<div id='classes_container'>";
             foreach ($groups as $group) {
                 $num = $this->get_class_members_num($group->id);
                 $list.="<div class='container-fluid'>";
-                $list.="<div class='col-sm-3'>$group->name</div><div class='col-sm-1' style='text-align:center;'>$num</div>";
+                $list.="<div class='col-sm-3'>$group->name</div><div class='col-sm-2' style='text-align:center;'>$num</div>";
+                $list.="</div>";
+                $list.="<div class='container-fluid'>";
+                $list.="<div class='col-sm-5'><hr/></div>";
                 $list.="</div>";
             } // end foreach
             $list.="</div>";
@@ -195,7 +198,7 @@ class Utils2 {
                 $list.="<div class='col-sm-2'>$user->firstname $user->lastname</div><div class='col-sm-2'>$groups</div><div class='col-sm-3' style='text-align:center;'>$status</div>";
                 $list.="</div>";
                 $list.="<div class='container-fluid' style='text-align:center;'>";
-                $list.="<div class='col-sm-8' style='text-align:center;'><hr/></div>";
+                $list.="<div class='col-sm-7' style='text-align:center;'><hr/></div>";
                 $list.="</div>";
             } // end foreach
             $list.="</div>";
