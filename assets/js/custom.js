@@ -283,6 +283,18 @@ $(document).ready(function () {
         } // end else
     });
 
+    $('body').on('click', 'a.confirm', function () {
+        var userid = $(this).data('userid');
+        if (confirm('Confirm current processor?')) {
+            var post_url = "http://globalizationplus.com/lms/utils/confirm.php";
+            $.post(post_url, {userid: userid}).done(function () {
+                document.location.reload();
+            });
+        }
+
+    });
+
+
 }); // end of document ready
 
 

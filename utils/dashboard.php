@@ -14,6 +14,9 @@ if ($_SESSION['logged'] == 1) {
 
     $class_total = $u->get_classes_num();
     $classes = $u->get_classes_list();
+
+    $tutors_total = $u->get_total_tutors_number();
+    $tutors = $u->get_tutors_list();
     ?>
 
     <!DOCTYPE html>
@@ -69,7 +72,7 @@ if ($_SESSION['logged'] == 1) {
                         </div>
                         <div id="tutors" class="tab-pane fade">
                             <div style='padding-left: 120px; '><h3>Professors</h3></div>
-                            <p>Some content in menu 1.</p>
+                            <p><?php echo $tutors; ?></p>
                         </div>
                         <div id="paid_keys" class="tab-pane fade">
                             <div style='padding-left: 120px; '><h3>Paid Keys</h3></div>
@@ -101,14 +104,30 @@ if ($_SESSION['logged'] == 1) {
 
                     $("#class_paginator").click(function () {
                         var page = $('#class_paginator').pagination('getCurrentPage');
-                        console.log('Page: ' + page);
                         var url = "/lms/utils/get_class_item.php";
                         $.post(url, {id: page}).done(function (data) {
                             $('#classes_container').html(data);
                         });
                     });
 
-                });
+                    $(function () {
+                        $('#tutors_paginator').pagination({
+                            items: <?php echo $tutors_total; ?>,
+                            itemsOnPage: <?php echo $u->limit; ?>,
+                            cssStyle: 'light-theme'
+                        });
+                    });
+
+                    $("#tutors_paginator").click(function () {
+                        var page = $('#tutors_paginator').pagination('getCurrentPage');
+                        var url = "/lms/utils/get_tutor_item.php";
+                        $.post(url, {id: page}).done(function (data) {
+                            $('#tutors_container').html(data);
+                        });
+                    });
+
+
+                }); // end of ducment ready
 
 
 
