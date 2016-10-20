@@ -218,13 +218,18 @@ class Utils {
     function get_user_role() {
         $contextid = $this->get_course_context();
         $userid = $this->user->id;
-        $query = "select * from mdl_role_assignments "
-                . "where contextid=$contextid "
-                . "and userid=$userid";
-        $result = $this->db->query($query);
-        while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
-            $roleid = $row['roleid'];
-        }
+        if ($userid != 2 && $userid != 3) {
+            $query = "select * from mdl_role_assignments "
+                    . "where contextid=$contextid "
+                    . "and userid=$userid";
+            $result = $this->db->query($query);
+            while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+                $roleid = $row['roleid'];
+            }
+        } // end if
+        else {
+            $roleid = 0; // Admin & Manager
+        } // end else
         return $roleid;
     }
 

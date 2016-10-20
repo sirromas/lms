@@ -288,12 +288,92 @@ $(document).ready(function () {
         if (confirm('Confirm current processor?')) {
             var post_url = "http://globalizationplus.com/lms/utils/confirm.php";
             $.post(post_url, {userid: userid}).done(function () {
-                document.location.reload();
+                var url = 'http://globalizationplus.com/lms/utils/get_tutors_page.php';
+                $.post(url, {id: 1}).done(function (data) {
+                    $('#tutors_container').html(data);
+                });
             });
         }
 
     });
 
+    // Adjust paid keys
+    $('body').on('click', 'a.adjust', function () {
+        var userid = $(this).data('userid');
+        var groupid = $(this).data('groupid');
+        console.log('User ID: ' + userid);
+        console.log('Group ID: ' + groupid);
+
+        /*
+         var post_url = "http://globalizationplus.com/lms/utils/get_jey_detailes.php";
+         $.post(post_url, {userid: userid}).done(function () {
+         document.location.reload();
+         });
+         */
+    });
+
+    // Search classes
+    $("#search_class_button").click(function () {
+        var item = $('#search_class').val();
+        if (item != '') {
+            $('#ajax').show();
+            var url = 'http://globalizationplus.com/lms/utils/search_class.php';
+            $.post(url, {item: item}).done(function (data) {
+                $('#ajax').hide();
+                $('#classes_container').html(data);
+            });
+        } // end if item!=''
+    });
+
+    // Clear classes filter
+    $("#clear_class_button").click(function () {
+        var url = 'http://globalizationplus.com/lms/utils/get_classes_page.php';
+        $.post(url, {item: 1}).done(function (data) {
+            $('#classes_container').html(data);
+        });
+    });
+
+    // Search tutors
+    $("#search_tutor_button").click(function () {
+        var item = $('#search_tutor').val();
+        if (item != '') {
+            $('#ajax_tutor').show();
+            var url = 'http://globalizationplus.com/lms/utils/search_tutor.php';
+            $.post(url, {item: item}).done(function (data) {
+                $('#ajax_tutor').hide();
+                $('#tutors_container').html(data);
+            });
+        } // end if item!=''
+    });
+
+    // Clear tutors filer
+    $("#clear_tutor_button").click(function () {
+        var url = 'http://globalizationplus.com/lms/utils/get_tutors_page.php';
+        $.post(url, {item: 1}).done(function (data) {
+            $('#tutors_container').html(data);
+        });
+    });
+
+    // Search subs
+    $("#search_subs_button").click(function () {
+        var item = $('#search_subs').val();
+        if (item != '') {
+            $('#ajax_subs').show();
+            var url = 'http://globalizationplus.com/lms/utils/search_subs.php';
+            $.post(url, {item: item}).done(function (data) {
+                $('#ajax_subs').hide();
+                $('#subs_container').html(data);
+            });
+        } // end if item!=''
+    });
+
+    // Clear subs filter
+    $("#clear_subs_button").click(function () {
+        var url = 'http://globalizationplus.com/lms/utils/get_subs_page.php';
+        $.post(url, {item: 1}).done(function (data) {
+            $('#subs_container').html(data);
+        });
+    });
 
 }); // end of document ready
 

@@ -14,9 +14,17 @@ if ($_SESSION['logged'] == 1) {
 
     $class_total = $u->get_classes_num();
     $classes = $u->get_classes_list();
+    $class_search = $u->get_search_block('class');
 
     $tutors_total = $u->get_total_tutors_number();
     $tutors = $u->get_tutors_list();
+    $tutor_search = $u->get_search_block('tutor');
+
+    $subs_total = $u->get_total_subscription();
+    $subs = $u->get_subscription_list();
+    $subs_search = $u->get_search_block('subs');
+
+    $trial_search = $u->get_search_block('trial');
     ?>
 
     <!DOCTYPE html>
@@ -60,26 +68,26 @@ if ($_SESSION['logged'] == 1) {
                     <ul class="nav nav-tabs">
                         <li class="active"><a data-toggle="tab" href="#classes">Classes</a></li>
                         <li><a data-toggle="tab" href="#tutors">Professors</a></li>
-                        <li><a data-toggle="tab" href="#paid_keys">Paid Keys</a></li>
+                        <li><a data-toggle="tab" href="#paid_keys">Subscription</a></li>
                         <li><a data-toggle="tab" href="#trial_keys">Trial Keys</a></li>
                         <li><a data-toggle="tab" href="#logout">Logout</a></li>
                     </ul>
 
                     <div class="tab-content">
                         <div id="classes" class="tab-pane fade in active">
-                            <div style='padding-left: 120px; '><h3 >Classes</h3></div>
+                            <div style='padding-left: 120px;'><h3>Classes&nbsp;<?php echo $class_search; ?></h3></div>
                             <p><?php echo $classes; ?></p>
                         </div>
                         <div id="tutors" class="tab-pane fade">
-                            <div style='padding-left: 120px; '><h3>Professors</h3></div>
+                            <div style='padding-left: 120px; '><h3>Professors&nbsp;<?php echo $tutor_search; ?></h3></div>
                             <p><?php echo $tutors; ?></p>
                         </div>
                         <div id="paid_keys" class="tab-pane fade">
-                            <div style='padding-left: 120px; '><h3>Paid Keys</h3></div>
-                            <p>Some content in menu 2.</p>
+                            <div style='padding-left: 120px; '><h3>Subscription&nbsp;<?php echo $subs_search; ?></h3></div>
+                            <p><?php echo $subs; ?></p>
                         </div>
                         <div id="trial_keys" class="tab-pane fade">
-                            <div style='padding-left: 120px; '><h3>Trial Keys</h3></div>
+                            <div style='padding-left: 120px; '><h3>Trial Keys&nbsp;<?php echo $trial_search; ?></h3></div>
                             <p>Some content in menu 3.</p>
                         </div>
                         <div id="logout" class="tab-pane fade">
@@ -93,7 +101,9 @@ if ($_SESSION['logged'] == 1) {
             <script type="text/javascript">
 
                 $(document).ready(function () {
-
+                    
+                    <!-- Classes section -->
+                    
                     $(function () {
                         $('#class_paginator').pagination({
                             items: <?php echo $class_total; ?>,
@@ -110,6 +120,12 @@ if ($_SESSION['logged'] == 1) {
                         });
                     });
 
+                    $.get('/lms/utils/data/classes.json', function (data) {
+                        $("#search_class").typeahead({source: data, items: 24});
+                    }, 'json');
+                    
+                    <!-- Tutors scetion -->
+
                     $(function () {
                         $('#tutors_paginator').pagination({
                             items: <?php echo $tutors_total; ?>,
@@ -125,8 +141,42 @@ if ($_SESSION['logged'] == 1) {
                             $('#tutors_container').html(data);
                         });
                     });
+                    
+                    
+                    $.get('/lms/utils/data/tutors.json', function (data) {
+                        $("#search_tutor").typeahead({source: data, items: 24});
+                    }, 'json');
 
 
+                    <!-- Subscription section -->
+                    
+                    $(function () {
+                        $('#subs_paginator').pagination({
+                            items: <?php echo $subs_total; ?>,
+                            itemsOnPage: <?php echo $u->limit; ?>,
+                            cssStyle: 'light-theme'
+                        });
+                    });
+
+                    $("#subs_paginator").click(function () {
+                        var page = $('#subs_paginator').pagination('getCurrentPage');
+                        var url = "/lms/utils/get_subs_item.php";
+                        $.post(url, {id: page}).done(function (data) {
+                            $('#subs_container').html(data);
+                        });
+                    });
+
+                    $.get('/lms/utils/data/subs.json', function (data) {
+                        $("#search_subs").typeahead({source: data, items: 24});
+                    }, 'json');
+                    
+                    
+                    <!-- Trial keys section -->
+                    
+                    $.get('/lms/utils/data/trial.json', function (data) {
+                        $("#search_trial").typeahead({source: data, items: 24});
+                    }, 'json');
+                    
                 }); // end of ducment ready
 
 
