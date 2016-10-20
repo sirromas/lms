@@ -565,4 +565,35 @@ class Utils2 {
         return $list;
     }
 
+    /*     * *********************** Adjustments **************************** */
+
+    function get_adjust_dialog($userid, $groupid) {
+        $list = "";
+        $list.="<!-- Trigger the modal with a button -->
+       
+            <!-- Modal -->
+            <div id='myModal' class='modal fade' role='dialog'>
+              <div class='modal-dialog'>
+
+                <!-- Modal content-->
+                <div class='modal-content'>
+                  <div class='modal-header'>
+                    <button type='button' class='close' data-dismiss='modal'>&times;</button>
+                    <h4 class='modal-title'>Modal Header</h4>
+                  </div>
+                  <div class='modal-body'>
+                    <p>Some text in the modal.</p>
+                  </div>
+                  <div class='modal-footer'>
+                    <button type='button' class='btn btn-default' id='modal_ok'>Ok</button>
+                    <button type='button' class='btn btn-default' data-dismiss='modal' id='modal_cancel'>Close</button>
+                  </div>
+                </div>
+
+              </div>
+            </div>";
+
+        return $list;
+    }
+
 }

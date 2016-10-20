@@ -1,7 +1,6 @@
 
 $(document).ready(function () {
     console.log("ready!");
-
     /**********************************************************************
      * 
      *  
@@ -42,7 +41,6 @@ $(document).ready(function () {
             document.location = 'http://globalizationplus.com/survey/';
         }
     });
-
     // Process email sender form
     $("#launcher").submit(function (event) {
         event.preventDefault();
@@ -83,7 +81,6 @@ $(document).ready(function () {
             }
         } // end else
     });
-
     /**********************************************************************
      * 
      *  
@@ -140,7 +137,6 @@ $(document).ready(function () {
             } // end else 
         }); // end of post
     });
-
     // Students signup
     $("#student_signup").submit(function (event) {
         event.preventDefault();
@@ -202,7 +198,6 @@ $(document).ready(function () {
             $('#form_err').html('Please provide all required fields');
         }
     });
-
     // Student subscription payment 
     $("#student_payment").submit(function (event) {
         event.preventDefault();
@@ -221,7 +216,6 @@ $(document).ready(function () {
         var cardyear = $('#cardyear').val();
         var group = $('#class').val();
         var sum = $('#amount').val();
-
         if (group == 0) {
             $('#form_err').html('Please select class');
             return;
@@ -259,7 +253,6 @@ $(document).ready(function () {
             }); // end of post
         } // end if group>0 && state>0 && cardmonth>0 && cardyear>0
     });
-
     // Professors confirmation
     $("#confirm").click(function () {
         $('#form_err').html('');
@@ -282,7 +275,6 @@ $(document).ready(function () {
             }); // end of post
         } // end else
     });
-
     $('body').on('click', 'a.confirm', function () {
         var userid = $(this).data('userid');
         if (confirm('Confirm current processor?')) {
@@ -303,14 +295,29 @@ $(document).ready(function () {
         var groupid = $(this).data('groupid');
         console.log('User ID: ' + userid);
         console.log('Group ID: ' + groupid);
-
-        /*
-         var post_url = "http://globalizationplus.com/lms/utils/get_jey_detailes.php";
-         $.post(post_url, {userid: userid}).done(function () {
-         document.location.reload();
-         });
-         */
+        var post_url = "http://globalizationplus.com/lms/utils/get_adjust_dialog.php";
+        $.post(post_url, {userid: userid, groupid: groupid}).done(function (data) {
+            $("body").append(data);
+            $("#myModal").modal('show');
+        });
     });
+
+
+    $('body').on('click', 'button', function (event) {
+
+        if (event.target.id == 'modal_ok') {
+            if (confirm('Adjust key expiration for current student?')) {
+                // Put other staff here ...
+                $("[data-dismiss=modal]").trigger({type: "click"});
+                $('#myModal').data('modal', null);
+            } // end if 
+        }
+
+        if (event.target.id == 'modal_cancel') {
+            $('#myModal').data('modal', null);
+        }
+
+    }); // end of $('body').on('click', 'button'
 
     // Search classes
     $("#search_class_button").click(function () {
@@ -324,7 +331,6 @@ $(document).ready(function () {
             });
         } // end if item!=''
     });
-
     // Clear classes filter
     $("#clear_class_button").click(function () {
         var url = 'http://globalizationplus.com/lms/utils/get_classes_page.php';
@@ -332,7 +338,6 @@ $(document).ready(function () {
             $('#classes_container').html(data);
         });
     });
-
     // Search tutors
     $("#search_tutor_button").click(function () {
         var item = $('#search_tutor').val();
@@ -345,7 +350,6 @@ $(document).ready(function () {
             });
         } // end if item!=''
     });
-
     // Clear tutors filer
     $("#clear_tutor_button").click(function () {
         var url = 'http://globalizationplus.com/lms/utils/get_tutors_page.php';
@@ -353,7 +357,6 @@ $(document).ready(function () {
             $('#tutors_container').html(data);
         });
     });
-
     // Search subs
     $("#search_subs_button").click(function () {
         var item = $('#search_subs').val();
@@ -366,7 +369,6 @@ $(document).ready(function () {
             });
         } // end if item!=''
     });
-
     // Clear subs filter
     $("#clear_subs_button").click(function () {
         var url = 'http://globalizationplus.com/lms/utils/get_subs_page.php';
@@ -374,6 +376,9 @@ $(document).ready(function () {
             $('#subs_container').html(data);
         });
     });
+
+
+
 
 }); // end of document ready
 
