@@ -34,7 +34,7 @@ class Utils {
         $this->signup_url = 'http://' . $_SERVER['SERVER_NAME'] . '/lms/login/mysignup.php';
         $this->mail_smtp_host = 'smtp.1and1.com';
         $this->mail_smtp_port = '25';
-        $this->mail_smtp_user = 'lms@globalizationplus.com';
+        $this->mail_smtp_user = 'lms2@globalizationplus.com';
         $this->mail_smtp_pwd = 'aK6SKymc';
     }
 
