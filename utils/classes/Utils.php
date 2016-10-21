@@ -374,7 +374,7 @@ class Utils2 {
                 $start = date('m-d-Y', $item->start_date);
                 $exp = date('m-d-Y', $item->exp_date);
                 $list.="<div class='container-fluid'>";
-                $list.="<div class='col-sm-2'>$user->firstname $user->lastname</div><div class='col-sm-2'>$class</div><div class='col-sm-3'>$item->auth_key</div><div class='col-sm-2' style='text-align:center;'>$start</div><div class='col-sm-2' style='text-align:center;'>$exp</div><div class='col-sm-1' style='text-align:center;'><a href='#' onClick='return false;' class='adjust' data-userid='$item->id' data-groupid='$item->groupid'>Adjust</a></div>";
+                $list.="<div class='col-sm-2'>$user->firstname $user->lastname</div><div class='col-sm-2'>$class</div><div class='col-sm-3'>$item->auth_key</div><div class='col-sm-2' style='text-align:center;'>$start</div><div class='col-sm-2' style='text-align:center;'>$exp</div><div class='col-sm-1' style='text-align:center;'><a href='#' onClick='return false;' class='adjust' data-userid='$item->userid' data-groupid='$item->groupid'>Adjust</a></div>";
                 $list.="</div>";
                 $list.="<div class='container-fluid'>";
                 $list.="<div class='col-sm-14'><hr/></div>";
@@ -569,6 +569,19 @@ class Utils2 {
 
     function get_adjust_dialog($userid, $groupid) {
         $list = "";
+        $query = "select * from mdl_card_payments "
+                . "where userid=$userid and groupid=$groupid";
+        $result = $this->db->query($query);
+        while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+            $unix_start_date = $row['start_date'];
+            $unix_exp_date = $row['exp_date'];
+        }
+
+        //echo "Unix start date: " . $unix_start_date . "<br>";
+        //echo "Unix exp date: " . $unix_exp_date . "<br>";
+
+        $start = date('m/d/Y', $unix_start_date);
+        $end = date('m/d/Y', $unix_exp_date);
         $list.="<!-- Trigger the modal with a button -->
        
             <!-- Modal -->
@@ -579,10 +592,26 @@ class Utils2 {
                 <div class='modal-content'>
                   <div class='modal-header'>
                     <button type='button' class='close' data-dismiss='modal'>&times;</button>
-                    <h4 class='modal-title'>Modal Header</h4>
+                    <h4 class='modal-title'>Adjust subscription</h4>
                   </div>
                   <div class='modal-body'>
-                    <p>Some text in the modal.</p>
+                    
+                    <input type='hidden' id='userid' value='$userid'>
+                    <input type='hidden' id='groupid' value='$groupid'>
+                        
+                    <div class='container-fluid' style='text-align:center;'>
+                    <div class='col-sm-3'>Start date</div>
+                    <div class='col-sm-2'><input type='text' id='subs_start' value='$start'></div>
+                    </div>
+                    <div class='container-fluid' style='text-align:center;'>
+                    <div class='col-sm-3'>Expiration date</div>
+                    <div class='col-sm-2'><input type='text' id='subs_exp' value='$end'></div>
+                    </div>
+
+                    <div class='container-fluid'>
+                    <div class='col-sm-6' id='subs_err' style='color:red;'></div>
+                    </div>
+                   
                   </div>
                   <div class='modal-footer'>
                     <button type='button' class='btn btn-default' id='modal_ok'>Ok</button>
@@ -594,6 +623,16 @@ class Utils2 {
             </div>";
 
         return $list;
+    }
+
+    function adjust_subs($userid, $groupid, $start, $exp) {
+        $unix_start = strtotime($start);
+        $unix_exp = strtotime($exp);
+        $query = "update mdl_card_payments set "
+                . "start_date='$unix_start', "
+                . "exp_date='$unix_exp' "
+                . "where userid=$userid and groupid=$groupid";
+        $this->db->query($query);
     }
 
 }

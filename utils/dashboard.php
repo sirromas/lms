@@ -57,8 +57,13 @@ if ($_SESSION['logged'] == 1) {
 
             <!-- Custom JS script -->
             <script type="text/javascript" src="http://globalizationplus.com/assets/js/custom.js"></script>
-
-
+            
+            <!-- DatePicker JS -->
+            <script type="text/javascript" src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+            
+            <!-- DatePicker CSS -->
+            <link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
+            
         </head>
         <body>
             <br><br><br>
@@ -176,6 +181,7 @@ if ($_SESSION['logged'] == 1) {
                     $.get('/lms/utils/data/trial.json', function (data) {
                         $("#search_trial").typeahead({source: data, items: 24});
                     }, 'json');
+                    
                     
                 }); // end of ducment ready
 

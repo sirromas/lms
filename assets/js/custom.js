@@ -288,7 +288,6 @@ $(document).ready(function () {
         }
 
     });
-
     // Adjust paid keys
     $('body').on('click', 'a.adjust', function () {
         var userid = $(this).data('userid');
@@ -299,22 +298,35 @@ $(document).ready(function () {
         $.post(post_url, {userid: userid, groupid: groupid}).done(function (data) {
             $("body").append(data);
             $("#myModal").modal('show');
+            $("#subs_start").datepicker();
+            $("#subs_exp").datepicker();
         });
     });
-
-
+    $('body').on('hidden.bs.modal', '.modal', function () {
+        $(this).removeData('bs.modal');
+    });
     $('body').on('click', 'button', function (event) {
 
         if (event.target.id == 'modal_ok') {
+
             if (confirm('Adjust key expiration for current student?')) {
-                // Put other staff here ...
-                $("[data-dismiss=modal]").trigger({type: "click"});
-                $('#myModal').data('modal', null);
+                var userid = $('#userid').val();
+                var groupid = $('#groupid').val();
+                var start = $('#subs_start').val();
+                var exp = $('#subs_exp').val();
+                var post_url = "http://globalizationplus.com/lms/utils/adjust_subs.php";
+                $.post(post_url, {userid: userid, groupid: groupid, start: start, exp: exp}).done(function (data) {
+                    console.log(data);
+                    $("[data-dismiss=modal]").trigger({type: "click"});
+                    $('#myModal').data('modal', null);
+                });
             } // end if 
         }
 
         if (event.target.id == 'modal_cancel') {
             $('#myModal').data('modal', null);
+            document.location.reload();
+            $('#paid_keys').trigger('click');
         }
 
     }); // end of $('body').on('click', 'button'
@@ -376,10 +388,6 @@ $(document).ready(function () {
             $('#subs_container').html(data);
         });
     });
-
-
-
-
 }); // end of document ready
 
 
