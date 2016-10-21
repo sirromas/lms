@@ -302,9 +302,8 @@ $(document).ready(function () {
             $("#subs_exp").datepicker();
         });
     });
-    $('body').on('hidden.bs.modal', '.modal', function () {
-        $(this).removeData('bs.modal');
-    });
+
+
     $('body').on('click', 'button', function (event) {
 
         if (event.target.id == 'modal_ok') {
@@ -321,6 +320,25 @@ $(document).ready(function () {
                     $('#myModal').data('modal', null);
                 });
             } // end if 
+        }
+
+        if (event.target.id == 'trial_ok') {
+            var username = $('#trial_user').val();
+            var groupname = $('#trial_class').val();
+            if (username == '' || groupname == '') {
+                $('#subs_err').html('Please select student and class');
+            } // end if
+            else {
+                $('#subs_err').html('');
+                if (confirm('Add trial key for current student?')) {
+                    var post_url = "http://globalizationplus.com/lms/utils/add_trial_key.php";
+                    $.post(post_url, {username: username, groupname: groupname}).done(function (data) {
+                        console.log(data);
+                        $("[data-dismiss=modal]").trigger({type: "click"});
+                        $('#myModal').data('modal', null);
+                    });
+                } // end if 
+            } // end else
         }
 
         if (event.target.id == 'modal_cancel') {
@@ -388,6 +406,58 @@ $(document).ready(function () {
             $('#subs_container').html(data);
         });
     });
+    
+    // Search trial
+    $("#search_trial_button").click(function () {
+        var item = $('#search_trial').val();
+        if (item != '') {
+            $('#ajax_trial').show();
+            var url = 'http://globalizationplus.com/lms/utils/search_trial.php';
+            $.post(url, {item: item}).done(function (data) {
+                $('#ajax_trial').hide();
+                $('#trial_container').html(data);
+            });
+        } // end if item!=''
+    });
+    // Clear subs filter
+    $("#clear_trial_button").click(function () {
+        var url = 'http://globalizationplus.com/lms/utils/get_trial_page.php';
+        $.post(url, {item: 1}).done(function (data) {
+            $('#trial_container').html(data);
+        });
+    });
+
+
+    $("#logout2").click(function () {
+        var url = 'http://globalizationplus.com/lms/utils/logout.php';
+        $.post(url, {item: 1}).done(function () {
+            window.location = 'http://globalizationplus.com/lms/utils';
+        });
+    });
+
+
+    $("#add_trial_button").click(function () {
+        console.log('Clicked ...');
+        var url = 'http://globalizationplus.com/lms/utils/get_add_trial_key_dialog.php';
+        $.post(url, {item: 1}).done(function (data) {
+            $("body").append(data);
+            $("#myModal").modal('show');
+
+            $.get('/lms/utils/data/classes.json', function (data) {
+                $("#trial_class").typeahead({source: data, items: 24});
+            }, 'json');
+
+            $.get('/lms/utils/data/trial.json', function (data) {
+                $("#trial_user").typeahead({source: data, items: 24});
+            }, 'json');
+
+
+            $("#subs_start").datepicker();
+            $("#subs_exp").datepicker();
+        });
+    });
+
+
 }); // end of document ready
 
 

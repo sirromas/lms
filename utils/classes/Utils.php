@@ -468,7 +468,137 @@ class Utils2 {
         return $list;
     }
 
-    /*     * **************** Typehead block **************** */
+    function search_trial($data) {
+        $list = "";
+        $items = array();
+        $data_arr = explode(' ', $data);
+        $firstname = $data_arr[1];
+        $lastname = $data_arr[0];
+        $users_array = $this->get_user_id_by_fio($firstname, $lastname);
+        if (count($users_array) > 0) {
+            $users_list = implode(",", $users_array);
+            $query = "select * from mdl_trial_keys where userid in ($users_list)";
+            // echo "Query: " . $query . "<br>";
+            $num = $this->db->numrows($query);
+            if ($num > 0) {
+                $result = $this->db->query($query);
+                while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+                    $item = new stdClass();
+                    foreach ($row as $key => $value) {
+                        $item->$key = $value;
+                    }
+                    $items[] = $item;
+                } // end while 
+                $list.=$this->create_keys_list_tab($items, false);
+            } // end if $num > 0
+            else {
+                $list.="<div class='container-fluid' style='text-align:center;'>";
+                $list.="<div class='col-sm-2'>N/A</div>";
+                $list.="</div>";
+            } // end else
+        } // end if count($users_array) > 0
+        else {
+            $list.="<div class='container-fluid' style='text-align:center;'>";
+            $list.="<div class='col-sm-2'>N/A</div>";
+            $list.="</div>";
+        }
+        return $list;
+    }
+
+    // **************** Trial keys functionality ****************** 
+
+    function get_trial_keys_tab($header = true) {
+        $items = array();
+        $query = "select * from mdl_trial_keys order by added limit 0, $this->limit";
+        $num = $this->db->numrows($query);
+        if ($num > 0) {
+            $result = $this->db->query($query);
+            while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+                $item = new stdClass();
+                foreach ($row as $key => $value) {
+                    $item->$key = $value;
+                } // end foreach
+                $items[] = $item;
+            } // end while
+            $list = $this->create_keys_list_tab($items, $header);
+        }
+        return $list;
+    }
+
+    function create_keys_list_tab($items, $headers) {
+        $list = "";
+        if (count($items) > 0) {
+
+            if ($headers) {
+                $list.="<div class='container-fluid' style='font-weight:bold;'>";
+                $list.="<div class='col-sm-2' style='text-align:left;'>Student</div><div class='col-sm-2'>Class Name</div><div class='col-sm-3' style='text-align:center;'>Key</div><div class='col-sm-2' style='text-align:center;'>Start date</div><div class='col-sm-2' style='text-align:center;'>Expiration date</div>";
+                $list.="</div>";
+            }
+            $list.="<div id='trial_container'>";
+            foreach ($items as $item) {
+                $user = $this->get_user_detailes($item->userid);
+                $class = $this->get_group_name($item->groupid);
+                $start = date('m-d-Y', $item->start_date);
+                $exp = date('m-d-Y', $item->exp_date);
+                $list.="<div class='container-fluid'>";
+                $list.="<div class='col-sm-2'>$user->firstname $user->lastname</div><div class='col-sm-2'>$class</div><div class='col-sm-3'>$item->auth_key</div><div class='col-sm-2' style='text-align:center;'>$start</div><div class='col-sm-2' style='text-align:center;'>$exp</div>";
+                $list.="</div>";
+                $list.="<div class='container-fluid'>";
+                $list.="<div class='col-sm-14'><hr/></div>";
+                $list.="</div>";
+            } // end foreach
+            $list.="</div>";
+            $list.="<div class='container-fluid' style='text-align:center;'>";
+            $list.="<div class='col-sm-14' id='ajax_trial' style='display:none;'><img src='../../assets/images/ajax.gif'></div>";
+            $list.="</div>";
+            if ($headers) {
+                $list.="<br><div class='container-fluid'>";
+                $list.="<div class='col-sm-9' id='trial_paginator'></div>";
+                $list.="</div>";
+            }
+        } // end if count($items)>0
+        else {
+            $list.="<div class='container-fluid' style='text-align:center;'>";
+            $list.="<div class='col-sm-2'>N/A</div>";
+            $list.="</div>";
+        } // end else
+        return $list;
+    }
+
+    function get_trial_total() {
+        $query = "select count(id) as total "
+                . "from mdl_trial_keys ";
+        $result = $this->db->query($query);
+        while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+            $total = $row['total'];
+        }
+        return $total;
+    }
+
+    function get_trial_item($page) {
+        $items = array();
+        if ($page == 1) {
+            $offset = 0;
+        } // end if $page==1
+        else {
+            $page = $page - 1;
+            $offset = $this->limit * $page;
+        }
+        $query = "select * from mdl_trial_keys  "
+                . "LIMIT $offset, $this->limit";
+        $result = $this->db->query($query);
+        while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+            $item = new stdClass();
+            foreach ($row as $key => $value) {
+                $item->$key = $value;
+            } // end foreach      
+            $items[] = $item;
+        } // end while
+        $list = $this->create_tutors_list_tab($items, false);
+        return $list;
+    }
+
+    // **************** Typehead block ****************** 
 
     function create_json_data($item) {
         switch ($item) {
@@ -520,12 +650,7 @@ class Utils2 {
                 }
                 break;
             case "trial";
-                $query = "select u.id, u.firstname, u.lastname, u.policyagreed, "
-                        . "r.roleid, r.userid, p.userid "
-                        . "from mdl_user u, mdl_role_assignments r, mdl_trial_keys p "
-                        . "where r.roleid=$this->student_role "
-                        . "and u.id=r.userid "
-                        . "and u.id=p.userid ";
+                $query = "select * from mdl_user where deleted=0";
                 $num = $this->db->numrows($query);
                 if ($num > 0) {
                     $result = $this->db->query($query);
@@ -559,7 +684,7 @@ class Utils2 {
                 break;
             case "trial";
                 $this->create_json_data('trial');
-                $list.="<input type='text' id='search_trial' class='typeahead'>&nbsp;<button type='submit' class='btn btn-default' id='search_trial_button'>Search</button>&nbsp;<button type='submit' class='btn btn-default' id='clear_trial_button'>Clear</button>";
+                $list.="<input type='text' id='search_trial' class='typeahead'>&nbsp;<button type='submit' class='btn btn-default' id='search_trial_button'>Search</button>&nbsp;<button type='submit' class='btn btn-default' id='clear_trial_button'>Clear</button>&nbsp;<button type='submit' class='btn btn-default' id='add_trial_button'>Add trial key</button>";
                 break;
         }
         return $list;
@@ -592,7 +717,7 @@ class Utils2 {
                 <div class='modal-content'>
                   <div class='modal-header'>
                     <button type='button' class='close' data-dismiss='modal'>&times;</button>
-                    <h4 class='modal-title'>Adjust subscription</h4>
+                    <h4 class='modal-title'>Add trial key</h4>
                   </div>
                   <div class='modal-body'>
                     
@@ -625,6 +750,97 @@ class Utils2 {
         return $list;
     }
 
+    function get_add_trial_key_dialog() {
+        $list.="<!-- Trigger the modal with a button -->
+       
+            <!-- Modal -->
+            <div id='myModal' class='modal fade' role='dialog'>
+              <div class='modal-dialog'>
+
+                <!-- Modal content-->
+                <div class='modal-content'>
+                  <div class='modal-header'>
+                    
+                    <h4 class='modal-title'>Adjust subscription</h4>
+                  </div>
+                  <div class='modal-body' style='text-align:center;'>
+                    
+                    <div class='container-fluid' style='text-align:left;'>
+                    <div class='col-sm-3'>User*</div>
+                    <div class='col-sm-2'><input type='text' id='trial_user'></div>
+                    </div>
+                    
+                    <div class='container-fluid' style='text-align:left;'>
+                    <div class='col-sm-3'>Class*</div>
+                    <div class='col-sm-2'><input type='text' id='trial_class'></div>
+                    </div>
+                    
+                    <div class='container-fluid'>
+                    <div class='col-sm-6' id='subs_err' style='color:red;'></div>
+                    </div>
+                   
+                  </div>
+                  <div class='modal-footer'>
+                    <button type='button' class='btn btn-default' id='trial_ok'>Ok</button>
+                    <button type='button' class='btn btn-default' data-dismiss='modal' id='modal_cancel'>Close</button>
+                  </div>
+                </div>
+
+              </div>
+            </div>";
+        return $list;
+    }
+
+    function get_group_id($name) {
+        $query = "select * from mdl_groups where name='$name'";
+        $result = $this->db->query($query);
+        while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+            $id = $row['id'];
+        }
+        return $id;
+    }
+
+    function generateRandomString($length = 25) {
+        return substr(str_shuffle("0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"), 0, $length);
+    }
+
+    function add_trial_key($username, $groupname) {
+
+        $unix_start = time();
+        $unix_exp = $unix_start + 259200; // tree days later
+        $names = explode(" ", $username);
+        $firstname = $names[1];
+        $lastname = $names[0];
+        $courseid = 2;
+        $groupid = $this->get_group_id($groupname);
+        $key = $this->generateRandomString();
+        $now = time();
+        $users = $this->get_user_id_by_fio($firstname, $lastname); // array
+        if (count($users) > 0) {
+            foreach ($users as $userid) {
+                $query = "insert into mdl_trial_keys "
+                        . "(userid,"
+                        . "courseid,"
+                        . "groupid,"
+                        . "auth_key,"
+                        . "start_date,"
+                        . "exp_date,"
+                        . "valid,"
+                        . "added) "
+                        . "values($userid,"
+                        . "$courseid,"
+                        . "$groupid,"
+                        . "'$key',"
+                        . "'$unix_start',"
+                        . "'$unix_exp'"
+                        . ",1,"
+                        . "'$now')";
+                //echo "Query: " . $query . "<br>";
+                $this->db->query($query);
+            } // end foreach 
+        } // end if count($users)>0
+    }
+
     function adjust_subs($userid, $groupid, $start, $exp) {
         $unix_start = strtotime($start);
         $unix_exp = strtotime($exp);
@@ -633,6 +849,10 @@ class Utils2 {
                 . "exp_date='$unix_exp' "
                 . "where userid=$userid and groupid=$groupid";
         $this->db->query($query);
+    }
+
+    function logout() {
+        session_destroy();
     }
 
 }

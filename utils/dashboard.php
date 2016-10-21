@@ -24,6 +24,8 @@ if ($_SESSION['logged'] == 1) {
     $subs = $u->get_subscription_list();
     $subs_search = $u->get_search_block('subs');
 
+    $trial_total=$u->get_trial_total();
+    $trial=$u->get_trial_keys_tab();
     $trial_search = $u->get_search_block('trial');
     ?>
 
@@ -75,7 +77,8 @@ if ($_SESSION['logged'] == 1) {
                         <li><a data-toggle="tab" href="#tutors">Professors</a></li>
                         <li><a data-toggle="tab" href="#paid_keys">Subscription</a></li>
                         <li><a data-toggle="tab" href="#trial_keys">Trial Keys</a></li>
-                        <li><a data-toggle="tab" href="#logout">Logout</a></li>
+                        <li><a data-toggle="tab" href="#semester">Semesters</a></li>
+                        <li><a data-toggle="tab" href="#logout">Account</a></li>
                     </ul>
 
                     <div class="tab-content">
@@ -93,11 +96,15 @@ if ($_SESSION['logged'] == 1) {
                         </div>
                         <div id="trial_keys" class="tab-pane fade">
                             <div style='padding-left: 120px; '><h3>Trial Keys&nbsp;<?php echo $trial_search; ?></h3></div>
-                            <p>Some content in menu 3.</p>
+                            <p><?php echo $trial; ?></p>
+                        </div>
+                        <div id="semester" class="tab-pane fade">
+                            <div style='padding-left: 120px; '><h3>Semesters</h3></div>
+                            <p><?php echo $tutors; ?></p>
                         </div>
                         <div id="logout" class="tab-pane fade">
-                            <div style='padding-left: 120px; '><h3>Logout</h3></div>
-                            <p>Some content in menu 4.</p>
+                            <br><br><div style='padding-left: 120px; '><button type='button' class="btn btn-default" id='logout2'>Logout</button></div>
+                            <p></p>
                         </div>
                     </div>
                 </div>
@@ -177,6 +184,22 @@ if ($_SESSION['logged'] == 1) {
                     
                     
                     <!-- Trial keys section -->
+                    
+                    $(function () {
+                    $('#trial_paginator').pagination({
+                            items: <?php echo $trial_total; ?>,
+                            itemsOnPage: <?php echo $u->limit; ?>,
+                            cssStyle: 'light-theme'
+                        });
+                    });
+
+                    $("#trial_paginator").click(function () {
+                        var page = $('#trial_paginator').pagination('getCurrentPage');
+                        var url = "/lms/utils/get_trial_item.php";
+                        $.post(url, {id: page}).done(function (data) {
+                            $('#trial_container').html(data);
+                        });
+                    });
                     
                     $.get('/lms/utils/data/trial.json', function (data) {
                         $("#search_trial").typeahead({source: data, items: 24});
