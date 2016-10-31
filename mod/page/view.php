@@ -98,7 +98,6 @@ if ($roleid == 5) {
     echo "<div class='row-fluid' style='text-align:center;'>";
     echo "<div class='span12'><hr></div>";
     echo "</div>";
-    
 } // end if $roleid == 5
 
 if (!isset($options['printheading']) || !empty($options['printheading'])) {
@@ -124,6 +123,13 @@ echo $OUTPUT->box($content, "generalbox center clearfix");
 
 if ($roleid == 4) {
     die();
+}
+
+if ($roleid == 5) {
+    if ($forumid > 0) {
+        $forumurl = "http://globalizationplus.com/lms/mod/forum/view.php?id=$forumid";
+        echo "<iframe src='$forumurl'  width='100%' height='600' frameBorder='0' scrolling='no'></iframe>";
+    }
 }
 
 $strlastmodified = get_string("lastmodified");

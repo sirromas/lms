@@ -406,7 +406,7 @@ $(document).ready(function () {
             $('#subs_container').html(data);
         });
     });
-    
+
     // Search trial
     $("#search_trial_button").click(function () {
         var item = $('#search_trial').val();
@@ -454,6 +454,14 @@ $(document).ready(function () {
 
             $("#subs_start").datepicker();
             $("#subs_exp").datepicker();
+        });
+    });
+
+    $('#r').click(function () {
+        console.log('Clicked ....');
+        var url = 'http://globalizationplus.com/survey/get_queue.php';
+        $.post(url, {item: 1}).done(function (data) {
+            $('#q').html(data);
         });
     });
 

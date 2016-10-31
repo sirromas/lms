@@ -163,9 +163,16 @@ class Survey {
         return $msg;
     }
 
-    function send_survey_email($email) {
-        $recipient = $email;
-        $message = $this->create_survey_email($email);
+    function update_item_err_description($item, $error_info) {
+        $query = "update mdl_external_survey_queue "
+                . "set email_err='$error_info' where id=$item->id";
+        $this->db->query($query);
+    }
+
+    function send_survey_email($item) {
+        $recipient = $item->email;
+        //$recipient = 'sirromas@gmail.com';
+        $message = $this->create_survey_email($item->email);
 
         $mail = new PHPMailer;
 
@@ -187,12 +194,12 @@ class Survey {
         $mail->Body = $message;
 
         if (!$mail->send()) {
-            $list = 'Mailer Error: ' . $mail->ErrorInfo . "\n";
+            $this->update_item_err_description($item, $mail->ErrorInfo);
+            return false;
         } // end if !$mail->send()
         else {
-            $list = "Email has been sent to $email \n";
+            return true;
         }
-        return $list;
     }
 
     function send_survey_results($email, $result) {
@@ -365,10 +372,20 @@ class Survey {
             $full_file_path = $this->upload_path . '/' . $filename . '.csv';
             if (move_uploaded_file($file['tmp_name'], $full_file_path)) {
                 $csv_data = array_map('str_getcsv', file($full_file_path));
-                $csv_array = $csv_data[0];
+                $csv_array = (count($csv_data[0]) > 1) ? $csv_data[0] : $csv_data[1];
+
+                /*
+                  echo "<pre>";
+                  print_r($csv_array);
+                  echo "</pre>";
+                  die();
+                 */
+
                 if (count($csv_array) > 0) {
                     foreach ($csv_array as $email) {
-                        $this->put_item_into_queue($email);
+                        if ($email != '') {
+                            $this->put_item_into_queue($email);
+                        }
                     }
                     $list.="Recipients list is put into queue and will be sent soon.";
                 } // end if
@@ -391,11 +408,16 @@ class Survey {
                 . "where sent=0 order by added desc limit 0,1";
         $result = $this->db->query($query);
         while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
-            $id = $row['id'];
-            $email = $row['email'];
-            $list = $this->send_survey_email($email);
-            echo $list;
-            $query = "update mdl_external_survey_queue set sent=1 where id=$id";
+            $item = new stdClass();
+            $item->id = $row['id'];
+            $item->email = $row['email'];
+            $status = $this->send_survey_email($item);
+            if ($status) {
+                $query = "update mdl_external_survey_queue set sent=1 where id=$item->id";
+            } // end if $status
+            else {
+                $query = "update mdl_external_survey_queue set sent=-1 where id=$item->id";
+            } //end else
             $this->db->query($query);
         }
     }
@@ -430,6 +452,84 @@ class Survey {
         $resultObj->p80 = $counter_80;
         $resultObj->p100 = $counter_100;
         return $resultObj;
+    }
+
+    function get_queue_status() {
+        $list = '';
+        $responders = $this->get_responders_data();
+        $query = "select count(id) as total "
+                . "from mdl_external_survey_queue where sent=0";
+        $result = $this->db->query($query);
+        while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+            $not_sent = $row['total'];
+        }
+
+        $query = "select count(id) as total "
+                . "from mdl_external_survey_queue where sent=1";
+        $result = $this->db->query($query);
+        while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+            $sent = $row['total'];
+        }
+
+        $query = "select count(id) as total "
+                . "from mdl_external_survey_queue where sent=-1";
+        $result = $this->db->query($query);
+        while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+            $failed = $row['total'];
+        }
+
+        $total = $not_sent + $sent + $failed;
+
+        $list.="<table border='0'>";
+
+        $list.="<tr>";
+        $list.="<th style='padding:15px'>Not sent</th>";
+        $list.="<th style='padding:15px'>Success</th>";
+        $list.="<th style='padding:15px'>Failed</th>";
+        $list.="<th style='padding:15px'>Total</th>";
+        $list.="<th style='padding:15px'>&nbsp;</th>";
+        $list.="<th style='padding:15px'>Responders</th>";
+        $list.="</tr>";
+
+        $list.="<tr>";
+        $list.="<td style='padding:15px'>$not_sent</td>";
+        $list.="<td style='padding:15px'>$sent</td>";
+        $list.="<td style='padding:15px'>$failed</td>";
+        $list.="<td style='padding:15px'>$total</td>";
+        $list.="<td style='padding:15px'>&nbsp;</td>";
+        $list.="<td style='padding:15px'>$responders</td>";
+        $list.="</tr>";
+
+        $list.="</table>";
+
+
+        return $list;
+    }
+
+    function get_responders_data() {
+        $list = '';
+        $query = "select count(id) as total from mdl_external_survey_result";
+        $result = $this->db->query($query);
+        while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+            $sent = $row['total'];
+        }
+        $filename = 'users.csv';
+        $this->create_csv_file($filename);
+        $list.="<span style='font-weight:bold;'>$sent</span><span style='padding-left:8px;'><a href='http://globalizationplus.com/survey/files/users.csv' target='_blank'>Download</a></span>";
+        return $list;
+    }
+
+    function create_csv_file($filename) {
+        // Write CSV data
+        $path = $this->upload_path . '/' . $filename;
+        $output = fopen($path, 'w');
+        fputcsv($output, array('User Email'));
+        $query = "select * from mdl_external_survey_result ";
+        $result = $this->db->query($query);
+        while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+            fputcsv($output, array($row['email']));
+        }
+        fclose($output);
     }
 
 }

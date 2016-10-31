@@ -391,6 +391,7 @@ $string['posttomygroups_help'] = 'Posts a copy of this message to all groups you
 $string['prevdiscussiona'] = 'Previous discussion: {$a}';
 $string['pluginadministration'] = 'Forum administration';
 $string['pluginname'] = 'Forum';
+//$string['pluginname'] = 'Dicussion board';
 $string['postadded'] = '<p>Your post was successfully added.</p> <p>You have {$a} to edit it if you want to make any changes.</p>';
 $string['postaddedsuccess'] = 'Your post was successfully added.';
 $string['postaddedtimeleft'] = 'You have {$a} to edit it if you want to make any changes.';

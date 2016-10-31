@@ -74,5 +74,5 @@ $resultObj = $survey->get_poll_results();
 
 
     </body>
-</html>>
+</html>
 

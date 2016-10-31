@@ -84,6 +84,7 @@ else {
             <div id="menu2" class="tab-pane fade" style="width:640px;padding-left: 45px;padding-top: 25px; ">
                 <?php
                 $resultObj = $survey->get_poll_results();
+                $queue = $survey->get_queue_status();
                 ?>
                 <script type="text/javascript">
 
@@ -112,7 +113,7 @@ else {
                         // Set chart options
                         var options = {'title': 'Poll results',
                             'width': 640,
-                            'height': 480};
+                            'height': 420};
 
                         // Instantiate and draw our chart, passing in some options.
                         var chart = new google.visualization.PieChart(document.getElementById('chart_div'));
@@ -121,6 +122,8 @@ else {
                 </script>
 
                 <div id="chart_div" style="padding-left: 45px;"></div>
+                <div style="border-style: dashed;"><span id='q'><?php echo $queue; ?></span><span style='cursor: pointer;'><img src='http://globalizationplus.com/assets/images/refresh.png' width='45' height='35' id='r' title='Refresh'></span></div>
+
 
             </div>
 
