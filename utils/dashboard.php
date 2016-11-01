@@ -77,7 +77,7 @@ if ($_SESSION['logged'] == 1) {
                         <li><a data-toggle="tab" href="#tutors">Professors</a></li>
                         <li><a data-toggle="tab" href="#paid_keys">Subscription</a></li>
                         <li><a data-toggle="tab" href="#trial_keys">Trial Keys</a></li>
-                        <li><a data-toggle="tab" href="#semester">Semesters</a></li>
+                        <!--<li><a data-toggle="tab" href="#semester">Semesters</a></li>-->
                         <li><a data-toggle="tab" href="#logout">Account</a></li>
                     </ul>
 
@@ -98,10 +98,13 @@ if ($_SESSION['logged'] == 1) {
                             <div style='padding-left: 120px; '><h3>Trial Keys&nbsp;<?php echo $trial_search; ?></h3></div>
                             <p><?php echo $trial; ?></p>
                         </div>
+                        
+                        <!--
                         <div id="semester" class="tab-pane fade">
                             <div style='padding-left: 120px; '><h3>Semesters</h3></div>
                             <p><?php echo $tutors; ?></p>
                         </div>
+                        -->
                         <div id="logout" class="tab-pane fade">
                             <br><br><div style='padding-left: 120px; '><button type='button' class="btn btn-default" id='logout2'>Logout</button></div>
                             <p></p>

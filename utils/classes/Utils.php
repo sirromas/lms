@@ -184,12 +184,24 @@ class Utils2 {
         return $list;
     }
 
+    function create_csv_file($tutors) {
+        // Write CSV data
+        $path = $this->json_path . '/tutors.csv';
+        $output = fopen($path, 'w');
+        fputcsv($output, array('Firstname', 'Lastname', 'Email'));
+        foreach ($tutors as $tutor) {
+            fputcsv($output, array($tutor->firstname, $tutor->lastname, $tutor->email));
+        }
+        fclose($output);
+    }
+
     function get_tutors_list($headers = true) {
         $items = array();
-        $query = "select u.id, u.firstname, u.lastname, u.policyagreed, "
+        $query = "select u.id, u.firstname, u.lastname, u.policyagreed, u.deleted, u.email, "
                 . "r.roleid, r.userid from mdl_user u, mdl_role_assignments r "
-                . "where r.roleid=$this->tutor_role and u.id=r.userid "
-                . "limit 0, $this->limit";
+                . "where u.deleted=0 and r.roleid=$this->tutor_role and u.id=r.userid ";
+
+        //echo "Query: ".$query."<br>";
         $num = $this->db->numrows($query);
         if ($num > 0) {
             $result = $this->db->query($query);
@@ -200,7 +212,9 @@ class Utils2 {
                 } // end foreach
                 $items[] = $item;
             } // end while
+            $this->create_csv_file($items);
         } // end if $num > 0
+
         $list = $this->create_tutors_list_tab($items, $headers);
         return $list;
     }
@@ -220,7 +234,7 @@ class Utils2 {
                 $groups = $this->get_user_groups($item->userid);
                 $status = ($user->policyagreed == 1) ? "Confirmed" : "Not confirmed&nbsp;<a href='#' class='confirm' onClick='return false;' data-userid='$item->userid'>Confrm</a>";
                 $list.="<div class='container-fluid'>";
-                $list.="<div class='col-sm-2'>$user->firstname $user->lastname</div><div class='col-sm-2'>$groups</div><div class='col-sm-3' style='text-align:center;'>$status</div>";
+                $list.="<div class='col-sm-2'>$user->firstname $user->lastname<br>$user->address<br>$user->city<br>$user->institution<br>$user->department</div><div class='col-sm-2'>$groups</div><div class='col-sm-3' style='text-align:center;'>$status</div>";
                 $list.="</div>";
                 $list.="<div class='container-fluid' style='text-align:center;'>";
                 $list.="<div class='col-sm-7' style='text-align:center;'><hr/></div>";
@@ -676,7 +690,8 @@ class Utils2 {
                 break;
             case "tutor":
                 $this->create_json_data('tutor');
-                $list.="<input type='text' id='search_tutor' class='typeahead'>&nbsp;<button type='submit' class='btn btn-default' id='search_tutor_button'>Search</button>&nbsp;<button type='submit' class='btn btn-default' id='clear_tutor_button'>Clear</button>";
+                $tutors_path = 'http://globalizationplus.com/lms/utils/data/tutors.csv';
+                $list.="<input type='text' id='search_tutor' class='typeahead'>&nbsp;<button type='submit' class='btn btn-default' id='search_tutor_button'>Search</button>&nbsp;<button type='submit' class='btn btn-default' id='clear_tutor_button'>Clear</button>&nbsp;<a href='$tutors_path' target='_blank'><button type='submit' class='btn btn-default' id='export_tutor_button'>Export</button></a>";
                 break;
             case"subs";
                 $this->create_json_data('subs');
