@@ -128,7 +128,7 @@ if ($roleid == 4) {
 if ($roleid == 5) {
     if ($forumid > 0) {
         $forumurl = "http://globalizationplus.com/lms/mod/forum/view.php?id=$forumid";
-        echo "<iframe src='$forumurl'  width='100%' height='600' frameBorder='0' scrolling='no'></iframe>";
+        echo "<iframe src='$forumurl'  width='100%' frameBorder='0' scrolling='no' onload=\"this.style.height=this.contentDocument.body.scrollHeight +'px';\"></iframe>";
     }
 }
 
