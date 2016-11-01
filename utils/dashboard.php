@@ -208,6 +208,11 @@ if ($_SESSION['logged'] == 1) {
                         $("#search_trial").typeahead({source: data, items: 24});
                     }, 'json');
                     
+                    $('#all').click(function () {
+                    var c = this.checked;
+                    $(':checkbox').prop('checked', c);
+                    });
+                    
                     
                 }); // end of ducment ready
 

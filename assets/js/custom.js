@@ -466,6 +466,19 @@ $(document).ready(function () {
     });
 
 
+    $('#adjust_trial_group').click(function () {
+        var users = new Array();
+        $("input[type=checkbox]:checked").each(function () {
+            var user = {userid: $(this).data('userid'), groupid: $(this).data('groupid')};
+            users.push(user);
+        });
+        var url = 'http://globalizationplus.com/lms/utils/adjust_trial_group.php';
+        $.post(url, {users: users}).done(function (data) {
+            console.log(data);
+        });
+    });
+
+
 }); // end of document ready
 
 

@@ -545,7 +545,7 @@ class Utils2 {
 
             if ($headers) {
                 $list.="<div class='container-fluid' style='font-weight:bold;'>";
-                $list.="<div class='col-sm-2' style='text-align:left;'>Student</div><div class='col-sm-2'>Class Name</div><div class='col-sm-3' style='text-align:center;'>Key</div><div class='col-sm-2' style='text-align:center;'>Start date</div><div class='col-sm-2' style='text-align:center;'>Expiration date</div>";
+                $list.="<div class='col-sm-2' style='text-align:left;'><input type='checkbox' id='all'>&nbsp;&nbsp;Student</div><div class='col-sm-2'>Class Name</div><div class='col-sm-3' style='text-align:center;'>Key</div><div class='col-sm-2' style='text-align:center;'>Start date</div><div class='col-sm-2' style='text-align:center;'>Expiration date</div><div class='col-sm-1' style='text-align:center;'>Action</div>";
                 $list.="</div>";
             }
             $list.="<div id='trial_container'>";
@@ -555,7 +555,7 @@ class Utils2 {
                 $start = date('m-d-Y', $item->start_date);
                 $exp = date('m-d-Y', $item->exp_date);
                 $list.="<div class='container-fluid'>";
-                $list.="<div class='col-sm-2'>$user->firstname $user->lastname</div><div class='col-sm-2'>$class</div><div class='col-sm-3'>$item->auth_key</div><div class='col-sm-2' style='text-align:center;'>$start</div><div class='col-sm-2' style='text-align:center;'>$exp</div>";
+                $list.="<div class='col-sm-2'><input type='checkbox' data-userid='$item->userid' data-groupid='$item->groupid'>&nbsp;&nbsp;$user->firstname $user->lastname</div><div class='col-sm-2'>$class</div><div class='col-sm-3'>$item->auth_key</div><div class='col-sm-2' style='text-align:center;'>$start</div><div class='col-sm-2' style='text-align:center;'>$exp</div><div class='col-sm-1' style='text-align:center;'><a href='#' onClick='return false;'>Adjust</a></div>";
                 $list.="</div>";
                 $list.="<div class='container-fluid'>";
                 $list.="<div class='col-sm-14'><hr/></div>";
@@ -671,8 +671,15 @@ class Utils2 {
                     while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
                         $firstname = mb_convert_encoding(trim($row['firstname']), 'UTF-8');
                         $lastname = mb_convert_encoding(trim($row['lastname']), 'UTF-8');
-                        $data4[] = $lastname . " " . $firstname;
+                        $users[] = $lastname . " " . $firstname;
                     } // end while
+
+                    $query = "select * from mdl_groups order by name";
+                    $result = $this->db->query($query);
+                    while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+                        $groups[] = mb_convert_encoding(trim($row['name']), 'UTF-8');
+                    }
+                    $data4 = array_merge($groups, $users);
                     $path = $this->json_path . '/trial.json';
                     file_put_contents($path, json_encode($data4));
                 }
@@ -699,7 +706,7 @@ class Utils2 {
                 break;
             case "trial";
                 $this->create_json_data('trial');
-                $list.="<input type='text' id='search_trial' class='typeahead'>&nbsp;<button type='submit' class='btn btn-default' id='search_trial_button'>Search</button>&nbsp;<button type='submit' class='btn btn-default' id='clear_trial_button'>Clear</button>&nbsp;<button type='submit' class='btn btn-default' id='add_trial_button'>Add trial key</button>";
+                $list.="<input type='text' id='search_trial' class='typeahead'>&nbsp;<button type='submit' class='btn btn-default' id='search_trial_button'>Search</button>&nbsp;<button type='submit' class='btn btn-default' id='clear_trial_button'>Clear</button>&nbsp;<button type='submit' class='btn btn-default' id='add_trial_button'>Add trial key</button>&nbsp;<button type='submit' class='btn btn-default' id='adjust_trial_group'>Adjust</button>";
                 break;
         }
         return $list;
