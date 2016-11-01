@@ -308,7 +308,8 @@ $string['modeflatnewestfirst'] = 'Display replies flat, with newest first';
 $string['modeflatoldestfirst'] = 'Display replies flat, with oldest first';
 $string['modenested'] = 'Display replies in nested form';
 $string['modethreaded'] = 'Display replies in threaded form';
-$string['modulename'] = 'Forum';
+//$string['modulename'] = 'Forum';
+$string['modulename'] = 'Discussion board';
 $string['modulename_help'] = 'The forum activity module enables participants to have asynchronous discussions i.e. discussions that take place over an extended period of time.
 
 There are several forum types to choose from, such as a standard forum where anyone can start a new discussion at any time; a forum where each student can post exactly one discussion; or a question and answer forum where students must first post before being able to view other students\' posts. A teacher can allow files to be attached to forum posts. Attached images are displayed in the forum post.

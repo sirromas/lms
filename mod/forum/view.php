@@ -130,7 +130,7 @@ if ($pos!==FALSE) {
 echo $OUTPUT->header();
 //echo $newheader;
 
-//die('Stopped ...');
+
 
 echo $OUTPUT->heading(format_string($forum->name), 2);
 if (!empty($forum->intro) && $forum->type != 'single' && $forum->type != 'teacher') {
