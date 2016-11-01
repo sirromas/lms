@@ -3239,6 +3239,9 @@ EOD;
     public function user_menu($user = null, $withlinks = null) {
         global $USER, $CFG;
         require_once($CFG->dirroot . '/user/lib.php');
+        $nav = new Navigation();
+        $roleid = $nav->get_user_role();
+        $subscription_info = $nav->get_subscription_info();
 
         if (is_null($user)) {
             $user = $USER;
@@ -3258,6 +3261,9 @@ EOD;
         }
 
         $returnstr = "";
+        if ($roleid == 5) {
+            $returnstr.="<span>$subscription_info</span>&nbsp;&nbsp;";
+        }
 
         // If during initial install, return the empty return string.
         if (during_initial_install()) {
@@ -3355,15 +3361,12 @@ EOD;
         $am->set_alignment(action_menu::TR, action_menu::BR);
         $am->set_nowrap_on_items();
         if ($withlinks) {
-            $nav = new Navigation();
-            $roleid = $nav->get_user_role();
-            //echo "Role ID: ".$roleid."<br>";
             $navitemcount = count($opts->navitems);
             $idx = 0;
 
             foreach ($opts->navitems as $key => $value) {
 
-                if ($USER->id!=2 && $USER->id!=3 && $roleid>=4 && $value->title != 'Log out') {
+                if ($USER->id != 2 && $USER->id != 3 && $roleid >= 4 && $value->title != 'Log out') {
                     continue;
                 } // end if
 
@@ -4155,11 +4158,11 @@ EOD;
         } else {
             $headings = $this->heading($contextheader->heading, $contextheader->headinglevel);
         }
-        
+
         //echo "Headings: <pre>";
         //print_r($headings);
         //echo "</pre><br>";
-        $headings="<h1 style='text-align:center;'>Globalization Plus<br>Nonpartisan Current Events Reports for University Students & Faculty</h1>";
+        $headings = "<h1 style='text-align:center;'>Globalization Plus<br>Nonpartisan Current Events Reports for University Students & Faculty</h1>";
 
         $html .= html_writer::tag('div', $headings, array('class' => 'page-header-headings'));
 

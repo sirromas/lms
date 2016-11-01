@@ -99,4 +99,48 @@ class Navigation extends Utils {
         return $pageid;
     }
 
+    function get_subscription_info() {
+        $list = "";
+        $userid = $this->user->id;
+
+        $query1 = "select * from mdl_trial_keys where userid=$userid";
+        $num1 = $this->db->numrows($query1);
+        if ($num1 > 0) {
+            $result = $this->db->query($query1);
+            while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+                $trial_start = $row['start_date'];
+                $trial_end = $row['exp_date'];
+            } // end while
+        } // end if $num1 > 0
+
+        $query2 = "select * from mdl_card_payments where userid=$userid";
+        $num2 = $this->db->numrows($query2);
+        if ($num2 > 0) {
+            $result = $this->db->query($query2);
+            while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+                $paid_start = $row['start_date'];
+                $paid_end = $row['exp_date'];
+            } // end while
+        } // end if $num2 > 0
+
+        if ($num1 == 0 && $num2 > 0) {
+            $s = date('m-d-Y', $paid_start);
+            $e = date('m-d-Y', $paid_end);
+        } // end if
+
+        if ($num1 > 0 && $num2 == 0) {
+            $s = date('m-d-Y', $trial_start);
+            $e = date('m-d-Y', $trial_end);
+        } // end if
+
+        if ($num1 > 0 && $num2 > 0) {
+            $s = date('m-d-Y', $paid_start);
+            $e = date('m-d-Y', $paid_end);
+        } // end if
+
+        $list.="<span style=''>Subscription period: $s - $e</span>";
+
+        return $list;
+    }
+
 }
