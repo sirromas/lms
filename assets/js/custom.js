@@ -303,6 +303,19 @@ $(document).ready(function () {
         });
     });
 
+    $('body').on('click', 'a.trial_adjust', function () {
+        var userid = $(this).data('userid');
+        var groupid = $(this).data('groupid');
+        var url = 'http://globalizationplus.com/lms/utils/get_adjust_trial_personal_key_modal_dialog.php';
+        var user = {userid: userid, groupid: groupid};
+        $.post(url, {user: JSON.stringify(user)}).done(function (data) {
+            $("body").append(data);
+            $("#myModal").modal('show');
+            $("#trial_start").datepicker();
+            $("#trial_exp").datepicker();
+        });
+    });
+
 
     $('body').on('click', 'button', function (event) {
 
@@ -341,10 +354,58 @@ $(document).ready(function () {
             } // end else
         }
 
+        if (event.target.id == 'personal_modal_trial_ok') {
+            var userid = $('#userid').val();
+            var groupid = $('#groupid').val();
+            var start = $('#trial_start').val();
+            var end = $('#trial_exp').val();
+
+            if (start == '' || end == '') {
+                $('#subs_err').html('Please provide key start and expiration date');
+            } // end if
+            else {
+                $('#subs_err').html('');
+                if (confirm('Adjust trial key for selected user?')) {
+                    var post_url = "http://globalizationplus.com/lms/utils/adjust_personal_trial_key.php";
+                    var user = {userid: userid, groupid: groupid, start: start, end: end};
+                    $.post(post_url, {user: JSON.stringify(user)}).done(function () {
+                        //console.log(data);
+                        $("[data-dismiss=modal]").trigger({type: "click"});
+                        $('#myModal').data('modal', null);
+                        document.location.reload();
+                    });
+                } // end if
+            } // end else
+        }
+
+
         if (event.target.id == 'modal_cancel') {
             $('#myModal').data('modal', null);
             document.location.reload();
             $('#paid_keys').trigger('click');
+        }
+
+
+
+        if (event.target.id == 'group_modal_trial_ok') {
+            var users = $('#users').val();
+            var start = $('#trial_start').val();
+            var end = $('#trial_exp').val();
+            if (start == '' || end == '') {
+                $('#subs_err').html('Please select start and expiration dates(s)');
+            } // end if 
+            else {
+                $('#subs_err').html('');
+                if (confirm('Adjust trial key(s) for selected user(s)?')) {
+                    var keys = {users: JSON.stringify(users), start: start, end: end};
+                    var url = 'http://globalizationplus.com/lms/utils/adjust_group_trial_keys.php';
+                    $.post(url, {users: JSON.stringify(keys)}).done(function () {
+                        $("[data-dismiss=modal]").trigger({type: "click"});
+                        $('#myModal').data('modal', null);
+                        document.location.reload();
+                    });
+                } // end if
+            } // end else
         }
 
     }); // end of $('body').on('click', 'button'
@@ -472,9 +533,28 @@ $(document).ready(function () {
             var user = {userid: $(this).data('userid'), groupid: $(this).data('groupid')};
             users.push(user);
         });
-        var url = 'http://globalizationplus.com/lms/utils/adjust_trial_group.php';
-        $.post(url, {users: users}).done(function (data) {
-            console.log(data);
+
+        if (users.length > 0) {
+            var url = 'http://globalizationplus.com/lms/utils/get_trial_modal_dialog.php';
+            $.post(url, {users: users}).done(function (data) {
+                $("body").append(data);
+                $("#myModal").modal('show');
+                $("#trial_start").datepicker();
+                $("#trial_exp").datepicker();
+            });
+        }
+    });
+
+    $('.trial_adjust').click(function () {
+        var userid = $(this).data('userid');
+        var groupid = $(this).data('groupid');
+        var url = 'http://globalizationplus.com/lms/utils/get_adjust_trial_personal_key_modal_dialog.php';
+        var user = {userid: userid, groupid: groupid};
+        $.post(url, {user: JSON.stringify(user)}).done(function (data) {
+            $("body").append(data);
+            $("#myModal").modal('show');
+            $("#trial_start").datepicker();
+            $("#trial_exp").datepicker();
         });
     });
 
