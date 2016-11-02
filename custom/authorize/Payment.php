@@ -128,6 +128,16 @@ class Payment extends Utils {
         //print_r($post_order);
         //echo "</pre><br>";
         //die();
+        $names = explode(" ", $post_order->cardholder);
+        if (count($names) == 2) {
+            $firstname = $names[0];
+            $lastname = $names[1];
+        } // end if
+
+        if (count($names) == 3) {
+            $firstname = $names[0] . " " . $lastname = $names[1];
+            $lastname = $names[2];
+        } // end if
 
         $payment = $this->prepare_order($post_order);
         $merchantAuthentication = $this->authorize();
@@ -158,8 +168,8 @@ class Payment extends Utils {
         $address = (string) $post_order->street . " " . (string) $post_order->city . " " . $state;
 
         $shipto = new AnetAPI\NameAndAddressType();
-        $shipto->setFirstName($post_order->firstname);
-        $shipto->setLastName($post_order->lastname);
+        $shipto->setFirstName($firstname);
+        $shipto->setLastName($lastname);
         $shipto->setCompany('Student');
         $shipto->setAddress($address);
         $shipto->setCity($post_order->city);
@@ -169,8 +179,8 @@ class Payment extends Utils {
 
         // Bill To
         $billto = new AnetAPI\CustomerAddressType();
-        $billto->setFirstName($post_order->firstname);
-        $billto->setLastName($post_order->lastname);
+        $billto->setFirstName($firstname);
+        $billto->setLastName($lastname);
         $billto->setCompany("Student");
         $billto->setAddress($address);
         $billto->setCity($post_order->city);

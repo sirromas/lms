@@ -143,11 +143,22 @@ $(document).ready(function () {
         var state = $('#state').val();
         var cardmonth = $('#cardmonth').val();
         var cardyear = $('#cardyear').val();
+        var cardholder = $('#cardholder').val();
         $('#form_err').html('');
         $('#form_info').html('');
-        if (state > 0 && cardmonth > 0 && cardyear > 0) {
+        if (state > 0 && cardmonth > 0 && cardyear > 0 && cardholder != '') {
             var groupname = $('#class').val();
             var email = $('#email').val();
+
+            var names_arr = cardholder.split(" ");
+            console.log('Billing name: ' + cardholder);
+            console.log('Billing firstname: ' + names_arr[0]);
+            console.log('Billing lastname: ' + names_arr[1]);
+            if (typeof (names_arr[1]) === "undefined") {
+                $('#form_err').html('Please provide correct card holder name separated by space');
+                return false;
+            }
+            $('#form_err').html('');
             var url = 'http://globalizationplus.com/lms/custom/tutors/is_email_exists.php';
             $.post(url, {email: email}).done(function (data) {
                 if (data == 0) {
@@ -173,6 +184,7 @@ $(document).ready(function () {
                                 dep: 'n/a',
                                 site: 'n/a',
                                 class: $('#class').val(),
+                                cardholder: cardholder,
                                 cardnumber: $('#cardnumber').val(),
                                 cvv: $('#cvv').val(),
                                 cardmonth: $('#cardmonth').val(),

@@ -118,7 +118,7 @@ class Student extends Utils {
                     $list.="Thank you for signup! Confirmation email is sent to $userobj->email";
                 } // end if
                 else {
-                    $list.="Signup is ok, but confirmation email was not sent ($email_status). Please contact us by email <a href='mailto:info@globalizationplus.com'>info@globalizationplus.com</a>";
+                    $list.="Signup is ok, but confirmation email was not sent. Please contact us by email <a href='mailto:info@globalizationplus.com'>info@globalizationplus.com</a>";
                 } // end else
             } // end if
             else {
