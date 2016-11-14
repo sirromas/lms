@@ -523,11 +523,11 @@ class Survey {
         // Write CSV data
         $path = $this->upload_path . '/' . $filename;
         $output = fopen($path, 'w');
-        fputcsv($output, array('User Email'));
+        fputcsv($output, array('User Email','Poll reuslt'));
         $query = "select * from mdl_external_survey_result ";
         $result = $this->db->query($query);
         while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
-            fputcsv($output, array($row['email']));
+            fputcsv($output, array($row['email'],$row['poll_result']));
         }
         fclose($output);
     }
