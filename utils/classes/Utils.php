@@ -583,8 +583,13 @@ class Utils2 {
     }
 
     function create_keys_list_tab($items, $headers) {
+        $item = 'trial';
+        $this->create_json_data($item);
         $list = "";
 
+        $list.="<div class='row-fluid'>";
+        $list.="<span class='span3' style='padding-left:25px;'><br><button class='btn btn-default' id='add_trial_button'>Add Trial Key</button></span>";
+        $list.="</div>";
 
         if (count($items) > 0) {
             $list.="<br><br><table id='trial_table' class='table table-striped table-bordered' cellspacing='0' width='100%'>";
@@ -726,9 +731,13 @@ class Utils2 {
                     while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
                         $groups[] = mb_convert_encoding(trim($row['name']), 'UTF-8');
                     }
-                    $data4 = array_merge($groups, $users);
+                    
                     $path = $this->json_path . '/trial.json';
-                    file_put_contents($path, json_encode($data4));
+                    file_put_contents($path, json_encode($groups));
+                    
+                    $path = $this->json_path . '/users.json';
+                    file_put_contents($path, json_encode($users));
+                   
                 }
                 break;
         }

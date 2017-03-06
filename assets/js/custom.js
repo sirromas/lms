@@ -551,6 +551,7 @@ $(document).ready(function () {
         });
     });
 
+
     $("#add_trial_button").click(function () {
         console.log('Clicked ...');
         var url = 'http://globalizationplus.com/lms/utils/get_add_trial_key_dialog.php';
@@ -558,12 +559,12 @@ $(document).ready(function () {
             $("body").append(data);
             $("#myModal").modal('show');
 
-            $.get('/lms/utils/data/classes.json', function (data) {
-                $("#trial_class").typeahead({source: data, items: 24});
+            $.get('/lms/utils/data/trial.json', function (data) {
+                $("#trial_class").typeahead({source: data, items: 2400});
             }, 'json');
 
-            $.get('/lms/utils/data/trial.json', function (data) {
-                $("#trial_user").typeahead({source: data, items: 24});
+            $.get('/lms/utils/data/users.json', function (data) {
+                $("#trial_user").typeahead({source: data, items: 2400});
             }, 'json');
 
 
@@ -616,6 +617,11 @@ $(document).ready(function () {
     $('body').on('click', function (event) {
 
         console.log('Event ID: ' + event.target.id);
+
+        if (event.target.id == 'modal_cancel_trial') {
+            console.log('Clicked ...');
+            document.location.reload();
+        }
 
         if (event.target.id.indexOf("cancel_trial_") >= 0) {
             document.location.reload();
