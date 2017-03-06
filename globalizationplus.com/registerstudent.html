@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+
+<html>
+    <head>
+        <title>Globalization Plus: Student Registration</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+        <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+
+        <!-- Latest compiled and minified CSS -->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" >
+
+        <!-- Optional theme -->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" >
+        <link rel="stylesheet" href="./assets/css/nav.css">
+
+        <!-- Latest compiled and minified JavaScript -->
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-3-typeahead/4.0.1/bootstrap3-typeahead.js"></script>
+
+        <script src="assets/js/custom.js"></script>
+
+        <!-- Data tables JS -->
+        <script type="text/javascript" src='https://cdn.datatables.net/1.10.13/js/jquery.dataTables.min.js' ></script>
+        <script type="text/javascript" src='https://cdn.datatables.net/1.10.13/js/dataTables.bootstrap.min.js' ></script>
+
+        <!-- Data tables CSS -->
+        <link rel="stylesheet" href="https://cdn.datatables.net/1.10.13/css/dataTables.bootstrap.min.css">
+
+        <script type="text/javascript">
+
+            var request = {id: 1};
+            var url = 'http://globalizationplus.com/lms/custom/students/create_typehead_data.php';
+            $.post(url, request).done(function (data) {
+                console.log(data);
+            }); // end of post
+            
+            
+            $.get('http://globalizationplus.com/lms/custom/students/groups.json', function (data) {
+                $("#class").typeahead({source: data, items: 256});
+            });
+            
+        </script>
+
+
+        <style type="text/css" media="all">
+
+            a:link { color: #000; text-decoration: none; }
+            a:visited { color: #000; }
+            a:active { color: #000; }
+            body { color: #000; }
+            a:hover { 
+                color: #000000; font-weight: bold; 
+            }
+            a.colorlink:hover { 
+                color: #856ce5; font-weight: normal; 
+            }
+
+            .form-group { display: inline-block; width: 220px; }
+
+            .form-control { font-size: 14px !important;}
+
+            .form-group.dsR1140 {
+
+                padding-bottom: 0px;
+                margin-bottom: 0px;
+            }
+
+            body { 
+                font-family: serif !important; padding-top: 8px;
+            }
+
+            :focus {
+                /* -webkit-focus-ring-color = '#ffffff' */
+                outline: -webkit-focus-ring-color auto 0px;
+                outline: -webkit-focus-ring-color auto 0px;
+
+
+
+                .dsR1140 /*agl rulekind: base;*/ { width: auto; height: 42px; }
+                #container35 { }
+                .dsR1141 /*agl rulekind: base;*/ { width: auto; height: 18px; }
+                #prof_signup { }
+
+                .dsR1142 /*agl rulekind: base;*/ { width: auto; height: 861px; }
+                .dsR1144 /*agl rulekind: base;*/ { width: auto; height: 853px; }
+
+                .container.dsR1142 { padding-bottom: 20px; }
+
+
+
+                a,img { border: none; }
+                .dsR1145 /*agl rulekind: base;*/ { width: 698px; height: 178px; }
+
+
+            </style>
+
+            <script>
+                function windowopener() {
+                    var le = (screen.width / 2) - 410;
+                    var to = (screen.height / 2) - 204;
+                    controlWindow = window.open("lms/loginpage.html", "dataitem", "toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=no,resizable=no,width=410,height=204,left=" + le + ",top=" + to + ",screenX=0,screenY=0'");
+                }
+
+            </script>
+
+        </head>
+        <body>
+            <div align="center">
+                <div align="center">
+                    <div align="center">
+                        <p><img class="dsR1145" src="assets/images/header.jpg" style="padding-top: 4px; border-style: solid; border-width: 6px 1px 2px; border-color: #ddd;" alt="" usemap="#header" border="0" /><map name="header" id="header"><area title="About Us" shape="rect" coords="609,23,683,40" href="http://www.globalizationplus.com/about.html" alt="About Us" target="_blank" /><area title="Globalization Plus" shape="rect" coords="120,55,556,102" href="http://www.globalizationplus.com" alt="Globalizaiton Plus" target="_blank" /><area title="Log-In" shape="rect" coords="17,19,68,39" href="http://www.globalizationplus.com/login.html" alt="Log-In" target="_blank" /></map></p>
+                    </div>
+                </div>
+            </div>
+            <div class="container dsR1142">
+                <div class="header clearfix dsR1139">
+                    <div align="center"></div>
+                </div>
+                <div class="panel panel-default dsR1144">
+                    <div class="panel-heading">
+                        <div class='text-center'>
+                            <div align="center">
+                                <span class="ds1">
+                                    <h3>University Student Registration<br />
+                                    </h3>
+                                    <h4>($30 per semester)</h4>
+                                </span></div>
+                        </div>
+                    </div>
+                    <div class="panel-body">
+                        <form id="student_signup" method="post">
+                            <div class="form-group">
+                                <div align="left">
+                                    <label for="first">First</label>                            <input type="text" class="form-control" id="first" name="first" required placeholder="Enter Your Firstname"></div>
+                            </div>
+
+                            <div class="form-group">
+                                <div align="left">
+                                    <label for="last">Last</label>                            <input type="text" class="form-control" id="last" name="last" required placeholder="Enter Your Lastname"></div>
+                            </div>
+
+                            <div class="form-group">
+                                <div align="left">
+                                    <label for="email">Email</label>                            <input type="email" class="form-control" id="email" name="email" required aria-describedby="emailHelp" placeholder="Enter email"></div>
+                            </div>
+
+                            <div class="form-group">
+                                <div align="left">
+                                    <label for="pwd">Password</label>                            <input type="password" class="form-control" required id="pwd" name="pwd" placeholder="Password"></div>
+                            </div>
+
+                            <div class="form-group">
+                                <div align="left">
+                                    <label for="street">Street</label>                            <input type="text" class="form-control" required id="street" name="street" placeholder="Enter Your Street"></div>
+                            </div>
+
+                            <div class="form-group">
+                                <div align="left">
+                                    <label for="city">City</label>                            <input type="text" class="form-control" id="city" name="city" required placeholder="Enter Your City"></div>
+                            </div>
+
+                            <div class="form-group">
+                                <div align="left">
+                                    <label for="state">State</label>                            <select id="state" class='form-control'>
+                                        <option value="0" selected="">State</option>
+                                        <option value="1">Alabama</option>
+                                        <option value="2">Alaska</option>
+                                        <option value="3">Arkansas</option>
+                                        <option value="4">Arizona</option>
+                                        <option value="5">California</option>
+                                        <option value="6">Colorado</option>
+                                        <option value="7">Connecticut</option>
+                                        <option value="8">Delaware</option>
+                                        <option value="9">District of Colombia</option>
+                                        <option value="10">Florida</option>
+                                        <option value="11">Georgia</option>
+                                        <option value="12">Hawaii</option>
+                                        <option value="13">Idaho</option>
+                                        <option value="14">Illinois</option>
+                                        <option value="15">Indiana</option>
+                                        <option value="16">Iowa</option>
+                                        <option value="17">Kansas</option>
+                                        <option value="18">Kentucky</option>
+                                        <option value="19">Louisiana</option>
+                                        <option value="20">Maine</option>
+                                        <option value="21">Maryland</option>
+                                        <option value="22">Massachusetts</option>
+                                        <option value="23">Michigan</option>
+                                        <option value="24">Minnesota</option>
+                                        <option value="25">Mississippi</option>
+                                        <option value="26">Missouri</option>
+                                        <option value="27">Montana</option>
+                                        <option value="28">Nebraska</option>
+                                        <option value="29">Nevada</option>
+                                        <option value="30">New Hampshire</option>
+                                        <option value="31">New Jersey</option>
+                                        <option value="32">New Mexico</option>
+                                        <option value="33">New York</option>
+                                        <option value="34">North Carolina</option>
+                                        <option value="35">North Dakota</option>
+                                        <option value="36">Ohio</option>
+                                        <option value="37">Oklahoma</option>
+                                        <option value="38">Oregon</option>
+                                        <option value="39">Pennsylvania</option>
+                                        <option value="40">Rhode Island</option>
+                                        <option value="41">South Carolina</option>
+                                        <option value="42">South Dakota</option>
+                                        <option value="43">Tennessee</option>
+                                        <option value="44">Texas</option>
+                                        <option value="45">Utah</option>
+                                        <option value="46">Vermont</option>
+                                        <option value="47">Virginia</option>
+                                        <option value="48">Washington</option>
+                                        <option value="49">West Virginia</option>
+                                        <option value="50">Wisconsin</option>
+                                        <option value="51">Wyoming</option>
+                                    </select></div>
+                            </div>
+
+                            <div class="form-group">
+                                <div align="left">
+                                    <label for="zip">Zip</label>                            <input type="text" class="form-control" id="zip" name="zip" required placeholder="Enter Your ZIP"></div>
+                            </div>
+
+                            <div class="form-group">
+                                <div align="left">
+                                    <label for="school">School Name</label>                            <input type="text" class="form-control" id="school" name="school" placeholder="Enter Your School Name"></div>
+                            </div>
+
+                            <div class="form-group">
+                                <div align="left">
+                                    <label for="class">Class Name</label>                            <input type="text" class="typeahead" autocomplete="off" spellcheck="false" id="class" name="class" required placeholder="Enter Your Class Name" style="display: block;
+                                                                                                            width: 100%;
+                                                                                                            height: @input-height-base; 
+                                                                                                            padding: @padding-base-vertical @padding-base-horizontal;
+                                                                                                            font-size: @font-size-base;
+                                                                                                            line-height: @line-height-base;
+                                                                                                            color: @input-color;
+                                                                                                            background-color: @input-bg;
+                                                                                                            background-image: none; 
+                                                                                                            border: 1px solid @input-border;
+                                                                                                            border-radius: @input-border-radius; "></div>
+                            </div>
+
+                            <div class="form-group">
+                                <div align="left">
+                                    <label for="cardholder">Card Holder</label>                            <input type="text" class="form-control" id="cardholder" name="cardholder" required placeholder="Enter Your Card Holder Name"></div>
+                            </div>
+
+                            <div class="form-group">
+                                <div align="left">
+                                    <label for="cardnumber">Card Number</label>                            <input type="text" class="form-control" id="cardnumber" name="cardnumber" required placeholder="Enter Your Card Number"></div>
+                            </div>
+
+                            <div class="form-group">
+                                <div align="left">
+                                    <label for="cvv">CVV code</label>                            <input type="text" class="form-control" id="cvv" name="cvv" required placeholder="Enter Your Card CVV"></div>
+                            </div>
+
+                            <div class="form-group">
+                                <div align="left">
+                                    <label for="card_month">Expiration Month</label>                            <select id="cardmonth" class="form-control">
+                                        <option value="0" selected="">Month</option>
+                                        <option value="01">01</option>
+                                        <option value="03">02</option>
+                                        <option value="03">03</option>
+                                        <option value="04">04</option>
+                                        <option value="05">05</option>
+                                        <option value="06">06</option>
+                                        <option value="07">07</option>
+                                        <option value="08">08</option>
+                                        <option value="09">09</option>
+                                        <option value="10">10</option>
+                                        <option value="11">11</option>
+                                        <option value="12">12</option>
+                                    </select></div>
+                            </div>
+                            <div class="form-group">
+                                <div align="left">
+                                    <label for="card_year">Expiration Year</label>                            <select id="cardyear" class="form-control">
+                                        <option value="0" selected="">Year</option>
+                                        <option value="2017">2017</option>
+                                        <option value="2018">2018</option>
+                                        <option value="2019">2019</option>
+                                        <option value="2020">2020</option>
+                                        <option value="2021">2021</option>
+                                        <option value="2022">2022</option>
+                                        <option value="2023">2023</option>
+                                        <option value="2024">2024</option>
+                                        <option value="2025">2025</option>
+                                        <option value="2026">2026</option>
+                                        <option value="2027">2027</option>
+                                        <option value="2028">2028</option>
+                                        <option value="2029">2029</option>
+                                        <option value="2030">2030</option>
+                                    </select></div>
+                            </div>
+                            <div align="center">
+                                <div class="form-group">
+                                    <div align="center">
+                                        <div class="text-error" id="form_err"></div>
+                                        <div class="form-group dsR1141">
+                                            <div align="center">
+                                                <div class="text-info" id="form_info"></div>
+                                                <div class="form-group dsR1140">
+                                                    <div align="center">
+                                                        <div class="text-info" id="ajax_loader" style="display:none;text-align: center;">
+                                                            <img src="assets/images/ajax.gif" /></div><br>
+                                                        <button type="submit" class="btn btn-default">Submit</button></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+
+
+
+                    </div>
+                    <div align="center">
+                        </form></div>
+                </div>
+            </div>
+            <br><br>	<footer class="footer">
+                <div class="text-center">
+                    <p align="center"><span class="ds110">©</span><span class="ds111"> copyright 2017 by Executive Clarity. All Rights Reserved.</span></p>
+                </div>
+            </p></div></footer><!-- /container --></div>
+</body>
+
+</html>

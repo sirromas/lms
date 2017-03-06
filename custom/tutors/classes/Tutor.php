@@ -9,17 +9,27 @@ class Tutor extends Utils {
     }
 
     function create_group($groupname) {
-        $query = "insert into mdl_groups "
-                . "(courseid,idnumber,name) "
-                . "values($this->courseid,"
-                . " ' ',"
-                . " '" . $groupname . "')";
-        $this->db->query($query);
+        if ($groupname != '') {
+            $status = $this->is_group_exists($groupname);
+            if ($status == 0) {
+                $query = "insert into mdl_groups "
+                        . "(courseid,idnumber,name) "
+                        . "values($this->courseid,"
+                        . " ' ',"
+                        . " '" . $groupname . "')";
+                $this->db->query($query);
 
-        $stmt = $this->db->query("SELECT LAST_INSERT_ID()");
-        $lastid_arr = $stmt->fetch(PDO::FETCH_NUM);
-        $lastId = $lastid_arr[0];
-
+                $stmt = $this->db->query("SELECT LAST_INSERT_ID()");
+                $lastid_arr = $stmt->fetch(PDO::FETCH_NUM);
+                $lastId = $lastid_arr[0];
+            } // end if $status==0
+            else {
+                $lastId = 0;
+            }
+        } // end if $groupname!=''
+        else {
+            $lastId = 0;
+        }
         return $lastId;
     }
 
@@ -29,22 +39,53 @@ class Tutor extends Utils {
         if ($result !== false) {
             $roleid = 4; // non-editing teacher
             $userObj = json_decode($user);
-            $groupname = $userObj->class;
             $email = $userObj->email;
             $userid = $this->get_user_id($email);
             $this->enrol_user($userid, $roleid);
-            $groupid = $this->create_group($groupname);
-            $this->add_to_group($groupid, $userid);
-            $email_status = $this->send_tutor_confirmation_email($userObj);
-            if ($email_status === true) {
-                $list.="Thank you for signup. Confirmation email is sent to $userObj->email .";
-            } // end if
-            else {
-                $list.="Signup is ok, but confirmation email was not sent ($email_status). Please contact us by email <a href='mailto:info@globalizationplus.com'>info@globalizationplus.com</a>";
+
+            $course1 = $userObj->course1;
+            $groupid = $this->create_group($course1);
+            if ($groupid > 0) {
+                $this->add_to_group($groupid, $userid);
             }
+
+
+            $course2 = $userObj->course2;
+            $groupid = $this->create_group($course2);
+            if ($groupid > 0) {
+                $this->add_to_group($groupid, $userid);
+            }
+
+            $course3 = $userObj->course3;
+            $groupid = $this->create_group($course3);
+            if ($groupid > 0) {
+                $this->add_to_group($groupid, $userid);
+            }
+
+            $course4 = $userObj->course4;
+            $groupid = $this->create_group($course4);
+            if ($groupid > 0) {
+                $this->add_to_group($groupid, $userid);
+            }
+
+            $course5 = $userObj->course5;
+            $groupid = $this->create_group($course5);
+            if ($groupid > 0) {
+                $this->add_to_group($groupid, $userid);
+            }
+
+            $course6 = $userObj->course6;
+            $groupid = $this->create_group($course6);
+            if ($groupid > 0) {
+                $this->add_to_group($groupid, $userid);
+            }
+
+            $status=$this->send_tutor_confirmation_email($userObj);
+            $list.="Thank you for signup. Confirmation email is sent to $userObj->email .";
+            echo $status;
         } // end if $result!==false
         else {
-            $list.="Signup error happened.ß";
+            $list.="Signup error happened";
         } // end else 
         return $list;
     }

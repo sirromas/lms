@@ -4147,22 +4147,22 @@ EOD;
         $html = html_writer::start_div('page-context-header');
 
         // Image data.
-        if (isset($contextheader->imagedata)) {
+        //if (isset($contextheader->imagedata)) {
             // Header specific image.
-            $html .= html_writer::div($contextheader->imagedata, 'page-header-image');
-        }
+          //  $html .= html_writer::div($contextheader->imagedata, 'page-header-image');
+        //}
 
         // Headings.
-        if (!isset($contextheader->heading)) {
-            $headings = $this->heading($this->page->heading, $contextheader->headinglevel);
-        } else {
-            $headings = $this->heading($contextheader->heading, $contextheader->headinglevel);
-        }
+        //if (!isset($contextheader->heading)) {
+            //$headings = $this->heading($this->page->heading, $contextheader->headinglevel);
+        //} else {
+          //  $headings = $this->heading($contextheader->heading, $contextheader->headinglevel);
+        //}
 
         //echo "Headings: <pre>";
         //print_r($headings);
         //echo "</pre><br>";
-        $headings = "<h1 style='text-align:center;'>Globalization Plus<br>Nonpartisan Current Events Reports for University Students & Faculty</h1>";
+        //$headings = "<h1 style='text-align:center;'>Globalization Plus<br>Nonpartisan Current Events Reports for University Students & Faculty</h1>";
 
         $html .= html_writer::tag('div', $headings, array('class' => 'page-header-headings'));
 

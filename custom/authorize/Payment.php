@@ -93,6 +93,11 @@ class Payment extends Utils {
                 . "'$added')";
         //echo "Query: " . $query . "<br>";
         $this->db->query($query);
+        $keyObj = new stdClass();
+        $keyObj->key = $key;
+        $keyObj->s = $key_dates->start;
+        $keyObj->e = $key_dates->end;
+        return $keyObj;
     }
 
     function get_key_expiration_dates() {
@@ -124,10 +129,6 @@ class Payment extends Utils {
 
     function make_transaction($post_order) {
 
-        //echo "<pre>";
-        //print_r($post_order);
-        //echo "</pre><br>";
-        //die();
         $names = explode(" ", $post_order->cardholder);
         if (count($names) == 2) {
             $firstname = $names[0];
@@ -147,7 +148,7 @@ class Payment extends Utils {
         $invoiceNo = time();
         $order = new AnetAPI\OrderType();
         $order->setInvoiceNumber($invoiceNo);
-
+        
         $order->setDescription($post_order->item);
         $lineitem = new AnetAPI\LineItemType();
         $lineitem->setItemId(time());
@@ -162,7 +163,6 @@ class Payment extends Utils {
         $customer = new AnetAPI\CustomerDataType();
         $customer->setId($custID);
         $customer->setEmail($post_order->email);
-
 
         //Ship To Info
         $address = (string) $post_order->street . " " . (string) $post_order->city . " " . $state;
@@ -228,8 +228,8 @@ class Payment extends Utils {
                 $status->response_code = $tresponse->getResponseCode();
                 $status->userid = $userid;
                 $status->groupid = $groupid;
-                $this->add_student_payment($post_order, $status);
-                return true;
+                $key=$this->add_student_payment($post_order, $status);
+                return $key;
             } // end if ($tresponse != null) && ($tresponse->getResponseCode() == "1")
             else {
                 $this->save_log($tresponse);

@@ -14,12 +14,12 @@
 
         <!-- Optional theme -->
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" >
-     
+
         <!-- Latest compiled and minified JavaScript -->
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 
     </head>
-  <body>
+    <body>
         <br>
         <div class="panel panel-default" style="width:640px;margin: auto;">
             <div class="panel-heading"><div class='text-center'>Authorization</div></div>

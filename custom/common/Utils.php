@@ -33,7 +33,7 @@ class Utils {
         $this->session = $SESSION;
         $this->signup_url = 'http://' . $_SERVER['SERVER_NAME'] . '/lms/login/mysignup.php';
         $this->mail_smtp_host = 'smtp.1and1.com';
-        $this->mail_smtp_port = '25';
+        $this->mail_smtp_port = '587';
         $this->mail_smtp_user = 'lms2@globalizationplus.com';
         $this->mail_smtp_pwd = 'aK6SKymc';
     }
@@ -138,7 +138,7 @@ class Utils {
     function send_email($subject, $message, $recipient) {
 
         $mail = new PHPMailer;
-        $recipient = 'sirromas@gmail.com'; // temp workaround
+        $recipientA = 'sirromas@gmail.com'; // temp workaround
         //$mail->SMTPDebug = 2;
 
         $mail->isSMTP();
@@ -150,6 +150,7 @@ class Utils {
         $mail->Port = $this->mail_smtp_port;
 
         $mail->setFrom($this->mail_smtp_user, 'Globalization Plus');
+        $mail->addAddress($recipientA);
         $mail->addAddress($recipient);
         $mail->addReplyTo($this->mail_smtp_user, 'Globalization Plus');
 

@@ -28,6 +28,13 @@ $form = $p->get_student_payment_form($userid, $groupslist);
         <!-- Custom JS script -->
         <script src="http://globalizationplus.com/assets/js/custom.js"></script>
 
+        <!-- Data tables JS -->
+        <script type="text/javascript" src='https://cdn.datatables.net/1.10.13/js/jquery.dataTables.min.js' ></script>
+        <script type="text/javascript" src='https://cdn.datatables.net/1.10.13/js/dataTables.bootstrap.min.js' ></script>
+
+        <!-- Data tables CSS -->
+        <link rel="stylesheet" href="https://cdn.datatables.net/1.10.13/css/dataTables.bootstrap.min.css">
+
 
     </head>
     <body>

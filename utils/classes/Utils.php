@@ -24,7 +24,7 @@ class Utils2 {
 
     function get_classes_list($headers = true) {
         $items = array();
-        $query = "select * from mdl_groups order by name limit 0, $this->limit";
+        $query = "select * from mdl_groups order by name";
         $num = $this->db->numrows($query);
         if ($num > 0) {
             $result = $this->db->query($query);
@@ -43,30 +43,25 @@ class Utils2 {
     function create_classes_list_tab($groups, $headers = true) {
         $list = "";
         if (count($groups) > 0) {
-            if ($headers) {
-                $list.="<div class='container-fluid' style='font-weight:bold;'>";
-                $list.="<div class='col-sm-3'>Class Name</div><div class='col-sm-2' style='text-align:center;'>Students Num</div>";
-                $list.="</div>";
-            }
-            $list.="<div id='classes_container'>";
+            $list.="<br><br><table id='classes_table' class='table table-striped table-bordered' cellspacing='0' width='100%'>";
+            $list.="<thead>";
+            $list.="<tr>";
+            $list.="<th>Class Name</th>";
+            $list.="<th>Students Num</th>";
+            $list.="</tr>";
+            $list.="</thead>";
+            $list.="<tbody>";
             foreach ($groups as $group) {
                 $num = $this->get_class_members_num($group->id);
-                $list.="<div class='container-fluid'>";
-                $list.="<div class='col-sm-3'>$group->name</div><div class='col-sm-2' style='text-align:center;'>$num</div>";
-                $list.="</div>";
-                $list.="<div class='container-fluid'>";
-                $list.="<div class='col-sm-5'><hr/></div>";
-                $list.="</div>";
+                if ($group->name != '' && $num > 0) {
+                    $list.="<tr>";
+                    $list.="<td>$group->name</td>";
+                    $list.="<td>$num</td>";
+                    $list.="</tr>";
+                } // end if $group->name!='' && $num>0
             } // end foreach
-            $list.="</div>";
-            $list.="<div class='container-fluid' style='text-align:center;'>";
-            $list.="<div class='col-sm-5' id='ajax' style='display:none;'><img src='../../assets/images/ajax.gif'></div>";
-            $list.="</div>";
-            if ($headers) {
-                $list.="<br><div class='container-fluid'>";
-                $list.="<div class='col-sm-9' id='class_paginator'></div>";
-                $list.="</div>";
-            }
+            $list.="</tbody>";
+            $list.="</table>";
         } // end if count($groups)>0
         else {
             $list.="<div class='container-fluid' style='text-align:center;'>";
@@ -222,33 +217,27 @@ class Utils2 {
     function create_tutors_list_tab($items, $headers = true) {
         $list = "";
         if (count($items) > 0) {
-            //echo "Inside count ++<br>";
-            if ($headers) {
-                $list.="<div class='container-fluid' style='font-weight:bold;'>";
-                $list.="<div class='col-sm-2' style='text-align:left;'>Professor</div><div class='col-sm-2'>Class Name</div><div class='col-sm-3' style='text-align:center;'>Status</div>";
-                $list.="</div>";
-            }
-            $list.="<div id='tutors_container'>";
+            $list.="<br><br><table id='tutors_table' class='table table-striped table-bordered' cellspacing='0' width='100%'>";
+            $list.="<thead>";
+            $list.="<tr>";
+            $list.="<th>Professor</th>";
+            $list.="<th>Class Name</th>";
+            $list.="<th>Status</th>";
+            $list.="</tr>";
+            $list.="</thead>";
+            $list.="<tbody>";
             foreach ($items as $item) {
                 $user = $this->get_user_detailes($item->userid);
                 $groups = $this->get_user_groups($item->userid);
                 $status = ($user->policyagreed == 1) ? "Confirmed" : "Not confirmed&nbsp;<a href='#' class='confirm' onClick='return false;' data-userid='$item->userid'>Confrm</a>";
-                $list.="<div class='container-fluid'>";
-                $list.="<div class='col-sm-2'>$user->firstname $user->lastname<br>$user->address<br>$user->city<br>$user->institution<br>$user->department</div><div class='col-sm-2'>$groups</div><div class='col-sm-3' style='text-align:center;'>$status</div>";
-                $list.="</div>";
-                $list.="<div class='container-fluid' style='text-align:center;'>";
-                $list.="<div class='col-sm-7' style='text-align:center;'><hr/></div>";
-                $list.="</div>";
+                $list.="<tr>";
+                $list.="<td>$user->firstname $user->lastname<br>$user->email</td>";
+                $list.="<td>$groups</td>";
+                $list.="<td>$status</td>";
+                $list.="</tr>";
             } // end foreach
-            $list.="</div>";
-            $list.="<div class='container-fluid' style='text-align:center;'>";
-            $list.="<div class='col-sm-7' id='ajax_tutor' style='display:none;'><img src='../../assets/images/ajax.gif'></div>";
-            $list.="</div>";
-            if ($headers) {
-                $list.="<br><div class='container-fluid'>";
-                $list.="<div class='col-sm-9' id='tutors_paginator'></div>";
-                $list.="</div>";
-            }
+            $list.="</tbody>";
+            $list.="</table>";
         } // end if count($groups)>0
         else {
             $list.="<div class='container-fluid' style='text-align:center;'>";
@@ -351,7 +340,7 @@ class Utils2 {
     function get_subscription_list($headers = true) {
         $items = array();
         $query = "select * from mdl_card_payments "
-                . "order by added desc limit 0, $this->limit";
+                . "order by added desc";
         $num = $this->db->numrows($query);
         if ($num > 0) {
             $result = $this->db->query($query);
@@ -367,42 +356,44 @@ class Utils2 {
         return $list;
     }
 
+    function get_paid_keys() {
+        $list = $this->get_subscription_list();
+        return $list;
+    }
+
     function create_subscription_list($items, $headers = true) {
         $list = "";
         if (count($items) > 0) {
-            /*
-              echo "<pre>";
-              print_r($items);
-              echo "</pre>";
-             */
-
-            if ($headers) {
-                $list.="<div class='container-fluid' style='font-weight:bold;'>";
-                $list.="<div class='col-sm-2' style='text-align:left;'>Student</div><div class='col-sm-2'>Class Name</div><div class='col-sm-3' style='text-align:center;'>Key</div><div class='col-sm-2' style='text-align:center;'>Start date</div><div class='col-sm-2' style='text-align:center;'>Expiration date</div><div class='col-sm-1' style='text-align:center;'>Action</div>";
-                $list.="</div>";
-            }
-            $list.="<div id='subs_container'>";
+            $list.="<br><br><table id='subs_table' class='table table-striped table-bordered' cellspacing='0' width='100%'>";
+            $list.="<thead>";
+            $list.="<tr>";
+            $list.="<th>Student</th>";
+            $list.="<th>Email</th>";
+            $list.="<th>Class Name</th>";
+            $list.="<th>Key</th>";
+            $list.="<th>Start Date</th>";
+            $list.="<th>Expiration Date</th>";
+            $list.="<th>Action</th>";
+            $list.="</tr>";
+            $list.="</thead>";
+            $list.="<tbody>";
             foreach ($items as $item) {
                 $user = $this->get_user_detailes($item->userid);
                 $class = $this->get_group_name($item->groupid);
                 $start = date('m-d-Y', $item->start_date);
                 $exp = date('m-d-Y', $item->exp_date);
-                $list.="<div class='container-fluid'>";
-                $list.="<div class='col-sm-2'>$user->firstname $user->lastname</div><div class='col-sm-2'>$class</div><div class='col-sm-3'>$item->auth_key</div><div class='col-sm-2' style='text-align:center;'>$start</div><div class='col-sm-2' style='text-align:center;'>$exp</div><div class='col-sm-1' style='text-align:center;'><a href='#' onClick='return false;' class='adjust' data-userid='$item->userid' data-groupid='$item->groupid'>Adjust</a></div>";
-                $list.="</div>";
-                $list.="<div class='container-fluid'>";
-                $list.="<div class='col-sm-14'><hr/></div>";
-                $list.="</div>";
+                $list.="<tr>";
+                $list.="<td>$user->firstname $user->lastname</td>";
+                $list.="<td>$user->email</td>";
+                $list.="<td>$class</td>";
+                $list.="<td>$item->auth_key</td>";
+                $list.="<td>$start</td>";
+                $list.="<td>$exp</td>";
+                $list.="<td><a href='#' onClick='return false;' class='adjust' data-userid='$item->userid' data-paymentid='$item->id' data-groupid='$item->groupid'>Adjust</a></td>";
+                $list.="</tr>";
             } // end foreach
-            $list.="</div>";
-            $list.="<div class='container-fluid' style='text-align:center;'>";
-            $list.="<div class='col-sm-14' id='ajax_subs' style='display:none;'><img src='../../assets/images/ajax.gif'></div>";
-            $list.="</div>";
-            if ($headers) {
-                $list.="<br><div class='container-fluid'>";
-                $list.="<div class='col-sm-9' id='subs_paginator'></div>";
-                $list.="</div>";
-            }
+            $list.="</tbody>";
+            $list.="</table>";
         } // end if count($items)>0
         else {
             $list.="<div class='container-fluid' style='text-align:center;'>";
@@ -544,12 +535,12 @@ class Utils2 {
                     }
                     $items[] = $item;
                 } // end while 
-                
+
                 /*
-                echo "<pre>";
-                print_r($items);
-                echo "</pre><br>";
-                */
+                  echo "<pre>";
+                  print_r($items);
+                  echo "</pre><br>";
+                 */
                 $list.=$this->create_keys_list_tab($items, false);
             } // end if $num > 0
             else {
@@ -570,7 +561,7 @@ class Utils2 {
 
     function get_trial_keys_tab($header = true) {
         $items = array();
-        $query = "select * from mdl_trial_keys order by added limit 0, $this->limit";
+        $query = "select * from mdl_trial_keys order by added";
         $num = $this->db->numrows($query);
         if ($num > 0) {
             $result = $this->db->query($query);
@@ -586,44 +577,46 @@ class Utils2 {
         return $list;
     }
 
+    function get_trial_keys() {
+        $list = $this->get_trial_keys_tab();
+        return $list;
+    }
+
     function create_keys_list_tab($items, $headers) {
         $list = "";
 
-        /*
-          echo "Items: <pre>";
-          print_r($items);
-          echo "</pre><br>";
-         */
 
         if (count($items) > 0) {
-
-            if ($headers) {
-                $list.="<div class='container-fluid' style='font-weight:bold;'>";
-                $list.="<div class='col-sm-2' style='text-align:left;'><input type='checkbox' id='all'>&nbsp;&nbsp;Student</div><div class='col-sm-2'>Class Name</div><div class='col-sm-3' style='text-align:center;'>Key</div><div class='col-sm-2' style='text-align:center;'>Start date</div><div class='col-sm-2' style='text-align:center;'>Expiration date</div><div class='col-sm-1' style='text-align:center;'>Action</div>";
-                $list.="</div>";
-            }
-            $list.="<div id='trial_container'>";
+            $list.="<br><br><table id='trial_table' class='table table-striped table-bordered' cellspacing='0' width='100%'>";
+            $list.="<thead>";
+            $list.="<tr>";
+            $list.="<th>Student</th>";
+            $list.="<th>Email</th>";
+            $list.="<th>Class Name</th>";
+            $list.="<th>Key</th>";
+            $list.="<th>Start Date</th>";
+            $list.="<th>Expiration Date</th>";
+            $list.="<th>Action</th>";
+            $list.="</tr>";
+            $list.="</thead>";
+            $list.="<tbody>";
             foreach ($items as $item) {
                 $user = $this->get_user_detailes($item->userid);
                 $class = $this->get_group_name($item->groupid);
                 $start = date('m-d-Y', $item->start_date);
                 $exp = date('m-d-Y', $item->exp_date);
-                $list.="<div class='container-fluid'>";
-                $list.="<div class='col-sm-2'><input type='checkbox' data-userid='$item->userid' data-groupid='$item->groupid'>&nbsp;&nbsp;$user->firstname $user->lastname</div><div class='col-sm-2'>$class</div><div class='col-sm-3'>$item->auth_key</div><div class='col-sm-2' style='text-align:center;'>$start</div><div class='col-sm-2' style='text-align:center;'>$exp</div><div class='col-sm-1' style='text-align:center;'><a href='#' onClick='return false;' class='trial_adjust' data-userid='$item->userid' data-groupid='$item->groupid'>Adjust</a></div>";
-                $list.="</div>";
-                $list.="<div class='container-fluid'>";
-                $list.="<div class='col-sm-14'><hr/></div>";
-                $list.="</div>";
+                $list.="<tr>";
+                $list.="<td>$user->firstname $user->lastname</td>";
+                $list.="<td>$user->email</td>";
+                $list.="<td>$class</td>";
+                $list.="<td>$item->auth_key</td>";
+                $list.="<td>$start</td>";
+                $list.="<td>$exp</td>";
+                $list.="<td><a href='#' onClick='return false;' class='trial_adjust' data-userid='$item->userid' data-groupid='$item->groupid'>Adjust</a></td>";
+                $list.="</tr>";
             } // end foreach
-            $list.="</div>";
-            $list.="<div class='container-fluid' style='text-align:center;'>";
-            $list.="<div class='col-sm-14' id='ajax_trial' style='display:none;'><img src='../../assets/images/ajax.gif'></div>";
-            $list.="</div>";
-            if ($headers) {
-                $list.="<br><div class='container-fluid'>";
-                $list.="<div class='col-sm-9' id='trial_paginator'></div>";
-                $list.="</div>";
-            }
+            $list.="</tbody>";
+            $list.="</table>";
         } // end if count($items)>0
         else {
             $list.="<div class='container-fluid' style='text-align:center;'>";
@@ -744,25 +737,29 @@ class Utils2 {
     function get_search_block($item) {
         $list = "";
 
-        switch ($item) {
-            case "class":
-                $this->create_json_data('class');
-                $list.="<input type='text' id='search_class' class='typeahead'>&nbsp;<button type='submit' class='btn btn-default' id='search_class_button'>Search</button>&nbsp;<button type='submit' class='btn btn-default' id='clear_class_button'>Clear</button>";
-                break;
-            case "tutor":
-                $this->create_json_data('tutor');
-                $tutors_path = 'http://globalizationplus.com/lms/utils/data/tutors.csv';
-                $list.="<input type='text' id='search_tutor' class='typeahead'>&nbsp;<button type='submit' class='btn btn-default' id='search_tutor_button'>Search</button>&nbsp;<button type='submit' class='btn btn-default' id='clear_tutor_button'>Clear</button>&nbsp;<a href='$tutors_path' target='_blank'><button type='submit' class='btn btn-default' id='export_tutor_button'>Export</button></a>";
-                break;
-            case"subs";
-                $this->create_json_data('subs');
-                $list.="<input type='text' id='search_subs' class='typeahead'>&nbsp;<button type='submit' class='btn btn-default' id='search_subs_button'>Search</button>&nbsp;<button type='submit' class='btn btn-default' id='clear_subs_button'>Clear</button>";
-                break;
-            case "trial";
-                $this->create_json_data('trial');
-                $list.="<input type='text' id='search_trial' class='typeahead'>&nbsp;<button type='submit' class='btn btn-default' id='search_trial_button'>Search</button>&nbsp;<button type='submit' class='btn btn-default' id='clear_trial_button'>Clear</button>&nbsp;<button type='submit' class='btn btn-default' id='add_trial_button'>Add trial key</button>&nbsp;<button type='submit' class='btn btn-default' id='adjust_trial_group'>Adjust</button>";
-                break;
-        }
+        /*
+         * 
+          switch ($item) {
+          case "class":
+          $this->create_json_data('class');
+          $list.="<input type='text' id='search_class' class='typeahead'>&nbsp;<button type='submit' class='btn btn-default' id='search_class_button'>Search</button>&nbsp;<button type='submit' class='btn btn-default' id='clear_class_button'>Clear</button>";
+          break;
+          case "tutor":
+          $this->create_json_data('tutor');
+          $tutors_path = 'http://globalizationplus.com/lms/utils/data/tutors.csv';
+          $list.="<input type='text' id='search_tutor' class='typeahead'>&nbsp;<button type='submit' class='btn btn-default' id='search_tutor_button'>Search</button>&nbsp;<button type='submit' class='btn btn-default' id='clear_tutor_button'>Clear</button>&nbsp;<a href='$tutors_path' target='_blank'><button type='submit' class='btn btn-default' id='export_tutor_button'>Export</button></a>";
+          break;
+          case"subs";
+          $this->create_json_data('subs');
+          $list.="<input type='text' id='search_subs' class='typeahead'>&nbsp;<button type='submit' class='btn btn-default' id='search_subs_button'>Search</button>&nbsp;<button type='submit' class='btn btn-default' id='clear_subs_button'>Clear</button>";
+          break;
+          case "trial";
+          $this->create_json_data('trial');
+          $list.="<input type='text' id='search_trial' class='typeahead'>&nbsp;<button type='submit' class='btn btn-default' id='search_trial_button'>Search</button>&nbsp;<button type='submit' class='btn btn-default' id='clear_trial_button'>Clear</button>&nbsp;<button type='submit' class='btn btn-default' id='add_trial_button'>Add trial key</button>&nbsp;<button type='submit' class='btn btn-default' id='adjust_trial_group'>Adjust</button>";
+          break;
+          }
+         * 
+         */
         return $list;
     }
 
@@ -774,6 +771,7 @@ class Utils2 {
                 . "where userid=$userid and groupid=$groupid";
         $result = $this->db->query($query);
         while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+            $id = $row['id'];
             $unix_start_date = $row['start_date'];
             $unix_exp_date = $row['exp_date'];
         }
@@ -786,7 +784,7 @@ class Utils2 {
         $list.="<!-- Trigger the modal with a button -->
        
             <!-- Modal -->
-            <div id='myModal' class='modal fade' role='dialog'>
+            <div id='myModal_paid_$userid' class='modal fade' role='dialog'>
               <div class='modal-dialog'>
 
                 <!-- Modal content-->
@@ -815,8 +813,8 @@ class Utils2 {
                    
                   </div>
                   <div class='modal-footer'>
-                    <button type='button' class='btn btn-default' id='modal_ok'>Ok</button>
-                    <button type='button' class='btn btn-default' data-dismiss='modal' id='modal_cancel'>Close</button>
+                    <button type='button' class='btn btn-default' id='modal_ok' data-paymentid='$id'>Ok</button>
+                    <button type='button' class='btn btn-default' data-dismiss='modal' id='modal_cancel_paid' data-userid='$userid'>Close</button>
                   </div>
                 </div>
 
@@ -858,7 +856,7 @@ class Utils2 {
                   </div>
                   <div class='modal-footer'>
                     <button type='button' class='btn btn-default' id='trial_ok'>Ok</button>
-                    <button type='button' class='btn btn-default' data-dismiss='modal' id='modal_cancel'>Close</button>
+                    <button type='button' class='btn btn-default' data-dismiss='modal' id='modal_cancel_trial'>Close</button>
                   </div>
                 </div>
 
@@ -921,13 +919,22 @@ class Utils2 {
         } // end if count($users)>0
     }
 
-    function adjust_subs($userid, $groupid, $start, $exp) {
-        $unix_start = strtotime($start);
-        $unix_exp = strtotime($exp);
+    function adjust_subs($subs) {
+
+        /*
+          echo "<pre>";
+          print_r($subs);
+          echo "</pre>";
+         */
+
+        $unix_start = strtotime($subs->start);
+        $unix_exp = strtotime($subs->exp);
         $query = "update mdl_card_payments set "
                 . "start_date='$unix_start', "
                 . "exp_date='$unix_exp' "
-                . "where userid=$userid and groupid=$groupid";
+                . "where id=$subs->paymentid";
+        //echo "Query: ".$query."<br>";
+
         $this->db->query($query);
     }
 
@@ -966,7 +973,7 @@ class Utils2 {
                   </div>
                   <div class='modal-footer'>
                     <button type='button' class='btn btn-default' id='group_modal_trial_ok'>Ok</button>
-                    <button type='button' class='btn btn-default' data-dismiss='modal' id='modal_cancel'>Close</button>
+                    <button type='button' class='btn btn-default' data-dismiss='modal' id='modal_cancel_trial'>Close</button>
                   </div>
                 </div>
 
@@ -990,7 +997,7 @@ class Utils2 {
         $list.="<!-- Trigger the modal with a button -->
        
             <!-- Modal -->
-            <div id='myModal' class='modal fade' role='dialog'>
+            <div id='myModal_trial_$user->userid' class='modal fade' role='dialog'>
               <div class='modal-dialog'>
 
                 <!-- Modal content-->
@@ -1020,7 +1027,7 @@ class Utils2 {
                   </div>
                   <div class='modal-footer'>
                     <button type='button' class='btn btn-default' id='personal_modal_trial_ok'>Ok</button>
-                    <button type='button' class='btn btn-default' data-dismiss='modal' id='modal_cancel'>Close</button>
+                    <button type='button' data-userid='$user->userid' class='btn btn-default' data-dismiss='modal' id='modal_cancel_trial'>Close</button>
                   </div>
                 </div>
 

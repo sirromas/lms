@@ -163,7 +163,7 @@ if (empty($CFG->forcedefaultmymoodle) && $PAGE->user_allowed_editing()) {
 $ac = new Access();
 $nav = new Navigation();
 $roleid = $ac->get_user_role();
-
+//echo "Role id: ".$roleid."<br>";
 
 if ($roleid == 4) {
 
@@ -194,7 +194,8 @@ if ($roleid == 5) {
     }
 
     // Navigate directly to course page section
-    $pageid = $nav->get_page_id();
+    $pageid = $nav->get_page_id(); // you need to find workaround
+    $pageid=9;
     if ($pageid != 0) {
         $url = "http://" . $_SERVER['SERVER_NAME'] . "/lms/mod/page/view.php?id=" . $pageid . "";
         header("Location: $url");

@@ -53,16 +53,16 @@ class Survey {
 
         $msg.="<!DOCTYPE html>
 
-<html>
-    <head>
-        <title>Survey</title>
-        <meta charset='UTF-8'>
-        <meta name='viewport' content='width = device-width, initial-scale = 1.0'>
-        
-</head>
-<body>
-    <br>
-    <div style='text-align: center;margin: auto;' class='main'>
+        <html>
+            <head>
+                <title>Survey</title>
+                <meta charset='UTF-8'>
+                <meta name='viewport' content='width = device-width, initial-scale = 1.0'>
+
+            </head>
+        <body>
+        <br>
+        <div style='text-align: center;margin: auto;' class='main'>
 
         <input type='hidden' id='email' value='$email'>
 
@@ -319,6 +319,105 @@ class Survey {
         }
     }
 
+    function get_campaign_page() {
+        $list = "";
+        $camps = $this->create_camp_list();
+        $list.="<div class='row-fluid' style='padding-bottom:15px;'>";
+        $list.="<span class='col-sm-1' style='padding-left:0px;'>Title*</span>";
+        $list.="<span class='span6'><input type='text' style='width:897px;' id='camp_title'></span>";
+        $list.="</div>";
+
+        $list.="<div class='row-fluid'>";
+
+        $list.="<span class='span12'>";
+        $list.="<textarea name='editor1' id='editor1' rows='10' style='width:675px;'>";
+        $list.="</textarea>
+            <script>
+                CKEDITOR.replace( 'editor1' );
+            </script>";
+        $list.="</span>";
+
+        $list.="</div>";
+
+        $list.="<div class='row'>";
+        $list.="<span class='col-sm-12' id='camp_err' style='padding-top:15px;color:red;'></span>";
+        $list.="</div>";
+
+        $list.="<div class='row' style='padding-top:15px;padding-left:15px;'>";
+        $list.="<span class='col-sm-1' style='padding-left:0px;'><button class='btn-default' id='add_camp'>Add</button></span>";
+        $list.="</div><br>";
+
+        $list.="<div class='row' style='padding-top:15px;'>";
+        $list.="<span class='col-sm-12'>$camps</span>";
+        $list.="</div>";
+
+
+
+
+        return $list;
+    }
+
+    function create_camp_list() {
+        $list = "";
+
+        $query = "select * from mdl_campaign order by added";
+        $num = $this->db->numrows($query);
+        if ($num > 0) {
+            $result = $this->db->query($query);
+            while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+                $c = new stdClass();
+                foreach ($row as $key => $value) {
+                    $c->$key = $value;
+                } // end foreach
+                $camps[] = $c;
+            } // end while
+        } // end if $num > 0
+
+        if (count($camps) > 0) {
+            $list.="<div id='camp_container'>";
+            $list.="<table id='camps' class='table table-striped table-bordered' cellspacing='0' width='100%'>";
+
+            $list.="<thead>";
+            $list.="<tr>";
+            $list.="<th style='padding:15px;'>Title</th>";
+            $list.="<th style='padding:15px;'>Content</th>";
+            $list.="<th style='padding:15px;'>Added</th>";
+            $list.="</tr>";
+            $list.="</thead>";
+
+            $list.="<tbody>";
+            foreach ($camps as $c) {
+                $date = date('m-d-Y', $c->added);
+                $list.="<tr>";
+                $list.="<td style='padding:15px'>$c->title</td>";
+                $list.="<td style='padding:15px'>$c->content</td>";
+                $list.="<td style='padding:15px;'>$date</td>";
+                $list.="</tr>";
+            } // end foreach
+            $list.="</tbody>";
+
+            $list.="</table>";
+            $list.="</div>";
+        } // end if count($camps) > 0
+        else {
+            $list.="<div class='row-fluid'>";
+            $list.="<span class='span9'>There are no any campaign added </span>";
+            $list.="</div>";
+        } // end else
+
+        return $list;
+    }
+
+    function add_camp($camp) {
+        $list = "";
+        $date = time();
+        $query = "insert into  mdl_campaign (title,content,added) "
+                . "values ('$camp->title','$camp->content','$date')";
+        $this->db->query($query);
+        $list.=$this->create_camp_list();
+        return $list;
+    }
+
     function get_settings_page() {
         $list = "";
         $configs = array();
@@ -328,7 +427,7 @@ class Survey {
             $configs[] = $row;
         }
 
-        $list.="<table border='0' align='center'>";
+        $list.="<table border='0' align='left' style='padding-left:35px;'>";
         foreach ($configs as $config_item) {
             $list.="<tr>";
             $list.="<td>" . $config_item['config_name'] . "</td><td style='padding:15px;'><input type='text' value='" . $config_item['config_value'] . "' id='" . $config_item['config_name'] . "' style='width:375px;'></td>";
@@ -523,11 +622,11 @@ class Survey {
         // Write CSV data
         $path = $this->upload_path . '/' . $filename;
         $output = fopen($path, 'w');
-        fputcsv($output, array('User Email','Poll reuslt'));
+        fputcsv($output, array('User Email', 'Poll reuslt'));
         $query = "select * from mdl_external_survey_result ";
         $result = $this->db->query($query);
         while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
-            fputcsv($output, array($row['email'],$row['poll_result']));
+            fputcsv($output, array($row['email'], $row['poll_result']));
         }
         fclose($output);
     }

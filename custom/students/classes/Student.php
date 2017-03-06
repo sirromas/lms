@@ -114,12 +114,7 @@ class Student extends Utils {
                 $subject = 'Signup confirmation';
                 $message = $this->get_confirmation_message($userid, $groupid, $userobj);
                 $email_status = $this->send_email($subject, $message, $userobj->email);
-                if ($email_status === true) {
-                    $list.="Thank you for signup! Confirmation email is sent to $userobj->email";
-                } // end if
-                else {
-                    $list.="Signup is ok, but confirmation email was not sent. Please contact us by email <a href='mailto:info@globalizationplus.com'>info@globalizationplus.com</a>";
-                } // end else
+                $list.="Thank you for signup! Confirmation email is sent to $userobj->email";
             } // end if
             else {
                 $list.="Signup is ok, but payment is failed. Please contact us by email <a href='mailto:info@globalizationplus.com'>info@globalizationplus.com</a>Confirmation email is sent to $userobj->email";
@@ -139,15 +134,12 @@ class Student extends Utils {
         $p = new Payment();
         $result = $p->make_transaction($userObj);
         if ($result !== false) {
+            $key = $result->key;
+            $exp = $result->e;
             $subject = "Subscription Renew Confirmation";
             $message = $this->get_prolong_message($userObj->userid, $userObj->class, $userObj);
-            $email_status = $this->send_email($subject, $message, $userObj->email);
-            if ($email_status === true) {
-                $list.="Payment is succesfull. Thank you! Confirmation email is sent to $userObj->email";
-            } // end if
-            else {
-                $list.="Payment is succesfull, but confirmation email was not sent ($email_status). Please contact us by email <a href='mailto:info@globalizationplus.com'>info@globalizationplus.com</a>";
-            } // end else
+            $this->send_email($subject, $message, $userObj->email);
+            $list.="<p align='center'>Payment is succesfull. Thank you! <br> Your key is $key , expiration date $exp</p>";
         } //  end if $result !== false
         else {
             $list.="Credit Card declined";

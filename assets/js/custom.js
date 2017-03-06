@@ -9,6 +9,8 @@ $(document).ready(function () {
      *    
      **********************************************************************/
 
+    $('#camps').DataTable();
+
     // Update config 
     $("#update_config").click(function () {
         var smtp_host = $('#smtp_host').val();
@@ -41,6 +43,27 @@ $(document).ready(function () {
             document.location = 'http://globalizationplus.com/survey/';
         }
     });
+
+    $("#add_camp").click(function () {
+        console.log('Clicked ...');
+        var title = $('#camp_title').val();
+        var content = CKEDITOR.instances.editor1.getData();
+        if (title != '' && content) {
+            $('#camp_err').html('');
+            if (confirm('Add new campaign?')) {
+                var camp = {title: title, content: content};
+                var url = 'http://globalizationplus.com/survey/add_camp.php';
+                $.post(url, {camp: JSON.stringify(camp)}).done(function (data) {
+                    $('#camp_container').html(data);
+                }); // end of post
+            } // end if confirm
+        } // end if
+        else {
+            $('#camp_err').html('Please provide title and content');
+        } // end else
+
+    });
+
     // Process email sender form
     $("#launcher").submit(function (event) {
         event.preventDefault();
@@ -98,9 +121,15 @@ $(document).ready(function () {
             if (data == 0) {
                 $('#form_err').html('');
                 $('#form_info').html('');
-                var groupname = $('#class').val();
+                var course1 = $('#course1').val();
+                var course2 = $('#course2').val();
+                var course3 = $('#course3').val();
+                var course4 = $('#course4').val();
+                var course5 = $('#course5').val();
+                var course6 = $('#course6').val();
+                
                 var url = 'http://globalizationplus.com/lms/custom/tutors/is_group_exists.php';
-                $.post(url, {groupname: groupname}).done(function (data) {
+                $.post(url, {groupname: course1}).done(function (data) {
                     if (data == 0) {
                         $('#form_err').html('');
                         $('#form_info').html('');
@@ -116,8 +145,13 @@ $(document).ready(function () {
                             title: $('#title').val(),
                             school: $('#school').val(),
                             dep: $('#dep').val(),
-                            site: $('#site').val(),
-                            class: $('#class').val()
+                            site: 'Some Site',
+                            course1: course1,
+                            course2: course2,
+                            course3: course3,
+                            course4: course4,
+                            course5: course5,
+                            course6: course6
                         };
                         var url = 'http://globalizationplus.com/lms/custom/tutors/signup.php';
                         $.post(url, {user: JSON.stringify(user)}).done(function (data) {
@@ -265,6 +299,8 @@ $(document).ready(function () {
             }); // end of post
         } // end if group>0 && state>0 && cardmonth>0 && cardyear>0
     });
+
+
     // Professors confirmation
     $("#confirm").click(function () {
         $('#form_err').html('');
@@ -302,27 +338,33 @@ $(document).ready(function () {
     });
     // Adjust paid keys
     $('body').on('click', 'a.adjust', function () {
+        console.log('Adjust subscription is clicked ....');
         var userid = $(this).data('userid');
         var groupid = $(this).data('groupid');
-        console.log('User ID: ' + userid);
-        console.log('Group ID: ' + groupid);
+        var did = "#myModal_paid_" + userid;
+        $(did).remove();
+        $('.modal-backdrop').remove();
         var post_url = "http://globalizationplus.com/lms/utils/get_adjust_dialog.php";
         $.post(post_url, {userid: userid, groupid: groupid}).done(function (data) {
             $("body").append(data);
-            $("#myModal").modal('show');
+            $(did).modal('show');
             $("#subs_start").datepicker();
             $("#subs_exp").datepicker();
         });
     });
 
     $('body').on('click', 'a.trial_adjust', function () {
+        console.log('Adjust trial key is clicked ....');
         var userid = $(this).data('userid');
         var groupid = $(this).data('groupid');
+        var did = "#myModal_trial_" + userid;
+        $(did).remove();
+        $('.modal-backdrop').remove();
         var url = 'http://globalizationplus.com/lms/utils/get_adjust_trial_personal_key_modal_dialog.php';
         var user = {userid: userid, groupid: groupid};
         $.post(url, {user: JSON.stringify(user)}).done(function (data) {
             $("body").append(data);
-            $("#myModal").modal('show');
+            $(did).modal('show');
             $("#trial_start").datepicker();
             $("#trial_exp").datepicker();
         });
@@ -332,17 +374,24 @@ $(document).ready(function () {
     $('body').on('click', 'button', function (event) {
 
         if (event.target.id == 'modal_ok') {
-
             if (confirm('Adjust key expiration for current student?')) {
                 var userid = $('#userid').val();
                 var groupid = $('#groupid').val();
                 var start = $('#subs_start').val();
                 var exp = $('#subs_exp').val();
+                var paymentid = $(this).data('paymentid');
                 var post_url = "http://globalizationplus.com/lms/utils/adjust_subs.php";
-                $.post(post_url, {userid: userid, groupid: groupid, start: start, exp: exp}).done(function (data) {
+                var subs = {userid: userid, groupid: groupid, start: start, exp: exp, paymentid: paymentid};
+                $.post(post_url, {subs: JSON.stringify(subs)}).done(function (data) {
                     console.log(data);
                     $("[data-dismiss=modal]").trigger({type: "click"});
-                    $('#myModal').data('modal', null);
+                    var url2 = 'http://globalizationplus.com/lms/utils/get_paid_keys.php';
+                    $.post(url2, {item: 1}).done(function (data) {
+                        $('#paid_keys').html(data);
+                        $('#subs_table').DataTable();
+                        $("#subs_start").datepicker();
+                        $("#subs_exp").datepicker();
+                    });
                 });
             } // end if 
         }
@@ -373,7 +422,7 @@ $(document).ready(function () {
             var end = $('#trial_exp').val();
 
             if (start == '' || end == '') {
-                $('#subs_err').html('Please provide key start and expiration date');
+                $('#subs_err').html('Please provide key start and expiration dates');
             } // end if
             else {
                 $('#subs_err').html('');
@@ -384,19 +433,17 @@ $(document).ready(function () {
                         //console.log(data);
                         $("[data-dismiss=modal]").trigger({type: "click"});
                         $('#myModal').data('modal', null);
-                        document.location.reload();
+                        var url = 'http://globalizationplus.com/lms/utils/get_trial_keys.php';
+                        $.post(url, {item: 1}).done(function (data) {
+                            $('#trial_keys').html(data);
+                            $('#trial_table').DataTable();
+                            $("#trial_start").datepicker();
+                            $("#trial_exp").datepicker();
+                        });
                     });
                 } // end if
             } // end else
         }
-
-
-        if (event.target.id == 'modal_cancel') {
-            $('#myModal').data('modal', null);
-            document.location.reload();
-            $('#paid_keys').trigger('click');
-        }
-
 
 
         if (event.target.id == 'group_modal_trial_ok') {
@@ -414,11 +461,12 @@ $(document).ready(function () {
                     $.post(url, {users: JSON.stringify(keys)}).done(function () {
                         $("[data-dismiss=modal]").trigger({type: "click"});
                         $('#myModal').data('modal', null);
-                        document.location.reload();
+                        //document.location.reload();
                     });
                 } // end if
             } // end else
         }
+
 
     }); // end of $('body').on('click', 'button'
 
@@ -500,15 +548,6 @@ $(document).ready(function () {
         });
     });
 
-
-    $("#logout2").click(function () {
-        var url = 'http://globalizationplus.com/lms/utils/logout.php';
-        $.post(url, {item: 1}).done(function () {
-            window.location = 'http://globalizationplus.com/lms/utils';
-        });
-    });
-
-
     $("#add_trial_button").click(function () {
         console.log('Clicked ...');
         var url = 'http://globalizationplus.com/lms/utils/get_add_trial_key_dialog.php';
@@ -569,6 +608,23 @@ $(document).ready(function () {
             $("#trial_exp").datepicker();
         });
     });
+
+
+    $('body').on('click', function (event) {
+
+        console.log('Event ID: ' + event.target.id);
+
+        if (event.target.id == 'logout_utils') {
+            var url = 'http://globalizationplus.com/lms/utils/logout.php';
+            if (confirm('Logout from system?')) {
+                $.post(url, {item: 1}).done(function () {
+                    window.location = 'http://globalizationplus.com/lms/utils';
+                });
+            } // end if confirm
+        }
+
+
+    }); // end of body click event
 
 
 }); // end of document ready

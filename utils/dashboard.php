@@ -24,8 +24,8 @@ if ($_SESSION['logged'] == 1) {
     $subs = $u->get_subscription_list();
     $subs_search = $u->get_search_block('subs');
 
-    $trial_total=$u->get_trial_total();
-    $trial=$u->get_trial_keys_tab();
+    $trial_total = $u->get_trial_total();
+    $trial = $u->get_trial_keys_tab();
     $trial_search = $u->get_search_block('trial');
     ?>
 
@@ -54,18 +54,25 @@ if ($_SESSION['logged'] == 1) {
             <!-- Pagination JS -->
             <script type="text/javascript" src="/assets/js/pagination/jquery.simplePagination.js"></script>
 
+            <!-- Data tables JS -->
+            <script type="text/javascript" src='https://cdn.datatables.net/1.10.13/js/jquery.dataTables.min.js' ></script>
+            <script type="text/javascript" src='https://cdn.datatables.net/1.10.13/js/dataTables.bootstrap.min.js' ></script>
+
+            <!-- Data tables CSS -->
+            <link rel="stylesheet" href="https://cdn.datatables.net/1.10.13/css/dataTables.bootstrap.min.css">
+
             <!-- Pagination CSS -->
             <link rel="stylesheet" href="/assets/js/pagination/simplePagination.css">
 
             <!-- Custom JS script -->
             <script type="text/javascript" src="http://globalizationplus.com/assets/js/custom.js"></script>
-            
+
             <!-- DatePicker JS -->
             <script type="text/javascript" src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
-            
+
             <!-- DatePicker CSS -->
             <link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
-            
+
         </head>
         <body>
             <br><br><br>
@@ -77,144 +84,39 @@ if ($_SESSION['logged'] == 1) {
                         <li><a data-toggle="tab" href="#tutors">Professors</a></li>
                         <li><a data-toggle="tab" href="#paid_keys">Subscription</a></li>
                         <li><a data-toggle="tab" href="#trial_keys">Trial Keys</a></li>
-                        <!--<li><a data-toggle="tab" href="#semester">Semesters</a></li>-->
-                        <li><a data-toggle="tab" href="#logout">Account</a></li>
+                        <li><a data-toggle="tab" href="#logout_account">Account</a></li>
                     </ul>
 
                     <div class="tab-content">
                         <div id="classes" class="tab-pane fade in active">
-                            <div style='padding-left: 120px;'><h3>Classes&nbsp;<?php echo $class_search; ?></h3></div>
-                            <p><?php echo $classes; ?></p>
+                            <?php echo $classes; ?>
                         </div>
                         <div id="tutors" class="tab-pane fade">
-                            <div style='padding-left: 120px; '><h3>Professors&nbsp;<?php echo $tutor_search; ?></h3></div>
-                            <p><?php echo $tutors; ?></p>
+                            <?php echo $tutors; ?>
                         </div>
                         <div id="paid_keys" class="tab-pane fade">
-                            <div style='padding-left: 120px; '><h3>Subscription&nbsp;<?php echo $subs_search; ?></h3></div>
-                            <p><?php echo $subs; ?></p>
+                            <?php echo $subs; ?>
                         </div>
                         <div id="trial_keys" class="tab-pane fade">
-                            <div style='padding-left: 120px; '><h3>Trial Keys&nbsp;<?php echo $trial_search; ?></h3></div>
-                            <p><?php echo $trial; ?></p>
+                            <?php echo $trial; ?>
                         </div>
-                        
-                        <!--
-                        <div id="semester" class="tab-pane fade">
-                            <div style='padding-left: 120px; '><h3>Semesters</h3></div>
-                            <p><?php echo $tutors; ?></p>
-                        </div>
-                        -->
-                        <div id="logout" class="tab-pane fade">
-                            <br><br><div style='padding-left: 120px; '><button type='button' class="btn btn-default" id='logout2'>Logout</button></div>
+                        <div id="logout_account" class="tab-pane fade">
+                            <br><br><div style='padding-left: 120px; '><button type='button' class="btn btn-default" id='logout_utils'>Logout</button></div>
                             <p></p>
                         </div>
                     </div>
                 </div>
             </div>
-
             <script type="text/javascript">
 
                 $(document).ready(function () {
-                    
-                    <!-- Classes section -->
-                    
-                    $(function () {
-                        $('#class_paginator').pagination({
-                            items: <?php echo $class_total; ?>,
-                            itemsOnPage: <?php echo $u->limit; ?>,
-                            cssStyle: 'light-theme'
-                        });
-                    });
 
-                    $("#class_paginator").click(function () {
-                        var page = $('#class_paginator').pagination('getCurrentPage');
-                        var url = "/lms/utils/get_class_item.php";
-                        $.post(url, {id: page}).done(function (data) {
-                            $('#classes_container').html(data);
-                        });
-                    });
+                    $('#classes_table').DataTable();
+                    $('#tutors_table').DataTable();
+                    $('#subs_table').DataTable();
+                    $('#trial_table').DataTable();
 
-                    $.get('/lms/utils/data/classes.json', function (data) {
-                        $("#search_class").typeahead({source: data, items: 24});
-                    }, 'json');
-                    
-                    <!-- Tutors scetion -->
-
-                    $(function () {
-                        $('#tutors_paginator').pagination({
-                            items: <?php echo $tutors_total; ?>,
-                            itemsOnPage: <?php echo $u->limit; ?>,
-                            cssStyle: 'light-theme'
-                        });
-                    });
-
-                    $("#tutors_paginator").click(function () {
-                        var page = $('#tutors_paginator').pagination('getCurrentPage');
-                        var url = "/lms/utils/get_tutor_item.php";
-                        $.post(url, {id: page}).done(function (data) {
-                            $('#tutors_container').html(data);
-                        });
-                    });
-                    
-                    
-                    $.get('/lms/utils/data/tutors.json', function (data) {
-                        $("#search_tutor").typeahead({source: data, items: 24});
-                    }, 'json');
-
-
-                    <!-- Subscription section -->
-                    
-                    $(function () {
-                        $('#subs_paginator').pagination({
-                            items: <?php echo $subs_total; ?>,
-                            itemsOnPage: <?php echo $u->limit; ?>,
-                            cssStyle: 'light-theme'
-                        });
-                    });
-
-                    $("#subs_paginator").click(function () {
-                        var page = $('#subs_paginator').pagination('getCurrentPage');
-                        var url = "/lms/utils/get_subs_item.php";
-                        $.post(url, {id: page}).done(function (data) {
-                            $('#subs_container').html(data);
-                        });
-                    });
-
-                    $.get('/lms/utils/data/subs.json', function (data) {
-                        $("#search_subs").typeahead({source: data, items: 24});
-                    }, 'json');
-                    
-                    
-                    <!-- Trial keys section -->
-                    
-                    $(function () {
-                    $('#trial_paginator').pagination({
-                            items: <?php echo $trial_total; ?>,
-                            itemsOnPage: <?php echo $u->limit; ?>,
-                            cssStyle: 'light-theme'
-                        });
-                    });
-
-                    $("#trial_paginator").click(function () {
-                        var page = $('#trial_paginator').pagination('getCurrentPage');
-                        var url = "/lms/utils/get_trial_item.php";
-                        $.post(url, {id: page}).done(function (data) {
-                            $('#trial_container').html(data);
-                        });
-                    });
-                    
-                    $.get('/lms/utils/data/trial.json', function (data) {
-                        $("#search_trial").typeahead({source: data, items: 24});
-                    }, 'json');
-                    
-                    $('#all').click(function () {
-                    var c = this.checked;
-                    $(':checkbox').prop('checked', c);
-                    });
-                    
-                    
-                }); // end of ducment ready
+                }); // end of document ready
 
 
 
