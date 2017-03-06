@@ -127,7 +127,7 @@ $(document).ready(function () {
                 var course4 = $('#course4').val();
                 var course5 = $('#course5').val();
                 var course6 = $('#course6').val();
-                
+
                 var url = 'http://globalizationplus.com/lms/custom/tutors/is_group_exists.php';
                 $.post(url, {groupname: course1}).done(function (data) {
                     if (data == 0) {
@@ -244,6 +244,7 @@ $(document).ready(function () {
             $('#form_err').html('Please provide all required fields');
         }
     });
+
     // Student subscription payment 
     $("#student_payment").submit(function (event) {
         event.preventDefault();
@@ -323,15 +324,13 @@ $(document).ready(function () {
             }); // end of post
         } // end else
     });
+
     $('body').on('click', 'a.confirm', function () {
         var userid = $(this).data('userid');
         if (confirm('Confirm current processor?')) {
             var post_url = "http://globalizationplus.com/lms/utils/confirm.php";
             $.post(post_url, {userid: userid}).done(function () {
-                var url = 'http://globalizationplus.com/lms/utils/get_tutors_page.php';
-                $.post(url, {id: 1}).done(function (data) {
-                    $('#tutors_container').html(data);
-                });
+                document.location.reload();
             });
         }
 
@@ -352,7 +351,7 @@ $(document).ready(function () {
             $("#subs_exp").datepicker();
         });
     });
-
+    // Adjust trial key
     $('body').on('click', 'a.trial_adjust', function () {
         console.log('Adjust trial key is clicked ....');
         var userid = $(this).data('userid');
@@ -444,6 +443,10 @@ $(document).ready(function () {
                 } // end if
             } // end else
         }
+
+        $("#target").click(function () {
+            alert("Handler for .click() called.");
+        });
 
 
         if (event.target.id == 'group_modal_trial_ok') {
@@ -613,6 +616,16 @@ $(document).ready(function () {
     $('body').on('click', function (event) {
 
         console.log('Event ID: ' + event.target.id);
+
+        if (event.target.id.indexOf("cancel_trial_") >= 0) {
+            document.location.reload();
+        }
+
+
+        if (event.target.id.indexOf("modal_cancel_paid_") >= 0) {
+            document.location.reload();
+        }
+
 
         if (event.target.id == 'logout_utils') {
             var url = 'http://globalizationplus.com/lms/utils/logout.php';

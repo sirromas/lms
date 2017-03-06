@@ -814,7 +814,7 @@ class Utils2 {
                   </div>
                   <div class='modal-footer'>
                     <button type='button' class='btn btn-default' id='modal_ok' data-paymentid='$id'>Ok</button>
-                    <button type='button' class='btn btn-default' data-dismiss='modal' id='modal_cancel_paid' data-userid='$userid'>Close</button>
+                    <button type='button' class='btn btn-default' data-dismiss='modal' id='modal_cancel_paid_$userid' data-userid='$userid'>Close</button>
                   </div>
                 </div>
 
@@ -1027,7 +1027,7 @@ class Utils2 {
                   </div>
                   <div class='modal-footer'>
                     <button type='button' class='btn btn-default' id='personal_modal_trial_ok'>Ok</button>
-                    <button type='button' data-userid='$user->userid' class='btn btn-default' data-dismiss='modal' id='modal_cancel_trial'>Close</button>
+                    <button type='button' data-userid='$user->userid' class='btn btn-default' data-dismiss='modal' id='cancel_trial_$user->userid'>Close</button>
                   </div>
                 </div>
 
