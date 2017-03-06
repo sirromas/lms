@@ -80,9 +80,9 @@ class Tutor extends Utils {
                 $this->add_to_group($groupid, $userid);
             }
 
-            $status=$this->send_tutor_confirmation_email($userObj);
+            $status = $this->send_tutor_confirmation_email($userObj);
             $list.="Thank you for signup. Confirmation email is sent to $userObj->email .";
-            echo $status;
+            
         } // end if $result!==false
         else {
             $list.="Signup error happened";
@@ -104,24 +104,28 @@ class Tutor extends Utils {
 
         </head>
         <body>
-            <br>
-            <p align='center'>Dear $user->firstname $user->lastname! </p>
-            <p align='center'>Thank you for signup!</p> 
-            <table align='center'>
+            
+            <table align='left' border='0'>
             <tr>
-            <td>Username:</td><td>$user->email</td>
+            <td colspan='2' style='text-align:left;'>Dear $user->firstname $user->lastname! </td>
+            </tr>
+            <tr>
+            <td colspan='2' style='text-align:left;'>Thank you for signup.<br></td>
+            </tr>
+            <tr>
+            <td><br>Username:</td><td><br>$user->email</td>
             </tr>
             <tr>
             <td>Password</td><td>$user->pwd</td>
             </tr>
             <tr>
-            <td>Class name:</td><td>$user->class</td>
+            <td>Class name:</td><td>$user->course1</td>
             </tr>
             <tr>
-            <td colspan='2'>Please be aware your access to the system is limited until you confirm your title.</td>
+            <td colspan='2'><br>Please be aware your access to the system is limited until you confirm your title.</td>
             </tr>
             <tr>
-            <td colspan='2'>With best regards, Globalization plus team</td>
+            <td colspan='2'><br>With best regards, <br><br><br>Globalization plus team</td>
             </tr>
             </table>
         </body>

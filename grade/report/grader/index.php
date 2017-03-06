@@ -52,6 +52,8 @@ if (isset($graderreportsilast)) {
     $SESSION->gradereport['filtersurname'] = $graderreportsilast;
 }
 
+
+purge_all_caches();
 $PAGE->set_url(new moodle_url('/grade/report/grader/index.php', array('id' => $courseid)));
 $PAGE->requires->yui_module('moodle-gradereport_grader-gradereporttable', 'Y.M.gradereport_grader.init', null, null, true);
 

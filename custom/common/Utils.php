@@ -33,9 +33,9 @@ class Utils {
         $this->session = $SESSION;
         $this->signup_url = 'http://' . $_SERVER['SERVER_NAME'] . '/lms/login/mysignup.php';
         $this->mail_smtp_host = 'smtp.1and1.com';
-        $this->mail_smtp_port = '587';
-        $this->mail_smtp_user = 'lms2@globalizationplus.com';
-        $this->mail_smtp_pwd = 'aK6SKymc';
+        $this->mail_smtp_port = '25';
+        $this->mail_smtp_user = 'info@globalizationplus.com';
+        $this->mail_smtp_pwd = 'abba1abba2';
     }
 
     function is_group_exists($groupname) {

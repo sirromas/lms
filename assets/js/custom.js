@@ -116,61 +116,71 @@ $(document).ready(function () {
     $("#prof_signup").submit(function (event) {
         event.preventDefault();
         var email = $('#email').val();
-        var url = 'http://globalizationplus.com/lms/custom/tutors/is_email_exists.php';
-        $.post(url, {email: email}).done(function (data) {
-            if (data == 0) {
-                $('#form_err').html('');
-                $('#form_info').html('');
-                var course1 = $('#course1').val();
-                var course2 = $('#course2').val();
-                var course3 = $('#course3').val();
-                var course4 = $('#course4').val();
-                var course5 = $('#course5').val();
-                var course6 = $('#course6').val();
+        var state = $('#state').val();
+        var course1 = $('#course1').val();
+        if (state > 0 && course1 != '') {
+            var url = 'http://globalizationplus.com/lms/custom/tutors/is_email_exists.php';
+            $.post(url, {email: email}).done(function (data) {
+                if (data == 0) {
+                    $('#form_err').html('');
+                    $('#form_info').html('');
+                    var course2 = $('#course2').val();
+                    var course3 = $('#course3').val();
+                    var course4 = $('#course4').val();
+                    var course5 = $('#course5').val();
+                    var course6 = $('#course6').val();
 
-                var url = 'http://globalizationplus.com/lms/custom/tutors/is_group_exists.php';
-                $.post(url, {groupname: course1}).done(function (data) {
-                    if (data == 0) {
-                        $('#form_err').html('');
-                        $('#form_info').html('');
-                        $('#ajax_loader').show();
-                        var user = {
-                            firstname: $('#first').val(),
-                            lastname: $('#last').val(),
-                            email: $('#email').val(),
-                            pwd: $('#pwd').val(),
-                            street: $('#street').val(),
-                            city: $('#city').val(),
-                            zip: $('#zip').val(),
-                            title: $('#title').val(),
-                            school: $('#school').val(),
-                            dep: $('#dep').val(),
-                            site: 'Some Site',
-                            course1: course1,
-                            course2: course2,
-                            course3: course3,
-                            course4: course4,
-                            course5: course5,
-                            course6: course6
-                        };
-                        var url = 'http://globalizationplus.com/lms/custom/tutors/signup.php';
-                        $.post(url, {user: JSON.stringify(user)}).done(function (data) {
-                            $('#ajax_loader').hide();
-                            $('#form_info').html(data);
-                        });
-                    } // end if data==0
-                    else {
-                        $('#form_info').html('');
-                        $('#form_err').html('Class name already exists');
-                    }
-                }); // end of post
-            } // end if data==0
-            else {
-                $('#form_info').html('');
-                $('#form_err').html('Provided email already exists');
-            } // end else 
-        }); // end of post
+                    var url = 'http://globalizationplus.com/lms/custom/tutors/is_group_exists.php';
+                    $.post(url, {groupname: course1}).done(function (data) {
+                        if (data == 0) {
+                            $('#form_err').html('');
+                            $('#form_info').html('');
+                            $('#ajax_loader').show();
+                            var user = {
+                                firstname: $('#first').val(),
+                                lastname: $('#last').val(),
+                                email: $('#email').val(),
+                                pwd: $('#pwd').val(),
+                                state: state,
+                                street: $('#street').val(),
+                                city: $('#city').val(),
+                                zip: $('#zip').val(),
+                                title: $('#title').val(),
+                                school: $('#school').val(),
+                                dep: $('#dep').val(),
+                                site: 'Some Site',
+                                course1: course1,
+                                course2: course2,
+                                course3: course3,
+                                course4: course4,
+                                course5: course5,
+                                course6: course6
+                            };
+                            var url = 'http://globalizationplus.com/lms/custom/tutors/signup.php';
+                            $.post(url, {user: JSON.stringify(user)}).done(function (data) {
+                                $('#ajax_loader').hide();
+                                $('#form_info').html(data);
+                            });
+                        } // end if data==0
+                        else {
+                            $('#form_info').html('');
+                            $('#form_err').html('Class name already exists');
+                        }
+                    }); // end of post
+                } // end if data==0
+                else {
+                    $('#form_info').html('');
+                    $('#form_err').html('Provided email already exists');
+                } // end else 
+            }); // end of post
+        } // end if state>0
+        else {
+            $('#form_err').html('Please select state and provide Course Name 1');
+        } // end else
     });
+
+
+
     // Students signup
     $("#student_signup").submit(function (event) {
         event.preventDefault();
@@ -184,14 +194,45 @@ $(document).ready(function () {
             var groupname = $('#class').val();
             var email = $('#email').val();
 
-            var names_arr = cardholder.split(" ");
-            console.log('Billing name: ' + cardholder);
-            console.log('Billing firstname: ' + names_arr[0]);
-            console.log('Billing lastname: ' + names_arr[1]);
-            if (typeof (names_arr[1]) === "undefined") {
-                $('#form_err').html('Please provide correct card holder name separated by space');
-                return false;
+            var clean_holder = cardholder.replace(/\s\s+/g, ' ');
+            var names_arr = clean_holder.split(" ");
+
+            var firstname, lastname;
+
+            console.log('names array length: ' + names_arr.length);
+
+            if (names_arr.length == 1) {
+                $('#personal_payment_err').html('Please provide correct card holder name separated by space');
+                return;
             }
+
+            if (names_arr.length == 2) {
+                console.log('Two names case ....');
+                console.log('Holder name: ' + cardholder);
+                firstname = names_arr[0];
+                lastname = names_arr[1];
+                console.log('Billing firstname: ' + firstname);
+                console.log('Billing lastname: ' + lastname);
+                if (typeof (firstname) === "undefined" || firstname == '' || typeof (lastname) === "undefined" || lastname == '') {
+                    $('#personal_payment_err').html('Please provide correct card holder name separated by space');
+                    return;
+                }
+            } // end if names_arr.length == 2
+
+            if (names_arr.length == 3) {
+                console.log('Three names case ...');
+                console.log('Holder name: ' + cardholder);
+                firstname = names_arr[0] + ' ' + names_arr[1];
+                lastname = names_arr[2];
+                console.log('Billing firstname: ' + firstname);
+                console.log('Billing lastname: ' + lastname);
+                if (typeof (firstname) === "undefined" || firstname == '' || typeof (lastname) === "undefined" || lastname == '') {
+                    $('#personal_payment_err').html('Please provide correct card holder name separated by space');
+                    return;
+                }
+            } // end if names_arr.length == 3
+
+
             $('#form_err').html('');
             var url = 'http://globalizationplus.com/lms/custom/tutors/is_email_exists.php';
             $.post(url, {email: email}).done(function (data) {
@@ -204,7 +245,7 @@ $(document).ready(function () {
                             var user = {
                                 item: 'Globalization Plus - Tuition',
                                 courseid: 2,
-                                amount: 27,
+                                amount: 30,
                                 firstname: $('#first').val(),
                                 lastname: $('#last').val(),
                                 email: $('#email').val(),
