@@ -31,17 +31,21 @@
 
         <script type="text/javascript">
 
-            var request = {id: 1};
-            var url = 'http://globalizationplus.com/lms/custom/students/create_typehead_data.php';
-            $.post(url, request).done(function (data) {
-                console.log(data);
-            }); // end of post
-            
-            
-            $.get('http://globalizationplus.com/lms/custom/students/groups.json', function (data) {
-                $("#class").typeahead({source: data, items: 256});
+            $(document).ready(function () {
+
+                var request = {id: 1};
+                var url = 'http://globalizationplus.com/lms/custom/students/create_typehead_data.php';
+                $.post(url, request).done(function (data) {
+                    console.log(data);
+                }); // end of post
+
+
+                $.get('http://globalizationplus.com/lms/custom/students/groups.json', function (data) {
+                    $("#class").typeahead({source: data, items: 256000});
+                });
+
             });
-            
+
         </script>
 
 
@@ -233,16 +237,16 @@
                             <div class="form-group">
                                 <div align="left">
                                     <label for="class">Class Name*</label>                            <input type="text" class="typeahead" autocomplete="off" spellcheck="false" id="class" name="class" required placeholder="Enter Your Class Name" style="display: block;
-                                                                                                            width: 100%;
-                                                                                                            height: @input-height-base; 
-                                                                                                            padding: @padding-base-vertical @padding-base-horizontal;
-                                                                                                            font-size: @font-size-base;
-                                                                                                            line-height: @line-height-base;
-                                                                                                            color: @input-color;
-                                                                                                            background-color: @input-bg;
-                                                                                                            background-image: none; 
-                                                                                                            border: 1px solid @input-border;
-                                                                                                            border-radius: @input-border-radius; "></div>
+                                                                                                             width: 100%;
+                                                                                                             height: @input-height-base; 
+                                                                                                             padding: @padding-base-vertical @padding-base-horizontal;
+                                                                                                             font-size: @font-size-base;
+                                                                                                             line-height: @line-height-base;
+                                                                                                             color: @input-color;
+                                                                                                             background-color: @input-bg;
+                                                                                                             background-image: none; 
+                                                                                                             border: 1px solid @input-border;
+                                                                                                             border-radius: @input-border-radius; "></div>
                             </div>
 
                             <div class="form-group">

@@ -112,6 +112,19 @@ $(document).ready(function () {
      *    
      **********************************************************************/
 
+    // Create classes data for students signup
+    var request = {id: 1};
+    var url = 'http://globalizationplus.com/lms/custom/students/create_typehead_data.php';
+    $.post(url, request).done(function (data) {
+        console.log(data);
+    }); // end of post
+
+
+    $.get('http://globalizationplus.com/lms/custom/students/groups.json', function (data) {
+        $("#class").typeahead({source: data, items: 256000});
+    });
+
+
     // Professors signup
     $("#prof_signup").submit(function (event) {
         event.preventDefault();

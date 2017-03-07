@@ -163,7 +163,6 @@ if (empty($CFG->forcedefaultmymoodle) && $PAGE->user_allowed_editing()) {
 $ac = new Access();
 $nav = new Navigation();
 $roleid = $ac->get_user_role();
-//echo "Role id: ".$roleid."<br>";
 
 if ($roleid == 4) {
 
@@ -176,11 +175,15 @@ if ($roleid == 4) {
         die();
     }
 
-    // Navigate directly to gradebook
+    /* **********************************************************************
+     *      
+     *   Redirect teacher directly to grades page
+     *
+     * *********************************************************************** */
     $groupid = $groups[0];
     $url = "http://" . $_SERVER['SERVER_NAME'] . "/lms/grade/report/grader/index.php?id=" . $ac->courseid . "&group=$groupid";
     header("Location: $url");
-}
+} // end if $roleid == 4
 
 if ($roleid == 5) {
 
@@ -193,13 +196,25 @@ if ($roleid == 5) {
         die();
     }
 
-    // Navigate directly to course page section
+    /* **********************************************************************
+     *      
+     *   If activity/resource belongs to user's group - it should be shown
+     *
+     * *********************************************************************** */
+
     $pageid = $nav->get_page_id(); // you need to find workaround
-    $pageid=9;
     if ($pageid != 0) {
         $url = "http://" . $_SERVER['SERVER_NAME'] . "/lms/mod/page/view.php?id=" . $pageid . "";
         header("Location: $url");
-    }
+    } // end if $pageid != 0
+    else {
+        echo $OUTPUT->header();
+        echo "<br><br><br><br><div class='row-fluid' style='text-align:center;'>";
+        echo "<span class='span12'>Course still does not have content</span>";
+        echo "</div>";
+        echo $OUTPUT->footer();
+        die();
+    } // end else
 }
 
 

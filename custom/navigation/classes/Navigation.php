@@ -23,18 +23,19 @@ class Navigation extends Utils {
                 . "order by added desc limit 0,1";
         $num = $this->db->numrows($query);
         if ($num > 0) {
-            //echo "Inside num ...<br>";
             $result = $this->db->query($query);
             while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
                 $id = $row['id'];
                 $aval = json_decode($row['availability']);
             }
 
+            // Get activity/resource groups to which it belongs
             $section = $aval->c;
             foreach ($section as $c) {
                 $sectiongroups[] = $c->id;
             }
 
+            // Show activity/resource only if user belongs to sections groups
             foreach ($usergroups as $g) {
                 if (in_array($g, $sectiongroups)) {
                     $pageid = $id; // If section and user are in same group

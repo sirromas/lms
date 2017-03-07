@@ -2796,21 +2796,23 @@ function grade_extend_settings($plugininfo, $courseid) {
     $setionsnode = $PAGE->settingsnav->prepend('Navigation', null, navigation_node::TYPE_CONTAINER);
 
     $pageid = $nav->get_page_id();
+    //echo "Page id: ".$pageid."<br>";
 
     if ($pageid > 0) {
         $link = "http://" . $_SERVER['SERVER_NAME'] . "/lms/mod/page/view.php?id=$pageid";
         $setionsnode->add('Assignment', $link, navigation_node::TYPE_SETTING, null, 2, new pix_icon('i/report', ''));
+        $setionsnode->make_active();
     }
 
     $forumid = $nav->get_forum_id();
-
+    //echo "Forum id: ".$forumid."<br>";
     if ($forumid > 0) {
         $link = "http://" . $_SERVER['SERVER_NAME'] . "/lms/mod/forum/view.php?id=$forumid";
         $setionsnode->add('Discussion board', $link, navigation_node::TYPE_SETTING, null, 2, new pix_icon('i/report', ''));
     }
 
     $quizid = $nav->get_quiz_id();
-
+    //echo "Quiz id: ".$quizid."<br>";
     if ($quizid > 0) {
         $link = "http://" . $_SERVER['SERVER_NAME'] . "/lms/mod/quiz/view.php?id=$quizid";
         $setionsnode->add('Quiz', $link, navigation_node::TYPE_SETTING, null, 2, new pix_icon('i/report', ''));
