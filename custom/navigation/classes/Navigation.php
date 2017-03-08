@@ -31,6 +31,13 @@ class Navigation extends Utils {
 
             // Get activity/resource groups to which it belongs
             $section = $aval->c;
+            
+            /*
+            echo "<pre>";
+            print_r($section);
+            echo "</pre>";
+            */
+            
             foreach ($section as $c) {
                 $sectiongroups[] = $c->id;
             }

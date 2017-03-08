@@ -238,6 +238,7 @@ class Utils {
         $groups = array();
         $userid = $this->user->id;
         $query = "select * from mdl_groups_members where userid=$userid";
+        //echo "Query: ".$query."<br>";
         $num = $this->db->numrows($query);
         if ($num > 0) {
             $result = $this->db->query($query);

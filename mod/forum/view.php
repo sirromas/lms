@@ -23,6 +23,7 @@
 require_once('../../config.php');
 require_once('lib.php');
 require_once($CFG->libdir . '/completionlib.php');
+require_once $_SERVER['DOCUMENT_ROOT'] . '/lms/custom/navigation/classes/Navigation.php';
 
 $id = optional_param('id', 0, PARAM_INT);       // Course Module ID
 $f = optional_param('f', 0, PARAM_INT);        // Forum ID
@@ -120,17 +121,25 @@ forum_view($forum, $course, $cm, $context);
 
 /*
  * 
-$pos = strpos($OUTPUT->header(), 'Discussion');
-if ($pos!==FALSE) {
-    $newheader=  substr($OUTPUT->header(), $pos);
-} 
+  $pos = strpos($OUTPUT->header(), 'Discussion');
+  if ($pos!==FALSE) {
+  $newheader=  substr($OUTPUT->header(), $pos);
+  }
  * 
  */
 
+$nav = new Navigation();
+$quizid = $nav->get_quiz_id();
+$roleid = $nav->get_user_role();
+if ($roleid == 5 && $quizid > 0) {
+    $quizurl = "http://globalizationplus.com/lms/mod/quiz/view.php?id=$quizid";
+    echo "<br><br><div class='row-fluid' style='text-align:center;'>";
+    echo "<span class='span12'><img src='http://" . $_SERVER['SERVER_NAME'] . "/assets/images/checkmark.png' width='20' height='20' valign='middle'>&nbsp;<a href='$quizurl' target='_blank'>Take our new quiz</a></span>";
+    echo "</div><br><br>";
+} // end if $roleid==5 && $quizid>0
+
+
 echo $OUTPUT->header();
-//echo $newheader;
-
-
 
 echo $OUTPUT->heading(format_string($forum->name), 2);
 if (!empty($forum->intro) && $forum->type != 'single' && $forum->type != 'teacher') {

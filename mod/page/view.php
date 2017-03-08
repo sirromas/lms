@@ -72,36 +72,36 @@ if ($inpopup and $page->display == RESOURCELIB_DISPLAY_POPUP) {
 echo $OUTPUT->header();
 
 if ($roleid == 5) {
-    
-    /*
-    echo "<br><div class='row-fluid' style='text-align:center;'>";
 
-    $quizid = $nav->get_quiz_id();
-    
-    
-    if ($quizid > 0) {
-        $quizurl = "http://globalizationplus.com/lms/mod/quiz/view.php?id=$quizid";
-        echo "<div class='span4' style='padding-left:12px;font-weight:bold;font-size:20px;color:black;'><img src='http://" . $_SERVER['SERVER_NAME'] . "/assets/images/checkmark.png' width='20' height='20' valign='middle'>&nbsp;<a href='$quizurl' target='_blank'>News Quiz</a></div>";
-    } // end if $quizid>0
-    
-    
-    $forumid = $nav->get_forum_id();
-    
-    if ($forumid > 0) {
-        $forumurl = "http://globalizationplus.com/lms/mod/forum/view.php?id=$forumid";
-        echo "<div class='span4' style='padding-left:12px;font-weight:bold;font-size:20px;color:black;'><img src='http://" . $_SERVER['SERVER_NAME'] . "/assets/images/checkmark.png' width='20' height='20' valign='middle'>&nbsp;</span><a href='$forumurl' target='_blank'>Discussion Board</a></div>";
-    } // end if $forumid>0
-    
-    $glossaryid = $nav->get_glossary_id();
-    
-    
-    if ($glossaryid > 0) {
-        $glossaryurl = "http://globalizationplus.com/lms/mod/glossary/view.php?id=$glossaryid";
-        echo "<div class='span4' style='padding-left:12px;font-weight:bold;font-size:20px;color:black;'><img src='http://" . $_SERVER['SERVER_NAME'] . "/assets/images/search.png' width='20' height='20' valign='middle'>&nbsp;<a href='$glossaryurl' target='_blank'>Political Dictionary</a></div>";
-    } // end if 
-    
-    
-    echo "</div>";
+    /*
+      echo "<br><div class='row-fluid' style='text-align:center;'>";
+
+      $quizid = $nav->get_quiz_id();
+
+
+      if ($quizid > 0) {
+      $quizurl = "http://globalizationplus.com/lms/mod/quiz/view.php?id=$quizid";
+      echo "<div class='span4' style='padding-left:12px;font-weight:bold;font-size:20px;color:black;'><img src='http://" . $_SERVER['SERVER_NAME'] . "/assets/images/checkmark.png' width='20' height='20' valign='middle'>&nbsp;<a href='$quizurl' target='_blank'>News Quiz</a></div>";
+      } // end if $quizid>0
+
+
+      $forumid = $nav->get_forum_id();
+
+      if ($forumid > 0) {
+      $forumurl = "http://globalizationplus.com/lms/mod/forum/view.php?id=$forumid";
+      echo "<div class='span4' style='padding-left:12px;font-weight:bold;font-size:20px;color:black;'><img src='http://" . $_SERVER['SERVER_NAME'] . "/assets/images/checkmark.png' width='20' height='20' valign='middle'>&nbsp;</span><a href='$forumurl' target='_blank'>Discussion Board</a></div>";
+      } // end if $forumid>0
+
+      $glossaryid = $nav->get_glossary_id();
+
+
+      if ($glossaryid > 0) {
+      $glossaryurl = "http://globalizationplus.com/lms/mod/glossary/view.php?id=$glossaryid";
+      echo "<div class='span4' style='padding-left:12px;font-weight:bold;font-size:20px;color:black;'><img src='http://" . $_SERVER['SERVER_NAME'] . "/assets/images/search.png' width='20' height='20' valign='middle'>&nbsp;<a href='$glossaryurl' target='_blank'>Political Dictionary</a></div>";
+      } // end if
+
+
+      echo "</div>";
      * 
      */
 
@@ -128,7 +128,8 @@ $formatoptions->noclean = true;
 $formatoptions->overflowdiv = true;
 $formatoptions->context = $context;
 $content = format_text($content, $page->contentformat, $formatoptions);
-echo $OUTPUT->box($content, "generalbox center clearfix");
+$attr=array('width'=>'175px');
+echo $OUTPUT->box($content, "generalbox center clearfix", 'assesment', $attr);
 
 
 if ($roleid == 4) {
@@ -139,4 +140,16 @@ if ($roleid == 4) {
 //$strlastmodified = get_string("lastmodified");
 //echo "<div class=\"modified\">$strlastmodified: " . userdate($page->timemodified) . "</div>";
 
+if ($roleid == 5) {
+
+    $forumid = $nav->get_forum_id();
+    $glossaryid = $nav->get_glossary_id();
+
+    if ($forumid > 0) {
+        $forumurl = "http://globalizationplus.com/lms/mod/forum/view.php?id=$forumid";
+        echo "<iframe src='$forumurl' width='100%' height='675px;' style='border:0'></iframe>";
+    } // end if $forumid>0
+} // end if $roleid == 5
+
 echo $OUTPUT->footer();
+

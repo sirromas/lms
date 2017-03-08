@@ -2809,6 +2809,7 @@ function grade_extend_settings($plugininfo, $courseid) {
     if ($forumid > 0) {
         $link = "http://" . $_SERVER['SERVER_NAME'] . "/lms/mod/forum/view.php?id=$forumid";
         $setionsnode->add('Discussion board', $link, navigation_node::TYPE_SETTING, null, 2, new pix_icon('i/report', ''));
+        //$setionsnode->add("<a href='$link' target='_blank'>Discussion board</a>,$link");
     }
 
     $quizid = $nav->get_quiz_id();

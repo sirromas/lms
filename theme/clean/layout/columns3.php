@@ -42,7 +42,7 @@ if (right_to_left()) {
     $sidepre = 'span4 pull-right';
     $sidepost = 'span3 desktop-first-column';
 }
-
+require_once $_SERVER['DOCUMENT_ROOT'] . '/lms/custom/navigation/classes/Navigation.php';
 echo $OUTPUT->doctype()
 ?>
 <html <?php echo $OUTPUT->htmlattributes(); ?>>
@@ -56,32 +56,33 @@ echo $OUTPUT->doctype()
     <body <?php echo $OUTPUT->body_attributes(); ?>>
 
         <?php
-        $string = $_SERVER['QUERY_STRING'];
-
-        if ($string != 'id=4') {
-
-            echo $OUTPUT->standard_top_of_body_html()
-            ?>
-
-            <header role="banner" class="navbar navbar-fixed-top<?php echo $html->navbarclass ?> moodle-has-zindex">
-                <nav role="navigation" class="navbar-inner">
-                    <div class="container-fluid">
-                        <?php echo $OUTPUT->navbar_home(); ?>
-                        <?php echo $OUTPUT->navbar_button(); ?>
-                        <?php echo $OUTPUT->user_menu(); ?>
-                        <?php echo $OUTPUT->search_box(); ?>
-                        <div class="nav-collapse collapse">
-                            <?php echo $OUTPUT->custom_menu(); ?>
-                            <ul class="nav pull-right">
-                                <li><?php echo $OUTPUT->page_heading_menu(); ?></li>
-                            </ul>
+        $nav = new Navigation();
+        $roleid = $nav->get_user_role();
+        if ($roleid == 5) {
+            $string = $_SERVER['SCRIPT_NAME'];
+            if ($string == '/lms/mod/page/view.php') {
+                echo $OUTPUT->standard_top_of_body_html()
+                ?>
+                <header role="banner" class="navbar navbar-fixed-top<?php echo $html->navbarclass ?> moodle-has-zindex">
+                    <nav role="navigation" class="navbar-inner">
+                        <div class="container-fluid">
+                            <?php echo $OUTPUT->navbar_home(); ?>
+                            <?php echo $OUTPUT->navbar_button(); ?>
+                            <?php echo $OUTPUT->user_menu(); ?>
+                            <?php echo $OUTPUT->search_box(); ?>
+                            <div class="nav-collapse collapse">
+                                <?php echo $OUTPUT->custom_menu(); ?>
+                                <ul class="nav pull-right">
+                                    <li><?php echo $OUTPUT->page_heading_menu(); ?></li>
+                                </ul>
+                            </div>
                         </div>
-                    </div>
-                </nav>
-                <?php //echo "Query string: ".$_SERVER['QUERY_STRING'] ."<br>"; ?> 
-            </header>
-            <?php
-        } // end if 
+                    </nav>
+
+                </header>
+                <?php
+            } // end if 
+        } // end if $roleid==5
         ?>
 
 
