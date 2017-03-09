@@ -60,7 +60,7 @@ echo $OUTPUT->doctype()
         $roleid = $nav->get_user_role();
         if ($roleid == 5) {
             $string = $_SERVER['SCRIPT_NAME'];
-            if ($string == '/lms/mod/page/view.php') {
+            if ($string == '/lms/mod/page/view.php' || $string=='/lms/my/index.php') {
                 echo $OUTPUT->standard_top_of_body_html()
                 ?>
                 <header role="banner" class="navbar navbar-fixed-top<?php echo $html->navbarclass ?> moodle-has-zindex">
