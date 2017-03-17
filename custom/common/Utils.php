@@ -9,6 +9,9 @@ require_once $_SERVER['DOCUMENT_ROOT'] . '/lms/config.php';
 require_once $_SERVER['DOCUMENT_ROOT'] . '/lms/group/lib.php';
 require_once $_SERVER['DOCUMENT_ROOT'] . '/lms/class.database.php';
 require_once $_SERVER['DOCUMENT_ROOT'] . '/lms/custom/common/mailer/vendor/PHPMailerAutoload.php';
+require_once '../postmark/vendor/autoload.php';
+
+use Postmark\PostmarkClient;
 
 class Utils {
 
@@ -133,6 +136,17 @@ class Utils {
 
     function add_to_group($groupid, $userid) {
         groups_add_member($groupid, $userid);
+    }
+
+    function sample_send() {
+        $client = new PostmarkClient("5a470ceb-d8d6-49cb-911c-55cbaeec199f");
+
+        $sendResult = $client->sendEmail(
+                "info@atic.kiev.ua", 
+                "sirromas@gmail.com", 
+                "Hello from Postmark!", 
+                "This is just a friendly 'hello' from your friends at Postmark."
+        );
     }
 
     function send_email($subject, $message, $recipient) {

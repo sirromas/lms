@@ -1,22 +1,15 @@
 <?php
 
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 /**
  * Description of Survey
  *
  * @author moyo
  */
-//require_once $_SERVER['DOCUMENT_ROOT'] . '/survey/class.database.php';
-//require_once $_SERVER['DOCUMENT_ROOT'] . '/survey/classes/mailer/vendor/PHPMailerAutoload.php';
-//echo __DIR__;
 require_once '/homepages/17/d212585247/htdocs/globalizationplus/survey/class.database.php';
-//require_once '../class.database.php';
 require_once 'mailer/vendor/PHPMailerAutoload.php';
+require_once '/homepages/17/d212585247/htdocs/globalizationplus/lms/custom/postmark/vendor/autoload.php';
+
+use Postmark\PostmarkClient;
 
 class Survey {
 
@@ -170,36 +163,15 @@ class Survey {
     }
 
     function send_survey_email($item) {
-        $recipient = $item->email;
-        //$recipient = 'sirromas@gmail.com';
-        $message = $this->create_survey_email($item->email);
-
-        $mail = new PHPMailer;
-
-        $mail->isSMTP();
-        $mail->Host = $this->mail_smtp_host;
-        $mail->SMTPAuth = true;
-        $mail->Username = $this->mail_smtp_user;
-        $mail->Password = $this->mail_smtp_pwd;
-        $mail->SMTPSecure = 'tls';
-        $mail->Port = $this->mail_smtp_port;
-
-        $mail->setFrom($this->mail_smtp_user, 'Globalization Plus');
-        $mail->addAddress($recipient);
-        $mail->addReplyTo($this->mail_smtp_user, 'Globalization Plus');
-
-        $mail->isHTML(true);
-
-        $mail->Subject = 'Globalization Plus';
-        $mail->Body = $message;
-
-        if (!$mail->send()) {
-            $this->update_item_err_description($item, $mail->ErrorInfo);
-            return false;
-        } // end if !$mail->send()
-        else {
-            return true;
-        }
+        //$recipient = $item->email;
+        $recipient = 'sirromas@gmail.com';
+        //$message = $this->create_survey_email($item->email);
+        $message = "<html><head></head><body><p style='text-align:center;'>This is test from Postmark ...</p></body></html>";
+        $from = 'info@globalizationplus.com';
+        $client = new PostmarkClient("5a470ceb-d8d6-49cb-911c-55cbaeec199f");
+        $subject = 'Grlobalizationplus - Survey';
+        $result = $client->sendEmail($from, $recipient, $subject, $message);
+        return $result;
     }
 
     function send_survey_results($email, $result) {
@@ -319,8 +291,20 @@ class Survey {
         }
     }
 
+    function get_questions_drop_down() {
+        $list = "";
+        $list.="<select id='camp_q_num'>";
+        $list.="<option value='0' selected>Please select</option>";
+        for ($i = 1; $i <= 10; $i++) {
+            $list.="<option value='$i'>$i</option>";
+        }
+        $list.="</select>";
+        return $list;
+    }
+
     function get_campaign_page() {
         $list = "";
+        $qbox = $this->get_questions_drop_down();
         $camps = $this->create_camp_list();
         $list.="<div class='row-fluid' style='padding-bottom:15px;'>";
         $list.="<span class='col-sm-1' style='padding-left:0px;'>Title*</span>";
@@ -339,12 +323,20 @@ class Survey {
 
         $list.="</div>";
 
+        $list.="<div class='row' style='padding-top:15px;padding-left:15px;'>";
+        $list.="<span class='col-sm-6' style='padding-left:0px;'>$qbox &nbsp;&nbsp;&nbsp;<button class='btn btn-default' id='add_q'>Add Questions</button></span>";
+        $list.="</div><br>";
+
+        $list.="<div id='q_container'>";
+
+        $list.="</div>";
+
         $list.="<div class='row'>";
         $list.="<span class='col-sm-12' id='camp_err' style='padding-top:15px;color:red;'></span>";
         $list.="</div>";
 
         $list.="<div class='row' style='padding-top:15px;padding-left:15px;'>";
-        $list.="<span class='col-sm-1' style='padding-left:0px;'><button class='btn-default' id='add_camp'>Add</button></span>";
+        $list.="<span class='col-sm-1' style='padding-left:0px;'><button class='btn btn-default' id='add_camp'>Add</button></span>";
         $list.="</div><br>";
 
         $list.="<div class='row' style='padding-top:15px;'>";
@@ -352,8 +344,47 @@ class Survey {
         $list.="</div>";
 
 
+        return $list;
+    }
 
+    function get_reply_grade_box($i) {
+        $list = "";
 
+        $list.="<select id='q_grade_$i'>";
+
+        $list.="</select>";
+        return $list;
+    }
+
+    function get_question_replies_block($i) {
+        $list = "";
+        for ($k = 1; $k <= 5; $k++) {
+            $list.="<div class='row'>";
+            $list.="<span class='col-sm-2'>Choice #$k</span>";
+            $list.="<span class='col-sm-6'><input type='text' class='r_$i' style='width:800px;'></span>";
+            $list.="</div>";
+        }
+        return $list;
+    }
+
+    function get_questions_block($num) {
+        $list = "";
+        $list.="<input type='hidden' id='q_num' value='$num'>";
+        for ($i = 1; $i <= $num; $i++) {
+            $q = $this->get_question_replies_block($i);
+            $list.="<div class='row'>";
+            $list.="<span class='col-sm-2'>Question #$i</span>";
+            $list.="<span class='col-sm-6'><input type='text' id='q_text_$i' style='width:800px;'></span>";
+            $list.="</div>";
+
+            $list.="<div class='row'>";
+            $list.="<span class='col-sm-12'><br>$q</span>";
+            $list.="</div>";
+
+            $list.="<div class='row'>";
+            $list.="<span class='col-sm-12'><hr></span>";
+            $list.="</div>";
+        }
         return $list;
     }
 
@@ -390,7 +421,7 @@ class Survey {
                 $date = date('m-d-Y', $c->added);
                 $list.="<tr>";
                 $list.="<td style='padding:15px'>$c->title</td>";
-                $list.="<td style='padding:15px'>$c->content</td>";
+                $list.="<td style='padding:15px'>$c->preface</td>";
                 $list.="<td style='padding:15px;'>$date</td>";
                 $list.="</tr>";
             } // end foreach
@@ -408,12 +439,94 @@ class Survey {
         return $list;
     }
 
+    function get_table_last_record_id($table) {
+        $query = "select * from $table order by id desc limit 0,1";
+        $result = $this->db->query($query);
+        while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+            $id = $row['id'];
+        }
+        return $id;
+    }
+
     function add_camp($camp) {
         $list = "";
+
+        /*
+          stdClass Object
+          (
+          [title] => aaaa
+          [content] =>
+          bbbb
+
+
+
+          [q] => Array
+          (
+          [0] => stdClass Object
+          (
+          [t] => Q1
+          [a] => Array
+          (
+          [0] => Q1-A
+          [1] => Q1-B
+          [2] => Q1-C
+          [3] => Q1-D
+          [4] => Q1-E
+          )
+
+          )
+
+          [1] => stdClass Object
+          (
+          [t] => Q2
+          [a] => Array
+          (
+          [0] => Q2-A
+          [1] => Q2-B
+          [2] => Q2-C
+          [3] => Q2-D
+          [4] => Q2-E
+          )
+
+          )
+
+          )
+
+          )
+         * 
+         */
+
+
+        $title = $camp->title;
+        $preface = $camp->content;
         $date = time();
-        $query = "insert into  mdl_campaign (title,content,added) "
-                . "values ('$camp->title','$camp->content','$date')";
+        $query = "insert into mdl_campaign "
+                . "(title,preface,added) "
+                . "values('$title','$preface','$date')";
+        echo "Query: " . $query . "<br>";
         $this->db->query($query);
+        $campLastId = $this->get_table_last_record_id('mdl_campaign');
+        echo "Campaign last id: " . $campLastId . "<br>";
+
+        $questions = $camp->q;
+        foreach ($questions as $q) {
+            $text = $q->t;
+            $query = "insert into mdl_campaign_q (campid,qtext) "
+                    . "values($campLastId,'$text')";
+            echo "Query: " . $query . "<br>";
+            $this->db->query($query);
+            $lastqID = $this->get_table_last_record_id('mdl_campaign_q');
+            echo "Last question id: " . $lastqID . "<br>";
+            $answers = $q->a;
+            if (count($answers) > 0) {
+                foreach ($answers as $a) {
+                    $query = "insert into mdl_campaign_a (qid, rtext) "
+                            . "values($lastqID,'$a')";
+                    echo "Query: " . $query . "<br>";
+                    $this->db->query($query);
+                } // end foreach
+            } // end if
+        }
         $list.=$this->create_camp_list();
         return $list;
     }

@@ -20,6 +20,7 @@ class Student extends Utils {
             $groups[] = mb_convert_encoding($row['name'], 'UTF-8');
         }
         file_put_contents($this->json_path, json_encode($groups));
+        echo "Groups data are updated ....";
     }
 
     function get_confirmation_message($userid, $groupid, $user) {
