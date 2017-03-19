@@ -69,24 +69,10 @@ else {
 
         <div class="tab-content" style="padding-left: 5px;">
             <div id="home" class="tab-pane fade in active">
-                <div class="row-fluid" style="padding-left: 35px;padding-top: 15px;">  
-                    <span class="span12">
-                        <form action="launch.php" method="post" id="launcher" name="launcher">
-                            <div class="form-group">
-                                <label for="email">Email</label>
-                                <input type="email" style="width: 235px;" class="form-control" id="email" name="email" placeholder="Enter Email Address">
-                            </div>
-                            <div class="form-group">
-                                <label class="control-label">Or select CSV file to be uploaded:</label>
-                                <input id="file" name="file" type="file" class="file">
-                            </div>
-                            <div class="form-group">
-                                <span id="form_err"></span>
-                            </div>    
-                            <button type="submit" class="btn btn-default">Submit</button>
-                        </form>
-                    </span>
-                </div>
+                <?php
+                $send_email = $survey->get_send_email_page();
+                echo $send_email;
+                ?>
             </div>
 
             <div id="menu1" class="tab-pane fade" style="width:640px;padding-left: 45px;padding-top: 25px; ">
@@ -143,12 +129,8 @@ else {
             <div id="camp" class="tab-pane fade" style="width:1024px;padding-left: 45px;padding-top: 25px; ">
                 <?php
                 $camp = $survey->get_campaign_page();
+                echo $camp;
                 ?>
-                <div class="row-fluid">
-                    <span class="span12"><?php echo $camp; ?></span>
-                </div>
-
-
             </div>
 
             <div id="menu3" class="tab-pane fade" style="width:640px;padding-left: 45px;padding-top: 25px; ">

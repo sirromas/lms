@@ -19,13 +19,22 @@ class Survey {
     public $mail_smtp_pwd;
     public $db;
     public $upload_path;
+    public $from;
+    public $subject;
 
     function __construct() {
         $this->db = new pdo_db();
-        $this->mail_smtp_host = $this->get_config_value('smtp_host');
-        $this->mail_smtp_port = $this->get_config_value('smtp_port');
-        $this->mail_smtp_user = $this->get_config_value('smtp_user');
-        $this->mail_smtp_pwd = $this->get_config_value('smtp_password');
+
+        /*
+          $this->mail_smtp_host = $this->get_config_value('smtp_host');
+          $this->mail_smtp_port = $this->get_config_value('smtp_port');
+          $this->mail_smtp_user = $this->get_config_value('smtp_user');
+          $this->mail_smtp_pwd = $this->get_config_value('smtp_password');
+         */
+
+
+        $this->from = 'info@globalizationplus.com';
+        $this->subject = 'Globalization plus - Survey';
         $this->upload_path = $_SERVER['DOCUMENT_ROOT'] . '/survey/files';
     }
 
@@ -162,16 +171,148 @@ class Survey {
         $this->db->query($query);
     }
 
-    function send_survey_email($item) {
-        //$recipient = $item->email;
-        $recipient = 'sirromas@gmail.com';
-        //$message = $this->create_survey_email($item->email);
-        $message = "<html><head></head><body><p style='text-align:center;'>This is test from Postmark ...</p></body></html>";
-        $from = 'info@globalizationplus.com';
+    function send_single_item($from, $recipient, $subject, $message) {
         $client = new PostmarkClient("5a470ceb-d8d6-49cb-911c-55cbaeec199f");
-        $subject = 'Grlobalizationplus - Survey';
         $result = $client->sendEmail($from, $recipient, $subject, $message);
         return $result;
+    }
+
+    function get_campaign_preface($campid) {
+        $query = "select * from mdl_campaign where id=$campid";
+        $result = $this->db->query($query);
+        while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+            $preface = $row['preface'];
+        }
+        return $preface;
+    }
+
+    function get_question_answers($qid) {
+        $list = "";
+        $i = 1;
+        $query = "select * from mdl_campaign_a where qid=$qid";
+        $num = $this->db->numrows($query);
+        if ($num > 0) {
+            $list.="<table border='1' style='width:100%'>";
+            $list.="<tr>";
+            $result = $this->db->query($query);
+            while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+                if ($i <= 3) {
+                    $list.="<td style='padding:15px;'><a href=''>" . $row['rtext'] . "</a></td>";
+                } // end if
+                else {
+                    $list.="<tr>";
+                    $list.="<td style='padding:15px;'><a href=''>" . $row['rtext'] . "</a></td>";
+                    $list.="</tr>";
+                } // end else
+                $i++;
+            } // end while
+            $list.="</tr>";
+            $list.="</table>";
+        } // end if $num > 0
+        return $list;
+    }
+
+    function get_message_signature() {
+        $list = "";
+        $list.="<table>";
+        $list.="<tr>
+                <td style='' colspan='4' align='left'>Many thanks for your kind assistance.<br><br><br></td>
+                </tr>";
+        $list.="<tr>
+                <td style='' colspan='4' align='left'>
+                ****************************************<br>
+                Professor Steve Posner, Ed.M., Harvard University<br>
+                M.P.W., University of Southern California<br>
+                Faculty, The USC Writing Program and<br>
+                Dornsife College Interdisciplinary Studies<br>
+                University of Southern California<br>
+                Email: steve.posner@post.harvard.edu<br>
+                Phone: 760.580.8700
+                </td>
+                </tr>";
+        $list.="</table>";
+        return $list;
+    }
+
+    function get_campaign_questions_block($campid) {
+        $list = "";
+        $query = "select * from mdl_campaign_q where campid=$campid";
+        $num = $this->db->numrows($query);
+        if ($num > 0) {
+            $result = $this->db->query($query);
+            while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+                $q = new stdClass();
+                foreach ($row as $key => $value) {
+                    $q->$key = $value;
+                }
+                $qs[] = $q;
+            } // end while 
+            $list.="<table>";
+            foreach ($qs as $q) {
+                $a = $this->get_question_answers($q->id);
+                $text = $q->qtext;
+                $list.="<tr>";
+                $list.="<td style='padding:15px;'>$text</td>";
+                $list.="</tr>";
+
+                $list.="<tr>";
+                $list.="<td style='padding:15px;'>$a</td>";
+                $list.="</tr>";
+            } // end for
+            $list.="</table>";
+        } // end if $num > 0
+        return $list;
+    }
+
+    function compose_message($campid) {
+        $list = "";
+        $preface = $this->get_campaign_preface($campid);
+        $questions = $this->get_campaign_questions_block($campid);
+        $signature = $this->get_message_signature();
+
+        $list.="<table>";
+
+        $list.="<tr>";
+        $list.="<td style='padding:15px;'>$preface</td>";
+        $list.="</tr>";
+
+        $list.="<tr>";
+        $list.="<td style='padding:15px;'>$questions</td>";
+        $list.="</tr>";
+
+        $list.="<tr>";
+        $list.="<td style='padding:15px;'>$signature</td>";
+        $list.="</tr>";
+
+        $list.="</table>";
+        return $list;
+    }
+
+    function send_survey_email($item) {
+        $list = "";
+
+        /*
+         * 
+          echo "<pre>";
+          print_r($item);
+          echo "</pre>";
+          die();
+         * 
+         */
+
+        $email = $item->email;
+        $campid = $item->campid;
+        $from = $this->from;
+        $subject = $this->subject;
+        $message = $this->compose_message($campid);
+        $status = $this->send_single_item($from, $email, $subject, $message);
+        if ($status) {
+            $list.="Email was successfully sent";
+        } // end if
+        else {
+            $list.="Email was not sent (failure)";
+        } // end else
+        return $list;
     }
 
     function send_survey_results($email, $result) {
@@ -347,6 +488,36 @@ class Survey {
         return $list;
     }
 
+    function delete_question_answers($ids) {
+        if (count($ids) > 0) {
+            foreach ($ids as $id) {
+                $query = "delete from mdl_campaign_a where qid=$id";
+                $this->db->query($query);
+            } // end foreach
+        } // count($ids)>0
+    }
+
+    function delete_questions($campid) {
+        $query = "select * from mdl_campaign_q where campid=$campid";
+        $num = $this->db->numrows($query);
+        if ($num > 0) {
+            $result = $this->db->query($query);
+            while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+                $ids[] = $row['id'];
+            } // end while
+            $this->delete_question_answers($ids);
+        } // end if $num > 0
+
+        $query = "delete from mdl_campaign_q where campid=$campid";
+        $this->db->query($query);
+    }
+
+    function del_campaign($id) {
+        $this->delete_questions($id);
+        $query = "delete from mdl_campaign where id=$id";
+        $this->db->query($query);
+    }
+
     function get_reply_grade_box($i) {
         $list = "";
 
@@ -358,7 +529,7 @@ class Survey {
 
     function get_question_replies_block($i) {
         $list = "";
-        for ($k = 1; $k <= 5; $k++) {
+        for ($k = 1; $k <= 6; $k++) {
             $list.="<div class='row'>";
             $list.="<span class='col-sm-2'>Choice #$k</span>";
             $list.="<span class='col-sm-6'><input type='text' class='r_$i' style='width:800px;'></span>";
@@ -413,6 +584,7 @@ class Survey {
             $list.="<th style='padding:15px;'>Title</th>";
             $list.="<th style='padding:15px;'>Content</th>";
             $list.="<th style='padding:15px;'>Added</th>";
+            $list.="<th style='padding:15px;'>Ops</th>";
             $list.="</tr>";
             $list.="</thead>";
 
@@ -421,8 +593,9 @@ class Survey {
                 $date = date('m-d-Y', $c->added);
                 $list.="<tr>";
                 $list.="<td style='padding:15px'>$c->title</td>";
-                $list.="<td style='padding:15px'>$c->preface</td>";
+                $list.="<td style='padding:15px' width='65%'>$c->preface</td>";
                 $list.="<td style='padding:15px;'>$date</td>";
+                $list.="<td style='padding:15px;'><span class='glyphicon glyphicon-wrench' id='camp_edit_$c->id' style='cursor:pointer;'></span>&nbsp;&nbsp;<span class='glyphicon glyphicon-trash' id='camp_del_$c->id' style='cursor:pointer;'></span></td>";
                 $list.="</tr>";
             } // end foreach
             $list.="</tbody>";
@@ -457,8 +630,6 @@ class Survey {
           [title] => aaaa
           [content] =>
           bbbb
-
-
 
           [q] => Array
           (
@@ -499,24 +670,24 @@ class Survey {
 
         $title = $camp->title;
         $preface = $camp->content;
+        $clear_peface = str_replace("'", "\'", $preface);
         $date = time();
         $query = "insert into mdl_campaign "
                 . "(title,preface,added) "
-                . "values('$title','$preface','$date')";
+                . "values('$title','$clear_peface','$date')";
         echo "Query: " . $query . "<br>";
         $this->db->query($query);
         $campLastId = $this->get_table_last_record_id('mdl_campaign');
-        echo "Campaign last id: " . $campLastId . "<br>";
 
         $questions = $camp->q;
         foreach ($questions as $q) {
             $text = $q->t;
+            $clear_text = str_replace("'", "\'", $text);
             $query = "insert into mdl_campaign_q (campid,qtext) "
-                    . "values($campLastId,'$text')";
+                    . "values($campLastId,'$clear_text')";
             echo "Query: " . $query . "<br>";
             $this->db->query($query);
             $lastqID = $this->get_table_last_record_id('mdl_campaign_q');
-            echo "Last question id: " . $lastqID . "<br>";
             $answers = $q->a;
             if (count($answers) > 0) {
                 foreach ($answers as $a) {
@@ -742,6 +913,80 @@ class Survey {
             fputcsv($output, array($row['email'], $row['poll_result']));
         }
         fclose($output);
+    }
+
+    function get_campaigns_list() {
+        $list = "";
+        $list.="<select id='campaigns_list' style='width:235px;'>";
+        $list.="<option value='0' selected>Please select</option>";
+        $query = "select * from mdl_campaign order by added desc";
+        $num = $this->db->numrows($query);
+        if ($num > 0) {
+            $result = $this->db->query($query);
+            while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+                $list.="<option value='" . $row['id'] . "'>" . $row['title'] . "</option>";
+            } // end while
+        } // end if $num > 0
+        $list.="</select>";
+        return $list;
+    }
+
+    function get_send_email_page() {
+        $list = "";
+        $campaign = $this->get_campaigns_list();
+
+        $list.="<br><br><div class='row-fluid' style='padding-left: 35px;padding-top: 15px;'>";
+        $list.="<span class='span12'>$campaign</span>";
+        $list.="</div>";
+
+        $list.="<div class='row-fluid' style='padding-left: 35px;padding-top: 15px;'>  
+                    <span class='span12'>
+                        <form action='launch.php' method='post' id='launcher' name='launcher'>
+                            <div class='form-group'>
+                                <label for='email'>Email</label>
+                                <input type='email' style='width: 235px;' class='form-control' id='email' name='email' placeholder='Enter Email Address'>
+                            </div>
+                            <div class='form-group'>
+                                <label class='control-label'>Or select CSV file to be uploaded:</label>
+                                <input id='file' name='file' type='file' class='file'>
+                            </div>
+                            <div class='form-group'>
+                                <span id='form_err'></span>
+                            </div>    
+                            <button type='submit' class='btn btn-default'>Submit</button>
+                        </form>
+                    </span>
+                </div>";
+
+        return $list;
+    }
+
+    function get_question_edit_answers($qid) {
+        $list = "";
+
+        return $list;
+    }
+
+    function get_survey_questions_block($campid) {
+        $list = "";
+
+        return $list;
+    }
+
+    function get_survey_edit_page($id) {
+        $list = "";
+
+        $list.="<div class='row'>";
+        $list.="<div class='col-4'><button class='btn btn-default' id='back_camp'>Back</button></div>";
+        $list.="</div>";
+
+        $query = "select * from ";
+
+        $list.="<div class='row'>";
+
+        $list.="</div>";
+
+        return $list;
     }
 
 }

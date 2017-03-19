@@ -107,42 +107,51 @@ $(document).ready(function () {
     // Process email sender form
     $("#launcher").submit(function (event) {
         event.preventDefault();
+        var campaign = $('#campaigns_list').val();
         var email = $('#email').val();
         var file = $('#file').val();
-        if (email == '' && file == '') {
-            $('#form_err').html('Please provide email or file to be uploaded');
-        } // end if 
-        else {
-            if (email != '' && file == '') {
-                var request = {email: email};
-                var url = 'http://globalizationplus.com/survey/launch.php';
-                $.post(url, request).done(function (data) {
-                    $('#form_err').html(data);
-                });
-            }
+        if (campaign > 0) {
+            if (email == '' && file == '') {
+                $('#form_err').html('Please provide email or file to be uploaded');
+            } // end if 
+            else {
 
-            if (email == '' && file != '') {
-                var url = 'http://globalizationplus.com/survey/upload.php';
-                var file_data = $('#file').prop('files');
-                var form_data = new FormData();
-                $.each(file_data, function (key, value) {
-                    form_data.append(key, value);
-                });
-                $.ajax({
-                    url: url,
-                    data: form_data,
-                    processData: false,
-                    contentType: false,
-                    type: 'POST',
-                    success: function (data) {
+                if (email != '' && file == '') {
+                    var item = {email: email, campid: campaign};
+                    var request = {item: JSON.stringify(item)};
+                    var url = 'http://globalizationplus.com/survey/launch.php';
+                    $.post(url, request).done(function (data) {
                         $('#form_err').html(data);
-                    } // end of success
-                }); // end of $.ajax ..
-            }
-            if (email != '' && file != '') {
-                $('#form_err').html('You can upload file or provide recipient email, but not both');
-            }
-        } // end else
+                    });
+                }
+
+                if (email == '' && file != '') {
+                    var url = 'http://globalizationplus.com/survey/upload.php';
+                    var file_data = $('#file').prop('files');
+                    var form_data = new FormData();
+                    form_data.append('campid', campaign);
+                    $.each(file_data, function (key, value) {
+                        form_data.append(key, value);
+                    });
+                    $.ajax({
+                        url: url,
+                        data: form_data,
+                        processData: false,
+                        contentType: false,
+                        type: 'POST',
+                        success: function (data) {
+                            $('#form_err').html(data);
+                        } // end of success
+                    }); // end of $.ajax ..
+                }
+                if (email != '' && file != '') {
+                    $('#form_err').html('You can upload file or provide recipient email, but not both');
+                }
+            } // end else
+        } // end if
+        else {
+            $('#form_err').html('Please select campaign to be sent');
+        }
     });
     /**********************************************************************
      * 
@@ -717,6 +726,25 @@ $(document).ready(function () {
             document.location.reload();
         }
 
+        if (event.target.id.indexOf("camp_edit_") >= 0) {
+            var id = event.target.id.replace('camp_edit_', '');
+            var url = 'http://globalizationplus.com/survey/edit_survey.php';
+            $.post(url, {id: id}).done(function (data) {
+                $('#camp').html(data);
+            });
+        }
+
+        if (event.target.id.indexOf("camp_del_") >= 0) {
+            if (confirm('Delete current campaign?')) {
+                var id = event.target.id.replace('camp_del_', '');
+                var url = 'http://globalizationplus.com/survey/del_survey.php';
+                $.post(url, {id: id}).done(function (data) {
+                    console.log(data);
+                    document.location.reload();
+                });
+            }
+        }
+
         if (event.target.id.indexOf("cancel_trial_") >= 0) {
             document.location.reload();
         }
@@ -726,7 +754,15 @@ $(document).ready(function () {
             document.location.reload();
         }
 
-
+       
+        if (event.target.id == 'back_camp') {
+            var url = 'http://globalizationplus.com/survey/get_survey_tab.php';
+            $.post(url, {id: id}).done(function (data) {
+                $('#camp').html(data);
+            });
+        }
+        
+        
         if (event.target.id == 'logout_utils') {
             var url = 'http://globalizationplus.com/lms/utils/logout.php';
             if (confirm('Logout from system?')) {
