@@ -757,7 +757,7 @@ $(document).ready(function () {
        
         if (event.target.id == 'back_camp') {
             var url = 'http://globalizationplus.com/survey/get_survey_tab.php';
-            $.post(url, {id: id}).done(function (data) {
+            $.post(url, {id: 1}).done(function (data) {
                 $('#camp').html(data);
             });
         }
