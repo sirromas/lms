@@ -192,18 +192,11 @@ class Survey {
         $query = "select * from mdl_campaign_a where qid=$qid";
         $num = $this->db->numrows($query);
         if ($num > 0) {
-            $list.="<table border='1' style='width:100%'>";
+            $list.="<table border='0' style='width:100%'>";
             $list.="<tr>";
             $result = $this->db->query($query);
             while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
-                if ($i <= 3) {
-                    $list.="<td style='padding:15px;'><a href=''>" . $row['rtext'] . "</a></td>";
-                } // end if
-                else {
-                    $list.="<tr>";
-                    $list.="<td style='padding:15px;'><a href=''>" . $row['rtext'] . "</a></td>";
-                    $list.="</tr>";
-                } // end else
+                $list.="<td style='padding:15px;'><a href=''>" . $row['rtext'] . "</a></td>";
                 $i++;
             } // end while
             $list.="</tr>";
@@ -256,7 +249,7 @@ class Survey {
                 $list.="</tr>";
 
                 $list.="<tr>";
-                $list.="<td style='padding:15px;'>$a</td>";
+                $list.="<td style=''>$a</td>";
                 $list.="</tr>";
             } // end for
             $list.="</table>";
@@ -273,11 +266,11 @@ class Survey {
         $list.="<table>";
 
         $list.="<tr>";
-        $list.="<td style='padding:15px;'>$preface</td>";
+        $list.="<td style=''>$preface</td>";
         $list.="</tr>";
 
         $list.="<tr>";
-        $list.="<td style='padding:15px;'>$questions</td>";
+        $list.="<td style=''>$questions</td>";
         $list.="</tr>";
 
         $list.="<tr>";
@@ -285,6 +278,21 @@ class Survey {
         $list.="</tr>";
 
         $list.="</table>";
+        return $list;
+    }
+
+    function preview_campaign($id) {
+        $list = "";
+        $camp = $this->compose_message($id);
+
+        $list.="<div class='row'>";
+        $list.="<div class='col-4'><button class='btn btn-default' id='back_camp'>Back</button><br><br></div>";
+        $list.="</div>";
+
+        $list.="<div class='row'>";
+        $list.="<div class='col-4'>$camp</div>";
+        $list.="</div>";
+
         return $list;
     }
 
@@ -562,7 +570,7 @@ class Survey {
     function create_camp_list() {
         $list = "";
 
-        $query = "select * from mdl_campaign order by added";
+        $query = "select * from mdl_campaign order by added desc";
         $num = $this->db->numrows($query);
         if ($num > 0) {
             $result = $this->db->query($query);
@@ -595,7 +603,10 @@ class Survey {
                 $list.="<td style='padding:15px'>$c->title</td>";
                 $list.="<td style='padding:15px' width='65%'>$c->preface</td>";
                 $list.="<td style='padding:15px;'>$date</td>";
-                $list.="<td style='padding:15px;'><span class='glyphicon glyphicon-wrench' id='camp_edit_$c->id' style='cursor:pointer;'></span>&nbsp;&nbsp;<span class='glyphicon glyphicon-trash' id='camp_del_$c->id' style='cursor:pointer;'></span></td>";
+                $list.="<td style='padding:15px;'>"
+                        . "<span title='Edit' class='glyphicon glyphicon-wrench' id='camp_edit_$c->id' style='cursor:pointer;'></span>&nbsp;&nbsp;"
+                        . "<span title='Delete' class='glyphicon glyphicon-trash' id='camp_del_$c->id' style='cursor:pointer;'></span>&nbsp;&nbsp;"
+                        . "<span title='Preview' class='glyphicon glyphicon-eye-open' id='camp_preview_$c->id' style='cursor:pointer;'></span></td>";
                 $list.="</tr>";
             } // end foreach
             $list.="</tbody>";
@@ -623,51 +634,6 @@ class Survey {
 
     function add_camp($camp) {
         $list = "";
-
-        /*
-          stdClass Object
-          (
-          [title] => aaaa
-          [content] =>
-          bbbb
-
-          [q] => Array
-          (
-          [0] => stdClass Object
-          (
-          [t] => Q1
-          [a] => Array
-          (
-          [0] => Q1-A
-          [1] => Q1-B
-          [2] => Q1-C
-          [3] => Q1-D
-          [4] => Q1-E
-          )
-
-          )
-
-          [1] => stdClass Object
-          (
-          [t] => Q2
-          [a] => Array
-          (
-          [0] => Q2-A
-          [1] => Q2-B
-          [2] => Q2-C
-          [3] => Q2-D
-          [4] => Q2-E
-          )
-
-          )
-
-          )
-
-          )
-         * 
-         */
-
-
         $title = $camp->title;
         $preface = $camp->content;
         $clear_peface = str_replace("'", "\'", $preface);
@@ -675,7 +641,6 @@ class Survey {
         $query = "insert into mdl_campaign "
                 . "(title,preface,added) "
                 . "values('$title','$clear_peface','$date')";
-        echo "Query: " . $query . "<br>";
         $this->db->query($query);
         $campLastId = $this->get_table_last_record_id('mdl_campaign');
 
@@ -685,15 +650,14 @@ class Survey {
             $clear_text = str_replace("'", "\'", $text);
             $query = "insert into mdl_campaign_q (campid,qtext) "
                     . "values($campLastId,'$clear_text')";
-            echo "Query: " . $query . "<br>";
             $this->db->query($query);
             $lastqID = $this->get_table_last_record_id('mdl_campaign_q');
             $answers = $q->a;
             if (count($answers) > 0) {
                 foreach ($answers as $a) {
+                    $clear_a = str_replace("'", "\'", $a);
                     $query = "insert into mdl_campaign_a (qid, rtext) "
-                            . "values($lastqID,'$a')";
-                    echo "Query: " . $query . "<br>";
+                            . "values($lastqID,'$clear_a')";
                     $this->db->query($query);
                 } // end foreach
             } // end if
@@ -963,30 +927,141 @@ class Survey {
 
     function get_question_edit_answers($qid) {
         $list = "";
+        $i = 1;
+        $query = "select * from mdl_campaign_a where qid=$qid";
+        $num = $this->db->numrows($query);
+        if ($num > 0) {
+            $list.="<input type='hidden' id='a_num' value='$num'>";
+            $result = $this->db->query($query);
+            while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+                $id = $row['id'];
+                $a = $row['rtext'];
+                $list.="<div clas='row'>";
+                $list.="<span style='margin-left:15px;'>Choice #$i&nbsp;&nbsp;<input type='text' class='q_a_$qid' data-id='$id' value='$a' style='width:935px;'></span>";
+                $list.="</div>";
+                $i++;
+            } // end while
+        } // end if $num > 0
+        return $list;
+    }
+
+    function get_survey_questions_block($qs) {
+        $list = "";
+        $i = 1;
+        if (count($qs) > 0) {
+            $num = count($qs);
+            $list.="<input type='hidden' id='q_num' value='$num'>";
+            foreach ($qs as $q) {
+                $a = $this->get_question_edit_answers($q->id);
+                $list.="<br><div class='row'>";
+                $list.="<span style='margin-left:15px;'><textarea id='q_edit_$i' data-id='$q->id' style='width:1004px;' rows='5'>$q->qtext</textarea>";
+                $list.="</div>";
+
+                $list.="<div class='row'>";
+                $list.="<span class=''>$a</span>";
+                $list.="</div>";
+
+                $list.="<div class='row'>";
+                $list.="<span class=''><br/></span>";
+                $list.="</div>";
+                $i++;
+            } // end foreach
+        } // end if count($qs
 
         return $list;
     }
 
-    function get_survey_questions_block($campid) {
-        $list = "";
-
-        return $list;
+    function get_edit_question_preface($id) {
+        $query = "select * from mdl_campaign where id=$id";
+        $result = $this->db->query($query);
+        while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+            $email_text = $row['preface'];
+        }
+        return $email_text;
     }
 
     function get_survey_edit_page($id) {
         $list = "";
 
-        $list.="<div class='row'>";
-        $list.="<div class='col-4'><button class='btn btn-default' id='back_camp'>Back</button></div>";
+        $list.="<div>";
+        $list.="<span><button class='btn btn-default' id='back_camp'>Back</button><br><br></span>";
         $list.="</div>";
 
-        $query = "select * from ";
+        $email_text = $this->get_edit_question_preface($id);
+        $query = "select * from mdl_campaign_q where campid=$id";
+        $result = $this->db->query($query);
+        while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+            $q = new stdClass();
+            foreach ($row as $key => $value) {
+                $q->$key = $value;
+            }
+            $q->a = $this->get_question_answers($q->id);
+            $qs[] = $q;
+        }
+
+        $questions = $this->get_survey_questions_block($qs);
+        $list.="<input type='hidden' id='campid' value='$id'>";
+        $list.="<div class='row'>";
+        $list.="<textarea name='editor1' id='editor1' rows='10' style='width:675px;'>$email_text</textarea>";
+        $list.="<script>
+                CKEDITOR.replace( 'editor1' );
+            </script>";
+        $list.="</div>";
 
         $list.="<div class='row'>";
-
+        $list.="<span class='col-12' style='margin-left:5px;'>$questions</span>";
         $list.="</div>";
+
+        $list.="<div class='row'>";
+        $list.="<span class='col-12' style='margin-left:5px;' id='camp_err' style='color:red;'></span>";
+        $list.="</div>";
+
+        $list.="<div class='row'>";
+        $list.="<span class='col-12' style='margin-left:5px;'><button class='btn btn-default' id='update_camp'>Update</button></span>";
+        $list.="</div><br>";
 
         return $list;
+    }
+
+    function update_camp($camp) {
+
+        /*
+          echo "<pre>";
+          print_r($camp);
+          echo "</pre>";
+         */
+
+        $campid = $camp->id;
+        $preface = $camp->msg;
+        $clear_peface = str_replace("'", "\'", $preface);
+
+        $query = "update mdl_campaign set preface='$clear_peface' "
+                . "where id=$campid";
+        $this->db->query($query);
+
+        $questions = json_decode($camp->q);
+        if (count($questions) > 0) {
+            foreach ($questions as $q) {
+                $qid = $q->id;
+                $qtext = $q->text;
+                $clear_text = str_replace("'", "\'", $qtext);
+                $query = "update mdl_campaign_q set qtext='$clear_text' "
+                        . "where id=$qid";
+                $this->db->query($query);
+
+                $answers = $q->a;
+                if (count($answers) > 0) {
+                    foreach ($answers as $a) {
+                        $aid = $a->aid;
+                        $atext = $a->text;
+                        $clear_text = str_replace("'", "\'", $atext);
+                        $query = "update mdl_campaign_a set rtext='$clear_text' "
+                                . "where id=$aid";
+                        $this->db->query($query);
+                    } // end foreach
+                } // end if count($answers)>0
+            } // end foreach
+        } // end if count($questions
     }
 
 }
