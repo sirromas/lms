@@ -186,7 +186,7 @@ class Survey {
         return $preface;
     }
 
-    function get_question_answers($qid) {
+    function get_question_answers($qid, $email = null) {
         $list = "";
         $i = 1;
         $query = "select * from mdl_campaign_a where qid=$qid";
@@ -196,7 +196,13 @@ class Survey {
             $list.="<tr>";
             $result = $this->db->query($query);
             while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
-                $list.="<td style='padding:15px;'><a href=''>" . $row['rtext'] . "</a></td>";
+                $id = $row['id'];
+                if ($email == null) {
+                    $list.="<td style='padding:15px;'><a href=''>" . $row['rtext'] . "</a></td>";
+                } // end if
+                else {
+                    $list.="<td style='padding:15px;'><a href='http://" . $_SERVER['SERVER_NAME'] . "/survey/receive.php?email=$email&id=$id'>" . $row['rtext'] . "</a></td>";
+                } // end else
                 $i++;
             } // end while
             $list.="</tr>";
@@ -227,7 +233,7 @@ class Survey {
         return $list;
     }
 
-    function get_campaign_questions_block($campid) {
+    function get_campaign_questions_block($campid, $email) {
         $list = "";
         $query = "select * from mdl_campaign_q where campid=$campid";
         $num = $this->db->numrows($query);
@@ -242,7 +248,7 @@ class Survey {
             } // end while 
             $list.="<table>";
             foreach ($qs as $q) {
-                $a = $this->get_question_answers($q->id);
+                $a = $this->get_question_answers($q->id, $email);
                 $text = $q->qtext;
                 $list.="<tr>";
                 $list.="<td style='padding:15px;'>$text</td>";
@@ -257,10 +263,10 @@ class Survey {
         return $list;
     }
 
-    function compose_message($campid) {
+    function compose_message($campid, $email) {
         $list = "";
         $preface = $this->get_campaign_preface($campid);
-        $questions = $this->get_campaign_questions_block($campid);
+        $questions = $this->get_campaign_questions_block($campid, $email);
         $signature = $this->get_message_signature();
 
         $list.="<table>";
@@ -312,7 +318,7 @@ class Survey {
         $campid = $item->campid;
         $from = $this->from;
         $subject = $this->subject;
-        $message = $this->compose_message($campid);
+        $message = $this->compose_message($campid, $email);
         $status = $this->send_single_item($from, $email, $subject, $message);
         if ($status) {
             $list.="Email was successfully sent";
@@ -323,77 +329,38 @@ class Survey {
         return $list;
     }
 
-    function send_survey_results($email, $result) {
+    function send_survey_results($email, $id) {
+        $list = "";
+        /*
+          switch ($result) {
+          case 20:
+          $recipient = "20@posnermail.com";
+          break;
+          case 50:
+          $recipient = "50@posnermail.com";
+          break;
+          case 80:
+          $recipient = "80@posnermail.com";
+          break;
+          case 100:
+          $recipient = "100@posnermail.com";
+          break;
+          }
+         */
 
-        switch ($result) {
-            case 20:
-                $recipient = "20@posnermail.com";
-                break;
-            case 50:
-                $recipient = "50@posnermail.com";
-                break;
-            case 80:
-                $recipient = "80@posnermail.com";
-                break;
-            case 100:
-                $recipient = "100@posnermail.com";
-                break;
-        }
-
-        //$recipient = 'sirromas@gmail.com'; // temp workaround;
         $date = time();
-        $query = "insert into mdl_external_survey_result "
-                . "(email,poll_result,added) values('$email','$result','$date')";
+        $query = "insert into mdl_campaign_r (email,rid,added) "
+                . "values('$email','$id','$date')";
         $this->db->query($query);
 
-        $mail = new PHPMailer;
 
-        $message = "";
-        $message.="<html>";
-        $message.="<body>";
-        $message.="<p align='center'>Survey result</p>";
+        $list.="<p style='text-align:center;'>"
+                . "<img class='dsR1145' src='http://globalizationplus.com/assets/images/header.jpg' style='padding-top: 4px; border-style: solid; border-width: 6px 1px 2px; border-color: #ddd;' alt='' usemap='#header' border='0'><map name='header' id='header'>"
+                . "<area title='About Us' shape='rect' coords='609,23,683,40' href='http://globalizationplus.com/about.html' alt='About Us' target='_blank'>"
+                . "<area title='Globalization Plus' shape='rect' coords='120,55,556,102' href='http://globalizationplus.com' alt='Globalizaiton Plus' target='_blank'><area title='Log-In' shape='rect' coords='17,19,68,39' href='http://globalizationplus.com/login.html' alt='Log-In' target='_blank'></map></p>";
 
-        $message.="<table align='center'>";
-
-        $message.="<tr>";
-        $message.="<td style='margin:15px;'>Email</td><td style='margin:15px;'>$email</td>";
-        $message.="</tr>";
-
-        $message.="<tr>";
-        $message.="<td style='margin:15px;'>Poll result</td><td style='margin:15px;'>$result%</td>";
-        $message.="</tr>";
-
-        $message.="</table>";
-
-        $message.="<p>Best regards,</p>";
-        $message.="<p>Globalization Plus Team</p>";
-        $message.="</body></html>";
-
-        $mail->isSMTP();
-        $mail->Host = $this->mail_smtp_host;
-        $mail->SMTPAuth = true;
-        $mail->Username = $this->mail_smtp_user;
-        $mail->Password = $this->mail_smtp_pwd;
-        $mail->SMTPSecure = 'tls';
-        $mail->Port = $this->mail_smtp_port;
-
-        $mail->setFrom($this->mail_smtp_user, 'Globalization Plus');
-        $mail->addAddress($recipient);
-        $mail->addReplyTo($this->mail_smtp_user, 'Globalization Plus');
-
-        $mail->isHTML(true);
-
-        $mail->Subject = 'Globalization Plus - Survey Results';
-        $mail->Body = $message;
-
-        if (!$mail->send()) {
-            echo 'Message could not be sent.';
-            echo 'Mailer Error: ' . $mail->ErrorInfo;
-        } // end if !$mail->send()
-        else {
-            $list = "<br><br><div style='margin:auto;text-align:center;'>Thank you very much!</div>";
-            return $list;
-        }
+        $list.= "<br><div style='margin:auto;text-align:center;font-weight:bold;font-size:25px;'>Thank you very much!</div>";
+        return $list;
     }
 
     function check_user($username, $password) {
@@ -767,6 +734,167 @@ class Survey {
             } //end else
             $this->db->query($query);
         }
+    }
+
+    function get_res_ampaigns_list() {
+        $list = "";
+        $list.="<select id='res_campaigns_list' style='width:130px;'>";
+        $list.="<option value='0' selected>Please select</option>";
+        $query = "select * from mdl_campaign order by preface";
+        $num = $this->db->numrows($query);
+        if ($num > 0) {
+            $result = $this->db->query($query);
+            while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+                $id = $row['id'];
+                $item = $row['title'];
+                $list.="<option value='$id'>$item</option>";
+            } // end while
+        } // end if $num > 0
+        $list.="</select>";
+        return $list;
+    }
+
+    function process_question_data($rid) {
+        $query = "select count(id) as total from mdl_campaign_r where rid=$rid";
+        $result = $this->db->query($query);
+        while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+            $total = $row['total'];
+        }
+        return $total;
+    }
+
+    function get_campaign_question_stat($qid, $name) {
+        $list = "";
+        $polls = array();
+        $query = "select * from mdl_campaign_a where qid=$qid";
+        $num = $this->db->numrows($query);
+        if ($num > 0) {
+            $result = $this->db->query($query);
+            while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+                $answers[] = $row['id'];
+            }
+            $alist = implode(',', $answers);
+            $query = "select * from mdl_campaign_r "
+                    . "where rid in ($alist) group by rid";
+            $num = $this->db->numrows($query);
+            if ($num > 0) {
+                $result = $this->db->query($query);
+                while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+                    $p = new stdClass();
+                    $rid = $row['rid'];
+                    $stat = $this->process_question_data($rid);
+                    $p->rid = $rid;
+                    $p->stat = $stat;
+                    $polls[] = $p;
+                } // end while
+            } // end if $num > 0
+        } // end if $num > 0
+
+        if (count($polls) > 0) {
+            $list.="<table id='res_table' class='table table-striped table-bordered' cellspacing='0' width='100%'>";
+            $list.="<thead>";
+            $list.="<tr>";
+            $list.="<th>Question text</th>";
+            $list.="<th>Hits</th>";
+            $list.="</tr>";
+            $list.="</thead>";
+            $list.="<tbody>";
+            foreach ($polls as $p) {
+                $name = $this->get_reply_text($p->rid);
+                $list.="<tr>";
+                $list.="<td>$name</td>";
+                $list.="<td>$p->stat</td>";
+                $list.="</tr>";
+            } // end foreach
+            $list.="</tbody>";
+            $list.="</table>";
+        } // end if count($polls)>0
+        return $list;
+    }
+
+    function get_reply_text($rid) {
+        $query = "select * from mdl_campaign_a where id=$rid";
+        $result = $this->db->query($query);
+        while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+            $name = $row['rtext'];
+        }
+        return $name;
+    }
+
+    function get_campaign_results($campid) {
+        $list = "";
+        $query = "select * from mdl_campaign_q where campid=$campid";
+        $num = $this->db->numrows($query);
+        if ($num > 0) {
+            $result = $this->db->query($query);
+            while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+                $qid = $row['id'];
+                $name = $row['qtext'];
+                $stat = $this->get_campaign_question_stat($qid, $name);
+                $list.="<div class='row'>";
+                $list.="<span class='col-md-4' style='padding-left:15px;padding-top:25px;'>$stat</span>";
+                $list.="<span class='col-md-8' id='q_chart' style='padding-left:15px;padding-top:25px;padding-right:15px;'></span>";
+                $list.="<div>";
+            } // end while
+        } // end if $num > 0
+        else {
+            $list.="N/A";
+        }
+        return $list;
+    }
+
+    function get_results_page() {
+        $list = "";
+        $campaignslist = $this->get_res_ampaigns_list();
+        $list.="<div class='row'>";
+        $list.="<span class='col-md-12'>$campaignslist</span>";
+        $list.="</div>";
+
+        $list.="<div class='row'>";
+        $list.="<span class='col-md-12' id='res_loader' style='padding-left:50px;padding-top:20px;display:none;'><img src='http://globalizationplus.com/assets/images/ajax.gif'></span>";
+        $list.="</div>";
+
+        return $list;
+    }
+
+    function get_chart_data($campid) {
+        $query = "select * from mdl_campaign_q where campid=$campid";
+        $num = $this->db->numrows($query);
+        if ($num > 0) {
+            $result = $this->db->query($query);
+            while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+                $qid = $row['id'];
+                $stat = $this->get_campaign_question_chart_stat($qid);
+            } // end while
+            return $stat;
+        } // end if $num > 0
+    }
+
+    function get_campaign_question_chart_stat($qid) {
+        $polls = array();
+        $query = "select * from mdl_campaign_a where qid=$qid";
+        $num = $this->db->numrows($query);
+        if ($num > 0) {
+            $result = $this->db->query($query);
+            while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+                $answers[] = $row['id'];
+            }
+            $alist = implode(',', $answers);
+            $query = "select * from mdl_campaign_r "
+                    . "where rid in ($alist) group by rid";
+            $num = $this->db->numrows($query);
+            if ($num > 0) {
+                $result = $this->db->query($query);
+                while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+                    $rid = $row['rid'];
+                    $stat = $this->process_question_data($rid);
+                    $name = $this->get_reply_text($rid);
+                    $p = array($name, $stat);
+                    $polls[] = $p;
+                } // end while
+            } // end if $num > 0
+        } // end if $num > 0
+        return json_encode($polls);
     }
 
     function get_poll_results() {

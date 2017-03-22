@@ -3,8 +3,8 @@
 require_once './classes/Survey.php';
 $survey = new Survey();
 $email = $_REQUEST['email'];
-$result = $_REQUEST['result'];
-$list = $survey->send_survey_results($email, $result);
+$id = $_REQUEST['id'];
+$list = $survey->send_survey_results($email, $id);
 echo $list;
 
 

@@ -46,6 +46,9 @@ else {
 
         <!-- Editor CDN -->
         <script src="//cdn.ckeditor.com/4.6.2/full/ckeditor.js"></script>
+        
+        <!-- Highcharts JS -->
+        <script type="text/javascript" src="http://code.highcharts.com/highcharts.js"></script>
 
         <!-- Custom JS code -->
         <script type="text/javascript" src="../assets/js/custom.js"></script>
@@ -81,11 +84,12 @@ else {
                 echo $settings;
                 ?>
             </div>
-            <div id="menu2" class="tab-pane fade" style="width:640px;padding-left: 45px;padding-top: 25px; ">
+            <div id="menu2" class="tab-pane fade" style="padding-left: 45px;padding-top: 25px; ">
                 <?php
-                $resultObj = $survey->get_poll_results();
-                $queue = $survey->get_queue_status();
+                $result=$survey->get_results_page();
                 ?>
+                
+                <!--
                 <script type="text/javascript">
 
                     // Load the Visualization API and the corechart package.
@@ -120,11 +124,11 @@ else {
                         chart.draw(data, options);
                     }
                 </script>
-
-                <div id="chart_div" style="padding-left: 45px;"></div>
-                <div style="border-style: dashed;"><span id='q'><?php echo $queue; ?></span><span style='cursor: pointer;'><img src='http://globalizationplus.com/assets/images/refresh.png' width='45' height='35' id='r' title='Refresh'></span></div>
-
-
+                -->
+                
+                <div style="padding-left: 15px;"><?php echo $result; ?></div>
+                <div class="row" id="camp_result" style='padding-left: 32px;'></div>
+            
             </div>
             <div id="camp" class="tab-pane fade" style="width:1024px;padding-left: 45px;padding-top: 25px; ">
                 <?php
