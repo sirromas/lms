@@ -837,15 +837,13 @@ $(document).ready(function () {
                 $('#res_table').DataTable();
                 var chart_url = 'http://globalizationplus.com/survey/get_chart_data.php';
                 $.post(chart_url, {id: campid}).done(function (data) {
-                    console.log(data);
+                    console.log('Server response: ' + data);
                     $.each(JSON.parse(data), function (index, value) {
-                        console.log('Vaue: ' + String(value));
-                        var item = String(value).split(',');
-                        console.log('Item array: ' + item[1]);
+                        var item = String(value).split('@');
                         var item_arr = [item[0], parseInt(item[1])];
                         chart_data.push(item_arr);
                     });
-                    console.log('Chart data array: ' + JSON.stringify(chart_data));
+                    console.log('Charts data array: ' + chart_data);
                     Highcharts.chart('q_chart', {
                         chart: {
                             type: 'pie',
@@ -878,7 +876,6 @@ $(document).ready(function () {
                                 data: chart_data
                             }]
                     });
-
                 }); // end of post
             }); // end of post
         }

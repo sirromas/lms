@@ -420,8 +420,10 @@ class Survey {
 
     function get_campaign_page() {
         $list = "";
-        $qbox = $this->get_questions_drop_down();
+        $num = 1;
+        //$qbox = $this->get_questions_drop_down();
         $camps = $this->create_camp_list();
+        $questions = $this->get_questions_block($num);
         $list.="<div class='row-fluid' style='padding-bottom:15px;'>";
         $list.="<span class='col-sm-1' style='padding-left:0px;'>Title*</span>";
         $list.="<span class='span6'><input type='text' style='width:897px;' id='camp_title'></span>";
@@ -439,12 +441,8 @@ class Survey {
 
         $list.="</div>";
 
-        $list.="<div class='row' style='padding-top:15px;padding-left:15px;'>";
-        $list.="<span class='col-sm-6' style='padding-left:0px;'>$qbox &nbsp;&nbsp;&nbsp;<button class='btn btn-default' id='add_q'>Add Questions</button></span>";
-        $list.="</div><br>";
-
-        $list.="<div id='q_container'>";
-
+        $list.="<br><div id='q_container'>";
+        $list.=$questions;
         $list.="</div>";
 
         $list.="<div class='row'>";
@@ -519,7 +517,7 @@ class Survey {
         for ($i = 1; $i <= $num; $i++) {
             $q = $this->get_question_replies_block($i);
             $list.="<div class='row'>";
-            $list.="<span class='col-sm-2'>Question #$i</span>";
+            $list.="<span class='col-sm-2'>Question* </span>";
             $list.="<span class='col-sm-6'><input type='text' id='q_text_$i' style='width:800px;'></span>";
             $list.="</div>";
 
@@ -808,7 +806,21 @@ class Survey {
             } // end foreach
             $list.="</tbody>";
             $list.="</table>";
+
+            $link = $this->get_campaign_csv_file($qid);
+            $list.="<div class='row'>";
+            $list.="<span calss='col-md-4'>$link</span>";
+            $list.="</div>";
         } // end if count($polls)>0
+        return $list;
+    }
+
+    function get_campaign_csv_file($qid) {
+        $list = "";
+        $filename = 'users.csv';
+        $total = $this->create_csv_file($filename, $qid);
+        $list.="<span class='col-md-4'>Total items: $total</span>";
+        $list.="<span class='col-md-3'><a href='http://" . $_SERVER['SERVER_NAME'] . "/survey/files/$filename' target='_blank'>Download</a></span>";
         return $list;
     }
 
@@ -826,11 +838,16 @@ class Survey {
         $query = "select * from mdl_campaign_q where campid=$campid";
         $num = $this->db->numrows($query);
         if ($num > 0) {
+
             $result = $this->db->query($query);
             while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
                 $qid = $row['id'];
                 $name = $row['qtext'];
                 $stat = $this->get_campaign_question_stat($qid, $name);
+                $list.="<div class='row'>";
+                $list.="<span class='col-md-9' style='padding-left:15px;padding-top:25px;font-weight:bold;'>$name</span>";
+                $list.="<div>";
+
                 $list.="<div class='row'>";
                 $list.="<span class='col-md-4' style='padding-left:15px;padding-top:25px;'>$stat</span>";
                 $list.="<span class='col-md-8' id='q_chart' style='padding-left:15px;padding-top:25px;padding-right:15px;'></span>";
@@ -889,7 +906,7 @@ class Survey {
                     $rid = $row['rid'];
                     $stat = $this->process_question_data($rid);
                     $name = $this->get_reply_text($rid);
-                    $p = array($name, $stat);
+                    $p = $name . '@' . $stat;
                     $polls[] = $p;
                 } // end while
             } // end if $num > 0
@@ -983,28 +1000,51 @@ class Survey {
 
     function get_responders_data() {
         $list = '';
-        $query = "select count(id) as total from mdl_external_survey_result";
+        $query = "select count(id) as total from mdl_campaign_r";
         $result = $this->db->query($query);
         while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
             $sent = $row['total'];
         }
         $filename = 'users.csv';
         $this->create_csv_file($filename);
-        $list.="<span style='font-weight:bold;'>$sent</span><span style='padding-left:8px;'><a href='http://globalizationplus.com/survey/files/users.csv' target='_blank'>Download</a></span>";
+        $list.="<div class='row'>";
+        $list.="<span style='font-weight:bold;'>Total items:  $sent</span><span style='padding-left:8px;'><a href='http://globalizationplus.com/survey/files/users.csv' target='_blank'>Download</a></span>";
+        $list.="</div>";
         return $list;
     }
 
-    function create_csv_file($filename) {
+    function get_answer_name($rid) {
+        $query = "select * from mdl_campaign_a where id=$rid";
+        $result = $this->db->query($query);
+        while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+            $name = $row['rtext'];
+        }
+        return $name;
+    }
+
+    function create_csv_file($filename, $qid) {
+
+        $query = "select * from mdl_campaign_a where qid=$qid";
+        $result = $this->db->query($query);
+        while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+            $aids[] = $row['id'];
+        }
+        $alist = implode(',', $aids);
+
         // Write CSV data
         $path = $this->upload_path . '/' . $filename;
         $output = fopen($path, 'w');
-        fputcsv($output, array('User Email', 'Poll reuslt'));
-        $query = "select * from mdl_external_survey_result ";
+        fputcsv($output, array('User Email', 'Hit', 'Date'));
+        $query = "select * from mdl_campaign_r where rid in ($alist) order by added ";
+        $total = $this->db->numrows($query);
         $result = $this->db->query($query);
         while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
-            fputcsv($output, array($row['email'], $row['poll_result']));
+            $name = $this->get_answer_name($row['rid']);
+            $date = date('m-d-Y', $row['added']);
+            fputcsv($output, array($row['email'], $name, $date));
         }
         fclose($output);
+        return $total;
     }
 
     function get_campaigns_list() {

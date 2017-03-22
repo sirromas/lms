@@ -48,7 +48,9 @@ else {
         <script src="//cdn.ckeditor.com/4.6.2/full/ckeditor.js"></script>
         
         <!-- Highcharts JS -->
-        <script type="text/javascript" src="http://code.highcharts.com/highcharts.js"></script>
+        <script type="text/javascript" src="http://code.highcharts.com/highcharts.js"></script>       
+        <script src="https://code.highcharts.com/highcharts-3d.js"></script>
+        <script src="https://code.highcharts.com/highcharts-3d.js"></script>
 
         <!-- Custom JS code -->
         <script type="text/javascript" src="../assets/js/custom.js"></script>
@@ -88,44 +90,7 @@ else {
                 <?php
                 $result=$survey->get_results_page();
                 ?>
-                
-                <!--
-                <script type="text/javascript">
-
-                    // Load the Visualization API and the corechart package.
-                    google.charts.load('current', {'packages': ['corechart']});
-
-                    // Set a callback to run when the Google Visualization API is loaded.
-                    google.charts.setOnLoadCallback(drawChart);
-
-                    // Callback that creates and populates a data table,
-                    // instantiates the pie chart, passes in the data and
-                    // draws it.
-                    function drawChart() {
-
-                        // Create the data table.
-                        var data = new google.visualization.DataTable();
-                        data.addColumn('string', 'Percentage');
-                        data.addColumn('number', 'Students');
-                        data.addRows([
-                            ['20% of Students', <?php echo (string) $resultObj->p20; ?>],
-                            ['50% of Students', <?php echo (string) $resultObj->p50; ?>],
-                            ['80% of Students', <?php echo (string) $resultObj->p80; ?>],
-                            ['100% of Students ', <?php echo (string) $resultObj->p100; ?>]
-                        ]);
-
-                        // Set chart options
-                        var options = {'title': 'Poll results',
-                            'width': 640,
-                            'height': 420};
-
-                        // Instantiate and draw our chart, passing in some options.
-                        var chart = new google.visualization.PieChart(document.getElementById('chart_div'));
-                        chart.draw(data, options);
-                    }
-                </script>
-                -->
-                
+              
                 <div style="padding-left: 15px;"><?php echo $result; ?></div>
                 <div class="row" id="camp_result" style='padding-left: 32px;'></div>
             
