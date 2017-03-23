@@ -189,6 +189,7 @@ class Survey {
     function get_question_answers($qid, $email = null) {
         $list = "";
         $i = 1;
+        $clean_email = trim($email);
         $query = "select * from mdl_campaign_a where qid=$qid";
         $num = $this->db->numrows($query);
         if ($num > 0) {
@@ -197,11 +198,11 @@ class Survey {
             $result = $this->db->query($query);
             while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
                 $id = $row['id'];
-                if ($email == null) {
+                if ($clean_email == null) {
                     $list.="<td style='padding:15px;'><a href=''>" . $row['rtext'] . "</a></td>";
                 } // end if
                 else {
-                    $list.="<td style='padding:15px;'><a href='http://" . $_SERVER['SERVER_NAME'] . "/survey/receive.php?email=$email&id=$id'>" . $row['rtext'] . "</a></td>";
+                    $list.="<td style='padding:15px;'><a href='http://globalizationplus.com/survey/receive.php?email=$clean_email&id=$id'>" . $row['rtext'] . "</a></td>";
                 } // end else
                 $i++;
             } // end while
