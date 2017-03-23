@@ -67,7 +67,7 @@ else {
         <ul class="nav nav-tabs" style="padding-left: 35px;">
             <li class="active"><a data-toggle="tab" href="#home">Send emails</a></li>
             <li><a data-toggle="tab" href="#menu1">Settings</a></li>
-            <li><a data-toggle="tab" href="#camp">Campaign</a></li>
+            <li><a data-toggle="tab" href="#camp">Survey</a></li>
             <li><a data-toggle="tab" href="#menu2">Results</a></li>
             <li><a data-toggle="tab" href="#menu3">Account</a></li>
         </ul>

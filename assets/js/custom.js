@@ -700,12 +700,14 @@ $(document).ready(function () {
                 q = {id: qid, text: qtext, a: answer};
                 questions.push(q);
             }
-            var campaign = {id: campid, msg: msg, q: JSON.stringify(questions)};
-            var url = 'http://globalizationplus.com/survey/update_camp.php';
-            $.post(url, {camp: JSON.stringify(campaign)}).done(function (data) {
-                console.log(data);
-                document.location.reload();
-            });
+            if (confirm('Update current survey')) {
+                var campaign = {id: campid, msg: msg, q: JSON.stringify(questions)};
+                var url = 'http://globalizationplus.com/survey/update_camp.php';
+                $.post(url, {camp: JSON.stringify(campaign)}).done(function (data) {
+                    console.log(data);
+                    document.location.reload();
+                });
+            }
         }
 
         if (event.target.id == 'add_camp') {

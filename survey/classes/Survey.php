@@ -304,16 +304,6 @@ class Survey {
 
     function send_survey_email($item) {
         $list = "";
-
-        /*
-         * 
-          echo "<pre>";
-          print_r($item);
-          echo "</pre>";
-          die();
-         * 
-         */
-
         $email = $item->email;
         $campid = $item->campid;
         $from = $this->from;
@@ -670,33 +660,30 @@ class Survey {
         return $list;
     }
 
-    function put_item_into_queue($email) {
-        $query = "insert into mdl_external_survey_queue "
-                . "(email, added) values ('$email', '" . time() . "')";
+    function put_item_into_queue($email, $campid) {
+        $date = time();
+        $query = "insert into mdl_campaign_queue "
+                . "(email, campid,  added) "
+                . "values ('$email','$campid', '$date')";
         $this->db->query($query);
     }
 
-    function upload_emails_list($files) {
+    function upload_emails_list($files, $post) {
         $list = "";
+        $campid = $post['campid'];
         $file = $files[0];
         if ($file['error'] == 0 && $file['size'] > 0) {
             $filename = time() . rand(10, 175);
             $full_file_path = $this->upload_path . '/' . $filename . '.csv';
+
             if (move_uploaded_file($file['tmp_name'], $full_file_path)) {
                 $csv_data = array_map('str_getcsv', file($full_file_path));
                 $csv_array = (count($csv_data[0]) > 1) ? $csv_data[0] : $csv_data[1];
 
-                /*
-                  echo "<pre>";
-                  print_r($csv_array);
-                  echo "</pre>";
-                  die();
-                 */
-
                 if (count($csv_array) > 0) {
                     foreach ($csv_array as $email) {
                         if ($email != '') {
-                            $this->put_item_into_queue($email);
+                            $this->put_item_into_queue($email, $campid);
                         }
                     }
                     $list.="Recipients list is put into queue and will be sent soon.";
@@ -712,23 +699,26 @@ class Survey {
         else {
             $list.="Error uploading file";
         }
+
+
         return $list;
     }
 
     function process_queueu_items() {
-        $query = "select * from mdl_external_survey_queue "
+        $query = "select * from mdl_campaign_queue "
                 . "where sent=0 order by added desc limit 0,1";
         $result = $this->db->query($query);
         while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
             $item = new stdClass();
             $item->id = $row['id'];
             $item->email = $row['email'];
+            $item->campid = $row['campid'];
             $status = $this->send_survey_email($item);
             if ($status) {
-                $query = "update mdl_external_survey_queue set sent=1 where id=$item->id";
+                $query = "update mdl_campaign_queue set sent=1 where id=$item->id";
             } // end if $status
             else {
-                $query = "update mdl_external_survey_queue set sent=-1 where id=$item->id";
+                $query = "update mdl_campaign_queue set sent=-1 where id=$item->id";
             } //end else
             $this->db->query($query);
         }
@@ -819,7 +809,6 @@ class Survey {
         $list = "";
         $filename = 'users.csv';
         $total = $this->create_csv_file($filename, $qid);
-        $list.="<span class='col-md-4'>Total items: $total</span>";
         $list.="<span class='col-md-3'><a href='http://" . $_SERVER['SERVER_NAME'] . "/survey/files/$filename' target='_blank'>Download</a></span>";
         return $list;
     }
