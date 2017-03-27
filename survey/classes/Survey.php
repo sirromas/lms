@@ -173,7 +173,7 @@ class Survey {
 
     function send_single_item($from, $recipient, $subject, $message) {
         $client = new PostmarkClient("5a470ceb-d8d6-49cb-911c-55cbaeec199f");
-        $recipient = 'sirromas@gmail.com'; // for testing purposes
+        //$recipient = 'sirromas@gmail.com'; // for testing purposes
         $result = $client->sendEmail($from, $recipient, $subject, $message);
         return $result;
     }
