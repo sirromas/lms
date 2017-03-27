@@ -173,23 +173,31 @@ class Survey {
 
     function send_single_item($from, $recipient, $subject, $message) {
         $client = new PostmarkClient("5a470ceb-d8d6-49cb-911c-55cbaeec199f");
+        $recipient = 'sirromas@gmail.com'; // for testing purposes
         $result = $client->sendEmail($from, $recipient, $subject, $message);
         return $result;
     }
 
-    function get_campaign_preface($campid) {
-        $query = "select * from mdl_campaign where id=$campid";
+    function get_campaign_preface($item, $preview = FALSE) {
+        $list = "";
+        if ($preview) {
+            $query = "select * from mdl_campaign where id=$item";
+            $list.="Dear Firstname Lastname, <br>";
+        } // end if 
+        else {
+            $query = "select * from mdl_campaign where id=$item->campid";
+            $list.="Dear $item->firstname $item->lastname, <br>";
+        } // end else
         $result = $this->db->query($query);
         while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
-            $preface = $row['preface'];
+            $preface = $list . $row['preface'];
         }
         return $preface;
     }
 
-    function get_question_answers($qid, $email = null) {
+    function get_question_answers($qid, $item, $preview) {
         $list = "";
-        $i = 1;
-        $clean_email = trim($email);
+        $clean_email = trim($item->email);
         $query = "select * from mdl_campaign_a where qid=$qid";
         $num = $this->db->numrows($query);
         if ($num > 0) {
@@ -198,13 +206,13 @@ class Survey {
             $result = $this->db->query($query);
             while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
                 $id = $row['id'];
-                if ($clean_email == null) {
-                    $list.="<td style='padding:15px;'><a href=''>" . $row['rtext'] . "</a></td>";
+                if ($preview) {
+                    $list.="<td style='padding:15px;'><a href='#' onClick='return false' target='_blank'>" . $row['rtext'] . "</a></td>";
                 } // end if
                 else {
-                    $list.="<td style='padding:15px;'><a href='http://globalizationplus.com/survey/receive.php?email=$clean_email&id=$id'>" . $row['rtext'] . "</a></td>";
-                } // end else
-                $i++;
+                    $query_string = "email=$clean_email&id=$id&firstname=" . urlencode($item->firstname) . "&lastname=" . urlencode($item->lastname) . "";
+                    $list.="<td style='padding:15px;'><a href='http://globalizationplus.com/survey/receive.php?$query_string' target='_blank'>" . $row['rtext'] . "</a></td>";
+                } // end else 
             } // end while
             $list.="</tr>";
             $list.="</table>";
@@ -234,9 +242,14 @@ class Survey {
         return $list;
     }
 
-    function get_campaign_questions_block($campid, $email) {
+    function get_campaign_questions_block($item, $preview = false) {
         $list = "";
-        $query = "select * from mdl_campaign_q where campid=$campid";
+        if ($preview) {
+            $query = "select * from mdl_campaign_q where campid=$item";
+        } // end if
+        else {
+            $query = "select * from mdl_campaign_q where campid=$item->campid";
+        } // end else
         $num = $this->db->numrows($query);
         if ($num > 0) {
             $result = $this->db->query($query);
@@ -249,7 +262,7 @@ class Survey {
             } // end while 
             $list.="<table>";
             foreach ($qs as $q) {
-                $a = $this->get_question_answers($q->id, $email);
+                $a = $this->get_question_answers($q->id, $item, $preview);
                 $text = $q->qtext;
                 $list.="<tr>";
                 $list.="<td style='padding:15px;'>$text</td>";
@@ -264,10 +277,11 @@ class Survey {
         return $list;
     }
 
-    function compose_message($campid, $email) {
+    function compose_message($item, $preview = false) {
+
         $list = "";
-        $preface = $this->get_campaign_preface($campid);
-        $questions = $this->get_campaign_questions_block($campid, $email);
+        $preface = $this->get_campaign_preface($item, $preview);
+        $questions = $this->get_campaign_questions_block($item, $preview);
         $signature = $this->get_message_signature();
 
         $list.="<table>";
@@ -290,7 +304,7 @@ class Survey {
 
     function preview_campaign($id) {
         $list = "";
-        $camp = $this->compose_message($id);
+        $camp = $this->compose_message($id, true);
 
         $list.="<div class='row'>";
         $list.="<div class='col-4'><button class='btn btn-default' id='back_camp'>Back</button><br><br></div>";
@@ -306,10 +320,9 @@ class Survey {
     function send_survey_email($item) {
         $list = "";
         $email = $item->email;
-        $campid = $item->campid;
         $from = $this->from;
         $subject = $this->subject;
-        $message = $this->compose_message($campid, $email);
+        $message = $this->compose_message($item);
         $status = $this->send_single_item($from, $email, $subject, $message);
         if ($status) {
             $list.="Email was successfully sent";
@@ -320,30 +333,16 @@ class Survey {
         return $list;
     }
 
-    function send_survey_results($email, $id) {
+    function send_survey_results($item) {
         $list = "";
-        /*
-          switch ($result) {
-          case 20:
-          $recipient = "20@posnermail.com";
-          break;
-          case 50:
-          $recipient = "50@posnermail.com";
-          break;
-          case 80:
-          $recipient = "80@posnermail.com";
-          break;
-          case 100:
-          $recipient = "100@posnermail.com";
-          break;
-          }
-         */
-
+        $id = $item['id'];
+        $email = $item['email'];
+        $firstname = urldecode($item['firstname']);
+        $lastname = urldecode($item['lastname']);
         $date = time();
-        $query = "insert into mdl_campaign_r (email,rid,added) "
-                . "values('$email','$id','$date')";
+        $query = "insert into mdl_campaign_r (firstname, lastname, email,rid,added) "
+                . "values('$firstname','$lastname', '$email','$id','$date')";
         $this->db->query($query);
-
 
         $list.="<p style='text-align:center;'>"
                 . "<img class='dsR1145' src='http://globalizationplus.com/assets/images/header.jpg' style='padding-top: 4px; border-style: solid; border-width: 6px 1px 2px; border-color: #ddd;' alt='' usemap='#header' border='0'><map name='header' id='header'>"
@@ -661,11 +660,12 @@ class Survey {
         return $list;
     }
 
-    function put_item_into_queue($email, $campid) {
+    function put_item_into_queue($item, $campid) {
         $date = time();
+        $sent = 1; // temp workaround
         $query = "insert into mdl_campaign_queue "
-                . "(email, campid,  added) "
-                . "values ('$email','$campid', '$date')";
+                . "(firstname, lastname, email, campid, sent,  added) "
+                . "values ('$item[0]', '$item[1]', '$item[2]','$campid','$sent', '$date')";
         $this->db->query($query);
     }
 
@@ -676,23 +676,20 @@ class Survey {
         if ($file['error'] == 0 && $file['size'] > 0) {
             $filename = time() . rand(10, 175);
             $full_file_path = $this->upload_path . '/' . $filename . '.csv';
-
             if (move_uploaded_file($file['tmp_name'], $full_file_path)) {
                 $csv_data = array_map('str_getcsv', file($full_file_path));
-                $csv_array = (count($csv_data[0]) > 1) ? $csv_data[0] : $csv_data[1];
-
-                if (count($csv_array) > 0) {
-                    foreach ($csv_array as $email) {
-                        if ($email != '') {
-                            $this->put_item_into_queue($email, $campid);
-                        }
-                    }
+                if (count($csv_data) > 0) {
+                    foreach ($csv_data as $item) {
+                        if ($item[0] != '' && $item[1] != '' && $item[2] != '') {
+                            $this->put_item_into_queue($item, $campid);
+                        } // end if $item[0]!='' && $item[1]!='' && $item[2]!=''
+                    } // end foreach
                     $list.="Recipients list is put into queue and will be sent soon.";
-                } // end if
+                } // end if count($csv_data) > 0
                 else {
                     $list.="No data found";
                 }
-            } // end if
+            } // end if move_uploaded_file($file['tmp_name'], $full_file_path)
             else {
                 $list.="Error uploading file (move uploaded file)";
             }
@@ -700,8 +697,6 @@ class Survey {
         else {
             $list.="Error uploading file";
         }
-
-
         return $list;
     }
 
@@ -711,6 +706,8 @@ class Survey {
         $result = $this->db->query($query);
         while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
             $item = new stdClass();
+            $item->firstname = $row['firstname'];
+            $item->lastname = $row['lastname'];
             $item->id = $row['id'];
             $item->email = $row['email'];
             $item->campid = $row['campid'];
@@ -1024,14 +1021,14 @@ class Survey {
         // Write CSV data
         $path = $this->upload_path . '/' . $filename;
         $output = fopen($path, 'w');
-        fputcsv($output, array('User Email', 'Hit', 'Date'));
+        fputcsv($output, array('User Firstname', 'User Lastname', 'User Email', 'Hit', 'Date'));
         $query = "select * from mdl_campaign_r where rid in ($alist) order by added ";
         $total = $this->db->numrows($query);
         $result = $this->db->query($query);
         while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
             $name = $this->get_answer_name($row['rid']);
             $date = date('m-d-Y', $row['added']);
-            fputcsv($output, array($row['email'], $name, $date));
+            fputcsv($output, array($row['firstname'], $row['lastname'], $row['email'], $name, $date));
         }
         fclose($output);
         return $total;
@@ -1065,8 +1062,16 @@ class Survey {
                     <span class='span12'>
                         <form action='launch.php' method='post' id='launcher' name='launcher'>
                             <div class='form-group'>
-                                <label for='email'>Email</label>
-                                <input type='email' style='width: 235px;' class='form-control' id='email' name='email' placeholder='Enter Email Address'>
+                                <label for='fname'>Firstname*</label>
+                                <input type='text' required style='width: 235px;' class='form-control' id='fname' name='fname' placeholder='Enter First Namee'>
+                            </div>
+                            <div class='form-group'>
+                                <label for='lname'>Lastname*</label>
+                                <input type='text' required style='width: 235px;' class='form-control' id='lname' name='lname' placeholder='Enter Last Name'>
+                            </div>
+                            <div class='form-group'>
+                                <label for='email'>Email*</label>
+                                <input type='email' required style='width: 235px;' class='form-control' id='email' name='email' placeholder='Enter Email Address'>
                             </div>
                             <div class='form-group'>
                                 <label class='control-label'>Or select CSV file to be uploaded:</label>

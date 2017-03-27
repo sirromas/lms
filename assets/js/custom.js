@@ -51,20 +51,25 @@ $(document).ready(function () {
         event.preventDefault();
         var campaign = $('#campaigns_list').val();
         var email = $('#email').val();
+        var fname = $('#fname').val();
+        var lname = $('#lname').val();
         var file = $('#file').val();
         if (campaign > 0) {
             if (email == '' && file == '') {
-                $('#form_err').html('Please provide email or file to be uploaded');
+                $('#form_err').html('Please provide user data or file to be uploaded');
             } // end if 
             else {
 
-                if (email != '' && file == '') {
-                    var item = {email: email, campid: campaign};
+                if (email != '' && fname != '' && lname != '' && file == '') {
+                    var item = {email: email, campid: campaign, firstname: fname, lastname: lname};
                     var request = {item: JSON.stringify(item)};
                     var url = 'http://globalizationplus.com/survey/launch.php';
                     $.post(url, request).done(function (data) {
                         $('#form_err').html(data);
                     });
+                } // end if
+                else {
+                    $('#form_err').html('Please provide all required fields');
                 }
 
                 if (email == '' && file != '') {

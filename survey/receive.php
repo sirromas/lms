@@ -2,9 +2,8 @@
 
 require_once './classes/Survey.php';
 $survey = new Survey();
-$email = $_REQUEST['email'];
-$id = $_REQUEST['id'];
-$list = $survey->send_survey_results($email, $id);
+$item=$_REQUEST;
+$list = $survey->send_survey_results($item);
 echo $list;
 
 
