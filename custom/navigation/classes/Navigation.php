@@ -15,39 +15,18 @@ class Navigation extends Utils {
     }
 
     function get_section_data($moduleid) {
+        // Course activity/resources are same for all student's groups
         $pageid = 0;
-        $usergroups = $this->get_user_groups();
         $query = "select * from mdl_course_modules "
                 . "where module=$moduleid "
-                . "and visible=1 and availability is not null "
+                . "and visible=1 "
                 . "order by added desc limit 0,1";
         $num = $this->db->numrows($query);
         if ($num > 0) {
             $result = $this->db->query($query);
             while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
-                $id = $row['id'];
-                $aval = json_decode($row['availability']);
-            }
-
-            // Get activity/resource groups to which it belongs
-            $section = $aval->c;
-            
-            /*
-            echo "<pre>";
-            print_r($section);
-            echo "</pre>";
-            */
-            
-            foreach ($section as $c) {
-                $sectiongroups[] = $c->id;
-            }
-
-            // Show activity/resource only if user belongs to sections groups
-            foreach ($usergroups as $g) {
-                if (in_array($g, $sectiongroups)) {
-                    $pageid = $id; // If section and user are in same group
-                }
-            } // end foreach
+                $pageid = $row['id'];
+            } // end while
         } // end if $num > 0
         return $pageid;
     }

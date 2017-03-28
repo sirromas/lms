@@ -132,10 +132,12 @@ $nav = new Navigation();
 $quizid = $nav->get_quiz_id();
 $roleid = $nav->get_user_role();
 if ($roleid == 5 && $quizid > 0) {
+    /*
     $quizurl = "http://globalizationplus.com/lms/mod/quiz/view.php?id=$quizid";
     echo "<br><br><div class='row-fluid' style='text-align:center;'>";
     echo "<span class='span12'><img src='http://" . $_SERVER['SERVER_NAME'] . "/assets/images/checkmark.png' width='20' height='20' valign='middle'>&nbsp;<a href='$quizurl' target='_blank'>Take our new quiz</a></span>";
     echo "</div><br><br>";
+    */
 } // end if $roleid==5 && $quizid>0
 
 

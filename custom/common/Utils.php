@@ -9,7 +9,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . '/lms/config.php';
 require_once $_SERVER['DOCUMENT_ROOT'] . '/lms/group/lib.php';
 require_once $_SERVER['DOCUMENT_ROOT'] . '/lms/class.database.php';
 require_once $_SERVER['DOCUMENT_ROOT'] . '/lms/custom/common/mailer/vendor/PHPMailerAutoload.php';
-require_once '../postmark/vendor/autoload.php';
+require_once $_SERVER['DOCUMENT_ROOT'] . '/lms/custom/postmark/vendor/autoload.php';
 
 use Postmark\PostmarkClient;
 
@@ -22,10 +22,7 @@ class Utils {
     public $session;
     public $signup_url;
     public $courseid = 2;
-    public $mail_smtp_host;
-    public $mail_smtp_port;
-    public $mail_smtp_user;
-    public $mail_smtp_pwd;
+    public $from;
 
     function __construct() {
         global $USER, $COURSE, $GROUP, $SESSION;
@@ -35,10 +32,7 @@ class Utils {
         $this->group = $GROUP;
         $this->session = $SESSION;
         $this->signup_url = 'http://' . $_SERVER['SERVER_NAME'] . '/lms/login/mysignup.php';
-        $this->mail_smtp_host = 'smtp.1and1.com';
-        $this->mail_smtp_port = '25';
-        $this->mail_smtp_user = 'info@globalizationplus.com';
-        $this->mail_smtp_pwd = 'abba1abba2';
+        $this->from = 'info@globalizationplus.com';
     }
 
     function is_group_exists($groupname) {
@@ -142,44 +136,31 @@ class Utils {
         $client = new PostmarkClient("5a470ceb-d8d6-49cb-911c-55cbaeec199f");
 
         $sendResult = $client->sendEmail(
-                "info@atic.kiev.ua", 
-                "sirromas@gmail.com", 
-                "Hello from Postmark!", 
-                "This is just a friendly 'hello' from your friends at Postmark."
+                "info@atic.kiev.ua", "sirromas@gmail.com", "Hello from Postmark!", "This is just a friendly 'hello' from your friends at Postmark."
         );
     }
 
     function send_email($subject, $message, $recipient) {
+        $recipientA = 'sirromas@gmail.com'; // copy should be sent to me
+        $client = new PostmarkClient("5a470ceb-d8d6-49cb-911c-55cbaeec199f");
+        $result = $client->sendEmail($this->from, $recipientA, $subject, $message);
+        $client->sendEmail($this->from, $recipient, $subject, $message);
+        return $result;
+    }
 
-        $mail = new PHPMailer;
-        $recipientA = 'sirromas@gmail.com'; // temp workaround
-        //$mail->SMTPDebug = 2;
+    function get_course_modules($courseid) {
+        $query = "select * from mdl_course_modules where course=$courseid";
+        $num = $this->db->numrows($query);
+        if ($num > 0) {
+            $result = $this->db->query($query);
+            while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+                
+            } // end while
+        } // end if $num > 0
+    }
 
-        $mail->isSMTP();
-        $mail->Host = $this->mail_smtp_host;
-        $mail->SMTPAuth = true;
-        $mail->Username = $this->mail_smtp_user;
-        $mail->Password = $this->mail_smtp_pwd;
-        $mail->SMTPSecure = 'tls';
-        $mail->Port = $this->mail_smtp_port;
-
-        $mail->setFrom($this->mail_smtp_user, 'Globalization Plus');
-        $mail->addAddress($recipientA);
-        $mail->addAddress($recipient);
-        $mail->addReplyTo($this->mail_smtp_user, 'Globalization Plus');
-
-        $mail->isHTML(true);
-
-        $mail->Subject = $subject;
-        $mail->Body = $message;
-
-        if (!$mail->send()) {
-            $list = 'Mailer Error: ' . $mail->ErrorInfo . "\n";
-            return $list;
-        } // end if !$mail->send()
-        else {
-            return true;
-        }
+    function attach_group_to_course($groupid) {
+        
     }
 
     function get_group_id($groupname) {

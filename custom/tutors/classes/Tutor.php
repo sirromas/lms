@@ -18,7 +18,6 @@ class Tutor extends Utils {
                         . " ' ',"
                         . " '" . $groupname . "')";
                 $this->db->query($query);
-
                 $stmt = $this->db->query("SELECT LAST_INSERT_ID()");
                 $lastid_arr = $stmt->fetch(PDO::FETCH_NUM);
                 $lastId = $lastid_arr[0];
@@ -48,7 +47,6 @@ class Tutor extends Utils {
             if ($groupid > 0) {
                 $this->add_to_group($groupid, $userid);
             }
-
 
             $course2 = $userObj->course2;
             $groupid = $this->create_group($course2);

@@ -114,7 +114,7 @@ class Student extends Utils {
             if ($result !== false) {
                 $subject = 'Signup confirmation';
                 $message = $this->get_confirmation_message($userid, $groupid, $userobj);
-                $email_status = $this->send_email($subject, $message, $userobj->email);
+                $this->send_email($subject, $message, $userobj->email);
                 $list.="Thank you for signup! Confirmation email is sent to $userobj->email";
             } // end if
             else {
