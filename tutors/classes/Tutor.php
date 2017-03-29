@@ -32,7 +32,7 @@ class Tutor extends Utils {
 
             $list.= "<div class='form-group'>";
             $list.= "<label for='page'>Reference page URL:</label>";
-            $list.= "<input type='text' class='form-control' name='page' id='page' >";
+            $list.= "<input type='text' class='form-control' required name='page' id='page' >";
             $list.="</div>";
 
             $list.="<div class='form-group'>";
@@ -59,12 +59,13 @@ class Tutor extends Utils {
         return $list;
     }
 
-    function test_page($email, $url) {
+    function test_page($user) {
         $list = "";
-        $page = file_get_contents($url);
-        $status = strpos($page, $email);
-        if ($status !== FALSE) {
-            $query = "update mdl_user set policyagreed='1' where email='$email'";
+        $page = file_get_contents($user->url);
+        $status1 = strstr($page, $user->email);
+        $status2 = strstr($page, $user->username);
+        if ($status1 !== FALSE && $status2 !== FALSE) {
+            $query = "update mdl_user set policyagreed='1' where email='$user->email'";
             $this->db->query($query);
             $list.="Thank you. Your membership is confirmed";
         } // end if

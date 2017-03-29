@@ -8,3 +8,5 @@
 *.sql
 
 *.pkg
+
+node-v6.10.0.pkg

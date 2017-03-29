@@ -116,11 +116,11 @@ class Student extends Utils {
                 $message = $this->get_confirmation_message($userid, $groupid, $userobj);
                 $this->send_email($subject, $message, $userobj->email);
                 $list.="Thank you for signup! Confirmation email is sent to $userobj->email";
-            } // end if
+            } // end if $result !== false
             else {
-                $list.="Signup is ok, but payment is failed. Please contact us by email <a href='mailto:info@globalizationplus.com'>info@globalizationplus.com</a>Confirmation email is sent to $userobj->email";
+                $list.="Signup error happened";
             } // end else
-        } // end if
+        } // end if $status !== false
         else {
             $list.="Signup error happened";
         }
@@ -143,7 +143,7 @@ class Student extends Utils {
             $list.="<p align='center'>Payment is succesfull. Thank you! <br> Your key is $key , expiration date $exp</p>";
         } //  end if $result !== false
         else {
-            $list.="Credit Card declined";
+            $list.="Credit Card Declined";
         }
         return $list;
     }

@@ -37,7 +37,7 @@ class StudentPayment extends Utils {
     function get_month_dropdown() {
         $list = "";
         $list.= "<div class='form-group'>";
-        $list.="<select id='cardmonth' name='cardmonth' class='form-control'>";
+        $list.="<select id='cardmonth' name='cardmonth' required class='form-control'>";
         $list.="<option value='0' selected>Month</option>";
         for ($i = 1; $i <= 12; $i++) {
             $list.="<option value='$i'>$i</option>";
@@ -49,7 +49,7 @@ class StudentPayment extends Utils {
     function get_year_dropdown() {
         $list = "";
         $list.= "<div class='form-group'>";
-        $list.="<select id='cardyear' name='cardyear' class='form-control'>";
+        $list.="<select id='cardyear' name='cardyear' required class='form-control'>";
         $list.="<option value='0' selected>Year</option>";
         for ($i = 2016; $i <= 2036; $i++) {
             $list.="<option value='$i'>$i</option>";
@@ -85,7 +85,7 @@ class StudentPayment extends Utils {
             $list.="<input type='hidden' id='amount' name='amount' value='27'>";
             $list.="<div class='form-group'>
                             <label for='holder'>Card Holder Name*</label>
-                            <input type='text' class='form-control' disabled='true' id='holder' data-userid=$userid  name='holder' required placeholder='Enter Card Holder Name' value='$user->firstname $user->lastname'>
+                            <input type='text' class='form-control' required disabled='true' id='holder' data-userid=$userid  name='holder' required placeholder='Enter Card Holder Name' value='$user->firstname $user->lastname'>
                         </div>";
             $list.="<div class='form-group'>
                             <label for='cardnumber'>Card Number*</label>

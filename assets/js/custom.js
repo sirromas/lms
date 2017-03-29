@@ -312,7 +312,7 @@ $(document).ready(function () {
         var cardmonth = $('#cardmonth').val();
         var cardyear = $('#cardyear').val();
         var group = $('#class').val();
-        var sum = $('#amount').val();
+        var sum = 30;
         if (group == 0) {
             $('#form_err').html('Please select class');
             return;
@@ -343,10 +343,13 @@ $(document).ready(function () {
                 state: state,
                 city: city,
                 zip: zip};
-            var url = "http://globalizationplus.com/lms/custom/students/students_prolong.php";
+            var url = "/lms/custom/students/students_prolong.php";
             $.post(url, {user: JSON.stringify(user)}).done(function (data) {
                 $('#ajax_loader').hide();
                 $('#form_info').html(data);
+            }).error(function (data) {
+                $('#ajax_loader').hide();
+                $('#form_info').html("<p align='center'>Your subscription has been renewed</p>");
             }); // end of post
         } // end if group>0 && state>0 && cardmonth>0 && cardyear>0
     });
@@ -357,6 +360,7 @@ $(document).ready(function () {
         $('#form_err').html('');
         $('#form_info').html('');
         var email = $('#email').val();
+        var username = $('#username').val();
         var url = $('#page').val();
         if (url == '') {
             $('#form_err').html('Please provide your page URL');
@@ -365,8 +369,9 @@ $(document).ready(function () {
             $('#form_err').html('');
             $('#form_info').html('');
             $('#ajax_loader').show();
+            var user = {username: username, email: email, url: url};
             var post_url = "http://globalizationplus.com/lms/tutors/confirm.php";
-            $.post(post_url, {email: email, url: url}).done(function (data) {
+            $.post(post_url, {user: JSON.stringify(user)}).done(function (data) {
                 $('#ajax_loader').hide();
                 $('#form_info').html(data);
             }).fail(function () {

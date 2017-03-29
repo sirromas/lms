@@ -25,6 +25,9 @@ $form = $p->get_student_payment_form($userid, $groupslist);
         <!-- Latest compiled and minified JavaScript -->
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 
+        <!--Typehead library -->
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-3-typeahead/4.0.1/bootstrap3-typeahead.js"></script>
+
         <!-- Custom JS script -->
         <script src="http://globalizationplus.com/assets/js/custom.js"></script>
 

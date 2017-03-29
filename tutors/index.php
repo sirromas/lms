@@ -24,11 +24,17 @@ $form = $t->get_confirmation_form($userid);
 
         <!-- Latest compiled and minified JavaScript -->
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-
+        
+        <!--Typehead library -->
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-3-typeahead/4.0.1/bootstrap3-typeahead.js"></script>
+        
+        <!-- Data tables JS -->
+        <script type="text/javascript" src='https://cdn.datatables.net/1.10.13/js/jquery.dataTables.min.js' ></script>
+        <script type="text/javascript" src='https://cdn.datatables.net/1.10.13/js/dataTables.bootstrap.min.js' ></script>
+        
         <!-- Custom JS script -->
         <script type="text/javascript" src="http://globalizationplus.com/assets/js/custom.js"></script>
-
-
+     
     </head>
     <body>
         <br><br><br>
