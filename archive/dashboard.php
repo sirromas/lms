@@ -44,6 +44,18 @@ if ($_SESSION['userid'] > 0) {
             <!-- Custom JS script -->
             <script type="text/javascript" src="http://globalizationplus.com/assets/js/custom.js"></script>
 
+            <script type="text/javascript">
+
+                $(document).ready(function () {
+                    $('#news_table').DataTable();
+                    $('#forum_table').DataTable();
+                    $('#quiz_table').DataTable();
+                });
+
+            </script>    
+
+
+
             <!-- DatePicker JS -->
             <script type="text/javascript" src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
 
@@ -62,7 +74,11 @@ if ($_SESSION['userid'] > 0) {
                         <li><a data-toggle="tab" href="#quizes">Quizzes</a></li>
                         <li><a data-toggle="tab" href="#logout_account">Account</a></li>
                     </ul>
-
+                    <?php
+                    $articles = $a->get_articles_archive();
+                    $forums=$a->get_forums_archive();
+                    $quizzes=$a->get_quiz_archive();
+                    ?>
                     <div class="tab-content">
                         <div id="articles" class="tab-pane fade in active">
                             <?php echo $articles; ?>
