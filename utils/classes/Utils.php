@@ -35,8 +35,8 @@ class Utils2 {
                 } // end foreach
                 $items[] = $item;
             } // end while
-            $list = $this->create_classes_list_tab($items, $headers);
-        }
+        } // end if $num > 0
+        $list = $this->create_classes_list_tab($items, $headers);
         return $list;
     }
 
@@ -64,8 +64,8 @@ class Utils2 {
             $list.="</table>";
         } // end if count($groups)>0
         else {
-            $list.="<div class='container-fluid' style='text-align:center;'>";
-            $list.="<div class='span8'>N/A</div>";
+            $list.="<br><br><div class='container-fluid' style='text-align:left;'>";
+            $list.="<div class='span1'>N/A</div>";
             $list.="</div>";
         } // end else
         return $list;
@@ -195,8 +195,6 @@ class Utils2 {
         $query = "select u.id, u.firstname, u.lastname, u.policyagreed, u.deleted, u.email, "
                 . "r.roleid, r.userid from mdl_user u, mdl_role_assignments r "
                 . "where u.deleted=0 and r.roleid=$this->tutor_role and u.id=r.userid ";
-
-        //echo "Query: ".$query."<br>";
         $num = $this->db->numrows($query);
         if ($num > 0) {
             $result = $this->db->query($query);
@@ -209,7 +207,6 @@ class Utils2 {
             } // end while
             $this->create_csv_file($items);
         } // end if $num > 0
-
         $list = $this->create_tutors_list_tab($items, $headers);
         return $list;
     }
@@ -240,8 +237,8 @@ class Utils2 {
             $list.="</table>";
         } // end if count($groups)>0
         else {
-            $list.="<div class='container-fluid' style='text-align:center;'>";
-            $list.="<div class='col-sm-2'>N/A</div>";
+            $list.="<br><br><div class='container-fluid' style='text-align:left;'>";
+            $list.="<div class='span1'>N/A</div>";
             $list.="</div>";
         } // end else
         return $list;
@@ -335,6 +332,15 @@ class Utils2 {
         return $list;
     }
 
+    function is_user_deleted($id) {
+        $query = "select * from mdl_user where id=$id";
+        $result = $this->db->query($query);
+        while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+            $deleted = $row['deleted'];
+        }
+        return $deleted;
+    }
+
     // **************** Subscription functionality ****************** 
 
     function get_subscription_list($headers = true) {
@@ -345,11 +351,14 @@ class Utils2 {
         if ($num > 0) {
             $result = $this->db->query($query);
             while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
-                $item = new stdClass();
-                foreach ($row as $key => $value) {
-                    $item->$key = $value;
-                } // end foreach
-                $items[] = $item;
+                $status = $this->is_user_deleted($row['userid']);
+                if ($status == 0) {
+                    $item = new stdClass();
+                    foreach ($row as $key => $value) {
+                        $item->$key = $value;
+                    } // end foreach
+                    $items[] = $item;
+                } // end if $status == 0
             } // end while
         } // end if $num > 0
         $list = $this->create_subscription_list($items, $headers);
@@ -396,8 +405,8 @@ class Utils2 {
             $list.="</table>";
         } // end if count($items)>0
         else {
-            $list.="<div class='container-fluid' style='text-align:center;'>";
-            $list.="<div class='col-sm-2'>N/A</div>";
+            $list.="<br><br><div class='container-fluid' style='text-align:left;'>";
+            $list.="<div class='span1'>N/A</div>";
             $list.="</div>";
         } // end else
         return $list;
@@ -566,14 +575,17 @@ class Utils2 {
         if ($num > 0) {
             $result = $this->db->query($query);
             while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
-                $item = new stdClass();
-                foreach ($row as $key => $value) {
-                    $item->$key = $value;
-                } // end foreach
-                $items[] = $item;
+                $status = $this->is_user_deleted($row['userid']);
+                if ($status == 0) {
+                    $item = new stdClass();
+                    foreach ($row as $key => $value) {
+                        $item->$key = $value;
+                    } // end foreach
+                    $items[] = $item;
+                } // end if $status==0
             } // end while
-            $list = $this->create_keys_list_tab($items, $header);
-        }
+        } // end if $num > 0
+        $list = $this->create_keys_list_tab($items, $header);
         return $list;
     }
 
@@ -624,8 +636,8 @@ class Utils2 {
             $list.="</table>";
         } // end if count($items)>0
         else {
-            $list.="<div class='container-fluid' style='text-align:center;'>";
-            $list.="<div class='col-sm-2'>N/A</div>";
+            $list.="<br><br><div class='container-fluid' style='text-align:left;'>";
+            $list.="<div class='span1'>N/A</div>";
             $list.="</div>";
         } // end else
         return $list;
@@ -731,13 +743,12 @@ class Utils2 {
                     while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
                         $groups[] = mb_convert_encoding(trim($row['name']), 'UTF-8');
                     }
-                    
+
                     $path = $this->json_path . '/trial.json';
                     file_put_contents($path, json_encode($groups));
-                    
+
                     $path = $this->json_path . '/users.json';
                     file_put_contents($path, json_encode($users));
-                   
                 }
                 break;
         }
