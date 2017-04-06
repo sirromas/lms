@@ -277,26 +277,34 @@ class Survey {
         return $list;
     }
 
+    function create_message($preface, $questions) {
+        $clear_preface = str_replace("{q}", $questions, $preface);
+        return $clear_preface;
+    }
+
     function compose_message($item, $preview = false) {
 
         $list = "";
         $preface = $this->get_campaign_preface($item, $preview);
         $questions = $this->get_campaign_questions_block($item, $preview);
-        $signature = $this->get_message_signature();
+        //$signature = $this->get_message_signature();
+        $clear_preface = $this->create_message($preface, $questions);
 
         $list.="<table>";
 
         $list.="<tr>";
-        $list.="<td style=''>$preface</td>";
+        $list.="<td style=''>$clear_preface</td>";
         $list.="</tr>";
 
-        $list.="<tr>";
-        $list.="<td style=''>$questions</td>";
-        $list.="</tr>";
+        /*
+          $list.="<tr>";
+          $list.="<td style=''>$questions</td>";
+          $list.="</tr>";
 
-        $list.="<tr>";
-        $list.="<td style='padding:15px;'>$signature</td>";
-        $list.="</tr>";
+          $list.="<tr>";
+          $list.="<td style='padding:15px;'>$signature</td>";
+          $list.="</tr>";
+         */
 
         $list.="</table>";
         return $list;
@@ -800,6 +808,11 @@ class Survey {
             $list.="<span calss='col-md-4'>$link</span>";
             $list.="</div>";
         } // end if count($polls)>0
+        else {
+            $list.="<div class='row'>";
+            $list.="<span calss='col-md-4' style='padding-left:29px;'>No one replied to survey yet</span>";
+            $list.="</div>";
+        }
         return $list;
     }
 
