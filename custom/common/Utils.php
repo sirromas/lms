@@ -143,9 +143,9 @@ class Utils {
     function send_email($subject, $message, $recipient) {
         $recipientA = 'sirromas@gmail.com'; // copy should be sent to me
         $client = new PostmarkClient("5a470ceb-d8d6-49cb-911c-55cbaeec199f");
-        $result = $client->sendEmail($this->from, $recipientA, $subject, $message);
+        $client->sendEmail($this->from, $recipientA, $subject, $message);
         $client->sendEmail($this->from, $recipient, $subject, $message);
-        return $result;
+        return true;
     }
 
     function get_course_modules($courseid) {

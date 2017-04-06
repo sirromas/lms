@@ -21,6 +21,8 @@
         <!-- Custom JS script -->
         <script src="http://globalizationplus.com/assets/js/custom.js"></script>
 
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-3-typeahead/4.0.1/bootstrap3-typeahead.js"></script>
+
         <!-- Data tables JS -->
         <script type="text/javascript" src='https://cdn.datatables.net/1.10.13/js/jquery.dataTables.min.js' ></script>
         <script type="text/javascript" src='https://cdn.datatables.net/1.10.13/js/dataTables.bootstrap.min.js' ></script>
@@ -136,7 +138,7 @@
                     </div>
                     <div class="panel-body" align="left">
                         <form action="" method="post" id='prof_signup'>
-                            <div align="center">
+                            <div align="left">
                                 <div class="form-group" align="left">
                                     <div align="left">
                                         <label for="first">First*</label> <input type="text" class="form-control" id="first" required="required" name="first" placeholder="" /></div>
@@ -216,10 +218,19 @@
                                     <div align="left">
                                         <label for="email">Email*</label> <input type="email" class="form-control" id="email" name="email" required="required" aria-describedby="emailHelp" placeholder="" /></div>
                                     <small id="emailHelp" class="form-text text-muted"></small></div>
+
                                 <div class="form-group">
                                     <div align="left">
-                                        <label for="pwd">Password*</label> <input type="password" class="form-control" id="pwd" name="Password" required="required" placeholder="Password" /></div>
+                                        <label for="phone">Telephone*</label> <input type="text" class="form-control" required id="phone" name="phone" placeholder="Phone" /></div>
                                 </div>
+
+                                <!--
+                                <div class="form-group">
+                                <div align="left">
+                                    <label for="pwd">Password*</label> <input type="password" class="form-control" id="pwd" name="Password" required="required" placeholder="Password" /></div>
+                                </div>
+                                -->
+
                                 <div class="form-group">
                                     <div align="left">
                                         <label for="school">University Name*</label> <input type="text" class="form-control" id="school" name="school" required="required" placeholder="" /></div>
@@ -232,16 +243,13 @@
                                     <div align="left">
                                         <label for="title">Title*</label> <input type="text" class="form-control" id="title" name="stitle" required="required" placeholder="" /></div>
                                 </div>
-                                <!--
+
                                 <div class="form-group">
                                     <div align="left">
-                                        <label for="site">University Website Adress</label> <input type="text" class="form-control" id="site" required="required" name="site" placeholder="" /></div>
+                                        <label for="site">University Website Adress</label> <input type="text" class="form-control" id="site" name="site" placeholder="University Personal Page" /></div>
                                 </div>
-                                -->
-                                <div class="form-group">
-                                    <div align="left">
-                                        <label for="phone">Telephone*</label> <input type="text" class="form-control" required id="phone" name="phone" placeholder="Phone" /></div>
-                                </div>
+
+
                                 <br />
                                 <span class="ds1"><b>Choose a name for each course that will be using Globalization Plus.<br />
                                         Students should input the name of the course in which they are enrolled when registering.</b></span><br />

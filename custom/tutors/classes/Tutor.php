@@ -78,9 +78,27 @@ class Tutor extends Utils {
                 $this->add_to_group($groupid, $userid);
             }
 
-            $status = $this->send_tutor_confirmation_email($userObj);
+            if ($userObj->site != '') {
+                $item = new stdClass();
+                $item->url = $userObj->site;
+                $item->email = $userObj->email;
+                $item->username = $userObj->firstname . " " . $userObj->lastname;
+                $status = $this->verify_tutor($item, FALSE);
+                if (!$status) {
+                    $this->send_non_confirmed_tutor_notification($userObj);
+                    $userObj->confirmed = 0;
+                } // end if 
+                else {
+                    $userObj->confirmed = 1;
+                } // end else
+            } // end if $userObj->site!=''
+            else {
+                $this->send_non_confirmed_tutor_notification($userObj);
+                $userObj->confirmed = 0;
+            } // end else
+
+            $this->send_tutor_confirmation_email($userObj);
             $list.="Thank you for signup. Confirmation email is sent to $userObj->email .";
-            
         } // end if $result!==false
         else {
             $list.="Signup error happened";
@@ -88,8 +106,71 @@ class Tutor extends Utils {
         return $list;
     }
 
+    function verify_tutor($user, $output = TRUE) {
+        $list = "";
+        $page = file_get_contents($user->url);
+        $status1 = strstr($page, $user->email);
+        $status2 = strstr($page, $user->username);
+        if ($status1 !== FALSE && $status2 !== FALSE) {
+            $query = "update mdl_user set policyagreed='1' where email='$user->email'";
+            $this->db->query($query);
+            if ($output) {
+                $list.="Thank you. Your membership is confirmed";
+            } // end if
+            else {
+                return TRUE;
+            }
+        } // end if
+        else {
+            if ($output) {
+                $list.="Your membership was not confirmed";
+            } // end if 
+            else {
+                return FALSE;
+            } // end else
+        } // end else
+        return $list;
+    }
+
+    function send_non_confirmed_tutor_notification($user) {
+        $msg = "";
+        $msg.="<html>";
+        $msg.="<body>";
+
+        $msg.="<p>Non-confirmed professor's registration:</p>";
+
+        $msg.="<table>";
+
+        $msg.="<tr>";
+        $msg.="<td style='padding:15px;'>First name</td><td style='padding:15px;'>$user->firstname</td>";
+        $msg.="</tr>";
+
+        $msg.="<tr>";
+        $msg.="<td style='padding:15px;'>Last name</td><td style='padding:15px;'>$user->lastname</td>";
+        $msg.="</tr>";
+
+        $msg.="<tr>";
+        $msg.="<td style='padding:15px;'>Email</td><td style='padding:15px;'>$user->email</td>";
+        $msg.="</tr>";
+
+        $msg.="<tr>";
+        $msg.="<td style='padding:15px;'>Phone</td><td style='padding:15px;'>$user->phone</td>";
+        $msg.="</tr>";
+
+        $msg.="</table>";
+        $msg.="</body>";
+        $msg.="</html>";
+
+        $subject = "Non-confirmed professor's registration";
+        $recipientA = 'sirromas@gmail.com';
+        $recipientB = 'steve@posnermail.com ';
+        $this->send_email($subject, $msg, $recipientA);
+        //$this->send_email($subject, $message, $recipientB);
+    }
+
     function send_tutor_confirmation_email($user) {
         $subject = 'Signup confirmation';
+
         $msg = "";
 
         $msg.="<!DOCTYPE html>
@@ -118,13 +199,19 @@ class Tutor extends Utils {
             </tr>
             <tr>
             <td>Class name:</td><td>$user->course1</td>
-            </tr>
-            <tr>
-            <td colspan='2'><br>Please be aware your access to the system is limited until you confirm your title.</td>
-            </tr>
-            <tr>
+            </tr>";
+
+        if ($user->confirmed == 0) {
+            $msg.="<tr>
+            <td colspan='2'><br>Since you did not confirm your membership we will contact you within 24h</td>
+            </tr>";
+        }
+
+
+        $msg . "<tr>
             <td colspan='2'><br>With best regards, <br><br><br>Globalization plus team</td>
             </tr>
+            
             </table>
         </body>
         </html>";

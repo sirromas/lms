@@ -59,7 +59,7 @@ class Tutor extends Utils {
         return $list;
     }
 
-    function test_page($user) {
+    function test_page($user, $output = TRUE) {
         $list = "";
         $page = file_get_contents($user->url);
         $status1 = strstr($page, $user->email);
@@ -67,10 +67,20 @@ class Tutor extends Utils {
         if ($status1 !== FALSE && $status2 !== FALSE) {
             $query = "update mdl_user set policyagreed='1' where email='$user->email'";
             $this->db->query($query);
-            $list.="Thank you. Your membership is confirmed";
+            if ($output) {
+                $list.="Thank you. Your membership is confirmed";
+            } // end if
+            else {
+                return TRUE;
+            }
         } // end if
         else {
-            $list.="Your membershop was not confirmed";
+            if ($output) {
+                $list.="Your membership was not confirmed";
+            } // end if 
+            else {
+                return FALSE;
+            } // end else
         } // end else
         return $list;
     }
