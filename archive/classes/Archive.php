@@ -45,7 +45,7 @@ class Archive {
         return $groups;
     }
 
-    function verify_user($username, $password) {
+    function verify_user($username) {
         $status = 0;
         $query = "select * from mdl_user where username='$username'";
         $num = $this->db->numrows($query);

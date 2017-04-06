@@ -707,28 +707,39 @@ function print_grade_plugin_selector($plugin_info, $active_type, $active_plugin,
     $count = 0;
     $active = '';
 
-    //echo "<pre>";
-    //print_r($plugin_info);
-    //echo "</pre>";
+    /*
+      echo "<pre>";
+      print_r($plugin_info);
+      echo "</pre>";
+     */
 
     foreach ($plugin_info as $plugin_type => $plugins) {
-        if ($plugin_type == 'strings' || $plugin_type == 'history' || $plugin_type == 'outcomes' || $plugin_type == 'user') {
+
+        //echo "Plugin type: " . $plugin_type . "<br>";
+        //echo "Plugin: " . print_r($plugins) . "<br>";
+
+        if ($plugin_type == 'strings' || $plugin_type == 'history' || $plugin_type == 'outcomes' || $plugin_type == 'user' || $plugin_type == 'settings') {
             continue;
         }
 
         $first_plugin = reset($plugins);
-        $sectionname = $plugin_info['strings'][$plugin_type];
+        if ($plugin_info['strings'][$plugin_type] != 'settings') {
+            $sectionname = $plugin_info['strings'][$plugin_type];
+        }
         $section = array();
 
-        //echo "<pre>";
-        //print_r($plugins);
-        //echo "</pre>";
+        /*
+          echo "----------------------------------------<pre>";
+          print_r($plugins);
+          echo "</pre>";
+         */
 
         foreach ($plugins as $plugin) {
             //echo "$plugin->string: <br>";
             if ($plugin->string != 'Grade history' && $plugin->string != 'Outcomes report' && $plugin->string != 'User report' && $plugin->string != 'Preferences: Grader report' && $plugin->string != 'OpenDocument spreadsheet' && $plugin->string != 'XML file') {
                 $link = $plugin->link->out(false);
                 $section[$link] = $plugin->string;
+                //echo "Current section: ".$section[$link]."<br>";
                 $count++;
                 if ($plugin_type === $active_type and $plugin->id === $active_plugin) {
                     $active = $link;
@@ -2714,7 +2725,7 @@ function grade_button($type, $courseid, $object) {
  * @global moodle_page $PAGE
  */
 function grade_extend_settings($plugininfo, $courseid) {
-    global $PAGE;
+    global $USER, $PAGE;
     $nav = new Navigation();
     $roleid = $nav->get_user_role();
 
@@ -2724,11 +2735,17 @@ function grade_extend_settings($plugininfo, $courseid) {
 
     if ($reports = grade_helper::get_plugins_reports($courseid)) {
         foreach ($reports as $report) {
-
+            
+            /*
+            echo "<pre>";
+            print_r($report);
+            echo "</pre><br>";
+            */
+            
             if ($roleid == 4) {
 
                 //echo "Report link: ". $report->link."<br>";
-                if ($report->id != 'history' && $report->id != 'outcomes' && $report->id != 'user') {
+                if ($report->id != 'history' && $report->id != 'outcomes' && $report->id != 'user' && $report->id != 'settings') {
                     $gradenode->add($report->string, $report->link, navigation_node::TYPE_SETTING, null, $report->id, new pix_icon('i/report', ''));
                 } // end if
             } // end if
@@ -2738,12 +2755,14 @@ function grade_extend_settings($plugininfo, $courseid) {
         } // end foreach
     }
 
-    if ($settings = grade_helper::get_info_manage_settings($courseid)) {
-        $settingsnode = $gradenode->add($strings['settings'], null, navigation_node::TYPE_CONTAINER);
-        foreach ($settings as $setting) {
-            $settingsnode->add($setting->string, $setting->link, navigation_node::TYPE_SETTING, null, $setting->id, new pix_icon('i/settings', ''));
+    if ($roleid != 4) {
+        if ($settings = grade_helper::get_info_manage_settings($courseid)) {
+            $settingsnode = $gradenode->add($strings['settings'], null, navigation_node::TYPE_CONTAINER);
+            foreach ($settings as $setting) {
+                $settingsnode->add($setting->string, $setting->link, navigation_node::TYPE_SETTING, null, $setting->id, new pix_icon('i/settings', ''));
+            }
         }
-    }
+    } // end if $roleid != 4
 
     if ($imports = grade_helper::get_plugins_import($courseid)) {
         $importnode = $gradenode->add($strings['import'], null, navigation_node::TYPE_CONTAINER);
@@ -2794,7 +2813,7 @@ function grade_extend_settings($plugininfo, $courseid) {
     }
 
     $setionsnode = $PAGE->settingsnav->prepend('Navigation', null, navigation_node::TYPE_CONTAINER);
-
+    $user_email=$nav->get_user_email($USER->id);
     $pageid = $nav->get_page_id();
     //echo "Page id: ".$pageid."<br>";
 
@@ -2818,6 +2837,10 @@ function grade_extend_settings($plugininfo, $courseid) {
         $link = "http://" . $_SERVER['SERVER_NAME'] . "/lms/mod/quiz/view.php?id=$quizid";
         $setionsnode->add('Quiz', $link, navigation_node::TYPE_SETTING, null, 2, new pix_icon('i/report', ''));
     }
+    
+    // Archive link
+    $link = "http://" . $_SERVER['SERVER_NAME'] . "/lms/archive/dashboard.php?username=$user_email";
+    $setionsnode->add('Archive', $link, navigation_node::TYPE_SETTING, null, 2, new pix_icon('i/report', ''));
 }
 
 /**

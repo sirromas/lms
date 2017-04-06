@@ -31,6 +31,15 @@ class Navigation extends Utils {
         return $pageid;
     }
 
+    function get_user_email($userid) {
+        $query = "select * from mdl_user where id=$userid";
+        $result = $this->db->query($query);
+        while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+            $email = $row['email'];
+        }
+        return $email;
+    }
+
     function get_assesment_id() {
         $pageid = $this->get_section_data($this->assesment_module_id);
         return $pageid;

@@ -5,7 +5,7 @@ $a = new Archive();
 if ($_REQUEST) {
     $username = $_REQUEST['username'];
     $password = $_REQUEST['password'];
-    $status = $a->verify_user($username, $password);
+    $status = $a->verify_user($username);
     $_SESSION['userid'] = $status;
 } // end if $_REQUEST
 
