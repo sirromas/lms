@@ -11,8 +11,6 @@ $(document).ready(function () {
 
     $('#camps').DataTable();
 
-
-
     // Update config 
     $("#update_config").click(function () {
         var smtp_host = $('#smtp_host').val();
@@ -100,6 +98,7 @@ $(document).ready(function () {
             $('#form_err').html('Please select campaign to be sent');
         }
     });
+
     /**********************************************************************
      * 
      *  
@@ -107,6 +106,29 @@ $(document).ready(function () {
      *   
      *    
      **********************************************************************/
+
+    // Monitor for Login errors reported from LMS
+
+    var getUrlParameter = function getUrlParameter(sParam) {
+        var sPageURL = decodeURIComponent(window.location.search.substring(1)),
+                sURLVariables = sPageURL.split('&'),
+                sParameterName,
+                i;
+
+        for (i = 0; i < sURLVariables.length; i++) {
+            sParameterName = sURLVariables[i].split('=');
+
+            if (sParameterName[0] === sParam) {
+                return sParameterName[1] === undefined ? true : sParameterName[1];
+            }
+        }
+    };
+
+    var code = getUrlParameter('errorcode');
+    if (code == 3) {
+        $('#login_err').html('Invalid email address or password');
+    }
+
 
     // Create classes data for students signup
     var request = {id: 1};
