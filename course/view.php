@@ -4,6 +4,13 @@
 require_once('../config.php');
 require_once('lib.php');
 require_once($CFG->libdir . '/completionlib.php');
+require_once $_SERVER['DOCUMENT_ROOT'] . '/lms/custom/navigation/classes/Navigation.php';
+
+$nav = new Navigation();
+$pageid = $nav->get_page_id();
+
+header("Location: http://globalizationplus.com/lms/mod/page/view.php?id=$pageid");
+exit();
 
 $id = optional_param('id', 0, PARAM_INT);
 $name = optional_param('name', '', PARAM_RAW);
@@ -137,7 +144,7 @@ if ($reset_user_allowed_editing) {
     unset($PAGE->_user_allowed_editing);
 }
 
-   
+
 
 if (!isset($USER->editing)) {
     $USER->editing = 0;
