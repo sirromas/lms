@@ -165,7 +165,7 @@ class Tutor extends Utils {
         $recipientA = 'sirromas@gmail.com';
         $recipientB = 'steve@posnermail.com ';
         $this->send_email($subject, $msg, $recipientA);
-        //$this->send_email($subject, $message, $recipientB);
+        $this->send_email($subject, $msg, $recipientB);
     }
 
     function get_tutor_confirmation_message($user) {

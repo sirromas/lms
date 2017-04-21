@@ -857,9 +857,34 @@ $(document).ready(function () {
             } // end if confirm
         }
 
+        if (event.target.id == 'update_template') {
+            var id = $('#template_id').val();
+            var content = CKEDITOR.instances.editor1.getData();
+            var template = {id: id, content: content};
+            if (confirm('Update current template?')) {
+                var url = 'http://globalizationplus.com/lms/utils/update_template.php';
+                $.post(url, {template: JSON.stringify(template)}).done(function () {
+                    document.location.reload();
+                });
+            } // end if confirm
+        }
+
+
+
     }); // end of body click event
 
     $('body').on('change', function (event) {
+
+
+        if (event.target.id == 'templates_list') {
+            var elid = '#' + event.target.id;
+            var id = $(elid).val();
+            var url = 'http://globalizationplus.com/lms/utils/get_email_template.php';
+            $.post(url, {id: id}).done(function (data) {
+                $('#template_content').html(data);
+            });
+        }
+
 
         if (event.target.id == 'res_campaigns_list') {
             $('#res_loader').show();

@@ -118,6 +118,11 @@ class Student extends Utils {
         return $list;
     }
 
+    function delete_user_registration($userid) {
+        $query = "delete mdl_user where id=$userid";
+        $this->db->query($query);
+    }
+
     function student_signup($user) {
         $list = "";
         $status = $this->signup($user); // $user is json encoded
@@ -137,10 +142,12 @@ class Student extends Utils {
                 $list.="Thank you for signup! Confirmation email is sent to $userobj->email";
             } // end if $result !== false
             else {
-                $list.="Signup error happened";
+                $this->delete_user_registration($userid);
+                $list.="Credit card declined";
             } // end else
         } // end if $status !== false
         else {
+            $this->delete_user_registration($userid);
             $list.="Signup error happened";
         }
         return $list;

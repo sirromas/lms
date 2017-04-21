@@ -609,7 +609,7 @@ class Utils2 {
             $list.="<tr>";
             $list.="<th>Student</th>";
             $list.="<th>Email</th>";
-            $list.="<th>Class Name</th>";
+            // $list.="<th>Class Name</th>";
             $list.="<th>Key</th>";
             $list.="<th>Start Date</th>";
             $list.="<th>Expiration Date</th>";
@@ -625,7 +625,7 @@ class Utils2 {
                 $list.="<tr>";
                 $list.="<td>$user->firstname $user->lastname</td>";
                 $list.="<td>$user->email</td>";
-                $list.="<td>$class</td>";
+                //$list.="<td>$class</td>";
                 $list.="<td>$item->auth_key</td>";
                 $list.="<td>$start</td>";
                 $list.="<td>$exp</td>";
@@ -1082,6 +1082,70 @@ class Utils2 {
 
     function logout() {
         session_destroy();
+    }
+
+    function get_templates_list() {
+        $list = "";
+
+        $list.="<select id='templates_list' style='width:365px;'>";
+        $list.="<option value='0' selected>Please select template</option>";
+        $query = "select * from mdl_email_templates order by template_name";
+        $result = $this->db->query($query);
+        while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+            $id = $row['id'];
+            $item = $row['template_name'];
+            $list.="<option value='$id'>$item</option>";
+        }
+        $list.="</select>";
+        return $list;
+    }
+
+    function get_account_tab() {
+        $list = "";
+        $templates = $this->get_templates_list();
+        $list.="<div class='container-fluid'>";
+        $list.="<span class='col-sm-6'>$templates</span>";
+        $list.="</div>";
+
+        $list.="<div class='container-fluid'>";
+        $list.="<span class='col-sm-12' id='template_content'></span>";
+        $list.="</div><br><br>";
+
+        $list.="<div class='container-fluid'>";
+        $list.="<span class='col-sm-6'><button type='button' class='btn btn-default' id='logout_utils'>Logout</button></span>";
+        $list.="</div>";
+
+        return $list;
+    }
+
+    function get_email_template($id) {
+        $list = "";
+        $query = "select * from mdl_email_templates where id=$id";
+        $result = $this->db->query($query);
+        while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+            $content = $row['template_content'];
+        }
+
+        $list.="<div class='container-fluid'>";
+        $list.="<span class='col-sm-12'>";
+        $list.="<br><textarea name='editor1' id='editor1' rows='10' style='width:675px;'>$content</textarea>";
+        $list.="<script>
+                CKEDITOR.replace( 'editor1' );
+            </script>";
+        $list.="</span>";
+        $list.="</div><br>";
+        $list.="<input type='hidden' id='template_id' value='$id'>";
+        $list.="<div class='container-fluid'>";
+        $list.="<span class='col-sm-6'><button type='button' class='btn btn-default' id='update_template'>Update</button></span>";
+        $list.="</div><br>";
+
+        return $list;
+    }
+
+    function update_email_template($t) {
+        $query = "update mdl_email_templates "
+                . "set template_content='$t->content' where id=$t->id";
+        $this->db->query($query);
     }
 
 }

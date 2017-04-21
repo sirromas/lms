@@ -27,6 +27,8 @@ if ($_SESSION['logged'] == 1) {
     $trial_total = $u->get_trial_total();
     $trial = $u->get_trial_keys_tab();
     $trial_search = $u->get_search_block('trial');
+
+    $account_tab = $u->get_account_tab();
     ?>
 
     <!DOCTYPE html>
@@ -37,16 +39,15 @@ if ($_SESSION['logged'] == 1) {
             <meta charset="UTF-8">
             <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+            <!-- ********************** JS libraries ********************** -->
+
             <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
-
-            <!-- Latest compiled and minified CSS -->
-            <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" >
-
-            <!-- Optional theme -->
-            <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" >
 
             <!-- Latest compiled and minified JavaScript -->
             <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+            <!-- Editor CDN -->
+            <script src="//cdn.ckeditor.com/4.6.2/full/ckeditor.js"></script>
 
             <!-- Typehead JS -->
             <script type='text/javascript' src='https://cdnjs.cloudflare.com/ajax/libs/bootstrap-3-typeahead/4.0.1/bootstrap3-typeahead.js'></script>
@@ -58,20 +59,28 @@ if ($_SESSION['logged'] == 1) {
             <script type="text/javascript" src='https://cdn.datatables.net/1.10.13/js/jquery.dataTables.min.js' ></script>
             <script type="text/javascript" src='https://cdn.datatables.net/1.10.13/js/dataTables.bootstrap.min.js' ></script>
 
-            <!-- Data tables CSS -->
-            <link rel="stylesheet" href="https://cdn.datatables.net/1.10.13/css/dataTables.bootstrap.min.css">
-
-            <!-- Pagination CSS -->
-            <link rel="stylesheet" href="/assets/js/pagination/simplePagination.css">
-
             <!-- Custom JS script -->
             <script type="text/javascript" src="http://globalizationplus.com/assets/js/custom.js"></script>
+
+            <!-- ********************** CSS libraries ********************** -->
+
+            <!-- Latest compiled and minified Bootstrap CSS -->
+            <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" >
+
+            <!-- Optional theme -->
+            <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" >
 
             <!-- DatePicker JS -->
             <script type="text/javascript" src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
 
             <!-- DatePicker CSS -->
             <link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
+
+            <!-- Data tables CSS -->
+            <link rel="stylesheet" href="https://cdn.datatables.net/1.10.13/css/dataTables.bootstrap.min.css">
+
+            <!-- Pagination CSS -->
+            <link rel="stylesheet" href="/assets/js/pagination/simplePagination.css">
 
         </head>
         <body>
@@ -101,28 +110,28 @@ if ($_SESSION['logged'] == 1) {
                             <?php echo $trial; ?>
                         </div>
                         <div id="logout_account" class="tab-pane fade">
-                            <br><br><div style='padding-left: 120px; '><button type='button' class="btn btn-default" id='logout_utils'>Logout</button></div>
-                            <p></p>
-                        </div>
+                            <br><br><?php echo $account_tab; ?></div>
+                        <p></p>
                     </div>
                 </div>
             </div>
-            <script type="text/javascript">
+        </div>
+        <script type="text/javascript">
 
-                $(document).ready(function () {
+            $(document).ready(function () {
 
-                    $('#classes_table').DataTable();
-                    $('#tutors_table').DataTable();
-                    $('#subs_table').DataTable();
-                    $('#trial_table').DataTable();
+                $('#classes_table').DataTable();
+                $('#tutors_table').DataTable();
+                $('#subs_table').DataTable();
+                $('#trial_table').DataTable();
 
-                }); // end of document ready
+            }); // end of document ready
 
 
 
-            </script>
+        </script>
 
-        </body>
+    </body>
     </html>
 
     <?php
