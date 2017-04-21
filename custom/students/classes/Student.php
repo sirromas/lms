@@ -23,44 +23,63 @@ class Student extends Utils {
         echo "Groups data are updated ....";
     }
 
+    function get_student_message_from_template($user, $class, $payment_detailes) {
+        $date1 = date('m/d/Y', $payment_detailes->start_date);
+        $date2 = date('m/d/Y', $payment_detailes->exp_date);
+        $query = "select * from mdl_email_templates where template_name='student'";
+        $result = $this->db->query($query);
+        while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+            $content = $row['template_content'];
+        }
+        $search = array('{firstname}', '{lastname}', '{email}', '{password}', '{class}', '{key}', '{date1}', '{date2}');
+        $replace = array($user->firstname, $user->lastname, $user->email, $user->pwd, $class, $payment_detailes->auth_key, $date1, $date2);
+        $message = str_replace($search, $replace, $content);
+        return $message;
+    }
+
     function get_confirmation_message($userid, $groupid, $user) {
         $list = "";
         $class = $this->get_group_name($groupid);
         $payment_detailes = $this->get_payment_detailes($userid, $groupid);
+        $list.=$this->get_student_message_from_template($user, $class, $payment_detailes);
 
-        $list.="<html>";
-        $list.="<body>";
-        $list.="<br>";
-        $list.="<p align='center'>Dear $user->firstname $user->lastname!</p>";
-        $list.="<p align='center'>Thank you for signup.</p>";
-        $list.="<table align='center'>";
+        /*
+         * 
+          $list.="<html>";
+          $list.="<body>";
+          $list.="<br>";
+          $list.="<p align='center'>Dear $user->firstname $user->lastname!</p>";
+          $list.="<p align='center'>Thank you for signup.</p>";
+          $list.="<table align='center'>";
 
-        $list.="<tr>";
-        $list.="<td style='padding:15px'>Username</td><td style='padding:15px'>$user->email</td>";
-        $list.="</tr>";
+          $list.="<tr>";
+          $list.="<td style='padding:15px'>Username</td><td style='padding:15px'>$user->email</td>";
+          $list.="</tr>";
 
-        $list.="<tr>";
-        $list.="<td style='padding:15px'>Password</td><td style='padding:15px'>$user->pwd</td>";
-        $list.="</tr>";
+          $list.="<tr>";
+          $list.="<td style='padding:15px'>Password</td><td style='padding:15px'>$user->pwd</td>";
+          $list.="</tr>";
 
-        $list.="<tr>";
-        $list.="<td style='padding:15px'>Class</td><td style='padding:15px'>$class</td>";
-        $list.="</tr>";
+          $list.="<tr>";
+          $list.="<td style='padding:15px'>Class</td><td style='padding:15px'>$class</td>";
+          $list.="</tr>";
 
-        $list.="<tr>";
-        $list.="<td style='padding:15px'>Access key</td><td style='padding:15px'>$payment_detailes->auth_key</td>";
-        $list.="</tr>";
+          $list.="<tr>";
+          $list.="<td style='padding:15px'>Access key</td><td style='padding:15px'>$payment_detailes->auth_key</td>";
+          $list.="</tr>";
 
-        $list.="<tr>";
-        $list.="<td style='padding:15px'>Key validation period</td><td style='padding:15px'>From " . date('m/d/Y', $payment_detailes->start_date) . " to " . date('m/d/Y', $payment_detailes->exp_date) . "</td>";
-        $list.="</tr>";
+          $list.="<tr>";
+          $list.="<td style='padding:15px'>Key validation period</td><td style='padding:15px'>From " . date('m/d/Y', $payment_detailes->start_date) . " to " . date('m/d/Y', $payment_detailes->exp_date) . "</td>";
+          $list.="</tr>";
 
-        $list.="</table>";
+          $list.="</table>";
 
-        $list.="<p align='center'>Best regards, <br> Globalization Plus Team.</p>";
+          $list.="<p align='center'>Best regards, <br> Globalization Plus Team.</p>";
 
-        $list.="</body>";
-        $list.="</html>";
+          $list.="</body>";
+          $list.="</html>";
+         * 
+         */
 
         return $list;
     }
