@@ -186,13 +186,15 @@ class Survey {
         } // end if 
         else {
             $query = "select * from mdl_campaign where id=$item->campid";
-            $list.="Dear $item->firstname $item->lastname, <br>";
         } // end else
         $result = $this->db->query($query);
         while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
-            $preface = $list . $row['preface'];
+            $preface = $row['preface'];
+            $search = array('{firstname}', '{lastname}');
+            $replace = array($item->firstname, $item->lastname);
+            $new_preface = str_replace($search, $replace, $preface);
         }
-        return $preface;
+        return $new_preface;
     }
 
     function get_question_answers($qid, $item, $preview) {
@@ -206,12 +208,13 @@ class Survey {
             $result = $this->db->query($query);
             while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
                 $id = $row['id'];
+                $color = $row['color'];
                 if ($preview) {
-                    $list.="<td style='padding:15px;'><a href='#' onClick='return false' target='_blank'>" . $row['rtext'] . "</a></td>";
+                    $list.="<td style='padding:15px;'><a href='#' style='color:$color' onClick='return false' target='_blank'>" . $row['rtext'] . "</a></td>";
                 } // end if
                 else {
                     $query_string = "email=$clean_email&id=$id&firstname=" . urlencode($item->firstname) . "&lastname=" . urlencode($item->lastname) . "";
-                    $list.="<td style='padding:15px;'><a href='http://globalizationplus.com/survey/receive.php?$query_string' target='_blank'>" . $row['rtext'] . "</a></td>";
+                    $list.="<td style='padding:15px;'><a style='color:$color' href='http://globalizationplus.com/survey/receive.php?$query_string' target='_blank'>" . $row['rtext'] . "</a></td>";
                 } // end else 
             } // end while
             $list.="</tr>";
@@ -265,7 +268,7 @@ class Survey {
                 $a = $this->get_question_answers($q->id, $item, $preview);
                 $text = $q->qtext;
                 $list.="<tr>";
-                $list.="<td style='padding:15px;'>$text</td>";
+                $list.="<td style='padding-left:15px;padding-right:15px;'>$text</td>";
                 $list.="</tr>";
 
                 $list.="<tr>";
@@ -295,16 +298,6 @@ class Survey {
         $list.="<tr>";
         $list.="<td style=''>$clear_preface</td>";
         $list.="</tr>";
-
-        /*
-          $list.="<tr>";
-          $list.="<td style=''>$questions</td>";
-          $list.="</tr>";
-
-          $list.="<tr>";
-          $list.="<td style='padding:15px;'>$signature</td>";
-          $list.="</tr>";
-         */
 
         $list.="</table>";
         return $list;
@@ -439,6 +432,10 @@ class Survey {
 
         $list.="</div>";
 
+        $list.="<div class='row-fluid' id='result'>";
+
+        $list.="</div>";
+
         $list.="<br><div id='q_container'>";
         $list.=$questions;
         $list.="</div>";
@@ -502,8 +499,16 @@ class Survey {
         $list = "";
         for ($k = 1; $k <= 6; $k++) {
             $list.="<div class='row'>";
+            $pickerid = '#cpicker_' . $k;
+            $elid = 'cpicker_' . $k;
             $list.="<span class='col-sm-2'>Choice #$k</span>";
-            $list.="<span class='col-sm-6'><input type='text' class='r_$i' style='width:800px;'></span>";
+            $list.="<span class='col-sm-4'><input type='text' id='r_$k' style='width:300px;'></span>";
+            $list.="<span class='col-sm-1'><input id='$elid' type='text' class='form-control' style='width:80px;'/ placeholder='Color'>
+                    <script>
+                        $(function() {
+                            $('$pickerid').colorpicker();
+                        });
+                    </script></span>";
             $list.="</div>";
         }
         return $list;
@@ -596,7 +601,6 @@ class Survey {
     }
 
     function add_camp($camp) {
-        $list = "";
         $title = $camp->title;
         $preface = $camp->content;
         $clear_peface = str_replace("'", "\'", $preface);
@@ -607,26 +611,24 @@ class Survey {
         $this->db->query($query);
         $campLastId = $this->get_table_last_record_id('mdl_campaign');
 
-        $questions = $camp->q;
-        foreach ($questions as $q) {
-            $text = $q->t;
-            $clear_text = str_replace("'", "\'", $text);
-            $query = "insert into mdl_campaign_q (campid,qtext) "
-                    . "values($campLastId,'$clear_text')";
-            $this->db->query($query);
-            $lastqID = $this->get_table_last_record_id('mdl_campaign_q');
-            $answers = $q->a;
-            if (count($answers) > 0) {
-                foreach ($answers as $a) {
-                    $clear_a = str_replace("'", "\'", $a);
-                    $query = "insert into mdl_campaign_a (qid, rtext) "
-                            . "values($lastqID,'$clear_a')";
-                    $this->db->query($query);
-                } // end foreach
-            } // end if
-        }
-        $list.=$this->create_camp_list();
-        return $list;
+        $text = $camp->qtext;
+        $clear_text = str_replace("'", "\'", $text);
+        $query = "insert into mdl_campaign_q (campid,qtext) "
+                . "values($campLastId,'$clear_text')";
+        $this->db->query($query);
+        $lastqID = $this->get_table_last_record_id('mdl_campaign_q');
+
+        $answers = json_decode($camp->r);
+        if (count($answers) > 0) {
+            foreach ($answers as $a) {
+                $clear_a = str_replace("'", "\'", $a->text);
+                $color = $a->color;
+                $query = "insert into mdl_campaign_a (qid, rtext, color) "
+                        . "values($lastqID,'$clear_a', '$color')";
+                $this->db->query($query);
+            } // end foreach
+        } // end if
+        return true;
     }
 
     function get_settings_page() {

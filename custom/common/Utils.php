@@ -244,4 +244,24 @@ class Utils {
         return $groups;
     }
 
+    function is_user_student($email) {
+        $userid = $this->get_user_id($email);
+        $roleid = $this->get_user_role();
+        return $roleid;
+    }
+
+    function is_student_has_key($userid) {
+        // 1. Check among card payments table mdl_card_payments
+        // 2. Check among trial keys table mdl_trial_keys
+
+        $query = "select * from mdl_card_payments where userid=$userid";
+        $num = $this->db->numrows($query);
+        if ($num > 0) {
+            
+        } // end if $num>0
+        else {
+            
+        } // end else 
+    }
+
 }

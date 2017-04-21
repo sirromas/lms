@@ -46,7 +46,7 @@ else {
 
         <!-- Editor CDN -->
         <script src="//cdn.ckeditor.com/4.6.2/full/ckeditor.js"></script>
-        
+
         <!-- Highcharts JS -->
         <script type="text/javascript" src="http://code.highcharts.com/highcharts.js"></script>       
         <script src="https://code.highcharts.com/highcharts-3d.js"></script>
@@ -58,6 +58,11 @@ else {
         <!-- Data tables JS -->
         <script type="text/javascript" src='https://cdn.datatables.net/1.10.13/js/jquery.dataTables.min.js' ></script>
         <script type="text/javascript" src='https://cdn.datatables.net/1.10.13/js/dataTables.bootstrap.min.js' ></script>
+
+        <!-- Color picker libraries -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-colorpicker/2.5.1/js/bootstrap-colorpicker.min.js"></script>
+        <link href="//cdnjs.cloudflare.com/ajax/libs/octicons/3.5.0/octicons.min.css" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-colorpicker/2.5.1/css/bootstrap-colorpicker.min.css">
 
     </head>
 
@@ -88,12 +93,12 @@ else {
             </div>
             <div id="menu2" class="tab-pane fade" style="padding-left: 45px;padding-top: 25px; ">
                 <?php
-                $result=$survey->get_results_page();
+                $result = $survey->get_results_page();
                 ?>
-              
+
                 <div style="padding-left: 15px;"><?php echo $result; ?></div>
                 <div class="row" id="camp_result" style='padding-left: 32px;'></div>
-            
+
             </div>
             <div id="camp" class="tab-pane fade" style="width:1024px;padding-left: 45px;padding-top: 25px; ">
                 <?php
@@ -108,6 +113,16 @@ else {
 
         </div>
 
+        <script type="text/javascript">
+
+            $(document).ready(function () {
+
+            });
+
+
+
+
+        </script>
 
 
     </body>
