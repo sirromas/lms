@@ -203,7 +203,7 @@ if ($roleid == 5) {
      * *********************************************************************** */
 
     $pageid = $nav->get_page_id(); // you need to find workaround
-    if ($pageid != 0) {
+    if ($pageid != 0 && $userid != 2 && $userid != 3) {
         $url = "http://" . $_SERVER['SERVER_NAME'] . "/lms/mod/page/view.php?id=" . $pageid . "";
         header("Location: $url");
     } // end if $pageid != 0

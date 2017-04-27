@@ -117,7 +117,7 @@ class block_settings extends block_base {
             return true;
         }
 
-        if ($roleid == 5 && $userid != 2 && $userid != 3) {
+        if ($roleid == 5 && ($userid != 2 && $userid != 3)) {
             return null;
         }
 

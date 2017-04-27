@@ -24,7 +24,6 @@
  * @copyright 2009 Sam Hemelryk
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-
 /**
  * The global navigation tree block class
  *
@@ -36,8 +35,8 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  * 
  */
-
 require_once $_SERVER['DOCUMENT_ROOT'] . '/lms/custom/navigation/classes/Navigation.php';
+
 class block_navigation extends block_base {
 
     /** @var int This allows for multiple navigation trees */
@@ -131,17 +130,19 @@ class block_navigation extends block_base {
      */
     function get_content() {
         global $CFG;
-        $nav=new Navigation();
-        $roleid=$nav->get_user_role();
-        $userid=$nav->user->id;
+        $nav = new Navigation();
+        $roleid = $nav->get_user_role();
+        $userid = $nav->user->id;
+        //echo "User id: " . $userid . "<br>";
         // First check if we have already generated, don't waste cycles
         if ($this->contentgenerated === true) {
             return $this->content;
         }
-        
-        if (($roleid == 5 || $roleid==4) && $userid!=2 && $userid!=3) {
-            return null;
-        }
+        if ($userid != 2 && $userid != 3) {
+            if ($roleid == 5 || $roleid == 4) {
+                return null;
+            }
+        } // end if $userid != 2 && $userid != 3
         // JS for navigation moved to the standard theme, the code will probably have to depend on the actual page structure
         // $this->page->requires->js('/lib/javascript-navigation.js');
         // Navcount is used to allow us to have multiple trees although I dont' know why
