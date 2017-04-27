@@ -8,9 +8,11 @@ require_once $_SERVER['DOCUMENT_ROOT'] . '/lms/custom/navigation/classes/Navigat
 
 $nav = new Navigation();
 $pageid = $nav->get_page_id();
-
-header("Location: http://globalizationplus.com/lms/mod/page/view.php?id=$pageid");
-exit();
+$userid = $USER->id;
+if ($userid != 2 && $userid != 3) {
+    header("Location: http://globalizationplus.com/lms/mod/page/view.php?id=$pageid");
+    exit();
+}
 
 $id = optional_param('id', 0, PARAM_INT);
 $name = optional_param('name', '', PARAM_RAW);

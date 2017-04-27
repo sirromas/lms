@@ -58,9 +58,10 @@ echo $OUTPUT->doctype()
         <?php
         $nav = new Navigation();
         $roleid = $nav->get_user_role();
+        $userid = $USER->id;
         if ($roleid == 5) {
             $string = $_SERVER['SCRIPT_NAME'];
-            if ($string == '/lms/mod/page/view.php' || $string=='/lms/my/index.php') {
+            if ($string == '/lms/mod/page/view.php' || $string == '/lms/my/index.php') {
                 echo $OUTPUT->standard_top_of_body_html()
                 ?>
                 <header role="banner" class="navbar navbar-fixed-top<?php echo $html->navbarclass ?> moodle-has-zindex">
@@ -83,6 +84,29 @@ echo $OUTPUT->doctype()
                 <?php
             } // end if 
         } // end if $roleid==5
+        else {
+            if ($userid == 2 || $userid == 3) {
+                echo $OUTPUT->standard_top_of_body_html();
+                ?>
+                <header role="banner" class="navbar navbar-fixed-top<?php echo $html->navbarclass ?> moodle-has-zindex">
+                    <nav role="navigation" class="navbar-inner">
+                        <div class="container-fluid">
+                            <?php echo $OUTPUT->navbar_home(); ?>
+                            <?php echo $OUTPUT->navbar_button(); ?>
+                            <?php echo $OUTPUT->user_menu(); ?>
+                            <?php echo $OUTPUT->search_box(); ?>
+                            <div class="nav-collapse collapse">
+                                <?php echo $OUTPUT->custom_menu(); ?>
+                                <ul class="nav pull-right">
+                                    <li><?php echo $OUTPUT->page_heading_menu(); ?></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </nav>
+                </header>
+                <?php
+            } // end if 
+        } // end else
         ?>
 
 
