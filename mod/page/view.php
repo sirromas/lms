@@ -147,7 +147,7 @@ if ($roleid == 5) {
 
     if ($forumid > 0) {
         $forumurl = "http://globalizationplus.com/lms/mod/forum/view.php?id=$forumid";
-        echo "<iframe src='$forumurl' width='100%' height='675px;' style='border:0'></iframe>";
+        echo "<div style='width:1024px;margin:auto;'><iframe src='$forumurl' width='100%' height='675px;' style='border:0'></iframe></div>";
     } // end if $forumid>0
 } // end if $roleid == 5
 
