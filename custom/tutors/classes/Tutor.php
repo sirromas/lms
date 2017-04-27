@@ -32,6 +32,11 @@ class Tutor extends Utils {
         return $lastId;
     }
 
+    function confirm_tutor($user) {
+        $query = "update mdl_user set policyagreed='1' where email='$user->email'";
+        $this->db->query($query);
+    }
+
     function tutor_signup($user) {
         $list = "";
         $result = $this->signup($user);
@@ -40,6 +45,7 @@ class Tutor extends Utils {
             $userObj = json_decode($user);
             $email = $userObj->email;
             $userid = $this->get_user_id($email);
+            $userObj->userid = $userid;
             $this->enrol_user($userid, $roleid);
 
             $course1 = $userObj->course1;
@@ -79,17 +85,24 @@ class Tutor extends Utils {
             }
 
             if ($userObj->site != '') {
-                $item = new stdClass();
-                $item->url = $userObj->site;
-                $item->email = $userObj->email;
-                $item->username = $userObj->firstname . " " . $userObj->lastname;
-                $status = $this->verify_tutor($item, FALSE);
-                if (!$status) {
-                    $this->send_non_confirmed_tutor_notification($userObj);
-                    $userObj->confirmed = 0;
-                } // end if 
+                $token = strstr($userObj->site, 'globalizationplus.com');
+                if ($token !== FALSE) {
+                    $this->confirm_tutor($userObj);
+                    $userObj->confirmed = 1; // required for confirmation email
+                } // end if $token!==FALSE
                 else {
-                    $userObj->confirmed = 1;
+                    $item = new stdClass();
+                    $item->url = $userObj->site;
+                    $item->email = $userObj->email;
+                    $item->username = $userObj->firstname . " " . $userObj->lastname;
+                    $status = $this->verify_tutor($item, FALSE);
+                    if (!$status) {
+                        $this->send_non_confirmed_tutor_notification($userObj);
+                        $userObj->confirmed = 0;
+                    } // end if 
+                    else {
+                        $userObj->confirmed = 1;
+                    } // end else
                 } // end else
             } // end if $userObj->site!=''
             else {
