@@ -39,6 +39,11 @@ require_once($CFG->dirroot . '/my/lib.php');
 require_once $_SERVER['DOCUMENT_ROOT'] . '/lms/custom/access/classes/Access.php';
 require_once $_SERVER['DOCUMENT_ROOT'] . '/lms/custom/navigation/classes/Navigation.php';
 
+$ac = new Access();
+$nav = new Navigation();
+$nav->update_quiz_link();
+
+
 redirect_if_major_upgrade_required();
 
 // TODO Add sesskey check to edit
@@ -160,8 +165,6 @@ if (empty($CFG->forcedefaultmymoodle) && $PAGE->user_allowed_editing()) {
     $USER->editing = $edit = 0;
 }
 
-$ac = new Access();
-$nav = new Navigation();
 $roleid = $ac->get_user_role();
 
 if ($roleid == 4) {
@@ -175,7 +178,7 @@ if ($roleid == 4) {
         die();
     }
 
-    /* **********************************************************************
+    /*     * *********************************************************************
      *      
      *   Redirect teacher directly to grades page
      *
@@ -196,7 +199,7 @@ if ($roleid == 5) {
         die();
     }
 
-    /* **********************************************************************
+    /*     * *********************************************************************
      *      
      *   If activity/resource belongs to user's group - it should be shown
      *

@@ -20,7 +20,7 @@ class Navigation extends Utils {
         $query = "select * from mdl_course_modules "
                 . "where module=$moduleid "
                 . "and visible=1 "
-                . "order by added desc limit 0,1";
+                . "order by id desc limit 0,1";
         $num = $this->db->numrows($query);
         if ($num > 0) {
             $result = $this->db->query($query);
@@ -137,6 +137,97 @@ class Navigation extends Utils {
         $list.="<span style=''>Subscription period: $s - $e</span>";
 
         return $list;
+    }
+
+    function get_previous_quiz_id() {
+        $id = 0;
+        $query = "select * from mdl_course_modules "
+                . "where module=$this->quiz_module_id "
+                . "order by id desc limit 1,2";
+        $num = $this->db->numrows($query);
+        if ($num > 0) {
+            $result = $this->db->query($query);
+            while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+                $id = $row['id'];
+            } // end while
+        } // end if $num > 0
+        return $id;
+    }
+
+    function update_quiz_link() {
+        $this->update_page_link();
+        $old_id = $this->get_previous_quiz_id();
+        if ($old_id == 0) {
+            return;
+        } // end if $oldid==0
+        else {
+            $old_link = "http://globalizationplus.com/lms/mod/quiz/view.php?id=$old_id";
+            $new_id = $this->get_section_data($this->quiz_module_id);
+            $new_link = "http://globalizationplus.com/lms/mod/quiz/view.php?id=$new_id";
+
+            $forum_id = $this->get_section_data($this->forum_module_id);
+            $query = "select * from mdl_course_modules "
+                    . "where id=$forum_id";
+            $result = $this->db->query($query);
+            while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+                $instanceid = $row['instance'];
+            }
+
+            $query = "select * from mdl_forum where id=$instanceid";
+            $result = $this->db->query($query);
+            while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+                $intro = $row['intro'];
+            }
+
+            $new_intro = str_replace($old_link, $new_link, $intro);
+            $query = "update mdl_forum set intro='$new_intro' where id=$instanceid";
+            $this->db->query($query);
+        } // end else
+    }
+
+    function get_previous_page_id() {
+        $id = 0;
+        $query = "select * from mdl_course_modules "
+                . "where module=$this->page_module_id "
+                . "order by id desc limit 1,2";
+        $num = $this->db->numrows($query);
+        if ($num > 0) {
+            $result = $this->db->query($query);
+            while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+                $id = $row['id'];
+            } // end while
+        } // end if $num > 0
+        return $id;
+    }
+
+    function update_page_link() {
+        $old_id = $this->get_previous_page_id();
+        if ($old_id == 0) {
+            return;
+        } // end if $oldid==0
+        else {
+            $old_link = "http://globalizationplus.com/lms/mod/page/view.php?id=$old_id";
+            $new_id = $this->get_section_data($this->page_module_id);
+            $new_link = "http://globalizationplus.com/lms/mod/page/view.php?id=$new_id";
+
+            $quiz_id = $this->get_section_data($this->quiz_module_id);
+            $query = "select * from mdl_course_modules "
+                    . "where id=$quiz_id";
+            $result = $this->db->query($query);
+            while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+                $instanceid = $row['instance'];
+            }
+
+            $query = "select * from mdl_quiz where id=$instanceid";
+            $result = $this->db->query($query);
+            while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+                $intro = $row['intro'];
+            }
+
+            $new_intro = str_replace($old_link, $new_link, $intro);
+            $query = "update mdl_quiz set intro='$new_intro' where id=$instanceid";
+            $this->db->query($query);
+        } // end else
     }
 
 }
