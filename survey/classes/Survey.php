@@ -21,6 +21,7 @@ class Survey {
     public $upload_path;
     public $from;
     public $subject;
+    public $imp_path = '/homepages/17/d212585247/htdocs/globalizationplus/survey/img';
 
     function __construct() {
         $this->db = new pdo_db();
@@ -47,122 +48,6 @@ class Survey {
             $value = $row['config_value'];
         }
         return $value;
-    }
-
-    function create_survey_email($email) {
-
-        $msg = "";
-
-        $msg.="<!DOCTYPE html>
-
-        <html>
-            <head>
-                <title>Survey</title>
-                <meta charset='UTF-8'>
-                <meta name='viewport' content='width = device-width, initial-scale = 1.0'>
-
-            </head>
-        <body>
-        <br>
-        <div style='text-align: center;margin: auto;' class='main'>
-
-        <input type='hidden' id='email' value='$email'>
-
-        <div style='width:800px;text-align: center;margin: auto;'>
-            <p align='left' style='font-weight: bold;'>Dear Colleague, </p><br>
-            <p align='justify'>I am a Professor of Advanced Writing for 
-                International Relations & Global Economics at the 
-                University of Southern California 
-                (<a href='http://dornsife.usc.edu/cf/faculty-and-staff/faculty.cfm?pid=1027494' target='_blank'>you may click here for my USC faculty bio</a>) 
-                and have a quick question regarding my research on 
-                current events awareness among undergraduate 
-                political science majors.<br><br>
-
-                <span>
-                    Your answer to the following would be deeply appreciated as
-                    it would greatly benefit my research:
-                </span>
-
-                <br><br>
-                <span class='tab'>When speculating about the news literacy of students, how many
-                    of your incoming undergraduates will know that Turkey's 
-                    President Recep Tayyip Erdoğan met with Vladimir Putin in 
-                    St. Petersburg to restore ties that were frayed when Turkey 
-                    downed a Russian jet operating along the Turkey-Syrian border? 
-                </span>
-
-            </p>
-        </div>
-
-        <div style='width:800px;text-align: center;margin:auto;'>
-
-            <table align='center' border='0'>
-
-                <tr>
-                    
-                    <!-- 
-                    <td style='padding: 35px;'><img src='http://globalizationplus.com/survey/20.jpg'  id='20' style='cursor: pointer;' onclick=\"location.href='http://globalizationplus.com/survey/receive.php?email=$email&resuslt=20'\"></td>
-                    <td style='padding: 35px;'><img src='http://globalizationplus.com/survey/50.jpg'  id='50' style='cursor: pointer;' onclick=\"location.href='http://globalizationplus.com/survey/receive.php?email=$email&resuslt=50'\"></td>
-                    <td style='padding: 35px;'><img src='http://globalizationplus.com/survey/80.jpg'  id='80' style='cursor: pointer;' onclick=\"location.href='http://globalizationplus.com/survey/receive.php?email=$email&resuslt=80'\"></td>
-                    <td style='padding: 35px;'><img src='http://globalizationplus.com/survey/100.jpg' id='100' style='cursor: pointer;' onclick=\"location.href='http://globalizationplus.com/survey/receive.php?email=$email&resuslt=100'\"></td>
-                     -->
-                     
-                    <td style='padding: 35px;'><a href='http://globalizationplus.com/survey/receive.php?email=$email&result=20' target='_blank'><img src='http://globalizationplus.com/survey/20.jpg'  id='20' style='cursor: pointer;'></a></td>
-                    <td style='padding: 35px;'><a href='http://globalizationplus.com/survey/receive.php?email=$email&result=50' target='_blank'><img src='http://globalizationplus.com/survey/50.jpg'  id='50' style='cursor: pointer;'></a></td>
-                    <td style='padding: 35px;'><a href='http://globalizationplus.com/survey/receive.php?email=$email&result=80' target='_blank'><img src='http://globalizationplus.com/survey/80.jpg'  id='80' style='cursor: pointer;'></a></td>
-                    <td style='padding: 35px;'><a href='http://globalizationplus.com/survey/receive.php?email=$email&result=100' target='_blank'><img src='http://globalizationplus.com/survey/100.jpg' id='100' style='cursor: pointer;></a></td>
-
-                </tr>
-                
-
-                <tr>
-                
-                <td align='left'>&nbsp;</td>
-                
-                </tr>
-               
-            </table>
-            
-            <table align='left' border='0'>
-            
-             <tr>
-                
-                <td style='' colspan='4' align='left'>Many thanks for your kind assistance.<br><br><br></td>
-                
-                </tr>
-                
-                <tr>
-                
-                <td style='' colspan='4' align='left'>
-                With all best wishes, <br>
-                Steve<br><br>
-                </td>
-                
-                </tr>
-
-                <tr>
-                
-                <td style='' colspan='4' align='left'>
-                ****************************************<br>
-                Professor Steve Posner, Ed.M., Harvard University<br>
-                M.P.W., University of Southern California<br>
-                Faculty, The USC Writing Program and<br>
-                Dornsife College Interdisciplinary Studies<br>
-                University of Southern California<br>
-                Email: steve.posner@post.harvard.edu<br>
-                Phone: 760.580.8700
-                </td>
-                </tr>
-
-            </table>
-
-        </div>
-    </div>
-</body>
-</html>";
-
-
-        return $msg;
     }
 
     function update_item_err_description($item, $error_info) {
@@ -223,28 +108,6 @@ class Survey {
         return $list;
     }
 
-    function get_message_signature() {
-        $list = "";
-        $list.="<table>";
-        $list.="<tr>
-                <td style='' colspan='4' align='left'>Many thanks for your kind assistance.<br><br><br></td>
-                </tr>";
-        $list.="<tr>
-                <td style='' colspan='4' align='left'>
-                ****************************************<br>
-                Professor Steve Posner, Ed.M., Harvard University<br>
-                M.P.W., University of Southern California<br>
-                Faculty, The USC Writing Program and<br>
-                Dornsife College Interdisciplinary Studies<br>
-                University of Southern California<br>
-                Email: steve.posner@post.harvard.edu<br>
-                Phone: 760.580.8700
-                </td>
-                </tr>";
-        $list.="</table>";
-        return $list;
-    }
-
     function get_campaign_questions_block($item, $preview = false) {
         $list = "";
         if ($preview) {
@@ -272,7 +135,7 @@ class Survey {
                 $list.="</tr>";
 
                 $list.="<tr>";
-                $list.="<td style=''>$a</td>";
+                $list.="<td style='padding:35px;'>$a</td>";
                 $list.="</tr>";
             } // end for
             $list.="</table>";
@@ -280,23 +143,118 @@ class Survey {
         return $list;
     }
 
-    function create_message($preface, $questions) {
-        $clear_preface = str_replace("{q}", $questions, $preface);
-        return $clear_preface;
+    function get_campaign_question($item, $preview = false) {
+        $text = "";
+        if ($preview) {
+            $query = "select * from mdl_campaign_q where campid=$item";
+        } // end if
+        else {
+            $query = "select * from mdl_campaign_q where campid=$item->campid";
+        } // end else
+        $num = $this->db->numrows($query);
+        if ($num > 0) {
+            $result = $this->db->query($query);
+            while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+                $text = $row['qtext'];
+            } // end while
+        } // end if $num > 0
+        return $text;
+    }
+
+    function get_campaign_answers($item, $preview) {
+        if ($preview) {
+            $query = "select * from mdl_campaign_q where campid=$item";
+        } // end if $preview
+        else {
+            $query = "select * from mdl_campaign_q where campid=$item->campid";
+            $clean_email = trim($item->email);
+        } // end else
+        $result = $this->db->query($query);
+        while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+            $qid = $row['id'];
+        } // end while 
+        $query = "select * from mdl_campaign_a where qid=$qid";
+        $num = $this->db->numrows($query);
+        if ($num > 0) {
+            $result = $this->db->query($query);
+            while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+                $list = "";
+                $id = $row['id'];
+                $color = $row['color'];
+                $img = $row['img'];
+                if ($preview) {
+                    if ($img == null) {
+                        $list.="<a href='#' style='color:$color' onClick='return false' target='_blank'>" . $row['rtext'] . "</a>";
+                    } // end if $img==null
+                    else {
+                        $img_path = $this->imp_path . '/' . $img;
+                        $list.="<a href='#' onClick='return false' target='_blank'><img src='$img_path' style='cursor:pointer;'></a>";
+                    } // end else
+                } // end if
+                else {
+                    $query_string = "email=$clean_email&id=$id&firstname=" . urlencode($item->firstname) . "&lastname=" . urlencode($item->lastname) . "";
+                    if ($img == null) {
+                        $list.="<a style='color:$color' href='http://globalizationplus.com/survey/receive.php?$query_string' target='_blank'>" . $row['rtext'] . "</a>";
+                    } // end if
+                    else {
+                        $img_path = $this->imp_path . '/' . $img;
+                        $list.="<a style='color:$color' href='http://globalizationplus.com/survey/receive.php?$query_string' target='_blank'><img src='$img_path' style='cursor:pointer;'></a>";
+                    } // end else
+                } // end else 
+                $answers[] = $list;
+            } // end while
+        } // end if $num > 0
+        return $answers;
+    }
+
+    function create_message($preface, $question, $answers) {
+        $clear_preface = str_replace("{q}", $question, $preface);
+        $total = count($answers);
+        if ($total > 0) {
+            for ($i = 1; $i <= $total; $i++) {
+                $a_item = "{a$i}";
+                $search[] = $a_item;
+            } // end for
+            $msg = str_replace($search, $answers, $clear_preface);
+            return $msg;
+        }
+    }
+
+    function prepare_campaign_answers($answers, $item, $preview) {
+        $new_answers = "";
+        if ($preview) {
+            $query = "select * from mdl_campaign where id=$item";
+        } // end if 
+        else {
+            $query = "select * from mdl_campaign where id=$item->campid";
+        } // end else
+        $result = $this->db->query($query);
+        while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+            $preface = $row['preface'];
+        }
+        $total = count($answers);
+        if ($total > 0) {
+            for ($i = 1; $i <= $total; $i++) {
+                $a_item = "{a$i}";
+                $search[] = $a_item;
+            } // end for
+
+            $new_answers = str_replace($search, $answers, $preface);
+        } // end if $total>0
+        return $new_answers;
     }
 
     function compose_message($item, $preview = false) {
-
         $list = "";
         $preface = $this->get_campaign_preface($item, $preview);
-        $questions = $this->get_campaign_questions_block($item, $preview);
-        //$signature = $this->get_message_signature();
-        $clear_preface = $this->create_message($preface, $questions);
+        $question = $this->get_campaign_question($item, $preview);
+        $answers = $this->get_campaign_answers($item, $preview);
+        $campaign = $this->create_message($preface, $question, $answers);
 
         $list.="<table>";
 
         $list.="<tr>";
-        $list.="<td style=''>$clear_preface</td>";
+        $list.="<td style=''>$campaign</td>";
         $list.="</tr>";
 
         $list.="</table>";
@@ -672,7 +630,7 @@ class Survey {
 
     function put_item_into_queue($item, $campid) {
         $date = time();
-        $sent = 1; // temp workaround
+        $sent = 0; // temp workaround
         $query = "insert into mdl_campaign_queue "
                 . "(firstname, lastname, email, campid, sent,  added) "
                 . "values ('$item[0]', '$item[1]', '$item[2]','$campid','$sent', '$date')";
@@ -1077,16 +1035,16 @@ class Survey {
                     <span class='span12'>
                         <form action='launch.php' method='post' id='launcher' name='launcher'>
                             <div class='form-group'>
-                                <label for='fname'>Firstname*</label>
-                                <input type='text' required style='width: 235px;' class='form-control' id='fname' name='fname' placeholder='Enter First Namee'>
+                                <label for='fname'>Firstname</label>
+                                <input type='text'  style='width: 235px;' class='form-control' id='fname' name='fname' placeholder='Enter First Namee'>
                             </div>
                             <div class='form-group'>
-                                <label for='lname'>Lastname*</label>
-                                <input type='text' required style='width: 235px;' class='form-control' id='lname' name='lname' placeholder='Enter Last Name'>
+                                <label for='lname'>Lastname</label>
+                                <input type='text'  style='width: 235px;' class='form-control' id='lname' name='lname' placeholder='Enter Last Name'>
                             </div>
                             <div class='form-group'>
-                                <label for='email'>Email*</label>
-                                <input type='email' required style='width: 235px;' class='form-control' id='email' name='email' placeholder='Enter Email Address'>
+                                <label for='email'></label>
+                                <input type='email'  style='width: 235px;' class='form-control' id='email' name='email' placeholder='Enter Email Address'>
                             </div>
                             <div class='form-group'>
                                 <label class='control-label'>Or select CSV file to be uploaded:</label>
