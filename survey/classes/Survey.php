@@ -57,8 +57,7 @@ class Survey {
     }
 
     function send_single_item($from, $recipient, $subject, $message) {
-        $client = new PostmarkClient("5a470ceb-d8d6-49cb-911c-55cbaeec199f");
-        //$recipient = 'sirromas@gmail.com'; // for testing purposes
+        $client = new PostmarkClient("5a470ceb-d8d6-49cb-911c-55cbaeec199f"); 
         $result = $client->sendEmail($from, $recipient, $subject, $message);
         return $result;
     }
@@ -173,7 +172,7 @@ class Survey {
         while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
             $qid = $row['id'];
         } // end while 
-        $query = "select * from mdl_campaign_a where qid=$qid";
+        $query = "select * from mdl_campaign_a where qid=$qid order by id desc";
         $num = $this->db->numrows($query);
         if ($num > 0) {
             $result = $this->db->query($query);
@@ -187,7 +186,7 @@ class Survey {
                         $list.="<a href='#' style='color:$color' onClick='return false' target='_blank'>" . $row['rtext'] . "</a>";
                     } // end if $img==null
                     else {
-                        $img_path = $this->imp_path . '/' . $img;
+                        $img_path = 'http://' . $_SERVER['SERVER_NAME'] . '/survey/img/' . $img;
                         $list.="<a href='#' onClick='return false' target='_blank'><img src='$img_path' style='cursor:pointer;'></a>";
                     } // end else
                 } // end if
@@ -197,7 +196,7 @@ class Survey {
                         $list.="<a style='color:$color' href='http://globalizationplus.com/survey/receive.php?$query_string' target='_blank'>" . $row['rtext'] . "</a>";
                     } // end if
                     else {
-                        $img_path = $this->imp_path . '/' . $img;
+                        $img_path = 'http://' . $_SERVER['SERVER_NAME'] . '/survey/img/' . $img;
                         $list.="<a style='color:$color' href='http://globalizationplus.com/survey/receive.php?$query_string' target='_blank'><img src='$img_path' style='cursor:pointer;'></a>";
                     } // end else
                 } // end else 
@@ -460,7 +459,7 @@ class Survey {
             $pickerid = '#cpicker_' . $k;
             $elid = 'cpicker_' . $k;
             $list.="<span class='col-sm-2'>Choice #$k</span>";
-            $list.="<span class='col-sm-4'><input type='text' id='r_$k' style='width:300px;'></span>";
+            $list.="<span class='col-sm-7'><input type='text' id='r_$k' style='width:575px;'></span>";
             $list.="<span class='col-sm-1'><input id='$elid' type='text' class='form-control' style='width:80px;'/ placeholder='Color'>
                     <script>
                         $(function() {
@@ -1073,7 +1072,10 @@ class Survey {
                 $id = $row['id'];
                 $a = $row['rtext'];
                 $list.="<div clas='row'>";
-                $list.="<span style='margin-left:15px;'>Choice #$i&nbsp;&nbsp;<input type='text' class='q_a_$qid' data-id='$id' value='$a' style='width:935px;'></span>";
+                $list.="<span style='margin-left:15px;'>Choice #$i&nbsp;&nbsp;<input type='text' class='q_a_$qid' data-id='$id' value='$a' style='width:575px;'></span>";
+                $list.="<span style='margin-left:15px;'><label class='btn btn-default btn-file'>Browse <input type='file' id='a_img_$id' style='display: none;'></label></span>";
+                $list.="<span style='margin-left:15px;'><button class='btn btn-default' id='upload_img_$id'>Upload</button></span>";
+                $list.="<span style='margin-left:15px;' id='upload_msg_$id'></span>";
                 $list.="</div>";
                 $i++;
             } // end while
@@ -1160,13 +1162,6 @@ class Survey {
     }
 
     function update_camp($camp) {
-
-        /*
-          echo "<pre>";
-          print_r($camp);
-          echo "</pre>";
-         */
-
         $campid = $camp->id;
         $preface = $camp->msg;
         $clear_peface = str_replace("'", "\'", $preface);
@@ -1198,6 +1193,39 @@ class Survey {
                 } // end if count($answers)>0
             } // end foreach
         } // end if count($questions
+    }
+
+    function upload_link_image($files, $post) {
+        $list = "";
+        $file = $files[0];
+
+        /*
+          echo "<pre>";
+          print_r($file);
+          echo "</pre>";
+         */
+
+        $tmp_name = $file['tmp_name'];
+        $error = $file['error'];
+        $size = $file['size'];
+        $id = $post['a_id'];
+        if ($tmp_name != '' && $size > 0 && $error == 0) {
+            $filename = time();
+            $fullpath = $this->imp_path . '/' . $filename;
+            $status = move_uploaded_file($tmp_name, $fullpath);
+            if ($status) {
+                $query = "update mdl_campaign_a set img='$filename' where id=$id";
+                $this->db->query($query);
+                $list.="File has been uploaded";
+            } // end if status
+            else {
+                $list.="Error uploading file";
+            } // end else
+        } // end if $tmp_name != ''
+        else {
+            $list.="Please select file to upload";
+        } // end else
+        return $list;
     }
 
 }

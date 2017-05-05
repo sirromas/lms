@@ -51,14 +51,15 @@ $(document).ready(function () {
         var email = $('#email').val();
         var fname = $('#fname').val();
         var lname = $('#lname').val();
-        var file = $('#file').val();
+        var file = $('#file')[0].files[0]
+        console.log('File ' + JSON.stringify(file));
         if (campaign > 0) {
             if (email == '' && file == '') {
                 $('#form_err').html('Please provide user data or file to be uploaded');
             } // end if 
             else {
 
-                if (email != '' && fname != '' && lname != '' && file == '') {
+                if (email != '' && fname != '' && lname != '') {
                     var item = {email: email, campid: campaign, firstname: fname, lastname: lname};
                     var request = {item: JSON.stringify(item)};
                     var url = 'http://globalizationplus.com/survey/launch.php';
@@ -89,9 +90,11 @@ $(document).ready(function () {
                         } // end of success
                     }); // end of $.ajax ..
                 }
-                if (email != '' && file != '') {
-                    $('#form_err').html('You can upload file or provide recipient email, but not both');
-                }
+                /*
+                 if (email != '' && file != '') {
+                 $('#form_err').html('You can upload file or provide recipient email, but not both');
+                 }
+                 */
             } // end else
         } // end if
         else {
@@ -870,6 +873,30 @@ $(document).ready(function () {
         }
 
 
+        if (event.target.id.indexOf("upload_img_") >= 0) {
+            var id = event.target.id.replace('upload_img_', '');
+            var elid = '#a_img_' + id;
+            var msg_elid = '#upload_msg_' + id;
+            var file_data = $(elid).prop('files');
+            var url = 'http://globalizationplus.com/survey/upload_img.php';
+            var form_data = new FormData();
+            form_data.append('a_id', id);
+            $.each(file_data, function (key, value) {
+                form_data.append(key, value);
+            });
+            $.ajax({
+                url: url,
+                data: form_data,
+                processData: false,
+                contentType: false,
+                type: 'POST',
+                success: function (data) {
+                    $(msg_elid).html(data);
+                } // end of success
+            }); // end of $.ajax ..
+
+
+        }
 
     }); // end of body click event
 
