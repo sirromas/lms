@@ -13,20 +13,11 @@ $(document).ready(function () {
 
     // Update config 
     $("#update_config").click(function () {
-        var smtp_host = $('#smtp_host').val();
-        var smtp_port = $('#smtp_port').val();
-        var smtp_user = $('#smtp_user').val();
-        var smtp_password = $('#smtp_password').val();
         var username = $('#username').val();
         var password = $('#password').val();
-        if (smtp_host != '' && smtp_port != '' && smtp_user != '' && username != '' && password != '' && smtp_password != '') {
+        if (username != '' && password != '') {
             if (confirm('Update config data?')) {
-                var config = {smtp_host: smtp_host,
-                    smtp_port: smtp_port,
-                    smtp_user: smtp_user,
-                    smtp_password: smtp_password,
-                    username: username,
-                    password: password};
+                var config = {username: username, password: password};
                 var request = {config: JSON.stringify(config)};
                 var url = 'http://globalizationplus.com/survey/update_config.php';
                 $.post(url, request).done(function (data) {
@@ -765,22 +756,30 @@ $(document).ready(function () {
 
         if (event.target.id == 'add_camp') {
             var questions;
+            var from = $('#from').val();
+            var subject = $('#subject').val();
             var title = $('#camp_title').val();
             var content = CKEDITOR.instances.editor1.getData();
-            if (title != '' && content) {
+            if (title != '' && content != '' && from != '' && subject != '') {
                 $('#camp_err').html('');
                 var qid = '#q_text_1'
                 var qtext = $(qid).val();
                 if (qtext != '') {
                     questions = get_reply_items();
                 } // end if qtext != ''
-                var camp = {title: title, content: content, qtext: qtext, r: JSON.stringify(questions)};
-                //console.log('Campaign: ' + JSON.stringify(camp));
+                var camp = {title: title,
+                    content: content,
+                    qtext: qtext,
+                    r: JSON.stringify(questions),
+                    from: from,
+                    subject: subject};
                 var first_q = $('#q_text_1').val();
                 if (first_q != '') {
+                    $('#camp_err').html('');
                     if (confirm('Add new campaign?')) {
                         var url = 'http://globalizationplus.com/survey/add_camp.php';
-                        $.post(url, {camp: JSON.stringify(camp)}).done(function () {
+                        $.post(url, {camp: JSON.stringify(camp)}).done(function (data) {
+                            console.log(data);
                             document.location.reload();
                         }); // end of post
                     } // end if confirm
@@ -790,10 +789,8 @@ $(document).ready(function () {
                 }
             } // end if title != '' && content
             else {
-                $('#camp_err').html('Please provide title and content');
+                $('#camp_err').html('Please provide all required fields');
             } // end else
-
-
         }
 
         if (event.target.id.indexOf("camp_edit_") >= 0) {
@@ -894,9 +891,18 @@ $(document).ready(function () {
                     $(msg_elid).html(data);
                 } // end of success
             }); // end of $.ajax ..
-
-
         }
+
+        if (event.target.id.indexOf("del_img_") >= 0) {
+            var id = event.target.id.replace('del_img_', '');
+            if (confirm('Delete current image?')) {
+                var url = 'http://globalizationplus.com/survey/del_img.php';
+                $.post(url, {id: id}).done(function () {
+                    document.location.reload();
+                });
+            } // end if confirm
+        }
+
 
     }); // end of body click event
 
