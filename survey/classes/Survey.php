@@ -134,8 +134,8 @@ class Survey {
         return $list;
     }
 
-    function get_campaign_question($item, $preview = false) {
-        $text = "";
+    function get_campaign_questions($item, $preview = false) {
+        $questions = array();
         if ($preview) {
             $query = "select * from mdl_campaign_q where campid=$item";
         } // end if
@@ -146,25 +146,21 @@ class Survey {
         if ($num > 0) {
             $result = $this->db->query($query);
             while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+                $qid = $row['id'];
+                $answers = $this->get_question_answers2($item, $qid, $preview);
                 $text = $row['qtext'];
+                $q = new stdClass();
+                $q->t = $text;
+                $q->a = $answers;
+                $questions[] = $q;
             } // end while
         } // end if $num > 0
-        return $text;
+        return $questions;
     }
 
-    function get_campaign_answers($item, $preview) {
-        if ($preview) {
-            $query = "select * from mdl_campaign_q where campid=$item";
-        } // end if $preview
-        else {
-            $query = "select * from mdl_campaign_q where campid=$item->campid";
-            $clean_email = trim($item->email);
-        } // end else
-        $result = $this->db->query($query);
-        while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
-            $qid = $row['id'];
-        } // end while 
+    function get_question_answers2($item, $qid, $preview) {
         $query = "select * from mdl_campaign_a where qid=$qid order by id desc";
+        $clean_email = trim($item->email);
         $num = $this->db->numrows($query);
         if ($num > 0) {
             $result = $this->db->query($query);
@@ -181,7 +177,7 @@ class Survey {
                         $img_path = 'http://' . $_SERVER['SERVER_NAME'] . '/survey/img/' . $img;
                         $list.="<a href='#' onClick='return false' target='_blank'><img src='$img_path' style='cursor:pointer;'></a>";
                     } // end else
-                } // end if
+                } // end if preview
                 else {
                     $query_string = "email=$clean_email&id=$id&firstname=" . urlencode($item->firstname) . "&lastname=" . urlencode($item->lastname) . "";
                     if ($img == null) {
@@ -198,17 +194,102 @@ class Survey {
         return $answers;
     }
 
-    function create_message($preface, $question, $answers) {
-        $clear_preface = str_replace("{q}", $question, $preface);
-        $total = count($answers);
-        if ($total > 0) {
-            for ($i = 1; $i <= $total; $i++) {
-                $a_item = "{a$i}";
-                $search[] = $a_item;
+    function get_campaign_answers($item, $preview) {
+        if ($preview) {
+            $query = "select * from mdl_campaign_q where campid=$item";
+        } // end if $preview
+        else {
+            $query = "select * from mdl_campaign_q where campid=$item->campid";
+            $clean_email = trim($item->email);
+        } // end else
+        $result = $this->db->query($query);
+        while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+            $qid[] = $row['id'];
+        } // end while
+        foreach ($qid as $id) {
+            $query = "select * from mdl_campaign_a where qid=$id order by id";
+            $num = $this->db->numrows($query);
+            if ($num > 0) {
+                $result = $this->db->query($query);
+                while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+                    $list = "";
+                    $id = $row['id'];
+                    $color = $row['color'];
+                    $img = $row['img'];
+                    if ($preview) {
+                        if ($img == null) {
+                            $list.="<a href='#' style='color:$color' onClick='return false' target='_blank'>" . $row['rtext'] . "</a>";
+                        } // end if $img==null
+                        else {
+                            $img_path = 'http://' . $_SERVER['SERVER_NAME'] . '/survey/img/' . $img;
+                            $list.="<a href='#' onClick='return false' target='_blank'><img src='$img_path' style='cursor:pointer;'></a>";
+                        } // end else
+                    } // end if preview
+                    else {
+                        $query_string = "email=$clean_email&id=$id&firstname=" . urlencode($item->firstname) . "&lastname=" . urlencode($item->lastname) . "";
+                        if ($img == null) {
+                            $list.="<a style='color:$color' href='http://globalizationplus.com/survey/receive.php?$query_string' target='_blank'>" . $row['rtext'] . "</a>";
+                        } // end if
+                        else {
+                            $img_path = 'http://' . $_SERVER['SERVER_NAME'] . '/survey/img/' . $img;
+                            $list.="<a style='color:$color' href='http://globalizationplus.com/survey/receive.php?$query_string' target='_blank'><img src='$img_path' style='cursor:pointer;'></a>";
+                        } // end else
+                    } // end else 
+                    $answers[] = $list;
+                } // end while
+            } // end if $num > 0
+        } // end foreach
+
+        return $answers;
+    }
+
+    function get_specific_questions_answers() {
+        
+    }
+
+    function get_question_answers_for_replace($total_answers, $i) {
+        for ($k = 1; $k <= $total_answers; $k++) {
+            $a_item = "{q" . $i . "_a" . $k . "}";
+            $a_search[] = $a_item;
+        } // end for
+        return $a_search;
+    }
+
+    function replace_questions_text($preface, $questions) {
+        $qa = [];
+        $i = 1;
+        foreach ($questions as $q) {
+            $t = $q->t;
+            $q_search[] = "{q$i}";
+            $qa[] = $t;
+            $i++;
+        } // end foreach
+        $msg = str_replace($q_search, $qa, $preface);
+        return $msg;
+    }
+
+    function replace_question_answers($subject, $a_search, $answers) {
+        $msg = str_replace($a_search, $answers, $subject);
+        return $msg;
+    }
+
+    function create_message($item, $preface, $questions, $preview) {
+        $msg = "";
+        $i = 1;
+        $message_with_questions = $this->replace_questions_text($preface, $questions);
+        $answers = $this->get_campaign_answers($item, $preview);
+        foreach ($questions as $q) {
+            $a = $q->a;
+            $total_answers = count($a);
+            for ($k = 1; $k <= $total_answers; $k++) {
+                $a_item = "{q" . $i . "_a" . $k . "}";
+                $a_search[] = $a_item;
             } // end for
-            $msg = str_replace($search, $answers, $clear_preface);
-            return $msg;
-        }
+            $i++;
+        } // end foreach
+
+        $msg.=str_replace($a_search, $answers, $message_with_questions);
+        return $msg;
     }
 
     function prepare_campaign_answers($answers, $item, $preview) {
@@ -238,9 +319,9 @@ class Survey {
     function compose_message($item, $preview = false) {
         $list = "";
         $preface = $this->get_campaign_preface($item, $preview);
-        $question = $this->get_campaign_question($item, $preview);
-        $answers = $this->get_campaign_answers($item, $preview);
-        $campaign = $this->create_message($preface, $question, $answers);
+        $questions = $this->get_campaign_questions($item, $preview);
+        //$answers = $this->get_campaign_answers($item, $preview);
+        $campaign = $this->create_message($item, $preface, $questions, $preview);
 
         $list.="<table>";
 
@@ -363,7 +444,7 @@ class Survey {
     function get_questions_drop_down() {
         $list = "";
         $list.="<select id='camp_q_num'>";
-        $list.="<option value='0' selected>Please select</option>";
+        $list.="<option value='0' selected>Please select survey questions number</option>";
         for ($i = 1; $i <= 10; $i++) {
             $list.="<option value='$i'>$i</option>";
         }
@@ -373,10 +454,8 @@ class Survey {
 
     function get_campaign_page() {
         $list = "";
-        $num = 1;
-        //$qbox = $this->get_questions_drop_down();
+        $qbox = $this->get_questions_drop_down();
         $camps = $this->create_camp_list();
-        $questions = $this->get_questions_block($num);
 
         $list.="<div class='row-fluid' style='padding-bottom:15px;'>";
         $list.="<span class='col-sm-1' style='padding-left:0px;'>From*</span>";
@@ -405,19 +484,25 @@ class Survey {
 
         $list.="</div>";
 
-        $list.="<div class='row-fluid' id='result'>";
+        $list.="<div class='row-fluid'>";
+        $list.="<span class='col-sm-1' style='padding-left:0px;'><br>$qbox</span>";
+        $list.="</div><br>";
 
+        $list.="<br><div class='row-fluid'>";
+        $list.="<span class='col-sm-12' style='padding-left:0px;' id='q_container'></span>";
         $list.="</div>";
 
-        $list.="<br><div id='q_container'>";
-        $list.=$questions;
-        $list.="</div>";
+        /*
+          $list.="<br><div id='q_container'>";
+          $list.=$questions;
+          $list.="</div>";
+         */
 
         $list.="<div class='row'>";
         $list.="<span class='col-sm-12' id='camp_err' style='padding-top:15px;color:red;'></span>";
         $list.="</div>";
 
-        $list.="<div class='row' style='padding-top:15px;padding-left:15px;'>";
+        $list.="<div class='row' style='padding-top:15px;padding-left:15px;display:none;' id='button_container'>";
         $list.="<span class='col-sm-1' style='padding-left:0px;'><button class='btn btn-default' id='add_camp'>Add</button></span>";
         $list.="</div><br>";
 
@@ -472,10 +557,10 @@ class Survey {
         $list = "";
         for ($k = 1; $k <= 6; $k++) {
             $list.="<div class='row'>";
-            $pickerid = '#cpicker_' . $k;
-            $elid = 'cpicker_' . $k;
+            $pickerid = '#cpicker_' . $k . '_' . $i;
+            $elid = 'cpicker_' . $k . '_' . $i;
             $list.="<span class='col-sm-2'>Choice #$k</span>";
-            $list.="<span class='col-sm-7'><input type='text' id='r_$k' style='width:575px;'></span>";
+            $list.="<span class='col-sm-7'><input type='text' id='r_" . $k . "_" . $i . "' style='width:575px;'></span>";
             $list.="<span class='col-sm-1'><input id='$elid' type='text' class='form-control' style='width:80px;'/ placeholder='Color'>
                     <script>
                         $(function() {
@@ -492,9 +577,9 @@ class Survey {
         $list.="<input type='hidden' id='q_num' value='$num'>";
         for ($i = 1; $i <= $num; $i++) {
             $q = $this->get_question_replies_block($i);
-            $list.="<div class='row'>";
+            $list.="<br><div class='row'>";
             $list.="<span class='col-sm-2'>Question* </span>";
-            $list.="<span class='col-sm-6'><input type='text' id='q_text_$i' style='width:800px;'></span>";
+            $list.="<span class='col-sm-6'><input type='text' id='q_text_$i' style='width:658px;'></span>";
             $list.="</div>";
 
             $list.="<div class='row'>";
@@ -574,35 +659,41 @@ class Survey {
     }
 
     function add_camp($camp) {
+        /*
+          echo "<pre>";
+          print_r($camp);
+          echo "</pre>";
+          die();
+         */
+
         $title = $camp->title;
         $preface = $camp->content;
+        $clear_peface = str_replace("'", "\'", $preface);
         $from = $camp->from;
         $subject = $camp->subject;
-        $clear_peface = str_replace("'", "\'", $preface);
+        $questions = $camp->questions;
         $date = time();
         $query = "insert into mdl_campaign "
                 . "(from_email,subject,title,preface,added) "
                 . "values ('$from', '$subject', '$title', '$clear_peface','$date')";
         $this->db->query($query);
         $campLastId = $this->get_table_last_record_id('mdl_campaign');
-
-        $text = $camp->qtext;
-        $clear_text = str_replace("'", "\'", $text);
-        $query = "insert into mdl_campaign_q (campid,qtext) "
-                . "values($campLastId,'$clear_text')";
-        $this->db->query($query);
-        $lastqID = $this->get_table_last_record_id('mdl_campaign_q');
-
-        $answers = json_decode($camp->r);
-        if (count($answers) > 0) {
-            foreach ($answers as $a) {
+        foreach ($questions as $q) {
+            $text = $q->qtext;
+            $clear_text = str_replace("'", "\'", $text);
+            $replies = $q->replies; // array
+            $query = "insert into mdl_campaign_q (campid,qtext) "
+                    . "values($campLastId,'$clear_text')";
+            $this->db->query($query);
+            $lastqID = $this->get_table_last_record_id('mdl_campaign_q');
+            foreach ($replies as $a) {
                 $clear_a = str_replace("'", "\'", $a->text);
                 $color = $a->color;
                 $query = "insert into mdl_campaign_a (qid, rtext, color) "
                         . "values($lastqID,'$clear_a', '$color')";
                 $this->db->query($query);
             } // end foreach
-        } // end if
+        } // end foreach
         return true;
     }
 
