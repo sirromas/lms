@@ -901,31 +901,39 @@ class Survey {
         return $name;
     }
 
-    function get_campaign_results($campid) {
+    function get_question_result_data($qid) {
         $list = "";
+        $query = "select * from mdl_campaign_q where id=$qid";
+        $result = $this->db->query($query);
+        while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+            $qid = $row['id'];
+            $name = $row['qtext'];
+            $stat = $this->get_campaign_question_stat($qid, $name);
+
+            $list.="<div class='row'>";
+            $list.="<span class='col-md-9' style='padding-left:15px;padding-top:25px;font-weight:bold;'>$name</span>";
+            $list.="<div>";
+
+            $list.="<div class='row'>";
+            $list.="<span class='col-md-4' style='padding-left:15px;padding-top:25px;'>$stat</span>";
+            $list.="<span class='col-md-8' id='q_chart_$qid' style='padding-left:15px;padding-top:25px;padding-right:15px;'></span>";
+            $list.="<div>";
+        } // end while
+        $chartstat = $this->get_campaign_question_chart_stat($qid);
+        $data = new stdClass();
+        $data->qid = $qid;
+        $data->table = $list;
+        $data->stat = $chartstat;
+        return $data;
+    }
+
+    function get_campaign_results($campid) {
         $query = "select * from mdl_campaign_q where campid=$campid";
-        $num = $this->db->numrows($query);
-        if ($num > 0) {
-
-            $result = $this->db->query($query);
-            while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
-                $qid = $row['id'];
-                $name = $row['qtext'];
-                $stat = $this->get_campaign_question_stat($qid, $name);
-                $list.="<div class='row'>";
-                $list.="<span class='col-md-9' style='padding-left:15px;padding-top:25px;font-weight:bold;'>$name</span>";
-                $list.="<div>";
-
-                $list.="<div class='row'>";
-                $list.="<span class='col-md-4' style='padding-left:15px;padding-top:25px;'>$stat</span>";
-                $list.="<span class='col-md-8' id='q_chart' style='padding-left:15px;padding-top:25px;padding-right:15px;'></span>";
-                $list.="<div>";
-            } // end while
-        } // end if $num > 0
-        else {
-            $list.="N/A";
-        }
-        return $list;
+        $result = $this->db->query($query);
+        while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+            $data[] = $this->get_question_result_data($row['id']);
+        } // end while
+        return json_encode($data);
     }
 
     function get_results_page() {

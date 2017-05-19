@@ -922,18 +922,21 @@ $(document).ready(function () {
             var url = 'http://globalizationplus.com/survey/get_campaign_results.php';
             $.post(url, {id: campid}).done(function (data) {
                 $('#res_loader').hide();
-                $('#camp_result').html(data);
-                $('#res_table').DataTable();
-                var chart_url = 'http://globalizationplus.com/survey/get_chart_data.php';
-                $.post(chart_url, {id: campid}).done(function (data) {
-                    console.log('Server response: ' + data);
-                    $.each(JSON.parse(data), function (index, value) {
+                $("#camp_result").html('');
+                $res = $.parseJSON(data);
+                $.each($res, function (index, obj) {
+                    var qid = obj.qid;
+                    var table = obj.table;
+                    var stat = obj.stat;
+                    $("#camp_result").append($(table));
+                    $.each(JSON.parse(stat), function (index, value) {
                         var item = String(value).split('@');
                         var item_arr = [item[0], parseInt(item[1])];
                         chart_data.push(item_arr);
-                    });
+                    }); // end of each
                     console.log('Charts data array: ' + chart_data);
-                    Highcharts.chart('q_chart', {
+                    var container = 'q_chart_' + qid;
+                    Highcharts.chart(container, {
                         chart: {
                             type: 'pie',
                             options3d: {
@@ -965,7 +968,56 @@ $(document).ready(function () {
                                 data: chart_data
                             }]
                     });
-                }); // end of post
+                }); // end of each
+
+                /*
+                 $('#res_loader').hide();
+                 $('#camp_result').html(data);
+                 $('#res_table').DataTable();
+                 var chart_url = 'http://globalizationplus.com/survey/get_chart_data.php';
+                 $.post(chart_url, {id: campid}).done(function (data) {
+                 console.log('Server response: ' + data);
+                 $.each(JSON.parse(data), function (index, value) {
+                 var item = String(value).split('@');
+                 var item_arr = [item[0], parseInt(item[1])];
+                 chart_data.push(item_arr);
+                 });
+                 console.log('Charts data array: ' + chart_data);
+                 Highcharts.chart('q_chart', {
+                 chart: {
+                 type: 'pie',
+                 options3d: {
+                 enabled: true,
+                 alpha: 45,
+                 beta: 0
+                 }
+                 },
+                 title: {
+                 text: 'Survey results'
+                 },
+                 tooltip: {
+                 pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+                 },
+                 plotOptions: {
+                 pie: {
+                 allowPointSelect: true,
+                 cursor: 'pointer',
+                 depth: 35,
+                 dataLabels: {
+                 enabled: true,
+                 format: '{point.name}'
+                 }
+                 }
+                 },
+                 series: [{
+                 type: 'pie',
+                 name: 'Hits',
+                 data: chart_data
+                 }]
+                 });
+                 }); // end of post
+                 */
+
             }); // end of post
         }
 
