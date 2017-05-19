@@ -56,6 +56,15 @@ class Survey {
 
     function get_campaign_preface($item, $preview = FALSE) {
         $list = "";
+        $list.="<!DOCTYPE html>";
+        $list.="<html lang='en'>";
+        $list.="<head>";
+        $list.="<meta name='viewport' content='width=device-width, initial-scale=1'>";
+        $list.="<link rel='stylesheet' href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css'>";
+        $list.="</head>";
+        $list.="<body>";
+        $list.="<div class='container-fluid'>";
+        
         if ($preview) {
             $query = "select * from mdl_campaign where id=$item";
             $list.="Dear Firstname Lastname, <br>";
@@ -69,8 +78,10 @@ class Survey {
             $search = array('{firstname}', '{lastname}');
             $replace = array($item->firstname, $item->lastname);
             $new_preface = str_replace($search, $replace, $preface);
+            $list.=$new_preface;
         }
-        return $new_preface;
+
+        return $list;
     }
 
     function get_question_answers($qid, $item, $preview) {
@@ -289,6 +300,9 @@ class Survey {
         } // end foreach
 
         $msg.=str_replace($a_search, $answers, $message_with_questions);
+        $msg.="</div>";
+        $msg.="</body>";
+        $msg.="</html>";
         return $msg;
     }
 
@@ -320,7 +334,6 @@ class Survey {
         $list = "";
         $preface = $this->get_campaign_preface($item, $preview);
         $questions = $this->get_campaign_questions($item, $preview);
-        //$answers = $this->get_campaign_answers($item, $preview);
         $campaign = $this->create_message($item, $preface, $questions, $preview);
 
         $list.="<table>";
