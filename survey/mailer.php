@@ -29,6 +29,9 @@ else {
         <!-- Latest compiled and minified CSS -->
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" >
 
+        <!-- Progress bar CSS -->
+        <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+
         <!-- Optional theme -->
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" >
 
@@ -64,6 +67,9 @@ else {
         <link href="//cdnjs.cloudflare.com/ajax/libs/octicons/3.5.0/octicons.min.css" rel="stylesheet">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-colorpicker/2.5.1/css/bootstrap-colorpicker.min.css">
 
+        <!-- jQuery UI -->
+        <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+
     </head>
 
     <body>
@@ -73,6 +79,7 @@ else {
             <li class="active"><a data-toggle="tab" href="#home">Send emails</a></li>
             <li><a data-toggle="tab" href="#menu1">Settings</a></li>
             <li><a data-toggle="tab" href="#camp">Survey</a></li>
+            <li><a data-toggle="tab" href="#progress">Progress</a></li>
             <li><a data-toggle="tab" href="#menu2">Results</a></li>
             <li><a data-toggle="tab" href="#menu3">Account</a></li>
         </ul>
@@ -105,6 +112,13 @@ else {
                 $camp = $survey->get_campaign_page();
                 echo $camp;
                 ?>
+            </div>
+
+            <div id="progress" class="tab-pane fade" style="width:1024px;padding-left: 45px;padding-top: 25px; ">
+                <?php
+                $progress = $survey->get_campaigns_progress();
+                echo $progress;
+                ?>         
             </div>
 
             <div id="menu3" class="tab-pane fade" style="width:640px;padding-left: 45px;padding-top: 25px; ">

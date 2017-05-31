@@ -10,6 +10,7 @@ $(document).ready(function () {
      **********************************************************************/
 
     $('#camps').DataTable();
+    $('#progress_table').DataTable();
 
     // Update config 
     $("#update_config").click(function () {
@@ -897,6 +898,40 @@ $(document).ready(function () {
                     document.location.reload();
                 });
             } // end if confirm
+        }
+
+
+        if (event.target.id.indexOf("camp_status_") >= 0) {
+            var text;
+            var id = event.target.id.replace('camp_status_', '');
+            var elid = '#' + event.target.id;
+            var status = $(elid).data('status');
+
+            if (status == '0') {
+                text = 'Enable survey processing?';
+            } // end if
+            else {
+                text = 'Disable survey processing?';
+            } // end else
+
+            var camp = {id: id, status: status};
+            var url = 'http://globalizationplus.com/survey/change_camp_status.php';
+            if (confirm(text)) {
+                $.post(url, {camp: JSON.stringify(camp)}).done(function () {
+                    document.location.reload();
+                });
+            }
+        }
+
+        if (event.target.id.indexOf("camp_refresh_") >= 0) {
+            var id = event.target.id.replace('camp_refresh_', '');
+            var divelid = '#progress_div_' + id;
+            $(divelid).fadeTo('fast', 0.33);
+            var url = 'http://globalizationplus.com/survey/update_camp_progress.php';
+            $.post(url, {id: id}).done(function (data) {
+                $(divelid).html(data);
+                $(divelid).fadeTo('fast', 1);
+            });
         }
 
 

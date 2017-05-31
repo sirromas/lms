@@ -64,7 +64,7 @@ class Survey {
         $list.="</head>";
         $list.="<body>";
         $list.="<div class='container-fluid'>";
-        
+
         if ($preview) {
             $query = "select * from mdl_campaign where id=$item";
             $list.="Dear Firstname Lastname, <br>";
@@ -76,11 +76,15 @@ class Survey {
         while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
             $preface = $row['preface'];
             $search = array('{firstname}', '{lastname}');
-            $replace = array($item->firstname, $item->lastname);
+            if ($item->firstname != '' && $item->lastname != '') {
+                $replace = array($item->firstname, $item->lastname);
+            } // end if 
+            else {
+                $replace = array('', '');
+            } // end else 
             $new_preface = str_replace($search, $replace, $preface);
             $list.=$new_preface;
         }
-
         return $list;
     }
 
@@ -769,7 +773,8 @@ class Survey {
                 $csv_data = array_map('str_getcsv', file($full_file_path));
                 if (count($csv_data) > 0) {
                     foreach ($csv_data as $item) {
-                        if ($item[0] != '' && $item[1] != '' && $item[2] != '') {
+                        // We must be ab;e to process both name and nameless lists
+                        if ($item[2] != '') {
                             $this->put_item_into_queue($item, $campid);
                         } // end if $item[0]!='' && $item[1]!='' && $item[2]!=''
                     } // end foreach
@@ -789,9 +794,23 @@ class Survey {
         return $list;
     }
 
+    function get_campaign_status($campid) {
+        $query = "select * from mdl_campaign where id=$campid";
+        $result = $this->db->query($query);
+        while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+            $status = $row['enabled'];
+        }
+        return $status;
+    }
+
     function process_queueu_items() {
-        $query = "select * from mdl_campaign_queue "
-                . "where sent=0 order by added desc limit 0,1";
+        $query = "select q.id, q.firstname, q.lastname, q.email, "
+                . "q.campid, q.sent, c.id as cid, c.enabled "
+                . "from mdl_campaign c, mdl_campaign_queue q "
+                . "where q.campid=c.id "
+                . "and c.enabled=1 "
+                . "and q.sent=0 "
+                . "order by q.added limit 0,1";
         $result = $this->db->query($query);
         while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
             $item = new stdClass();
@@ -800,14 +819,17 @@ class Survey {
             $item->id = $row['id'];
             $item->email = $row['email'];
             $item->campid = $row['campid'];
-            $status = $this->send_survey_email($item);
-            if ($status) {
-                $query = "update mdl_campaign_queue set sent=1 where id=$item->id";
-            } // end if $status
-            else {
-                $query = "update mdl_campaign_queue set sent=-1 where id=$item->id";
-            } //end else
-            $this->db->query($query);
+            $campaign_status = $this->get_campaign_status($item->campid);
+            if ($campaign_status > 0) {
+                $send_status = $this->send_survey_email($item);
+                if ($send_status) {
+                    $query = "update mdl_campaign_queue set sent=1 where id=$item->id";
+                } // end if $status
+                else {
+                    $query = "update mdl_campaign_queue set sent=-1 where id=$item->id";
+                } //end else
+                $this->db->query($query);
+            } // end if $campaign_status>0
         }
     }
 
@@ -1363,6 +1385,138 @@ class Survey {
     function del_answer_image($id) {
         $query = "update mdl_campaign_a set img='' where id=$id";
         $this->db->query($query);
+    }
+
+    function get_campaign_not_sent_items($campid) {
+        $items = array();
+        $query = "select * from mdl_campaign_queue "
+                . "where campid=$campid and sent=0";
+        $num = $this->db->numrows($query);
+        if ($num > 0) {
+            $result = $this->db->query($query);
+            while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+                $items[] = $row['id'];
+            } // end while
+        } // end if ($num > 0
+        return $items;
+    }
+
+    function get_campaign_sent_items($campid) {
+        $items = array();
+        $query = "select * from mdl_campaign_queue "
+                . "where campid=$campid and sent<>0";
+        $num = $this->db->numrows($query);
+        if ($num > 0) {
+            $result = $this->db->query($query);
+            while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+                $items[] = $row['id'];
+            } // end while
+            return $items;
+        } // end if $num > 0
+    }
+
+    function get_campaign_details($campid) {
+        $query = "select * from mdl_campaign where id=$campid";
+        $result = $this->db->query($query);
+        while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+            $camp = new stdClass();
+            foreach ($row as $key => $value) {
+                $camp->$key = $value;
+            } // end foreach
+        } // end while
+        return $camp;
+    }
+
+    function get_campaign_queue_data($campid) {
+        $camp = $this->get_campaign_details($campid);
+        $not_sent = $this->get_campaign_not_sent_items($campid);
+        $not_sent_total = count($not_sent);
+        $sent = $this->get_campaign_sent_items($campid);
+        $sent_total = count($sent);
+        $total = $not_sent_total + $sent_total;
+        $data = new stdClass();
+        $data->camp = $camp;
+        $data->not_sent_items = $not_sent;
+        $data->sent_items = $sent;
+        $data->not_sent_total = $not_sent_total;
+        $data->sent_total = $sent_total;
+        $data->total = $total;
+        $data->status = $camp->enabled;
+        return $data;
+    }
+
+    function get_campaign_progress_block($data) {
+        $list = "";
+        $id = $data->camp->id;
+        $list.="<div id='progress_div_$id'>$data->sent_total sent of $data->total (" . round(($data->sent_total / $data->total) * 100) . ") %</div>";
+        return $list;
+    }
+
+    function get_campaign_stop_button($data) {
+        $list = "";
+        $status = $data->status;
+        $text = ($status == 0) ? 'Enable' : 'Disable';
+        $campid = $data->camp->id;
+        $id = "camp_status_$campid";
+        $refreshid = "camp_refresh_$campid";
+        $list.="<button class='btn btn-default' id='$id' data-status='$status'>$text</button>&nbsp;&nbsp;";
+        $list.="<button class='btn btn-default' id='$refreshid' data-status='$status'>Refresh</button>";
+        return $list;
+    }
+
+    function get_campaigns_progress() {
+        $list = "";
+        $query = "select * from mdl_campaign order by id desc";
+        $num = $this->db->numrows($query);
+        if ($num > 0) {
+            $list.="<table id='progress_table' class='table table-striped table-bordered' cellspacing='0' width='100%'>";
+            $list.="<thead>";
+            $list.="<tr>";
+            $list.="<th>Survey</th>";
+            $list.="<th>Progress</th>";
+            $list.="<th>Status</th>";
+            $list.="<th>Ops</th>";
+            $list.="</tr>";
+            $list.="</thead>";
+            $list.="<tbody>";
+            $result = $this->db->query($query);
+            while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+                $camps[] = $row['id'];
+            } // end while
+            foreach ($camps as $campid) {
+                $camp = $this->get_campaign_queue_data($campid);
+                $name = $camp->camp->title;
+                $progres = $this->get_campaign_progress_block($camp);
+                $status = ($camp->status == 0) ? 'Disabled' : 'Enabled';
+                $button = $this->get_campaign_stop_button($camp);
+                $list.="<tr>";
+                $list.="<td>$name</td>";
+                $list.="<td>$progres</td>";
+                $list.="<td>$status</td>";
+                $list.="<td>$button</td>";
+                $list.="</tr>";
+            } // end foreach
+            $list.="</tbody>";
+            $list.="</table>";
+        } // end if $num > 0
+        else {
+            $list.="<div class='row'>";
+            $list.="<span class='col-12'>There are no surveys definded</span>";
+            $list = "</div>";
+        } // end else
+        return $list;
+    }
+
+    function change_campaign_status($camp) {
+        $status = ($camp->status == 0) ? 1 : 0;
+        $query = "update mdl_campaign set enabled=$status where id='$camp->id'";
+        $this->db->query($query);
+    }
+
+    function update_camp_progress_data($id) {
+        $camp = $this->get_campaign_queue_data($id);
+        $progres = $this->get_campaign_progress_block($camp);
+        return $progres;
     }
 
 }
