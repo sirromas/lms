@@ -821,13 +821,7 @@ class Survey {
             $item->campid = $row['campid'];
             $campaign_status = $this->get_campaign_status($item->campid);
             if ($campaign_status > 0) {
-                $send_status = $this->send_survey_email($item);
-                if ($send_status) {
-                    $query = "update mdl_campaign_queue set sent=1 where id=$item->id";
-                } // end if $status
-                else {
-                    $query = "update mdl_campaign_queue set sent=-1 where id=$item->id";
-                } //end else
+                $query = "update mdl_campaign_queue set sent=1 where id=$item->id";
                 $this->db->query($query);
             } // end if $campaign_status>0
         }
