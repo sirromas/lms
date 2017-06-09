@@ -803,6 +803,15 @@ class Survey {
         return $status;
     }
 
+    function validate_email($email) {
+        if (filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            return true;
+        } // end if
+        else {
+            return false;
+        } // end else
+    }
+
     function process_queueu_items() {
         $query = "select q.id, q.firstname, q.lastname, q.email, "
                 . "q.campid, q.sent, c.id as cid, c.enabled "
@@ -811,20 +820,41 @@ class Survey {
                 . "and c.enabled=1 "
                 . "and q.sent=0 "
                 . "order by q.added limit 0,1";
-        $result = $this->db->query($query);
-        while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
-            $item = new stdClass();
-            $item->firstname = $row['firstname'];
-            $item->lastname = $row['lastname'];
-            $item->id = $row['id'];
-            $item->email = $row['email'];
-            $item->campid = $row['campid'];
-            $campaign_status = $this->get_campaign_status($item->campid);
-            if ($campaign_status > 0) {
-                $query = "update mdl_campaign_queue set sent=1 where id=$item->id";
-                $this->db->query($query);
-            } // end if $campaign_status>0
-        }
+        echo "Query: " . $query . "<br>";
+        $num = $this->db->numrows($query);
+        if ($num > 0) {
+            $result = $this->db->query($query);
+            while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+                $item = new stdClass();
+                $item->firstname = $row['firstname'];
+                $item->lastname = $row['lastname'];
+                $item->id = $row['id'];
+                $item->email = $row['email'];
+                $item->campid = $row['campid'];
+                $campaign_status = $this->get_campaign_status($item->campid);
+                if ($campaign_status > 0) {
+                    $email = $item->email;
+                    $campdata = $this->get_campaign_detailes($item);
+                    $from = $campdata->from_email;
+                    $subject = $campdata->subject;
+                    $message = $this->compose_message($item);
+                    try {
+                        $this->send_single_item($from, $email, $subject, $message);
+                        echo "Email item " . $row['email'] . " is correct ...<br>";
+                        $query = "update mdl_campaign_queue set sent=1 where id=$item->id";
+                    } // end try 
+                    catch (Exception $e) {
+                        echo 'Message: ' . $e->getMessage();
+                        echo "Email item " . $row['email'] . " is not correct ...<br>";
+                        $query = "update mdl_campaign_queue set sent=-1 where id=$item->id";
+                    }
+                    $this->db->query($query);
+                } // end if $campaign_status>0
+            } // end while
+        } // end if $num > 0
+        else {
+            echo "<br><p style='text-align:center;'>There are no items to be processed ...</p>";
+        } // end else
     }
 
     function get_res_ampaigns_list() {
@@ -1398,7 +1428,21 @@ class Survey {
     function get_campaign_sent_items($campid) {
         $items = array();
         $query = "select * from mdl_campaign_queue "
-                . "where campid=$campid and sent<>0";
+                . "where campid=$campid and sent=1";
+        $num = $this->db->numrows($query);
+        if ($num > 0) {
+            $result = $this->db->query($query);
+            while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+                $items[] = $row['id'];
+            } // end while
+            return $items;
+        } // end if $num > 0
+    }
+
+    function get_campaign_invalid_items($campid) {
+        $items = array();
+        $query = "select * from mdl_campaign_queue "
+                . "where campid=$campid and sent=-1";
         $num = $this->db->numrows($query);
         if ($num > 0) {
             $result = $this->db->query($query);
@@ -1424,16 +1468,18 @@ class Survey {
     function get_campaign_queue_data($campid) {
         $camp = $this->get_campaign_details($campid);
         $not_sent = $this->get_campaign_not_sent_items($campid);
+        $invalid = count($this->get_campaign_invalid_items($campid));
         $not_sent_total = count($not_sent);
         $sent = $this->get_campaign_sent_items($campid);
         $sent_total = count($sent);
-        $total = $not_sent_total + $sent_total;
+        $total = $not_sent_total + $sent_total + $invalid;
         $data = new stdClass();
         $data->camp = $camp;
         $data->not_sent_items = $not_sent;
         $data->sent_items = $sent;
         $data->not_sent_total = $not_sent_total;
         $data->sent_total = $sent_total;
+        $data->invalid = $invalid;
         $data->total = $total;
         $data->status = $camp->enabled;
         return $data;
@@ -1442,7 +1488,8 @@ class Survey {
     function get_campaign_progress_block($data) {
         $list = "";
         $id = $data->camp->id;
-        $list.="<div id='progress_div_$id'>$data->sent_total sent of $data->total (" . round(($data->sent_total / $data->total) * 100) . ") %</div>";
+        $invalid = ($data->invalid == '') ? 'N/A' : $data->invalid;
+        $list.="<div id='progress_div_$id'>$data->sent_total sent of $data->total (" . round(($data->sent_total / $data->total) * 100) . ") %<br><span style=''>Invalid items: $invalid</span></div>";
         return $list;
     }
 
