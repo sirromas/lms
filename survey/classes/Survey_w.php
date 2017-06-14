@@ -25,8 +25,8 @@ class Survey {
 
     function __construct() {
         $this->db = new pdo_db();
-        $this->from = 'info@professorsteveposner.com';
-        $this->subject = 'Professor Posner - Research';
+        $this->from = 'info@globalizationplus.com';
+        $this->subject = 'Globalization plus - Survey';
         $this->upload_path = $_SERVER['DOCUMENT_ROOT'] . '/survey/files';
     }
 
@@ -105,7 +105,7 @@ class Survey {
                 } // end if
                 else {
                     $query_string = "email=$clean_email&id=$id&firstname=" . urlencode($item->firstname) . "&lastname=" . urlencode($item->lastname) . "";
-                    $list.="<td style='padding:15px;'><a style='color:$color' href='http://professorsteveposner.com/survey/receive.php?$query_string' target='_blank'>" . $row['rtext'] . "</a></td>";
+                    $list.="<td style='padding:15px;'><a style='color:$color' href='http://globalizationplus.com/survey/receive.php?$query_string' target='_blank'>" . $row['rtext'] . "</a></td>";
                 } // end else 
             } // end while
             $list.="</tr>";
@@ -196,11 +196,11 @@ class Survey {
                 else {
                     $query_string = "email=$clean_email&id=$id&firstname=" . urlencode($item->firstname) . "&lastname=" . urlencode($item->lastname) . "";
                     if ($img == null) {
-                        $list.="<a style='color:$color' href='http://professorsteveposner.com/survey/receive.php?$query_string' target='_blank'>" . $row['rtext'] . "</a>";
+                        $list.="<a style='color:$color' href='http://globalizationplus.com/survey/receive.php?$query_string' target='_blank'>" . $row['rtext'] . "</a>";
                     } // end if
                     else {
                         $img_path = 'http://' . $_SERVER['SERVER_NAME'] . '/survey/img/' . $img;
-                        $list.="<a style='color:$color' href='http://professorsteveposner.com/survey/receive.php?$query_string' target='_blank'><img src='$img_path' style='cursor:pointer;'></a>";
+                        $list.="<a style='color:$color' href='http://globalizationplus.com/survey/receive.php?$query_string' target='_blank'><img src='$img_path' style='cursor:pointer;'></a>";
                     } // end else
                 } // end else 
                 $answers[] = $list;
@@ -243,11 +243,11 @@ class Survey {
                     else {
                         $query_string = "email=$clean_email&id=$id&firstname=" . urlencode($item->firstname) . "&lastname=" . urlencode($item->lastname) . "";
                         if ($img == null) {
-                            $list.="<a style='color:$color' href='http://professorsteveposner.com/survey/receive.php?$query_string' target='_blank'>" . $row['rtext'] . "</a>";
+                            $list.="<a style='color:$color' href='http://globalizationplus.com/survey/receive.php?$query_string' target='_blank'>" . $row['rtext'] . "</a>";
                         } // end if
                         else {
                             $img_path = 'http://' . $_SERVER['SERVER_NAME'] . '/survey/img/' . $img;
-                            $list.="<a style='color:$color' href='http://professorsteveposner.com/survey/receive.php?$query_string' target='_blank'><img src='$img_path' style='cursor:pointer;'></a>";
+                            $list.="<a style='color:$color' href='http://globalizationplus.com/survey/receive.php?$query_string' target='_blank'><img src='$img_path' style='cursor:pointer;'></a>";
                         } // end else
                     } // end else 
                     $answers[] = $list;
@@ -406,11 +406,11 @@ class Survey {
         $this->db->query($query);
 
         $list.="<p style='text-align:center;'>"
-                . "<img class='dsR1145' src='../../assets/images/surveythanks.jpg' style='padding-top: 4px; border-style: solid; border-width: 6px 1px 2px; border-color: #ddd;' alt='' usemap='#header' border='0'><map name='header' id='header'>"
-                . "<area title='About Us' shape='rect' coords='35817,3217,40220,5217' href='http://professorsteveposner.com/about.html' alt='About Us' target='_blank'>"
-                . "<area title='Professor Posner' shape='rect' coords='7103,6774,32763,12109' href='http://professorsteveposner.com' alt='Globalizaiton Plus' target='_blank'><area title='Log-In' shape='rect' coords='1055,2772,4108,5106' href='http://professorsteveposner.com/login.html' alt='Log-In' target='_blank'></map></p>";
+                . "<img class='dsR1145' src='http://globalizationplus.com/assets/images/header.jpg' style='padding-top: 4px; border-style: solid; border-width: 6px 1px 2px; border-color: #ddd;' alt='' usemap='#header' border='0'><map name='header' id='header'>"
+                . "<area title='About Us' shape='rect' coords='609,23,683,40' href='http://globalizationplus.com/about.html' alt='About Us' target='_blank'>"
+                . "<area title='Globalization Plus' shape='rect' coords='120,55,556,102' href='http://globalizationplus.com' alt='Globalizaiton Plus' target='_blank'><area title='Log-In' shape='rect' coords='17,19,68,39' href='http://globalizationplus.com/login.html' alt='Log-In' target='_blank'></map></p>";
 
-       $list.= "<br><div style='margin:auto;text-align:center;font-weight:bold;font-size:25px;'>.</div>";
+        $list.= "<br><div style='margin:auto;text-align:center;font-weight:bold;font-size:25px;'>Thank you very much!</div>";
         return $list;
     }
 
@@ -801,6 +801,15 @@ class Survey {
             $status = $row['enabled'];
         }
         return $status;
+    }
+
+    function validate_email($email) {
+        if (filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            return true;
+        } // end if
+        else {
+            return false;
+        } // end else
     }
 
     function process_queueu_items() {
@@ -1419,7 +1428,21 @@ class Survey {
     function get_campaign_sent_items($campid) {
         $items = array();
         $query = "select * from mdl_campaign_queue "
-                . "where campid=$campid and sent<>0";
+                . "where campid=$campid and sent=1";
+        $num = $this->db->numrows($query);
+        if ($num > 0) {
+            $result = $this->db->query($query);
+            while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+                $items[] = $row['id'];
+            } // end while
+            return $items;
+        } // end if $num > 0
+    }
+
+    function get_campaign_invalid_items($campid) {
+        $items = array();
+        $query = "select * from mdl_campaign_queue "
+                . "where campid=$campid and sent=-1";
         $num = $this->db->numrows($query);
         if ($num > 0) {
             $result = $this->db->query($query);
@@ -1445,16 +1468,18 @@ class Survey {
     function get_campaign_queue_data($campid) {
         $camp = $this->get_campaign_details($campid);
         $not_sent = $this->get_campaign_not_sent_items($campid);
+        $invalid = count($this->get_campaign_invalid_items($campid));
         $not_sent_total = count($not_sent);
         $sent = $this->get_campaign_sent_items($campid);
         $sent_total = count($sent);
-        $total = $not_sent_total + $sent_total;
+        $total = $not_sent_total + $sent_total + $invalid;
         $data = new stdClass();
         $data->camp = $camp;
         $data->not_sent_items = $not_sent;
         $data->sent_items = $sent;
         $data->not_sent_total = $not_sent_total;
         $data->sent_total = $sent_total;
+        $data->invalid = $invalid;
         $data->total = $total;
         $data->status = $camp->enabled;
         return $data;
@@ -1463,7 +1488,8 @@ class Survey {
     function get_campaign_progress_block($data) {
         $list = "";
         $id = $data->camp->id;
-        $list.="<div id='progress_div_$id'>$data->sent_total sent of $data->total (" . round(($data->sent_total / $data->total) * 100) . ") %</div>";
+        $invalid = ($data->invalid == '') ? 'N/A' : $data->invalid;
+        $list.="<div id='progress_div_$id'>$data->sent_total sent of $data->total (" . round(($data->sent_total / $data->total) * 100) . ") %<br><span style=''>Invalid items: $invalid</span></div>";
         return $list;
     }
 
