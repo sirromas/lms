@@ -178,13 +178,13 @@ if ($roleid == 4) {
         die();
     }
 
-    /*     * *********************************************************************
+    /* **********************************************************************
      *      
      *   Redirect teacher directly to grades page
      *
      * *********************************************************************** */
     $groupid = $groups[0];
-    $url = "http://" . $_SERVER['SERVER_NAME'] . "/lms/grade/report/grader/index.php?id=" . $ac->courseid . "&group=$groupid";
+    $url = "http://www." . $_SERVER['SERVER_NAME'] . "/lms/grade/report/grader/index.php?id=" . $ac->courseid . "&group=$groupid";
     header("Location: $url");
 } // end if $roleid == 4
 
@@ -199,7 +199,7 @@ if ($roleid == 5) {
         die();
     }
 
-    /*     * *********************************************************************
+    /*  **********************************************************************
      *      
      *   If activity/resource belongs to user's group - it should be shown
      *
@@ -207,7 +207,7 @@ if ($roleid == 5) {
 
     $pageid = $nav->get_page_id(); // you need to find workaround
     if ($pageid != 0 && $userid != 2 && $userid != 3) {
-        $url = "http://" . $_SERVER['SERVER_NAME'] . "/lms/mod/page/view.php?id=" . $pageid . "";
+        $url = "http://www." . $_SERVER['SERVER_NAME'] . "/lms/mod/page/view.php?id=" . $pageid . "";
         header("Location: $url");
     } // end if $pageid != 0
     else {

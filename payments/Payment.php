@@ -43,7 +43,7 @@ $form = $p->get_student_payment_form($userid, $groupslist);
     <body>
 
         <div class="header clearfix">
-            <h3 class="text-muted text-center">GLOBALIZATION PLUS</h3>
+            <h3 class="text-muted text-center">NewsFacts & Analysis</h3>
         </div>
 
         <br>

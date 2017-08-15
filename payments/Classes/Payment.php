@@ -131,7 +131,7 @@ class StudentPayment extends Utils {
                         </div>";
 
             $list.="<div class='form-group'>
-                            <div class='text-info' id='ajax_loader' style='display:none;text-align: center;'><img src='http://globalizationplus.com/assets/images/ajax.gif'></div>    
+                            <div class='text-info' id='ajax_loader' style='display:none;text-align: center;'><img src='http://www.newsfactsandanalysis.com/assets/images/ajax.gif'></div>    
                         </div>";
 
             $list.="<button type='submit' class='btn btn-default'>Submit</button>";

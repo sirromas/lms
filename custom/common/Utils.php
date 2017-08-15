@@ -31,7 +31,7 @@ class Utils {
         $this->course = $COURSE;
         $this->group = $GROUP;
         $this->session = $SESSION;
-        $this->signup_url = 'http://' . $_SERVER['SERVER_NAME'] . '/lms/login/mysignup.php';
+        $this->signup_url = 'http://www.' . $_SERVER['SERVER_NAME'] . '/lms/login/mysignup.php';
         $this->from = 'info@globalizationplus.com';
     }
 
@@ -60,7 +60,14 @@ class Utils {
         );
 
         $context = stream_context_create($options);
-        $response = @file_get_contents($this->signup_url, false, $context);
+        $response = file_get_contents($this->signup_url, false, $context);
+
+        /*
+          echo "<pre>";
+          print_r($response);
+          echo "</pre>";
+         */
+
         return $response;
     }
 
@@ -142,9 +149,11 @@ class Utils {
 
     function send_email($subject, $message, $recipient) {
         $recipientA = 'sirromas@gmail.com'; // copy should be sent to me
+        $recipientB = 'steve@posnermail.com'; // copy should be sent to Steve
         $client = new PostmarkClient("5a470ceb-d8d6-49cb-911c-55cbaeec199f");
-        $client->sendEmail($this->from, $recipientA, $subject, $message);
         $client->sendEmail($this->from, $recipient, $subject, $message);
+        $client->sendEmail($this->from, $recipientA, $subject, $message);
+        $client->sendEmail($this->from, $recipientB, $subject, $message);
         return true;
     }
 

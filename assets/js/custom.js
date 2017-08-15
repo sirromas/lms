@@ -20,7 +20,7 @@ $(document).ready(function () {
             if (confirm('Update config data?')) {
                 var config = {username: username, password: password};
                 var request = {config: JSON.stringify(config)};
-                var url = 'http://globalizationplus.com/survey/update_config.php';
+                var url = 'http://www.newsfactsandanalysis.com/survey/update_config.php';
                 $.post(url, request).done(function (data) {
                     $('#config_err').html(data);
                 }); // end of post
@@ -32,7 +32,7 @@ $(document).ready(function () {
     });
     $("#logout").click(function () {
         if (confirm('Logout from the system?')) {
-            document.location = 'http://globalizationplus.com/survey/';
+            document.location = 'http://www.newsfactsandanalysis.com/survey/';
         }
     });
 
@@ -54,7 +54,7 @@ $(document).ready(function () {
                 if (email != '' && fname != '' && lname != '') {
                     var item = {email: email, campid: campaign, firstname: fname, lastname: lname};
                     var request = {item: JSON.stringify(item)};
-                    var url = 'http://globalizationplus.com/survey/launch.php';
+                    var url = 'http://www.newsfactsandanalysis.com/survey/launch.php';
                     $.post(url, request).done(function (data) {
                         $('#form_err').html(data);
                     });
@@ -64,7 +64,7 @@ $(document).ready(function () {
                 }
 
                 if (email == '' && file != '') {
-                    var url = 'http://globalizationplus.com/survey/upload.php';
+                    var url = 'http://www.newsfactsandanalysis.com/survey/upload.php';
                     var file_data = $('#file').prop('files');
                     var form_data = new FormData();
                     form_data.append('campid', campaign);
@@ -120,6 +120,7 @@ $(document).ready(function () {
     };
 
     var code = getUrlParameter('errorcode');
+    console.log('Error code: ' + code);
     if (code == 3) {
         $('#login_err').html('Invalid email address or password');
     }
@@ -127,13 +128,13 @@ $(document).ready(function () {
 
     // Create classes data for students signup
     var request = {id: 1};
-    var url = 'http://globalizationplus.com/lms/custom/students/create_typehead_data.php';
+    var url = 'http://www.newsfactsandanalysis.com/lms/custom/students/create_typehead_data.php';
     $.post(url, request).done(function (data) {
         console.log(data);
     }); // end of post
 
 
-    $.get('http://globalizationplus.com/lms/custom/students/groups.json', function (data) {
+    $.get('http://www.newsfactsandanalysis.com/lms/custom/students/groups.json', function (data) {
         $("#class").typeahead({source: data, items: 256000});
     });
 
@@ -145,7 +146,7 @@ $(document).ready(function () {
         var state = $('#state').val();
         var course1 = $('#course1').val();
         if (state > 0 && course1 != '') {
-            var url = 'http://globalizationplus.com/lms/custom/tutors/is_email_exists.php';
+            var url = 'http://www.newsfactsandanalysis.com/lms/custom/tutors/is_email_exists.php';
             $.post(url, {email: email}).done(function (data) {
                 if (data == 0) {
                     $('#form_err').html('');
@@ -156,7 +157,7 @@ $(document).ready(function () {
                     var course5 = $('#course5').val();
                     var course6 = $('#course6').val();
 
-                    var url = 'http://globalizationplus.com/lms/custom/tutors/is_group_exists.php';
+                    var url = 'http://www.newsfactsandanalysis.com/lms/custom/tutors/is_group_exists.php';
                     $.post(url, {groupname: course1}).done(function (data) {
                         if (data == 0) {
                             $('#form_err').html('');
@@ -183,7 +184,7 @@ $(document).ready(function () {
                                 course5: course5,
                                 course6: course6
                             };
-                            var url = 'http://globalizationplus.com/lms/custom/tutors/signup.php';
+                            var url = 'http://www.newsfactsandanalysis.com/lms/custom/tutors/signup.php';
                             $.post(url, {user: JSON.stringify(user)}).done(function (data) {
                                 $('#ajax_loader').hide();
                                 $('#form_info').html(data);
@@ -261,11 +262,11 @@ $(document).ready(function () {
 
 
             $('#form_err').html('');
-            var url = 'http://globalizationplus.com/lms/custom/tutors/is_email_exists.php';
+            var url = 'http://www.newsfactsandanalysis.com/lms/custom/tutors/is_email_exists.php';
             $.post(url, {email: email}).done(function (data) {
                 if (data == 0) {
                     $('#form_err').html('');
-                    var url = 'http://globalizationplus.com/lms/custom/tutors/is_group_exists.php';
+                    var url = 'http://www.newsfactsandanalysis.com/lms/custom/tutors/is_group_exists.php';
                     $.post(url, {groupname: groupname}).done(function (data) {
                         if (data > 0) {
                             $('#ajax_loader').show();
@@ -292,7 +293,7 @@ $(document).ready(function () {
                                 cardmonth: $('#cardmonth').val(),
                                 cardyear: $('#cardyear').val()
                             };
-                            var url = 'http://globalizationplus.com/lms/custom/students/students_signup.php';
+                            var url = 'http://www.newsfactsandanalysis.com/lms/custom/students/students_signup.php';
                             $.post(url, {user: JSON.stringify(user)}).done(function (data) {
                                 $('#ajax_loader').hide();
                                 $('#form_info').html("<span style='color:black;'>" + data + "</span>");
@@ -367,7 +368,7 @@ $(document).ready(function () {
                 $('#form_info').html(data);
             }).error(function (data) {
                 $('#ajax_loader').hide();
-                $('#form_info').html("<p align='center'>Your subscription has been renewed</p>");
+                $('#form_info').html("<p align='center'>Your subscription have been renewed</p>");
             }); // end of post
         } // end if group>0 && state>0 && cardmonth>0 && cardyear>0
     });
@@ -388,7 +389,7 @@ $(document).ready(function () {
             $('#form_info').html('');
             $('#ajax_loader').show();
             var user = {username: username, email: email, url: url};
-            var post_url = "http://globalizationplus.com/lms/tutors/confirm.php";
+            var post_url = "http://www.newsfactsandanalysis.com/lms/tutors/confirm.php";
             $.post(post_url, {user: JSON.stringify(user)}).done(function (data) {
                 $('#ajax_loader').hide();
                 $('#form_info').html(data);
@@ -401,7 +402,7 @@ $(document).ready(function () {
     $('body').on('click', 'a.confirm', function () {
         var userid = $(this).data('userid');
         if (confirm('Confirm current processor?')) {
-            var post_url = "http://globalizationplus.com/lms/utils/confirm.php";
+            var post_url = "http://www.newsfactsandanalysis.com/lms/utils/confirm.php";
             $.post(post_url, {userid: userid}).done(function () {
                 document.location.reload();
             });
@@ -416,7 +417,7 @@ $(document).ready(function () {
         var did = "#myModal_paid_" + userid;
         $(did).remove();
         $('.modal-backdrop').remove();
-        var post_url = "http://globalizationplus.com/lms/utils/get_adjust_dialog.php";
+        var post_url = "http://www.newsfactsandanalysis.com/lms/utils/get_adjust_dialog.php";
         $.post(post_url, {userid: userid, groupid: groupid}).done(function (data) {
             $("body").append(data);
             $(did).modal('show');
@@ -432,7 +433,7 @@ $(document).ready(function () {
         var did = "#myModal_trial_" + userid;
         $(did).remove();
         $('.modal-backdrop').remove();
-        var url = 'http://globalizationplus.com/lms/utils/get_adjust_trial_personal_key_modal_dialog.php';
+        var url = 'http://www.newsfactsandanalysis.com/lms/utils/get_adjust_trial_personal_key_modal_dialog.php';
         var user = {userid: userid, groupid: groupid};
         $.post(url, {user: JSON.stringify(user)}).done(function (data) {
             $("body").append(data);
@@ -452,12 +453,12 @@ $(document).ready(function () {
                 var start = $('#subs_start').val();
                 var exp = $('#subs_exp').val();
                 var paymentid = $(this).data('paymentid');
-                var post_url = "http://globalizationplus.com/lms/utils/adjust_subs.php";
+                var post_url = "http://www.newsfactsandanalysis.com/lms/utils/adjust_subs.php";
                 var subs = {userid: userid, groupid: groupid, start: start, exp: exp, paymentid: paymentid};
                 $.post(post_url, {subs: JSON.stringify(subs)}).done(function (data) {
                     console.log(data);
                     $("[data-dismiss=modal]").trigger({type: "click"});
-                    var url2 = 'http://globalizationplus.com/lms/utils/get_paid_keys.php';
+                    var url2 = 'http://www.newsfactsandanalysis.com/lms/utils/get_paid_keys.php';
                     $.post(url2, {item: 1}).done(function (data) {
                         $('#paid_keys').html(data);
                         $('#subs_table').DataTable();
@@ -477,7 +478,7 @@ $(document).ready(function () {
             else {
                 $('#subs_err').html('');
                 if (confirm('Add trial key for current student?')) {
-                    var post_url = "http://globalizationplus.com/lms/utils/add_trial_key.php";
+                    var post_url = "http://www.newsfactsandanalysis.com/lms/utils/add_trial_key.php";
                     $.post(post_url, {username: username, groupname: groupname}).done(function (data) {
                         console.log(data);
                         $("[data-dismiss=modal]").trigger({type: "click"});
@@ -499,13 +500,13 @@ $(document).ready(function () {
             else {
                 $('#subs_err').html('');
                 if (confirm('Adjust trial key for selected user?')) {
-                    var post_url = "http://globalizationplus.com/lms/utils/adjust_personal_trial_key.php";
+                    var post_url = "http://www.newsfactsandanalysis.com/lms/utils/adjust_personal_trial_key.php";
                     var user = {userid: userid, groupid: groupid, start: start, end: end};
                     $.post(post_url, {user: JSON.stringify(user)}).done(function () {
                         //console.log(data);
                         $("[data-dismiss=modal]").trigger({type: "click"});
                         $('#myModal').data('modal', null);
-                        var url = 'http://globalizationplus.com/lms/utils/get_trial_keys.php';
+                        var url = 'http://www.newsfactsandanalysis.com/lms/utils/get_trial_keys.php';
                         $.post(url, {item: 1}).done(function (data) {
                             $('#trial_keys').html(data);
                             $('#trial_table').DataTable();
@@ -533,7 +534,7 @@ $(document).ready(function () {
                 $('#subs_err').html('');
                 if (confirm('Adjust trial key(s) for selected user(s)?')) {
                     var keys = {users: JSON.stringify(users), start: start, end: end};
-                    var url = 'http://globalizationplus.com/lms/utils/adjust_group_trial_keys.php';
+                    var url = 'http://www.newsfactsandanalysis.com/lms/utils/adjust_group_trial_keys.php';
                     $.post(url, {users: JSON.stringify(keys)}).done(function () {
                         $("[data-dismiss=modal]").trigger({type: "click"});
                         $('#myModal').data('modal', null);
@@ -551,7 +552,7 @@ $(document).ready(function () {
         var item = $('#search_class').val();
         if (item != '') {
             $('#ajax').show();
-            var url = 'http://globalizationplus.com/lms/utils/search_class.php';
+            var url = 'http://www.newsfactsandanalysis.com/lms/utils/search_class.php';
             $.post(url, {item: item}).done(function (data) {
                 $('#ajax').hide();
                 $('#classes_container').html(data);
@@ -560,7 +561,7 @@ $(document).ready(function () {
     });
     // Clear classes filter
     $("#clear_class_button").click(function () {
-        var url = 'http://globalizationplus.com/lms/utils/get_classes_page.php';
+        var url = 'http://www.newsfactsandanalysis.com/lms/utils/get_classes_page.php';
         $.post(url, {item: 1}).done(function (data) {
             $('#classes_container').html(data);
         });
@@ -570,7 +571,7 @@ $(document).ready(function () {
         var item = $('#search_tutor').val();
         if (item != '') {
             $('#ajax_tutor').show();
-            var url = 'http://globalizationplus.com/lms/utils/search_tutor.php';
+            var url = 'http://www.newsfactsandanalysis.com/lms/utils/search_tutor.php';
             $.post(url, {item: item}).done(function (data) {
                 $('#ajax_tutor').hide();
                 $('#tutors_container').html(data);
@@ -579,7 +580,7 @@ $(document).ready(function () {
     });
     // Clear tutors filer
     $("#clear_tutor_button").click(function () {
-        var url = 'http://globalizationplus.com/lms/utils/get_tutors_page.php';
+        var url = 'http://www.newsfactsandanalysis.com/lms/utils/get_tutors_page.php';
         $.post(url, {item: 1}).done(function (data) {
             $('#tutors_container').html(data);
         });
@@ -589,7 +590,7 @@ $(document).ready(function () {
         var item = $('#search_subs').val();
         if (item != '') {
             $('#ajax_subs').show();
-            var url = 'http://globalizationplus.com/lms/utils/search_subs.php';
+            var url = 'http://www.newsfactsandanalysis.com/lms/utils/search_subs.php';
             $.post(url, {item: item}).done(function (data) {
                 $('#ajax_subs').hide();
                 $('#subs_container').html(data);
@@ -598,7 +599,7 @@ $(document).ready(function () {
     });
     // Clear subs filter
     $("#clear_subs_button").click(function () {
-        var url = 'http://globalizationplus.com/lms/utils/get_subs_page.php';
+        var url = 'http://www.newsfactsandanalysis.com/lms/utils/get_subs_page.php';
         $.post(url, {item: 1}).done(function (data) {
             $('#subs_container').html(data);
         });
@@ -609,7 +610,7 @@ $(document).ready(function () {
         var item = $('#search_trial').val();
         if (item != '') {
             $('#ajax_trial').show();
-            var url = 'http://globalizationplus.com/lms/utils/search_trial.php';
+            var url = 'http://www.newsfactsandanalysis.com/lms/utils/search_trial.php';
             $.post(url, {item: item}).done(function (data) {
                 $('#ajax_trial').hide();
                 $('#trial_container').html(data);
@@ -618,7 +619,7 @@ $(document).ready(function () {
     });
     // Clear subs filter
     $("#clear_trial_button").click(function () {
-        var url = 'http://globalizationplus.com/lms/utils/get_trial_page.php';
+        var url = 'http://www.newsfactsandanalysis.com/lms/utils/get_trial_page.php';
         $.post(url, {item: 1}).done(function (data) {
             $('#trial_container').html(data);
         });
@@ -627,7 +628,7 @@ $(document).ready(function () {
 
     $("#add_trial_button").click(function () {
         console.log('Clicked ...');
-        var url = 'http://globalizationplus.com/lms/utils/get_add_trial_key_dialog.php';
+        var url = 'http://www.newsfactsandanalysis.com/lms/utils/get_add_trial_key_dialog.php';
         $.post(url, {item: 1}).done(function (data) {
             $("body").append(data);
             $("#myModal").modal('show');
@@ -648,7 +649,7 @@ $(document).ready(function () {
 
     $('#r').click(function () {
         console.log('Clicked ....');
-        var url = 'http://globalizationplus.com/survey/get_queue.php';
+        var url = 'http://www.newsfactsandanalysis.com/survey/get_queue.php';
         $.post(url, {item: 1}).done(function (data) {
             $('#q').html(data);
         });
@@ -663,7 +664,7 @@ $(document).ready(function () {
         });
 
         if (users.length > 0) {
-            var url = 'http://globalizationplus.com/lms/utils/get_trial_modal_dialog.php';
+            var url = 'http://www.newsfactsandanalysis.com/lms/utils/get_trial_modal_dialog.php';
             $.post(url, {users: users}).done(function (data) {
                 $("body").append(data);
                 $("#myModal").modal('show');
@@ -676,7 +677,7 @@ $(document).ready(function () {
     $('.trial_adjust').click(function () {
         var userid = $(this).data('userid');
         var groupid = $(this).data('groupid');
-        var url = 'http://globalizationplus.com/lms/utils/get_adjust_trial_personal_key_modal_dialog.php';
+        var url = 'http://www.newsfactsandanalysis.com/lms/utils/get_adjust_trial_personal_key_modal_dialog.php';
         var user = {userid: userid, groupid: groupid};
         $.post(url, {user: JSON.stringify(user)}).done(function (data) {
             $("body").append(data);
@@ -699,7 +700,7 @@ $(document).ready(function () {
         if (event.target.id == 'add_q') {
             var num = $('#camp_q_num').val();
             if (num > 0) {
-                var url = 'http://globalizationplus.com/survey/add_question.php';
+                var url = 'http://www.newsfactsandanalysis.com/survey/add_question.php';
                 $.post(url, {num: num}).done(function (data) {
                     $('#q_container').html(data);
                 });
@@ -730,7 +731,7 @@ $(document).ready(function () {
             }
             if (confirm('Update current survey')) {
                 var campaign = {id: campid, msg: msg, q: JSON.stringify(questions)};
-                var url = 'http://globalizationplus.com/survey/update_camp.php';
+                var url = 'http://www.newsfactsandanalysis.com/survey/update_camp.php';
                 $.post(url, {camp: JSON.stringify(campaign)}).done(function (data) {
                     console.log(data);
                     document.location.reload();
@@ -778,7 +779,7 @@ $(document).ready(function () {
                         title: title,
                         content: content,
                         questions: questions};
-                    var url = 'http://globalizationplus.com/survey/add_camp.php';
+                    var url = 'http://www.newsfactsandanalysis.com/survey/add_camp.php';
                     $.post(url, {camp: JSON.stringify(camp)}).done(function (data) {
                         console.log(data);
                         document.location.reload();
@@ -792,7 +793,7 @@ $(document).ready(function () {
 
         if (event.target.id.indexOf("camp_edit_") >= 0) {
             var id = event.target.id.replace('camp_edit_', '');
-            var url = 'http://globalizationplus.com/survey/edit_survey.php';
+            var url = 'http://www.newsfactsandanalysis.com/survey/edit_survey.php';
             $.post(url, {id: id}).done(function (data) {
                 $('#camp').html(data);
             });
@@ -801,7 +802,7 @@ $(document).ready(function () {
         if (event.target.id.indexOf("camp_del_") >= 0) {
             if (confirm('Delete current campaign?')) {
                 var id = event.target.id.replace('camp_del_', '');
-                var url = 'http://globalizationplus.com/survey/del_survey.php';
+                var url = 'http://www.newsfactsandanalysis.com/survey/del_survey.php';
                 $.post(url, {id: id}).done(function (data) {
                     console.log(data);
                     document.location.reload();
@@ -820,14 +821,14 @@ $(document).ready(function () {
 
         if (event.target.id.indexOf("camp_preview_") >= 0) {
             var id = event.target.id.replace('camp_preview_', '');
-            var url = 'http://globalizationplus.com/survey/preview_camp.php';
+            var url = 'http://www.newsfactsandanalysis.com/survey/preview_camp.php';
             $.post(url, {id: id}).done(function (data) {
                 $('#camp').html(data);
             });
         }
 
         if (event.target.id == 'back_camp') {
-            var url = 'http://globalizationplus.com/survey/get_survey_tab.php';
+            var url = 'http://www.newsfactsandanalysis.com/survey/get_survey_tab.php';
             $.post(url, {id: 1}).done(function (data) {
                 $('#camp').html(data);
                 $('#camps').DataTable();
@@ -837,19 +838,19 @@ $(document).ready(function () {
 
 
         if (event.target.id == 'logout_utils') {
-            var url = 'http://globalizationplus.com/lms/utils/logout.php';
+            var url = 'http://www.newsfactsandanalysis.com/lms/utils/logout.php';
             if (confirm('Logout from system?')) {
                 $.post(url, {item: 1}).done(function () {
-                    window.location = 'http://globalizationplus.com/lms/utils';
+                    window.location = 'http://www.newsfactsandanalysis.com/lms/utils';
                 });
             } // end if confirm
         }
 
         if (event.target.id == 'logout_account_archive') {
-            var url = 'http://globalizationplus.com/lms/archive/logout.php';
+            var url = 'http://www.newsfactsandanalysis.com/lms/archive/logout.php';
             if (confirm('Logout from system?')) {
                 $.post(url, {item: 1}).done(function () {
-                    window.location = 'http://globalizationplus.com/lms/archive';
+                    window.location = 'http://www.newsfactsandanalysis.com/lms/archive';
                 });
             } // end if confirm
         }
@@ -859,7 +860,7 @@ $(document).ready(function () {
             var content = CKEDITOR.instances.editor1.getData();
             var template = {id: id, content: content};
             if (confirm('Update current template?')) {
-                var url = 'http://globalizationplus.com/lms/utils/update_template.php';
+                var url = 'http://www.newsfactsandanalysis.com/lms/utils/update_template.php';
                 $.post(url, {template: JSON.stringify(template)}).done(function () {
                     document.location.reload();
                 });
@@ -872,7 +873,7 @@ $(document).ready(function () {
             var elid = '#a_img_' + id;
             var msg_elid = '#upload_msg_' + id;
             var file_data = $(elid).prop('files');
-            var url = 'http://globalizationplus.com/survey/upload_img.php';
+            var url = 'http://www.newsfactsandanalysis.com/survey/upload_img.php';
             var form_data = new FormData();
             form_data.append('a_id', id);
             $.each(file_data, function (key, value) {
@@ -893,7 +894,7 @@ $(document).ready(function () {
         if (event.target.id.indexOf("del_img_") >= 0) {
             var id = event.target.id.replace('del_img_', '');
             if (confirm('Delete current image?')) {
-                var url = 'http://globalizationplus.com/survey/del_img.php';
+                var url = 'http://www.newsfactsandanalysis.com/survey/del_img.php';
                 $.post(url, {id: id}).done(function () {
                     document.location.reload();
                 });
@@ -915,7 +916,7 @@ $(document).ready(function () {
             } // end else
 
             var camp = {id: id, status: status};
-            var url = 'http://globalizationplus.com/survey/change_camp_status.php';
+            var url = 'http://www.newsfactsandanalysis.com/survey/change_camp_status.php';
             if (confirm(text)) {
                 $.post(url, {camp: JSON.stringify(camp)}).done(function () {
                     document.location.reload();
@@ -927,7 +928,7 @@ $(document).ready(function () {
             var id = event.target.id.replace('camp_refresh_', '');
             var divelid = '#progress_div_' + id;
             $(divelid).fadeTo('fast', 0.33);
-            var url = 'http://globalizationplus.com/survey/update_camp_progress.php';
+            var url = 'http://www.newsfactsandanalysis.com/survey/update_camp_progress.php';
             $.post(url, {id: id}).done(function (data) {
                 $(divelid).html(data);
                 $(divelid).fadeTo('fast', 1);
@@ -943,7 +944,7 @@ $(document).ready(function () {
         if (event.target.id == 'templates_list') {
             var elid = '#' + event.target.id;
             var id = $(elid).val();
-            var url = 'http://globalizationplus.com/lms/utils/get_email_template.php';
+            var url = 'http://www.newsfactsandanalysis.com/lms/utils/get_email_template.php';
             $.post(url, {id: id}).done(function (data) {
                 $('#template_content').html(data);
             });
@@ -954,7 +955,7 @@ $(document).ready(function () {
             $('#res_loader').show();
             var chart_data = [];
             var campid = $('#res_campaigns_list').val();
-            var url = 'http://globalizationplus.com/survey/get_campaign_results.php';
+            var url = 'http://www.newsfactsandanalysis.com/survey/get_campaign_results.php';
             $.post(url, {id: campid}).done(function (data) {
                 $('#res_loader').hide();
                 $("#camp_result").html('');
@@ -1005,60 +1006,12 @@ $(document).ready(function () {
                     });
                 }); // end of each
 
-                /*
-                 $('#res_loader').hide();
-                 $('#camp_result').html(data);
-                 $('#res_table').DataTable();
-                 var chart_url = 'http://globalizationplus.com/survey/get_chart_data.php';
-                 $.post(chart_url, {id: campid}).done(function (data) {
-                 console.log('Server response: ' + data);
-                 $.each(JSON.parse(data), function (index, value) {
-                 var item = String(value).split('@');
-                 var item_arr = [item[0], parseInt(item[1])];
-                 chart_data.push(item_arr);
-                 });
-                 console.log('Charts data array: ' + chart_data);
-                 Highcharts.chart('q_chart', {
-                 chart: {
-                 type: 'pie',
-                 options3d: {
-                 enabled: true,
-                 alpha: 45,
-                 beta: 0
-                 }
-                 },
-                 title: {
-                 text: 'Survey results'
-                 },
-                 tooltip: {
-                 pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
-                 },
-                 plotOptions: {
-                 pie: {
-                 allowPointSelect: true,
-                 cursor: 'pointer',
-                 depth: 35,
-                 dataLabels: {
-                 enabled: true,
-                 format: '{point.name}'
-                 }
-                 }
-                 },
-                 series: [{
-                 type: 'pie',
-                 name: 'Hits',
-                 data: chart_data
-                 }]
-                 });
-                 }); // end of post
-                 */
-
             }); // end of post
         }
 
         if (event.target.id == 'camp_q_num') {
             var num = $('#camp_q_num').val();
-            var url = 'http://globalizationplus.com/survey/get_add_camp_questions_block.php';
+            var url = 'http://www.newsfactsandanalysis.com/survey/get_add_camp_questions_block.php';
             $.post(url, {num: num}).done(function (data) {
                 $('#q_container').html(data);
                 $('#button_container').show();

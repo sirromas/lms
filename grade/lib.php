@@ -2818,7 +2818,7 @@ function grade_extend_settings($plugininfo, $courseid) {
     //echo "Page id: ".$pageid."<br>";
 
     if ($pageid > 0) {
-        $link = "http://" . $_SERVER['SERVER_NAME'] . "/lms/mod/page/view.php?id=$pageid";
+        $link = "http://www." . $_SERVER['SERVER_NAME'] . "/lms/mod/page/view.php?id=$pageid";
         $setionsnode->add('Assignment', $link, navigation_node::TYPE_SETTING, null, 2, new pix_icon('i/report', ''));
         $setionsnode->make_active();
     }
@@ -2826,7 +2826,7 @@ function grade_extend_settings($plugininfo, $courseid) {
     $forumid = $nav->get_forum_id();
     //echo "Forum id: ".$forumid."<br>";
     if ($forumid > 0) {
-        $link = "http://" . $_SERVER['SERVER_NAME'] . "/lms/mod/forum/view.php?id=$forumid";
+        $link = "http://www." . $_SERVER['SERVER_NAME'] . "/lms/mod/forum/view.php?id=$forumid";
         $setionsnode->add('Discussion board', $link, navigation_node::TYPE_SETTING, null, 2, new pix_icon('i/report', ''));
         //$setionsnode->add("<a href='$link' target='_blank'>Discussion board</a>,$link");
     }
@@ -2834,12 +2834,12 @@ function grade_extend_settings($plugininfo, $courseid) {
     $quizid = $nav->get_quiz_id();
     //echo "Quiz id: ".$quizid."<br>";
     if ($quizid > 0) {
-        $link = "http://" . $_SERVER['SERVER_NAME'] . "/lms/mod/quiz/view.php?id=$quizid";
+        $link = "http://www." . $_SERVER['SERVER_NAME'] . "/lms/mod/quiz/view.php?id=$quizid";
         $setionsnode->add('Quiz', $link, navigation_node::TYPE_SETTING, null, 2, new pix_icon('i/report', ''));
     }
     
     // Archive link
-    $link = "http://" . $_SERVER['SERVER_NAME'] . "/lms/archive/dashboard.php?username=$user_email";
+    $link = "http://www." . $_SERVER['SERVER_NAME'] . "/lms/archive/dashboard.php?username=$user_email";
     $setionsnode->add('Archive', $link, navigation_node::TYPE_SETTING, null, 2, new pix_icon('i/report', ''));
 }
 

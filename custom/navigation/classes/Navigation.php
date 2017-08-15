@@ -155,15 +155,16 @@ class Navigation extends Utils {
     }
 
     function update_quiz_link() {
+        $server=$_SERVER['SERVER_NAME'];
         $this->update_page_link();
         $old_id = $this->get_previous_quiz_id();
         if ($old_id == 0) {
             return;
         } // end if $oldid==0
         else {
-            $old_link = "http://globalizationplus.com/lms/mod/quiz/view.php?id=$old_id";
+            $old_link = "http://www.$server/lms/mod/quiz/view.php?id=$old_id";
             $new_id = $this->get_section_data($this->quiz_module_id);
-            $new_link = "http://globalizationplus.com/lms/mod/quiz/view.php?id=$new_id";
+            $new_link = "http://www.$server/lms/mod/quiz/view.php?id=$new_id";
 
             $forum_id = $this->get_section_data($this->forum_module_id);
             $query = "select * from mdl_course_modules "
@@ -206,9 +207,9 @@ class Navigation extends Utils {
             return;
         } // end if $oldid==0
         else {
-            $old_link = "http://globalizationplus.com/lms/mod/page/view.php?id=$old_id";
+            $old_link = "http://www.$server/lms/mod/page/view.php?id=$old_id";
             $new_id = $this->get_section_data($this->page_module_id);
-            $new_link = "http://globalizationplus.com/lms/mod/page/view.php?id=$new_id";
+            $new_link = "http://www.$server/lms/mod/page/view.php?id=$new_id";
 
             $quiz_id = $this->get_section_data($this->quiz_module_id);
             $query = "select * from mdl_course_modules "

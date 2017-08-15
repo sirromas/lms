@@ -41,10 +41,12 @@ if ($_REQUEST) {
     $user->secret = random_string(15);
     $user->auth = $CFG->registerauth;
 
-      //echo "<br>----------------<br>";
-      //print_r($user);
-      //echo "<br>----------------<br>";
-      //die();
+    /*
+      echo "<br>----------------<br>";
+      print_r($user);
+      echo "<br>----------------<br>";
+      die();
+    */
     
     // Initialize alternate name fields to empty strings.
     $namefields = array_diff(get_all_user_name_fields(), useredit_get_required_name_fields());
@@ -54,5 +56,6 @@ if ($_REQUEST) {
 
     // Perform signup process
     $authplugin->user_signup($user, false); // do not send confirmation  email
+    return true;
     
 } // end if $_REQUEST

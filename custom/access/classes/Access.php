@@ -47,11 +47,11 @@ class Access extends Utils {
         $list = "";
         $list.="<br><br>";
         $list.="<div class='container-fluid' style='text-align:center;'>";
-        $list.="<span class='span12'><h1>Globalization Plus<br>Nonpartisan Current Events Reports for University Students & Faculty</h1></span>";
+        $list.="<span class='span12'><h1>NewsFacts & Analysis<br>Nonpartisan Current Events Reports for University Students & Faculty</h1></span>";
         $list.="</div>";
 
         $list.="<div class='container-fluid' style='text-align:center;'>";
-        $list.="<span class='span12'>You do not have subscription or it is expired. Please click <a href='http://" . $_SERVER['SERVER_NAME'] . "/lms/payments/payment.php?userid=$userid&groups=$groups_list' target='_blank'>here</a> to get your subscription.</span>";
+        $list.="<span class='span12'>You do not have subscription or it is expired. Please click <a href='http://www." . $_SERVER['SERVER_NAME'] . "/lms/payments/payment.php?userid=$userid&groups=$groups_list' target='_blank'>here</a> to get your subscription.</span>";
         $list.="</div>";
         return $list;
     }
@@ -70,11 +70,11 @@ class Access extends Utils {
         $list = "";
         $list.="<br><br>";
         $list.="<div class='container-fluid' style='text-align:center;'>";
-        $list.="<span class='span12'><h1>Globalization Plus<br>Nonpartisan Current Events Reports for University Students & Faculty</h1></span>";
+        $list.="<span class='span12'><h1>NewsFacts & Analysis<br>Nonpartisan Current Events Reports for University Students & Faculty</h1></span>";
         $list.="</div>";
 
         $list.="<div class='container-fluid' style='text-align:center;'>";
-        $list.="<span class='span12'>You did not confirm your professor's membership. Please click <a href='http://" . $_SERVER['SERVER_NAME'] . "/lms/tutors/index.php?userid=$userid&groups=$groups_list' target='_blank'>here</a> to get confirmed.</span>";
+        $list.="<span class='span12'>You did not confirm your professor's membership. Please click <a href='http://www." . $_SERVER['SERVER_NAME'] . "/lms/tutors/index.php?userid=$userid&groups=$groups_list' target='_blank'>here</a> to get confirmed.</span>";
         $list.="</div>";
         return $list;
     }

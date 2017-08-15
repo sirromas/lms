@@ -17,7 +17,7 @@ $CFG->dboptions = array (
   'dbsocket' => '',
 );
 
-$CFG->wwwroot   = 'http://globalizationplus.com/lms';
+$CFG->wwwroot   = 'http://www.newsfactsandanalysis.com/lms';
 $CFG->dataroot  = '/homepages/17/d212585247/htdocs/moodledata';
 $CFG->admin     = 'admin';
 

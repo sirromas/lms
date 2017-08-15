@@ -145,9 +145,11 @@ if ($roleid == 5) {
     $forumid = $nav->get_forum_id();
     $glossaryid = $nav->get_glossary_id();
 
+    
+    
     if ($forumid > 0) {
-        $forumurl = "http://globalizationplus.com/lms/mod/forum/view.php?id=$forumid";
-        echo "<div style='width:1024px;margin:auto;'><iframe src='$forumurl' width='100%' height='675px;' style='border:0'></iframe></div>";
+        $forumurl = "http://www.".$_SERVER['SERVER_NAME']."/lms/mod/forum/view.php?id=$forumid";
+        echo "<div style='width:877px;margin:auto;'><iframe src='$forumurl' width='100%' height='675px;' style='border:0'></iframe></div>";
     } // end if $forumid>0
 } // end if $roleid == 5
 

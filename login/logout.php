@@ -60,5 +60,6 @@ foreach($authsequence as $authname) {
 }
 
 require_logout();
-
+// Overrid default logout page
+$redirect='http://www.newsfactsandanalysis.com/';
 redirect($redirect);

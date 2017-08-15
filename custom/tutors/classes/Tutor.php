@@ -203,55 +203,8 @@ class Tutor extends Utils {
 
     function send_tutor_confirmation_email($user) {
         $subject = 'Signup confirmation';
-
         $msg = "";
         $msg.=$this->get_tutor_confirmation_message($user);
-
-        /*
-          $msg.="<!DOCTYPE html>
-
-          <html>
-          <head>
-          <title>Signup confirmation</title>
-          <meta charset='UTF-8'>
-          <meta name='viewport' content='width = device-width, initial-scale = 1.0'>
-
-          </head>
-          <body>
-
-          <table align='left' border='0'>
-          <tr>
-          <td colspan='2' style='text-align:left;'>Dear $user->firstname $user->lastname! </td>
-          </tr>
-          <tr>
-          <td colspan='2' style='text-align:left;'>Thank you for signup.<br></td>
-          </tr>
-          <tr>
-          <td><br>Username:</td><td><br>$user->email</td>
-          </tr>
-          <tr>
-          <td>Password</td><td>$user->pwd</td>
-          </tr>
-          <tr>
-          <td>Class name:</td><td>$user->course1</td>
-          </tr>";
-
-          if ($user->confirmed == 0) {
-          $msg.="<tr>
-          <td colspan='2'><br>Since you did not confirm your membership we will contact you within 24h</td>
-          </tr>";
-          }
-
-
-          $msg . "<tr>
-          <td colspan='2'><br>With best regards, <br><br><br>Globalization plus team</td>
-          </tr>
-
-          </table>
-          </body>
-          </html>";
-         */
-
         $result = $this->send_email($subject, $msg, $user->email);
         return $result;
     }
