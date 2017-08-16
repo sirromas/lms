@@ -777,108 +777,120 @@ class grade_report_grader extends grade_report {
         $strexcludedgrades = get_string('excluded', 'grades');
         $strerror = get_string('error');
 
+
         foreach ($this->gtree->get_levels() as $key => $row) {
             $headingrow = new html_table_row();
             $headingrow->attributes['class'] = 'heading_name_row';
 
             foreach ($row as $columnkey => $element) {
-                $sortlink = clone($this->baseurl);
-                if (isset($element['object']->id)) {
-                    $sortlink->param('sortitemid', $element['object']->id);
-                }
 
-                $eid = $element['eid'];
-                $object = $element['object'];
-                $type = $element['type'];
-                $categorystate = @$element['categorystate'];
+                if (!$element['object']->is_hidden()) {
 
-                if (!empty($element['colspan'])) {
-                    $colspan = $element['colspan'];
-                } else {
-                    $colspan = 1;
-                }
+                    /*
+                      echo "<pre>";
+                      print_r($columnkey);
+                      echo "</pre><br>";
+                     */
 
-                if (!empty($element['depth'])) {
-                    $catlevel = 'catlevel' . $element['depth'];
-                } else {
-                    $catlevel = '';
-                }
-
-                // Element is a filler
-                if ($type == 'filler' or $type == 'fillerfirst' or $type == 'fillerlast') {
-                    $fillercell = new html_table_cell();
-                    $fillercell->attributes['class'] = $type . ' ' . $catlevel;
-                    $fillercell->colspan = $colspan;
-                    $fillercell->text = '&nbsp;';
-
-                    // This is a filler cell; don't use a <th>, it'll confuse screen readers.
-                    $fillercell->header = false;
-                    $headingrow->cells[] = $fillercell;
-                } else if ($type == 'category') {
-                    // Make sure the grade category has a grade total or at least has child grade items.
-                    if (grade_tree::can_output_item($element)) {
-                        // Element is a category.
-                        $categorycell = new html_table_cell();
-                        $categorycell->attributes['class'] = 'category ' . $catlevel;
-                        $categorycell->colspan = $colspan;
-                        $categorycell->text = $this->get_course_header($element);
-                        $categorycell->header = true;
-                        $categorycell->scope = 'col';
-
-                        // Print icons.
-                        if ($USER->gradeediting[$this->courseid]) {
-                            $categorycell->text .= $this->get_icons($element);
-                        }
-
-                        $headingrow->cells[] = $categorycell;
+                    $sortlink = clone($this->baseurl);
+                    if (isset($element['object']->id)) {
+                        $sortlink->param('sortitemid', $element['object']->id);
                     }
-                } else {
-                    // Element is a grade_item
-                    if ($element['object']->id == $this->sortitemid) {
-                        if ($this->sortorder == 'ASC') {
-                            $arrow = $this->get_sort_arrow('up', $sortlink);
-                        } else {
-                            $arrow = $this->get_sort_arrow('down', $sortlink);
+
+                    $eid = $element['eid'];
+                    $object = $element['object'];
+                    $type = $element['type'];
+                    $categorystate = @$element['categorystate'];
+
+                    if (!empty($element['colspan'])) {
+                        $colspan = $element['colspan'];
+                    } else {
+                        $colspan = 1;
+                    }
+
+                    if (!empty($element['depth'])) {
+                        $catlevel = 'catlevel' . $element['depth'];
+                    } else {
+                        $catlevel = '';
+                    }
+
+                    // Element is a filler
+                    if ($type == 'filler' or $type == 'fillerfirst' or $type == 'fillerlast') {
+                        $fillercell = new html_table_cell();
+                        $fillercell->attributes['class'] = $type . ' ' . $catlevel;
+                        $fillercell->colspan = $colspan;
+                        $fillercell->text = '&nbsp;';
+
+                        // This is a filler cell; don't use a <th>, it'll confuse screen readers.
+                        $fillercell->header = false;
+                        $headingrow->cells[] = $fillercell;
+                    } else if ($type == 'category') {
+                        // Make sure the grade category has a grade total or at least has child grade items.
+                        if (grade_tree::can_output_item($element)) {
+                            // Element is a category.
+                            $categorycell = new html_table_cell();
+                            $categorycell->attributes['class'] = 'category ' . $catlevel;
+                            $categorycell->colspan = $colspan;
+                            $categorycell->text = $this->get_course_header($element);
+                            $categorycell->header = true;
+                            $categorycell->scope = 'col';
+
+                            // Print icons.
+                            if ($USER->gradeediting[$this->courseid]) {
+                                $categorycell->text .= $this->get_icons($element);
+                            }
+
+                            $headingrow->cells[] = $categorycell;
                         }
                     } else {
-                        $arrow = $this->get_sort_arrow('move', $sortlink);
-                    }
-
-                    $headerlink = $this->gtree->get_element_header($element, true, $showactivityicons, false, false, true);
-
-                    $itemcell = new html_table_cell();
-                    $itemcell->attributes['class'] = $type . ' ' . $catlevel . ' highlightable' . ' i' . $element['object']->id;
-                    $itemcell->attributes['data-itemid'] = $element['object']->id;
-
-                    if ($element['object']->is_hidden()) {
-                        $itemcell->attributes['class'] .= ' dimmed_text';
-                    }
-
-                    $singleview = '';
-
-                    // FIXME: MDL-52678 This is extremely hacky we should have an API for inserting grade column links.
-                    if (get_capability_info('gradereport/singleview:view')) {
-                        if (has_all_capabilities(array('gradereport/singleview:view', 'moodle/grade:viewall',
-                                    'moodle/grade:edit'), $this->context)) {
-
-                            $url = new moodle_url('/grade/report/singleview/index.php', array(
-                                'id' => $this->course->id,
-                                'item' => 'grade',
-                                'itemid' => $element['object']->id));
-                            $singleview = $OUTPUT->action_icon(
-                                    $url, new pix_icon('t/editstring', get_string('singleview', 'grades', $element['object']->get_name()))
-                            );
+                        // Element is a grade_item
+                        if ($element['object']->id == $this->sortitemid) {
+                            if ($this->sortorder == 'ASC') {
+                                $arrow = $this->get_sort_arrow('up', $sortlink);
+                            } else {
+                                $arrow = $this->get_sort_arrow('down', $sortlink);
+                            }
+                        } else {
+                            $arrow = $this->get_sort_arrow('move', $sortlink);
                         }
+
+                        $headerlink = $this->gtree->get_element_header($element, true, $showactivityicons, false, false, true);
+
+                        $itemcell = new html_table_cell();
+                        $itemcell->attributes['class'] = $type . ' ' . $catlevel . ' highlightable' . ' i' . $element['object']->id;
+                        $itemcell->attributes['data-itemid'] = $element['object']->id;
+
+                        if ($element['object']->is_hidden()) {
+                            $itemcell->attributes['class'] .= ' dimmed_text';
+                        }
+
+                        $singleview = '';
+
+                        // FIXME: MDL-52678 This is extremely hacky we should have an API for inserting grade column links.
+                        if (get_capability_info('gradereport/singleview:view')) {
+                            if (has_all_capabilities(array('gradereport/singleview:view', 'moodle/grade:viewall',
+                                        'moodle/grade:edit'), $this->context)) {
+
+                                $url = new moodle_url('/grade/report/singleview/index.php', array(
+                                    'id' => $this->course->id,
+                                    'item' => 'grade',
+                                    'itemid' => $element['object']->id));
+                                $singleview = $OUTPUT->action_icon(
+                                        $url, new pix_icon('t/editstring', get_string('singleview', 'grades', $element['object']->get_name()))
+                                );
+                            }
+                        }
+
+                        $itemcell->colspan = $colspan;
+                        $itemcell->text = shorten_text($headerlink) . $arrow . $singleview;
+                        $itemcell->header = true;
+                        $itemcell->scope = 'col';
+
+                        $headingrow->cells[] = $itemcell;
                     }
+                } // end if !$element['object']->is_hidden()
+            } // end foreach with all columns including hidden
 
-                    $itemcell->colspan = $colspan;
-                    $itemcell->text = shorten_text($headerlink) . $arrow . $singleview;
-                    $itemcell->header = true;
-                    $itemcell->scope = 'col';
-
-                    $headingrow->cells[] = $itemcell;
-                }
-            }
             $rows[] = $headingrow;
         }
 
@@ -899,7 +911,8 @@ class grade_report_grader extends grade_report {
             $tabindices[$item->id]['grade'] = $gradetabindex;
             $tabindices[$item->id]['feedback'] = $gradetabindex + $numusers;
             $gradetabindex += $numusers * 2;
-        }
+        } // end foreach
+        
         $scalesarray = array();
 
         if (!empty($scaleslist)) {
@@ -912,16 +925,25 @@ class grade_report_grader extends grade_report {
         // and that this user does not have the ability to view hidden items. In this case we still need to pass all the
         // grade items (in case one has been hidden) as the course total shown needs to be adjusted for this particular
         // user.
+
+
         if (!$this->canviewhidden) {
             $allgradeitems = grade_item::fetch_all(array('courseid' => $this->courseid));
         }
 
+        /*
+        echo "<pre>";
+        print_r($allgradeitems);
+        echo "</pre>";
+        */
+        
         foreach ($this->users as $userid => $user) {
 
             if ($this->canviewhidden) {
                 $altered = array();
                 $unknown = array();
-            } else {
+            } // end if 
+            else {
                 $usergrades = $this->allgrades[$userid];
                 $hidingaffected = grade_grade::get_hiding_affected($usergrades, $allgradeitems);
                 $altered = $hidingaffected['altered'];
@@ -929,16 +951,34 @@ class grade_report_grader extends grade_report {
                 unset($hidingaffected);
             }
 
+
             $itemrow = new html_table_row();
             $itemrow->id = 'user_' . $userid;
 
             $fullname = fullname($user);
             $jsarguments['users'][$userid] = $fullname;
-
+            
+            /*
+            echo "<pre>";
+            print_r($this->gtree->items);
+            echo "</pre>";
+            */
+            
             foreach ($this->gtree->items as $itemid => $unused) {
                 $item = & $this->gtree->items[$itemid];
+                
+                if ($item->hidden==0) {
+                
                 $grade = $this->grades[$userid][$item->id];
-
+                
+                
+                
+                /*
+                echo "<pre>";
+                print_r($item);
+                echo "------------------------------------</pre>";
+               */
+                
                 $itemcell = new html_table_cell();
 
                 $itemcell->id = 'u' . $userid . 'i' . $itemid;
@@ -1147,9 +1187,13 @@ class grade_report_grader extends grade_report {
                 }
 
                 $itemrow->cells[] = $itemcell;
-            }
+                
+                } // end if  $item->hidden==0
+                
+            } // end foreach
+                
             $rows[] = $itemrow;
-        }
+        } // end foreach
 
         if ($enableajax) {
             $jsarguments['cfg']['ajaxenabled'] = true;
