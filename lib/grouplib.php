@@ -632,7 +632,7 @@ function groups_allgroups_course_menu($course, $urlroot, $update = false, $activ
     $groupsmenu = array();
 
     if (has_capability('moodle/site:accessallgroups', $context)) {
-        $groupsmenu[0] = get_string('allparticipants');
+        //$groupsmenu[0] = get_string('allparticipants');
         $allowedgroups = groups_get_all_groups($course->id, 0, $course->defaultgroupingid);
     } else {
         $allowedgroups = groups_get_all_groups($course->id, $USER->id, $course->defaultgroupingid);
@@ -727,7 +727,7 @@ function groups_print_activity_menu($cm, $urlroot, $return=false, $hideallpartic
 
     $groupsmenu = array();
     if ((!$allowedgroups or $groupmode == VISIBLEGROUPS or $aag) and !$hideallparticipants) {
-        $groupsmenu[0] = get_string('allparticipants');
+        //$groupsmenu[0] = get_string('allparticipants');
     }
 
     $groupsmenu += groups_sort_menu_options($allowedgroups, $usergroups);
