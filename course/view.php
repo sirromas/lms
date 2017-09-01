@@ -9,10 +9,13 @@ require_once $_SERVER['DOCUMENT_ROOT'] . '/lms/custom/navigation/classes/Navigat
 $nav = new Navigation();
 $pageid = $nav->get_page_id();
 $userid = $USER->id;
-if ($userid != 2 && $userid != 3) {
-    header("Location: http://globalizationplus.com/lms/mod/page/view.php?id=$pageid");
-    exit();
-}
+if ($userid != 2) {
+    $roleid = $nav->get_user_role();
+    if ($roleid == 5) {
+        header("Location: http://www.newsfactsandanalysis.com/lms/mod/page/view.php?id=$pageid");
+        exit();
+    } // end if $roleid == 5
+} // end if $userid != 2
 
 $id = optional_param('id', 0, PARAM_INT);
 $name = optional_param('name', '', PARAM_RAW);

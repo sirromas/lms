@@ -14,3 +14,7 @@ node-v6.10.0.pkg
 *.png
 
 *.txt
+
+*.zip
+
+*.mbz

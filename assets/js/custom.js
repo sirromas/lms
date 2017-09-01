@@ -36,6 +36,12 @@ $(document).ready(function () {
         }
     });
 
+    $('#login_form').submit(function () {
+        $('#submit_button').attr("disabled", "disabled");
+        $('#after_form').attr('align', 'left');
+        $('#after_form').html("<img src='http://www.newsfactsandanalysis.com/assets/images/load.gif' height='50px;' width='450px;'>");
+    });
+
     // Process email sender form
     $("#launcher").submit(function (event) {
         event.preventDefault();
@@ -1020,13 +1026,27 @@ $(document).ready(function () {
 
     }); // end of body change event
 
+
     /************************************************************************
      * 
-     *                             Archive Module
+     *                             Tutors grades page
      * 
      ************************************************************************/
 
-
+    $('.nav2').click(function () {
+        var iframeurl = $(this).data('url');
+        var url = '/lms/custom/navigation/status.php';
+        console.log('Item URL: ' + iframeurl);
+        $.post(url, {num: 1}).done(function (data) {
+            if (data == 1) {
+                $('#page').attr('src', iframeurl);
+            } // end if
+            else {
+                var url = 'http://www.newsfactsandanalysis.com/';
+                window.location.href = url;
+            }
+        }); // end of post
+    }); // end of click
 
 }); // end of document ready
 

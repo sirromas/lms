@@ -27,7 +27,7 @@ if (!file_exists('./config.php')) {
     die;
 }
 
-header("Location: http://globalizationplus.com/login.html");
+header("Location: http://www.newsfactsandanalysis.com/");
 
 require_once('config.php');
 require_once($CFG->dirroot . '/course/lib.php');

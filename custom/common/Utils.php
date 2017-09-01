@@ -21,8 +21,18 @@ class Utils {
     public $group;
     public $session;
     public $signup_url;
-    public $courseid = 2;
+    public $courseid;
     public $from;
+
+    function get_actual_course_id() {
+        $query = "select * from mdl_course where category<>0 "
+                . "order by id desc limit 0,1";
+        $result = $this->db->query($query);
+        while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+            $id = $row['id'];
+        }
+        return $id;
+    }
 
     function __construct() {
         global $USER, $COURSE, $GROUP, $SESSION;
@@ -33,6 +43,7 @@ class Utils {
         $this->session = $SESSION;
         $this->signup_url = 'http://www.' . $_SERVER['SERVER_NAME'] . '/lms/login/mysignup.php';
         $this->from = 'info@globalizationplus.com';
+        $this->courseid = $this->get_actual_course_id();
     }
 
     function is_group_exists($groupname) {
@@ -223,10 +234,11 @@ class Utils {
     function get_user_role() {
         $contextid = $this->get_course_context();
         $userid = $this->user->id;
-        if ($userid != 2 && $userid != 3) {
+        if ($userid != 2) {
             $query = "select * from mdl_role_assignments "
                     . "where contextid=$contextid "
                     . "and userid=$userid";
+            //echo "Query: " . $query . "<br>";
             $result = $this->db->query($query);
             while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
                 $roleid = $row['roleid'];

@@ -112,14 +112,19 @@ class block_settings extends block_base {
         $nav = new Navigation();
         $roleid = $nav->get_user_role();
         $userid = $nav->user->id;
+
+        //echo "Role ID: ".$roleid."<br>";
+        //echo "User ID: ".$userid."<br>";
         // First check if we have already generated, don't waste cycles
         if ($this->contentgenerated === true) {
             return true;
         }
 
-        if ($roleid == 5 && ($userid != 2 && $userid != 3)) {
-            return null;
-        }
+        if ($userid != 2) {
+            if ($roleid == 5 || $roleid==4) {
+                return null;
+            }
+        } // end if $userid != 2
 
         // JS for navigation moved to the standard theme, the code will probably have to depend on the actual page structure
         // $this->page->requires->js('/lib/javascript-navigation.js');

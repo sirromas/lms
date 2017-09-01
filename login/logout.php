@@ -23,43 +23,65 @@
  * @copyright  1999 onwards Martin Dougiamas  http://dougiamas.com
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-
 require_once('../config.php');
+require_once $_SERVER['DOCUMENT_ROOT'] . '/lms/custom/navigation/classes/Navigation.php';
+$nav = new Navigation();
+$roleid = $nav->get_user_role();
 
 $PAGE->set_url('/login/logout.php');
 $PAGE->set_context(context_system::instance());
 
 $sesskey = optional_param('sesskey', '__notpresent__', PARAM_RAW); // we want not null default to prevent required sesskey warning
-$login   = optional_param('loginpage', 0, PARAM_BOOL);
+$login = optional_param('loginpage', 0, PARAM_BOOL);
 
 // can be overridden by auth plugins
-if ($login) {
-    $redirect = get_login_url();
-} else {
-    $redirect = $CFG->wwwroot.'/';
+if ($roleid == 4) {
+    ?>
+    <script type="text/javascript">
+        document.location.reload();
+    </script>
+    <?php
+
+} // end if
+else {
+    if ($login) {
+        $redirect = get_login_url();
+    } else {
+        $redirect = $CFG->wwwroot . '/';
+    }
 }
 
 if (!isloggedin()) {
     // no confirmation, user has already logged out
     require_logout();
     redirect($redirect);
-
 } else if (!confirm_sesskey($sesskey)) {
     $PAGE->set_title($SITE->fullname);
     $PAGE->set_heading($SITE->fullname);
     echo $OUTPUT->header();
-    echo $OUTPUT->confirm(get_string('logoutconfirm'), new moodle_url($PAGE->url, array('sesskey'=>sesskey())), $CFG->wwwroot.'/');
+    echo $OUTPUT->confirm(get_string('logoutconfirm'), new moodle_url($PAGE->url, array('sesskey' => sesskey())), $CFG->wwwroot . '/');
     echo $OUTPUT->footer();
     die;
 }
 
 $authsequence = get_enabled_auth_plugins(); // auths, in sequence
-foreach($authsequence as $authname) {
+foreach ($authsequence as $authname) {
     $authplugin = get_auth_plugin($authname);
     $authplugin->logoutpage_hook();
 }
 
 require_logout();
-// Overrid default logout page
-$redirect='http://www.newsfactsandanalysis.com/';
-redirect($redirect);
+// Override default logout page
+
+if ($roleid == 4) {
+    ?>
+    <script type="text/javascript">
+        document.location.reload();
+    </script>
+    <?php
+
+} // end if
+else {
+    $redirect = 'http://www.newsfactsandanalysis.com/';
+    redirect($redirect);
+}

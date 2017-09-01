@@ -138,11 +138,12 @@ class block_navigation extends block_base {
         if ($this->contentgenerated === true) {
             return $this->content;
         }
-        if ($userid != 2 && $userid != 3) {
-            if ($roleid == 5 || $roleid == 4) {
+        if ($userid != 2) {
+            if ($roleid == 4 || $roleid == 5) {
                 return null;
             }
         } // end if $userid != 2 && $userid != 3
+       
         // JS for navigation moved to the standard theme, the code will probably have to depend on the actual page structure
         // $this->page->requires->js('/lib/javascript-navigation.js');
         // Navcount is used to allow us to have multiple trees although I dont' know why

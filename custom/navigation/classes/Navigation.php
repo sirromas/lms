@@ -98,43 +98,45 @@ class Navigation extends Utils {
     function get_subscription_info() {
         $list = "";
         $userid = $this->user->id;
+        $roleid = $this->get_user_role();
+        if ($roleid != 0 && $roleid != 4 && $roleid != 3) {
+            $query1 = "select * from mdl_trial_keys where userid=$userid";
+            $num1 = $this->db->numrows($query1);
+            if ($num1 > 0) {
+                $result = $this->db->query($query1);
+                while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+                    $trial_start = $row['start_date'];
+                    $trial_end = $row['exp_date'];
+                } // end while
+            } // end if $num1 > 0
 
-        $query1 = "select * from mdl_trial_keys where userid=$userid";
-        $num1 = $this->db->numrows($query1);
-        if ($num1 > 0) {
-            $result = $this->db->query($query1);
-            while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
-                $trial_start = $row['start_date'];
-                $trial_end = $row['exp_date'];
-            } // end while
-        } // end if $num1 > 0
+            $query2 = "select * from mdl_card_payments where userid=$userid";
+            $num2 = $this->db->numrows($query2);
+            if ($num2 > 0) {
+                $result = $this->db->query($query2);
+                while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+                    $paid_start = $row['start_date'];
+                    $paid_end = $row['exp_date'];
+                } // end while
+            } // end if $num2 > 0
 
-        $query2 = "select * from mdl_card_payments where userid=$userid";
-        $num2 = $this->db->numrows($query2);
-        if ($num2 > 0) {
-            $result = $this->db->query($query2);
-            while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
-                $paid_start = $row['start_date'];
-                $paid_end = $row['exp_date'];
-            } // end while
-        } // end if $num2 > 0
+            if ($num1 == 0 && $num2 > 0) {
+                $s = date('m-d-Y', $paid_start);
+                $e = date('m-d-Y', $paid_end);
+            } // end if
 
-        if ($num1 == 0 && $num2 > 0) {
-            $s = date('m-d-Y', $paid_start);
-            $e = date('m-d-Y', $paid_end);
-        } // end if
+            if ($num1 > 0 && $num2 == 0) {
+                $s = date('m-d-Y', $trial_start);
+                $e = date('m-d-Y', $trial_end);
+            } // end if
 
-        if ($num1 > 0 && $num2 == 0) {
-            $s = date('m-d-Y', $trial_start);
-            $e = date('m-d-Y', $trial_end);
-        } // end if
+            if ($num1 > 0 && $num2 > 0) {
+                $s = date('m-d-Y', $paid_start);
+                $e = date('m-d-Y', $paid_end);
+            } // end if
 
-        if ($num1 > 0 && $num2 > 0) {
-            $s = date('m-d-Y', $paid_start);
-            $e = date('m-d-Y', $paid_end);
-        } // end if
-
-        $list.="<span style=''>Subscription period: $s - $e</span>";
+            $list.="<span style=''>Subscription period: $s - $e</span>";
+        } // end if $roleid != 0
 
         return $list;
     }
@@ -155,7 +157,7 @@ class Navigation extends Utils {
     }
 
     function update_quiz_link() {
-        $server=$_SERVER['SERVER_NAME'];
+        $server = $_SERVER['SERVER_NAME'];
         $this->update_page_link();
         $old_id = $this->get_previous_quiz_id();
         if ($old_id == 0) {
@@ -207,9 +209,9 @@ class Navigation extends Utils {
             return;
         } // end if $oldid==0
         else {
-            $old_link = "http://www.$server/lms/mod/page/view.php?id=$old_id";
+            $old_link = "http://www" . $_SERVER['SERVER_NAME'] . "/lms/mod/page/view.php?id=$old_id";
             $new_id = $this->get_section_data($this->page_module_id);
-            $new_link = "http://www.$server/lms/mod/page/view.php?id=$new_id";
+            $new_link = "http://www" . $_SERVER['SERVER_NAME'] . "/lms/mod/page/view.php?id=$new_id";
 
             $quiz_id = $this->get_section_data($this->quiz_module_id);
             $query = "select * from mdl_course_modules "
@@ -228,6 +230,15 @@ class Navigation extends Utils {
             $new_intro = str_replace($old_link, $new_link, $intro);
             $query = "update mdl_quiz set intro='$new_intro' where id=$instanceid";
             $this->db->query($query);
+        } // end else
+    }
+
+    function is_logged() {
+        if (isloggedin()) {
+            return 1;
+        } // end if
+        else {
+            return 0;
         } // end else
     }
 

@@ -43,7 +43,6 @@ $ac = new Access();
 $nav = new Navigation();
 $nav->update_quiz_link();
 
-
 redirect_if_major_upgrade_required();
 
 // TODO Add sesskey check to edit
@@ -166,7 +165,7 @@ if (empty($CFG->forcedefaultmymoodle) && $PAGE->user_allowed_editing()) {
 }
 
 $roleid = $ac->get_user_role();
-
+//echo "Role id: ".$roleid."<br>";
 if ($roleid == 4) {
 
     // Check tutor's access
@@ -178,15 +177,12 @@ if ($roleid == 4) {
         die();
     }
 
-    /* **********************************************************************
-     *      
-     *   Redirect teacher directly to grades page
-     *
-     * *********************************************************************** */
     $groupid = $groups[0];
-    $url = "http://www." . $_SERVER['SERVER_NAME'] . "/lms/grade/report/grader/index.php?id=" . $ac->courseid . "&group=$groupid";
+    //$url = "http://www." . $_SERVER['SERVER_NAME'] . "/lms/grade/report/grader/index.php?id=" . $ac->courseid . "&group=$groupid";
+    $url = "http://www." . $_SERVER['SERVER_NAME'] . "/lms/grade.php";
     header("Location: $url");
 } // end if $roleid == 4
+
 
 if ($roleid == 5) {
 
@@ -199,14 +195,10 @@ if ($roleid == 5) {
         die();
     }
 
-    /*  **********************************************************************
-     *      
-     *   If activity/resource belongs to user's group - it should be shown
-     *
-     * *********************************************************************** */
 
     $pageid = $nav->get_page_id(); // you need to find workaround
-    if ($pageid != 0 && $userid != 2 && $userid != 3) {
+    //echo "My index Page ID: ".$pageid."<br>";
+    if ($pageid != 0 && $userid != 2) {
         $url = "http://www." . $_SERVER['SERVER_NAME'] . "/lms/mod/page/view.php?id=" . $pageid . "";
         header("Location: $url");
     } // end if $pageid != 0
@@ -218,7 +210,8 @@ if ($roleid == 5) {
         echo $OUTPUT->footer();
         die();
     } // end else
-}
+} // end if $roleid == 5
+
 
 
 echo $OUTPUT->header();

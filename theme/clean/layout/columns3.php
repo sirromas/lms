@@ -59,6 +59,8 @@ echo $OUTPUT->doctype()
         $nav = new Navigation();
         $roleid = $nav->get_user_role();
         $userid = $USER->id;
+        //echo "Role id: " . $roleid . "<br>";
+        //echo "User id:" . $userid . "<br>";
         if ($roleid == 5) {
             $string = $_SERVER['SCRIPT_NAME'];
             if ($string == '/lms/mod/page/view.php' || $string == '/lms/my/index.php') {
@@ -85,7 +87,7 @@ echo $OUTPUT->doctype()
             } // end if 
         } // end if $roleid==5
         else {
-            if ($userid == 2 || $userid == 3) {
+            if ($userid == 2) {
                 echo $OUTPUT->standard_top_of_body_html();
                 ?>
                 <header role="banner" class="navbar navbar-fixed-top<?php echo $html->navbarclass ?> moodle-has-zindex">
