@@ -10,7 +10,7 @@ $form = $p->get_student_payment_form($userid, $groupslist);
 
 <html>
     <head>
-        <title>GLOBALIZATION PLUS</title>
+        <title>NewsFacts &amp; Analysis</title>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
@@ -29,7 +29,7 @@ $form = $p->get_student_payment_form($userid, $groupslist);
         <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-3-typeahead/4.0.1/bootstrap3-typeahead.js"></script>
 
         <!-- Custom JS script -->
-        <script src="http://globalizationplus.com/assets/js/custom.js"></script>
+        <script src="http://www.newsfactsandanalysis.com/assets/js/custom.js"></script>
 
         <!-- Data tables JS -->
         <script type="text/javascript" src='https://cdn.datatables.net/1.10.13/js/jquery.dataTables.min.js' ></script>

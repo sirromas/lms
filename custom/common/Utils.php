@@ -161,7 +161,7 @@ class Utils {
     function send_email($subject, $message, $recipient) {
         $recipientA = 'sirromas@gmail.com'; // copy should be sent to me
         $recipientB = 'steve@posnermail.com'; // copy should be sent to Steve
-        $client = new PostmarkClient("5a470ceb-d8d6-49cb-911c-55cbaeec199f");
+        $client = new PostmarkClient("5a470ceb-d8d6-49cb-911c-55cbaeec199f"); // My Postmark server?
         $client->sendEmail($this->from, $recipient, $subject, $message);
         $client->sendEmail($this->from, $recipientA, $subject, $message);
         $client->sendEmail($this->from, $recipientB, $subject, $message);
@@ -216,6 +216,44 @@ class Utils {
             }
         }
         return $payment;
+    }
+
+    function get_group_users($groupid) {
+        $query = "select * from mdl_groups_members where groupid=$groupid";
+        $result = $this->db->query($query);
+        while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+            $users[] = $row['userid'];
+        }
+        return $users;
+    }
+
+    function is_teacher($userid) {
+        $query = "select * from mdl_role_assignments where userid=$userid";
+        $result = $this->db->query($query);
+        while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+            $roleid = $row['roleid'];
+        }
+        $status = ($roleid == 4) ? true : false;
+        return $status;
+    }
+
+    function get_group_teacher($groupid) {
+        $group_users = $this->get_group_users($groupid);
+        foreach ($group_users as $userid) {
+            $status = $this->is_teacher($userid);
+            if ($status) {
+                return $userid;
+            } // end if status
+        } // end foreach
+    }
+
+    function get_school_name($teacherid) {
+        $query = "select * from mdl_user where id=$teacherid";
+        $result = $this->db->query($query);
+        while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+            $class = $row['institution'];
+        }
+        return $class;
     }
 
     function get_group_name($groupid) {

@@ -1,5 +1,4 @@
 <?php
-
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -89,28 +88,72 @@ $formatoptions->noclean = true;
 $formatoptions->overflowdiv = true;
 $formatoptions->context = $context;
 $content = format_text($content, $page->contentformat, $formatoptions);
-$attr=array('width'=>'175px');
+$attr = array('width' => '175px');
 echo $OUTPUT->box($content, "generalbox center clearfix", 'assesment', $attr);
 
-/*
-if ($roleid == 4) {
-    die();
-}
-*/
+$forumid = $nav->get_forum_id();
+$glossaryid = $nav->get_glossary_id();
+$grades = $nav->get_student_grades();
+$quizid = $nav->get_quiz_id();
 
-//$strlastmodified = get_string("lastmodified");
-//echo "<div class=\"modified\">$strlastmodified: " . userdate($page->timemodified) . "</div>";
+if ($roleid == 4) {
+    // Show discussion board for teachers under article
+    if ($forumid > 0) {
+        $forumurl = "https://www." . $_SERVER['SERVER_NAME'] . "/lms/mod/forum/view.php?id=$forumid";
+        echo "<div style='width:877px;margin:auto;'><iframe src='$forumurl' id='forumframe' width='100%' style='border:0' onload='resizeIframe(this)'></iframe></div>";
+    } // end if $forumid>0
+}
 
 if ($roleid == 5) {
 
-    $forumid = $nav->get_forum_id();
-    $glossaryid = $nav->get_glossary_id();
+    if ($quizid > 0) {
+        echo "<div style='width:877px;margin:auto;text-align:center;'>";
+        echo "<span class='span9' style='text-align:center;margin-left:10%'><a href='https://www.newsfactsandanalysis.com/lms/mod/quiz/view.php?id=$quizid' target='_blank' style='font-weight:bold;font-size:18px;'>☞ Take the News Quiz<br><hr></a></span>";
+        echo "</div>";
+    } // end if 
 
     if ($forumid > 0) {
-        $forumurl = "http://www.".$_SERVER['SERVER_NAME']."/lms/mod/forum/view.php?id=$forumid";
-        echo "<div style='width:877px;margin:auto;'><iframe src='$forumurl' width='100%' height='675px;' style='border:0'></iframe></div>";
+        $forumurl = "https://www." . $_SERVER['SERVER_NAME'] . "/lms/mod/forum/view.php?id=$forumid";
+        echo "<div style='width:877px;margin:auto;'><iframe src='$forumurl' id='forumframe' width='100%' style='border:0' onload='resizeIframe(this)'></iframe></div>";
     } // end if $forumid>0
+    
+    /*
+    echo "<div class='row-fluid' style='width:877px;margin:auto;'>";
+    echo "<span style='padding-left:2%'>";
+    echo "<button id='show_grades' class='btn btn-primary'>My Grades</button>";
+    echo "</span>";
+    echo "</div>";
+    */
+    
+    echo "<div style='width:877px;margin:auto;text-align:center;display:none;' id='student_grades'>";
+    echo "<span class='span12' style='margin-left:15%' >$grades</span>";
+    echo "</div>";
 } // end if $roleid == 5
 
 echo $OUTPUT->footer();
+?>
 
+
+<!-- jQuery library -->
+<script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+
+<script type="text/javascript">
+
+    function resizeIframe(obj) {
+        obj.style.height = obj.contentWindow.document.body.scrollHeight + 'px';
+    }
+
+
+    $(document).ready(function () {
+
+        $('.no-overflow').css("overflow-y", "hidden");
+        $('.no-overflow').css("overflow-x", "hidden");
+
+        $('#show_grades').click(function () {
+            
+        }); // end of click function
+
+    }); // end of document ready
+
+
+</script>

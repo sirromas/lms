@@ -6,10 +6,10 @@ $CFG = new stdClass();
 
 $CFG->dbtype    = 'mysqli';
 $CFG->dblibrary = 'native';
-$CFG->dbhost    = 'db598436755.db.1and1.com';
-$CFG->dbname    = 'db598436755';
-$CFG->dbuser    = 'dbo598436755';
-$CFG->dbpass    = 'aK6SKymc';
+$CFG->dbhost    = 'db696740921.db.1and1.com';
+$CFG->dbname    = 'db696740921';
+$CFG->dbuser    = 'dbo696740921';
+$CFG->dbpass    = 'aK6SKymc*';
 $CFG->prefix    = 'mdl_';
 $CFG->dboptions = array (
   'dbpersist' => 0,
@@ -17,8 +17,8 @@ $CFG->dboptions = array (
   'dbsocket' => '',
 );
 
-$CFG->wwwroot   = 'http://globalizationplus.com/lms';
-$CFG->dataroot  = '/homepages/17/d212585247/htdocs/lms/moodledata';
+$CFG->wwwroot   = 'http://www.newsfactsandanalysis.com/lms';
+$CFG->dataroot  = '/homepages/17/d212585247/htdocs/moodledata';
 $CFG->admin     = 'admin';
 
 $CFG->directorypermissions = 0777;

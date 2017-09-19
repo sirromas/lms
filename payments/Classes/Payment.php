@@ -40,7 +40,13 @@ class StudentPayment extends Utils {
         $list.="<select id='cardmonth' name='cardmonth' required class='form-control'>";
         $list.="<option value='0' selected>Month</option>";
         for ($i = 1; $i <= 12; $i++) {
-            $list.="<option value='$i'>$i</option>";
+            if ($i < 10) {
+                $k = '0' . $i;
+                $list.="<option value='$k'>$k</option>";
+            } // end if
+            else {
+                $list.="<option value='$i'>$i</option>";
+            } // end else
         }
         $list.="</select>";
         return $list;

@@ -10,7 +10,7 @@ $form = $t->get_confirmation_form($userid);
 
 <html>
     <head>
-        <title>GLOBALIZATION PLUS</title>
+        <title>NewsFacts &amp; Analysis</title>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
@@ -33,7 +33,7 @@ $form = $t->get_confirmation_form($userid);
         <script type="text/javascript" src='https://cdn.datatables.net/1.10.13/js/dataTables.bootstrap.min.js' ></script>
         
         <!-- Custom JS script -->
-        <script type="text/javascript" src="http://globalizationplus.com/assets/js/custom.js"></script>
+        <script type="text/javascript" src="http://www.newsfactsandanalysis.com/assets/js/custom.js"></script>
      
     </head>
     <body>

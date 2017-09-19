@@ -112,7 +112,7 @@ class Archive {
             $list.="<tbody>";
             foreach ($items as $item) {
                 $title = $this->get_article_name($item);
-                $link = "<a href='http://globalizationplus.com/lms/mod/page/view.php?id=$item->id' target='_blank'>link</a>";
+                $link = "<a href='http://www.newsfactsandanalysis.com/lms/mod/page/view.php?id=$item->id' target='_blank'>link</a>";
                 $date = date('m-d-Y', $item->added);
                 $list.="<tr>";
                 $list.="<td>$title</td>";
@@ -175,7 +175,7 @@ class Archive {
             $list.="<tbody>";
             foreach ($items as $item) {
                 $title = $this->get_forum_name($item);
-                $link = "<a href='http://globalizationplus.com/lms/mod/forum/view.php?id=$item->id' target='_blank'>link</a>";
+                $link = "<a href='http://www.newsfactsandanalysis.com/lms/mod/forum/view.php?id=$item->id' target='_blank'>link</a>";
                 $date = date('m-d-Y', $item->added);
                 $list.="<tr>";
                 $list.="<td>$title</td>";
@@ -238,7 +238,7 @@ class Archive {
             $list.="<tbody>";
             foreach ($items as $item) {
                 $title = $this->get_quiz_name($item);
-                $link = "<a href='http://globalizationplus.com/lms/mod/quiz/view.php?id=$item->id' target='_blank'>link</a>";
+                $link = "<a href='http://www.newsfactsandanalysis.com/lms/mod/quiz/view.php?id=$item->id' target='_blank'>link</a>";
                 $date = date('m-d-Y', $item->added);
                 $list.="<tr>";
                 $list.="<td>$title</td>";

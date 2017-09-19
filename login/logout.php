@@ -82,6 +82,6 @@ if ($roleid == 4) {
 
 } // end if
 else {
-    $redirect = 'http://www.newsfactsandanalysis.com/';
+    $redirect = 'https://www.newsfactsandanalysis.com/';
     redirect($redirect);
 }

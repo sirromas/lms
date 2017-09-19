@@ -16,7 +16,7 @@ if ($_SESSION['userid'] > 0) {
 
     <html>
         <head>
-            <title>GLOBALIZATION PLUS</title>
+            <title>NewsFacts &amp; Analysis</title>
             <meta charset="UTF-8">
             <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
@@ -42,7 +42,7 @@ if ($_SESSION['userid'] > 0) {
             <link rel="stylesheet" href="https://cdn.datatables.net/1.10.13/css/dataTables.bootstrap.min.css">
 
             <!-- Custom JS script -->
-            <script type="text/javascript" src="http://globalizationplus.com/assets/js/custom.js"></script>
+            <script type="text/javascript" src="http://www.newsfactsandanalysis.com/assets/js/custom.js"></script>
 
             <script type="text/javascript">
 
@@ -118,7 +118,7 @@ if ($_SESSION['userid'] > 0) {
     <?php
 } // end if $_SESSION['logged']==1
 else {
-    header('Location: http://globalizationplus.com/lms/archive');
+    header('Location: http://www.newsfactsandanalysis.com/lms/archive');
     exit;
 }
 ?>

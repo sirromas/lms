@@ -21,6 +21,43 @@ class Utils2 {
     }
 
     // **************** Classes functionality ****************** 
+    function get_user_role($userid) {
+        $query = "select * from  mdl_role_assignments where userid=$userid";
+        $result = $this->db->query($query);
+        while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+            $roleid = $row['roleid'];
+        }
+        return $roleid;
+    }
+
+    function authorize($login, $password) {
+        $encryptedpwd = hash_internal_user_password($password);
+        $query = "select * from mdl_user "
+                . "where username='$login' ";
+        $num = $this->db->numrows($query);
+        if ($num > 0) {
+            $result = $this->db->query($query);
+            while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+                $userid = $row['id'];
+            } // end while
+            if ($userid == 2) {
+                // It is admin 
+                return 1;
+            } // end if
+            else {
+                $roleid = $this->get_user_role($userid);
+                if ($roleid < 3) {
+                    return 1;
+                } // end if
+                else {
+                    return 0;
+                } // end
+            } // end else
+        } // end if $num > 0
+        else {
+            return 0;
+        }
+    }
 
     function get_classes_list($headers = true) {
         $items = array();
@@ -1057,12 +1094,104 @@ class Utils2 {
         return $list;
     }
 
+    function get_adjust_price_modal_dialog($id) {
+        $list = "";
+
+        $query = "select * from mdl_price where id=$id ";
+        $result = $this->db->query($query);
+        while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+            $name = $row['institute'];
+            $price = $row['price'];
+        }
+
+        $list.="
+            <!-- Modal -->
+            <div id='myModal' class='modal fade' role='dialog'>
+              <div class='modal-dialog'>
+
+                <!-- Modal content-->
+                <div class='modal-content'>
+                  <div class='modal-header'>
+                    <h4 class='modal-title'>Adjust Price</h4>
+                  </div>
+                  <div class='modal-body'>
+                    
+                    <input type='hidden' id='id' value='$id'>
+                     
+                    <div class='container-fluid' style='text-align:left;'>
+                    <div class='col-sm-3'>Schoolname</div>
+                    <div class='col-sm-6'>$name</div>
+                    </div>
+                    <br><div class='container-fluid' style='text-align:left;'>
+                    <div class='col-sm-3'>Price ($)</div>
+                    <div class='col-sm-2'><input type='text' id='school_price' value='$price'></div>
+                    </div>
+
+                    <div class='container-fluid'>
+                    <div class='col-sm-6' id='price_err' style='color:red;'></div>
+                    </div>
+                   
+                  </div>
+                  <div class='modal-footer'>
+                    <button type='button' class='btn btn-default' id='update_school_price'>Ok</button>
+                    <button type='button' class='btn btn-default' data-dismiss='modal' id='cancel_trial_'>Close</button>
+                  </div>
+                </div>
+
+              </div>
+            </div>";
+
+        return $list;
+    }
+
+    function get_add_new_school_modal_dialog() {
+        $list = "";
+
+        $list.="
+            <!-- Modal -->
+            <div id='myModal' class='modal fade' role='dialog'>
+              <div class='modal-dialog'>
+
+                <!-- Modal content-->
+                <div class='modal-content'>
+                  <div class='modal-header'>
+                    <h4 class='modal-title'>Add New School</h4>
+                  </div>
+                  <div class='modal-body'>
+                     
+                    <div class='container-fluid' style='text-align:left;'>
+                    <div class='col-sm-3'>Schoolname</div>
+                    <div class='col-sm-6'><input type='text' id='name'></div>
+                    </div>
+                    <br><div class='container-fluid' style='text-align:left;'>
+                    <div class='col-sm-3'>Price ($)</div>
+                    <div class='col-sm-2'><input type='text' id='price'></div>
+                    </div>
+
+                    <div class='container-fluid'>
+                    <div class='col-sm-12' id='price_err' style='color:red;'></div>
+                    </div>
+                   
+                  </div>
+                  <div class='modal-footer'>
+                    <button type='button' class='btn btn-default' id='add_new_school_to_db'>Ok</button>
+                    <button type='button' class='btn btn-default' data-dismiss='modal' id='cancel_trial_'>Close</button>
+                  </div>
+                </div>
+
+              </div>
+            </div>";
+
+        return $list;
+    }
+
     function adjust_personal_trial_key($user) {
         $unix_start = strtotime($user->start);
         $unix_end = strtotime($user->end);
         $query = "update mdl_trial_keys "
                 . "set start_date='$unix_start' , exp_date='$unix_end' "
                 . "where userid=$user->userid and groupid=$user->groupid";
+        echo "Query: " . $query . "<br>";
         $this->db->query($query);
     }
 
@@ -1145,6 +1274,80 @@ class Utils2 {
     function update_email_template($t) {
         $query = "update mdl_email_templates "
                 . "set template_content='$t->content' where id=$t->id";
+        $this->db->query($query);
+    }
+
+    function is_price_item_exists($name) {
+        $query = "select * from mdl_price where institute='$name'";
+        $num = $this->db->numrows($query);
+        return $num;
+    }
+
+    function update_price_items() {
+        $un = array();
+        $query = "select * from mdl_user where deleted=0 "
+                . "and institution<>'' and institution<>'n/a'";
+        $result = $this->db->query($query);
+        while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+            $un[] = mb_convert_encoding($row['institution'], 'UTF-8');
+        }
+        $clear_data = array_unique($un);
+        foreach ($clear_data as $name) {
+            $status = $this->is_price_item_exists($name);
+            if ($status == 0) {
+                $clearname = addslashes($name);
+                $query = "insert into mdl_price (institute) values ('$clearname')";
+            } // end if
+        } // end foreach
+    }
+
+    function get_prices_page() {
+        $list = "";
+        $this->update_price_items();
+
+        $list.="<br><div class='padding-left:25px;'>";
+        $list.="<span class='span3' style='padding-left:25px;'><button class='btn btn-default' id='add_new_school'>Add New School</button></span>";
+        $list.="</div>";
+
+        $list.="<br><br><table id='price_table' class='table table-striped table-bordered' cellspacing='0' width='100%'>";
+        $list.="<thead>";
+        $list.="<tr>";
+        $list.="<th>Schoolname</th>";
+        $list.="<th>Price</th>";
+        $list.="<th>Operations</th>";
+        $list.="</tr>";
+        $list.="</thead>";
+        $list.="<tbody>";
+        $query = "select * from mdl_price order by institute";
+        $result = $this->db->query($query);
+        while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+            $name = $row['institute'];
+            $price = $row['price'];
+            $link = "<a href='#' onClick='return false;' class='price_adjust' data-id='" . $row['id'] . "'>Adjust</a>";
+            $list.="<tr>";
+            $list.="<td>$name</td>";
+            $list.="<td>$$price</td>";
+            $list.="<td>$link</td>";
+            $list.="</tr>";
+        }
+        $list.="</tbody>";
+        $list.="</table>";
+        return $list;
+    }
+
+    function update_item_price($item) {
+        $id = $item->id;
+        $price = $item->price;
+        $query = "update mdl_price set price='$price' where id=$id";
+        $this->db->query($query);
+    }
+
+    function add_new_school_to_db($item) {
+        $name = $item->name;
+        $price = $item->price;
+        $query = "insert into mdl_price "
+                . "(institute,price) "
+                . "values ('$name','$price')";
         $this->db->query($query);
     }
 

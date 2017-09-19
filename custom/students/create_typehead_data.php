@@ -2,5 +2,6 @@
 
 require_once 'classes/Student.php';
 $st = new Student();
-$list = $st->get_groups_list();
-echo $list;
+$st->get_groups_list();
+$st->create_univsersity_data();
+

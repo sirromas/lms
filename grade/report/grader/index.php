@@ -174,11 +174,14 @@ if (!empty($studentsperpage)) {
     echo $OUTPUT->paging_bar($numusers, $report->page, $studentsperpage, $report->pbarurl);
 }
 
+/*
 $displayaverages = true;
 if ($numusers == 0) {
     $displayaverages = false;
 }
+*/
 
+$displayaverages = false; // we have only one course for all professors
 $reporthtml = $report->get_grade_table($displayaverages);
 
 // print submit button
@@ -193,7 +196,8 @@ if ($USER->gradeediting[$course->id] && ($report->get_pref('showquickfeedback') 
     echo $reporthtml;
     echo '<div class="submit"><input type="submit" id="gradersubmit" value="' . s(get_string('savechanges')) . '" /></div>';
     echo '</div></form>';
-} else {
+} // end if 
+else {
     echo $reporthtml;
 }
 

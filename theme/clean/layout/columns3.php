@@ -64,7 +64,10 @@ echo $OUTPUT->doctype()
         if ($roleid == 5) {
             $string = $_SERVER['SCRIPT_NAME'];
             if ($string == '/lms/mod/page/view.php' || $string == '/lms/my/index.php') {
-                echo $OUTPUT->standard_top_of_body_html()
+                echo "<script type='text/javascript' src='https://code.jquery.com/jquery-1.12.4.min.js'></script>";
+                echo "<script type='text/javascript' src='/assets/js/custom2.js'></script>";
+
+                echo $OUTPUT->standard_top_of_body_html();
                 ?>
                 <header role="banner" class="navbar navbar-fixed-top<?php echo $html->navbarclass ?> moodle-has-zindex">
                     <nav role="navigation" class="navbar-inner">
@@ -111,8 +114,6 @@ echo $OUTPUT->doctype()
         } // end else
         ?>
 
-
-
         <div id="page" class="container-fluid">
             <?php echo $OUTPUT->full_header(); ?>
             <div id="page-content" class="row-fluid">
@@ -130,7 +131,8 @@ echo $OUTPUT->doctype()
                 </div>
                 <?php echo $OUTPUT->blocks('side-post', $sidepost); ?>
             </div>
-
+            
+            
             <footer id="page-footer">
                 <div id="course-footer"><?php echo $OUTPUT->course_footer(); ?></div>
                 <p class="helplink"><?php echo $OUTPUT->page_doc_link(); ?></p>
@@ -141,7 +143,7 @@ echo $OUTPUT->doctype()
                 echo $OUTPUT->standard_footer_html();
                 ?>
             </footer>
-
+            
             <?php echo $OUTPUT->standard_end_of_body_html() ?>
 
         </div>

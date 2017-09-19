@@ -8,7 +8,7 @@ $(document).ready(function () {
      *   
      *    
      **********************************************************************/
-
+    var iframeurl;
     $('#camps').DataTable();
     $('#progress_table').DataTable();
 
@@ -20,7 +20,7 @@ $(document).ready(function () {
             if (confirm('Update config data?')) {
                 var config = {username: username, password: password};
                 var request = {config: JSON.stringify(config)};
-                var url = 'http://www.newsfactsandanalysis.com/survey/update_config.php';
+                var url = 'https://www.newsfactsandanalysis.com/survey/update_config.php';
                 $.post(url, request).done(function (data) {
                     $('#config_err').html(data);
                 }); // end of post
@@ -32,14 +32,37 @@ $(document).ready(function () {
     });
     $("#logout").click(function () {
         if (confirm('Logout from the system?')) {
-            document.location = 'http://www.newsfactsandanalysis.com/survey/';
+            document.location = 'https://www.newsfactsandanalysis.com/survey/';
         }
     });
 
+    function submit_login_form() {
+        $('#login_form').submit();
+    }
+
+    function show_loader() {
+        console.log('Function called ..');
+        $('#login_err').html('');
+        //$('#after_form').show();
+        document.getElementById("after_form").style.display = "block";
+    }
+
     $('#login_form').submit(function () {
-        $('#submit_button').attr("disabled", "disabled");
-        $('#after_form').attr('align', 'left');
-        $('#after_form').html("<img src='http://www.newsfactsandanalysis.com/assets/images/load.gif' height='50px;' width='450px;'>");
+        setTimeout(show_loader, 1);
+    });
+
+
+    /*
+     $("#submit_button").click(function () {
+     $('#submit_button').attr("disabled", "disabled");
+     $('#container27').hide();
+     $('#after_form').show();
+     submit_login_form();
+     });
+     */
+
+    $("#grades").click(function () {
+        console.log('Clicked ...');
     });
 
     // Process email sender form
@@ -60,7 +83,7 @@ $(document).ready(function () {
                 if (email != '' && fname != '' && lname != '') {
                     var item = {email: email, campid: campaign, firstname: fname, lastname: lname};
                     var request = {item: JSON.stringify(item)};
-                    var url = 'http://www.newsfactsandanalysis.com/survey/launch.php';
+                    var url = 'https://www.newsfactsandanalysis.com/survey/launch.php';
                     $.post(url, request).done(function (data) {
                         $('#form_err').html(data);
                     });
@@ -70,7 +93,7 @@ $(document).ready(function () {
                 }
 
                 if (email == '' && file != '') {
-                    var url = 'http://www.newsfactsandanalysis.com/survey/upload.php';
+                    var url = 'https://www.newsfactsandanalysis.com/survey/upload.php';
                     var file_data = $('#file').prop('files');
                     var form_data = new FormData();
                     form_data.append('campid', campaign);
@@ -108,8 +131,11 @@ $(document).ready(function () {
      *    
      **********************************************************************/
 
-    // Monitor for Login errors reported from LMS
+    $("body").on("click mousedown mouseup focus blur keydown change", function (e) {
+        //console.log(e);
+    });
 
+    // Monitor for Login errors reported from LMS
     var getUrlParameter = function getUrlParameter(sParam) {
         var sPageURL = decodeURIComponent(window.location.search.substring(1)),
                 sURLVariables = sPageURL.split('&'),
@@ -128,19 +154,11 @@ $(document).ready(function () {
     var code = getUrlParameter('errorcode');
     console.log('Error code: ' + code);
     if (code == 3) {
+        $('#container27').hide();
         $('#login_err').html('Invalid email address or password');
     }
 
-
-    // Create classes data for students signup
-    var request = {id: 1};
-    var url = 'http://www.newsfactsandanalysis.com/lms/custom/students/create_typehead_data.php';
-    $.post(url, request).done(function (data) {
-        console.log(data);
-    }); // end of post
-
-
-    $.get('http://www.newsfactsandanalysis.com/lms/custom/students/groups.json', function (data) {
+    $.get('https://www.newsfactsandanalysis.com/lms/custom/students/groups.json', function (data) {
         $("#class").typeahead({source: data, items: 256000});
     });
 
@@ -152,7 +170,7 @@ $(document).ready(function () {
         var state = $('#state').val();
         var course1 = $('#course1').val();
         if (state > 0 && course1 != '') {
-            var url = 'http://www.newsfactsandanalysis.com/lms/custom/tutors/is_email_exists.php';
+            var url = 'https://www.newsfactsandanalysis.com/lms/custom/tutors/is_email_exists.php';
             $.post(url, {email: email}).done(function (data) {
                 if (data == 0) {
                     $('#form_err').html('');
@@ -163,7 +181,7 @@ $(document).ready(function () {
                     var course5 = $('#course5').val();
                     var course6 = $('#course6').val();
 
-                    var url = 'http://www.newsfactsandanalysis.com/lms/custom/tutors/is_group_exists.php';
+                    var url = 'https://www.newsfactsandanalysis.com/lms/custom/tutors/is_group_exists.php';
                     $.post(url, {groupname: course1}).done(function (data) {
                         if (data == 0) {
                             $('#form_err').html('');
@@ -190,7 +208,7 @@ $(document).ready(function () {
                                 course5: course5,
                                 course6: course6
                             };
-                            var url = 'http://www.newsfactsandanalysis.com/lms/custom/tutors/signup.php';
+                            var url = 'https://www.newsfactsandanalysis.com/lms/custom/tutors/signup.php';
                             $.post(url, {user: JSON.stringify(user)}).done(function (data) {
                                 $('#ajax_loader').hide();
                                 $('#form_info').html(data);
@@ -225,6 +243,8 @@ $(document).ready(function () {
         $('#form_err').html('');
         $('#form_info').html('');
         if (state > 0 && cardmonth > 0 && cardyear > 0 && cardholder != '') {
+            var amount = $('#price').val();
+
             var groupname = $('#class').val();
             var email = $('#email').val();
 
@@ -268,18 +288,18 @@ $(document).ready(function () {
 
 
             $('#form_err').html('');
-            var url = 'http://www.newsfactsandanalysis.com/lms/custom/tutors/is_email_exists.php';
+            var url = 'https://www.newsfactsandanalysis.com/lms/custom/tutors/is_email_exists.php';
             $.post(url, {email: email}).done(function (data) {
                 if (data == 0) {
                     $('#form_err').html('');
-                    var url = 'http://www.newsfactsandanalysis.com/lms/custom/tutors/is_group_exists.php';
+                    var url = 'https://www.newsfactsandanalysis.com/lms/custom/tutors/is_group_exists.php';
                     $.post(url, {groupname: groupname}).done(function (data) {
                         if (data > 0) {
                             $('#ajax_loader').show();
                             var user = {
                                 item: 'Globalization Plus - Tuition',
                                 courseid: 2,
-                                amount: 30,
+                                amount: amount,
                                 firstname: $('#first').val(),
                                 lastname: $('#last').val(),
                                 email: $('#email').val(),
@@ -299,7 +319,7 @@ $(document).ready(function () {
                                 cardmonth: $('#cardmonth').val(),
                                 cardyear: $('#cardyear').val()
                             };
-                            var url = 'http://www.newsfactsandanalysis.com/lms/custom/students/students_signup.php';
+                            var url = 'https://www.newsfactsandanalysis.com/lms/custom/students/students_signup.php';
                             $.post(url, {user: JSON.stringify(user)}).done(function (data) {
                                 $('#ajax_loader').hide();
                                 $('#form_info').html("<span style='color:black;'>" + data + "</span>");
@@ -320,13 +340,26 @@ $(document).ready(function () {
         }
     });
 
+
+
+    $("#archieve_login").submit(function () {
+        $('#ajax_loader').show();
+    });
+
     // Student subscription payment 
     $("#student_payment").submit(function (event) {
         event.preventDefault();
         var holder = $('#holder').val();
+        console.log('Holder: ' + holder);
         var holder_arr = holder.split(" ");
         var firstname = holder_arr[0];
         var lastname = holder_arr[1];
+
+        if (firstname == '' || lastname == '') {
+            $('#form_err').html('Please provide cardholder firstname and lastnemt separated by space');
+            return;
+        }
+
         var userid = $('#holder').data('userid');
         var address = $('#address').val();
         var city = $('#city').val();
@@ -395,7 +428,7 @@ $(document).ready(function () {
             $('#form_info').html('');
             $('#ajax_loader').show();
             var user = {username: username, email: email, url: url};
-            var post_url = "http://www.newsfactsandanalysis.com/lms/tutors/confirm.php";
+            var post_url = "https://www.newsfactsandanalysis.com/lms/tutors/confirm.php";
             $.post(post_url, {user: JSON.stringify(user)}).done(function (data) {
                 $('#ajax_loader').hide();
                 $('#form_info').html(data);
@@ -408,7 +441,7 @@ $(document).ready(function () {
     $('body').on('click', 'a.confirm', function () {
         var userid = $(this).data('userid');
         if (confirm('Confirm current processor?')) {
-            var post_url = "http://www.newsfactsandanalysis.com/lms/utils/confirm.php";
+            var post_url = "https://www.newsfactsandanalysis.com/lms/utils/confirm.php";
             $.post(post_url, {userid: userid}).done(function () {
                 document.location.reload();
             });
@@ -423,7 +456,7 @@ $(document).ready(function () {
         var did = "#myModal_paid_" + userid;
         $(did).remove();
         $('.modal-backdrop').remove();
-        var post_url = "http://www.newsfactsandanalysis.com/lms/utils/get_adjust_dialog.php";
+        var post_url = "https://www.newsfactsandanalysis.com/lms/utils/get_adjust_dialog.php";
         $.post(post_url, {userid: userid, groupid: groupid}).done(function (data) {
             $("body").append(data);
             $(did).modal('show');
@@ -439,7 +472,7 @@ $(document).ready(function () {
         var did = "#myModal_trial_" + userid;
         $(did).remove();
         $('.modal-backdrop').remove();
-        var url = 'http://www.newsfactsandanalysis.com/lms/utils/get_adjust_trial_personal_key_modal_dialog.php';
+        var url = 'https://www.newsfactsandanalysis.com/lms/utils/get_adjust_trial_personal_key_modal_dialog.php';
         var user = {userid: userid, groupid: groupid};
         $.post(url, {user: JSON.stringify(user)}).done(function (data) {
             $("body").append(data);
@@ -459,12 +492,12 @@ $(document).ready(function () {
                 var start = $('#subs_start').val();
                 var exp = $('#subs_exp').val();
                 var paymentid = $(this).data('paymentid');
-                var post_url = "http://www.newsfactsandanalysis.com/lms/utils/adjust_subs.php";
+                var post_url = "https://www.newsfactsandanalysis.com/lms/utils/adjust_subs.php";
                 var subs = {userid: userid, groupid: groupid, start: start, exp: exp, paymentid: paymentid};
                 $.post(post_url, {subs: JSON.stringify(subs)}).done(function (data) {
                     console.log(data);
                     $("[data-dismiss=modal]").trigger({type: "click"});
-                    var url2 = 'http://www.newsfactsandanalysis.com/lms/utils/get_paid_keys.php';
+                    var url2 = 'https://www.newsfactsandanalysis.com/lms/utils/get_paid_keys.php';
                     $.post(url2, {item: 1}).done(function (data) {
                         $('#paid_keys').html(data);
                         $('#subs_table').DataTable();
@@ -484,7 +517,7 @@ $(document).ready(function () {
             else {
                 $('#subs_err').html('');
                 if (confirm('Add trial key for current student?')) {
-                    var post_url = "http://www.newsfactsandanalysis.com/lms/utils/add_trial_key.php";
+                    var post_url = "https://www.newsfactsandanalysis.com/lms/utils/add_trial_key.php";
                     $.post(post_url, {username: username, groupname: groupname}).done(function (data) {
                         console.log(data);
                         $("[data-dismiss=modal]").trigger({type: "click"});
@@ -506,13 +539,13 @@ $(document).ready(function () {
             else {
                 $('#subs_err').html('');
                 if (confirm('Adjust trial key for selected user?')) {
-                    var post_url = "http://www.newsfactsandanalysis.com/lms/utils/adjust_personal_trial_key.php";
+                    var post_url = "https://www.newsfactsandanalysis.com/lms/utils/adjust_personal_trial_key.php";
                     var user = {userid: userid, groupid: groupid, start: start, end: end};
                     $.post(post_url, {user: JSON.stringify(user)}).done(function () {
                         //console.log(data);
                         $("[data-dismiss=modal]").trigger({type: "click"});
                         $('#myModal').data('modal', null);
-                        var url = 'http://www.newsfactsandanalysis.com/lms/utils/get_trial_keys.php';
+                        var url = 'https://www.newsfactsandanalysis.com/lms/utils/get_trial_keys.php';
                         $.post(url, {item: 1}).done(function (data) {
                             $('#trial_keys').html(data);
                             $('#trial_table').DataTable();
@@ -522,6 +555,24 @@ $(document).ready(function () {
                     });
                 } // end if
             } // end else
+        }
+
+        if (event.target.id == 'update_school_price') {
+            var id = $('#id').val();
+            var price = $('#school_price').val();
+            if (price == '' || !$.isNumeric(price) || price == 0) {
+                $('#price_err').html('Please provide valid price ');
+            } // end if
+            else {
+                $('#price_err').html('');
+                var item = {id: id, price: price};
+                var url = 'https://www.newsfactsandanalysis.com/lms/utils/update_item_price.php';
+                $.post(url, {item: JSON.stringify(item)}).done(function () {
+                    $("[data-dismiss=modal]").trigger({type: "click"});
+                    $('#myModal').data('modal', null);
+                    document.location.reload();
+                });
+            }
         }
 
         $("#target").click(function () {
@@ -540,7 +591,7 @@ $(document).ready(function () {
                 $('#subs_err').html('');
                 if (confirm('Adjust trial key(s) for selected user(s)?')) {
                     var keys = {users: JSON.stringify(users), start: start, end: end};
-                    var url = 'http://www.newsfactsandanalysis.com/lms/utils/adjust_group_trial_keys.php';
+                    var url = 'https://www.newsfactsandanalysis.com/lms/utils/adjust_group_trial_keys.php';
                     $.post(url, {users: JSON.stringify(keys)}).done(function () {
                         $("[data-dismiss=modal]").trigger({type: "click"});
                         $('#myModal').data('modal', null);
@@ -558,7 +609,7 @@ $(document).ready(function () {
         var item = $('#search_class').val();
         if (item != '') {
             $('#ajax').show();
-            var url = 'http://www.newsfactsandanalysis.com/lms/utils/search_class.php';
+            var url = 'https://www.newsfactsandanalysis.com/lms/utils/search_class.php';
             $.post(url, {item: item}).done(function (data) {
                 $('#ajax').hide();
                 $('#classes_container').html(data);
@@ -567,7 +618,7 @@ $(document).ready(function () {
     });
     // Clear classes filter
     $("#clear_class_button").click(function () {
-        var url = 'http://www.newsfactsandanalysis.com/lms/utils/get_classes_page.php';
+        var url = 'https://www.newsfactsandanalysis.com/lms/utils/get_classes_page.php';
         $.post(url, {item: 1}).done(function (data) {
             $('#classes_container').html(data);
         });
@@ -577,7 +628,7 @@ $(document).ready(function () {
         var item = $('#search_tutor').val();
         if (item != '') {
             $('#ajax_tutor').show();
-            var url = 'http://www.newsfactsandanalysis.com/lms/utils/search_tutor.php';
+            var url = 'https://www.newsfactsandanalysis.com/lms/utils/search_tutor.php';
             $.post(url, {item: item}).done(function (data) {
                 $('#ajax_tutor').hide();
                 $('#tutors_container').html(data);
@@ -586,7 +637,7 @@ $(document).ready(function () {
     });
     // Clear tutors filer
     $("#clear_tutor_button").click(function () {
-        var url = 'http://www.newsfactsandanalysis.com/lms/utils/get_tutors_page.php';
+        var url = 'https://www.newsfactsandanalysis.com/lms/utils/get_tutors_page.php';
         $.post(url, {item: 1}).done(function (data) {
             $('#tutors_container').html(data);
         });
@@ -596,7 +647,7 @@ $(document).ready(function () {
         var item = $('#search_subs').val();
         if (item != '') {
             $('#ajax_subs').show();
-            var url = 'http://www.newsfactsandanalysis.com/lms/utils/search_subs.php';
+            var url = 'https://www.newsfactsandanalysis.com/lms/utils/search_subs.php';
             $.post(url, {item: item}).done(function (data) {
                 $('#ajax_subs').hide();
                 $('#subs_container').html(data);
@@ -605,7 +656,7 @@ $(document).ready(function () {
     });
     // Clear subs filter
     $("#clear_subs_button").click(function () {
-        var url = 'http://www.newsfactsandanalysis.com/lms/utils/get_subs_page.php';
+        var url = 'https://www.newsfactsandanalysis.com/lms/utils/get_subs_page.php';
         $.post(url, {item: 1}).done(function (data) {
             $('#subs_container').html(data);
         });
@@ -616,7 +667,7 @@ $(document).ready(function () {
         var item = $('#search_trial').val();
         if (item != '') {
             $('#ajax_trial').show();
-            var url = 'http://www.newsfactsandanalysis.com/lms/utils/search_trial.php';
+            var url = 'https://www.newsfactsandanalysis.com/lms/utils/search_trial.php';
             $.post(url, {item: item}).done(function (data) {
                 $('#ajax_trial').hide();
                 $('#trial_container').html(data);
@@ -625,7 +676,7 @@ $(document).ready(function () {
     });
     // Clear subs filter
     $("#clear_trial_button").click(function () {
-        var url = 'http://www.newsfactsandanalysis.com/lms/utils/get_trial_page.php';
+        var url = 'https://www.newsfactsandanalysis.com/lms/utils/get_trial_page.php';
         $.post(url, {item: 1}).done(function (data) {
             $('#trial_container').html(data);
         });
@@ -634,7 +685,7 @@ $(document).ready(function () {
 
     $("#add_trial_button").click(function () {
         console.log('Clicked ...');
-        var url = 'http://www.newsfactsandanalysis.com/lms/utils/get_add_trial_key_dialog.php';
+        var url = 'https://www.newsfactsandanalysis.com/lms/utils/get_add_trial_key_dialog.php';
         $.post(url, {item: 1}).done(function (data) {
             $("body").append(data);
             $("#myModal").modal('show');
@@ -655,7 +706,7 @@ $(document).ready(function () {
 
     $('#r').click(function () {
         console.log('Clicked ....');
-        var url = 'http://www.newsfactsandanalysis.com/survey/get_queue.php';
+        var url = 'https://www.newsfactsandanalysis.com/survey/get_queue.php';
         $.post(url, {item: 1}).done(function (data) {
             $('#q').html(data);
         });
@@ -670,7 +721,7 @@ $(document).ready(function () {
         });
 
         if (users.length > 0) {
-            var url = 'http://www.newsfactsandanalysis.com/lms/utils/get_trial_modal_dialog.php';
+            var url = 'https://www.newsfactsandanalysis.com/lms/utils/get_trial_modal_dialog.php';
             $.post(url, {users: users}).done(function (data) {
                 $("body").append(data);
                 $("#myModal").modal('show');
@@ -683,7 +734,7 @@ $(document).ready(function () {
     $('.trial_adjust').click(function () {
         var userid = $(this).data('userid');
         var groupid = $(this).data('groupid');
-        var url = 'http://www.newsfactsandanalysis.com/lms/utils/get_adjust_trial_personal_key_modal_dialog.php';
+        var url = 'https://www.newsfactsandanalysis.com/lms/utils/get_adjust_trial_personal_key_modal_dialog.php';
         var user = {userid: userid, groupid: groupid};
         $.post(url, {user: JSON.stringify(user)}).done(function (data) {
             $("body").append(data);
@@ -693,10 +744,45 @@ $(document).ready(function () {
         });
     });
 
+    $('.price_adjust').click(function () {
+        var id = $(this).data('id');
+        var url = 'https://www.newsfactsandanalysis.com/lms/utils/get_adjust_price_modal_dialog.php';
+        $.post(url, {id: id}).done(function (data) {
+            $("body").append(data);
+            $("#myModal").modal('show');
+        });
+    });
+
 
     $('body').on('click', function (event) {
 
         console.log('Event ID: ' + event.target.id);
+
+        if (event.target.id == 'add_new_school_to_db') {
+            var name = $('#name').val();
+            var price = $('#price').val();
+            if (name != '' && price != '' && $.isNumeric(price)) {
+                $('#price_err').html('');
+                var item = {name: name, price: price};
+                var url = 'https://www.newsfactsandanalysis.com/lms/utils/add_new_school_to_db.php';
+                $.post(url, {item: JSON.stringify(item)}).done(function () {
+                    $("[data-dismiss=modal]").trigger({type: "click"});
+                    $('#myModal').data('modal', null);
+                    document.location.reload();
+                });
+            } // end if
+            else {
+                $('#price_err').html('Please provide schoolname and its price');
+            } // end else
+        }
+
+        if (event.target.id == 'add_new_school') {
+            var url = 'https://www.newsfactsandanalysis.com/lms/utils/get_add_new_school_modal_dialog.php';
+            $.post(url, {id: id}).done(function (data) {
+                $("body").append(data);
+                $("#myModal").modal('show');
+            });
+        }
 
         if (event.target.id == 'modal_cancel_trial') {
             console.log('Clicked ...');
@@ -706,7 +792,7 @@ $(document).ready(function () {
         if (event.target.id == 'add_q') {
             var num = $('#camp_q_num').val();
             if (num > 0) {
-                var url = 'http://www.newsfactsandanalysis.com/survey/add_question.php';
+                var url = 'https://www.newsfactsandanalysis.com/survey/add_question.php';
                 $.post(url, {num: num}).done(function (data) {
                     $('#q_container').html(data);
                 });
@@ -737,7 +823,7 @@ $(document).ready(function () {
             }
             if (confirm('Update current survey')) {
                 var campaign = {id: campid, msg: msg, q: JSON.stringify(questions)};
-                var url = 'http://www.newsfactsandanalysis.com/survey/update_camp.php';
+                var url = 'https://www.newsfactsandanalysis.com/survey/update_camp.php';
                 $.post(url, {camp: JSON.stringify(campaign)}).done(function (data) {
                     console.log(data);
                     document.location.reload();
@@ -785,7 +871,7 @@ $(document).ready(function () {
                         title: title,
                         content: content,
                         questions: questions};
-                    var url = 'http://www.newsfactsandanalysis.com/survey/add_camp.php';
+                    var url = 'https://www.newsfactsandanalysis.com/survey/add_camp.php';
                     $.post(url, {camp: JSON.stringify(camp)}).done(function (data) {
                         console.log(data);
                         document.location.reload();
@@ -799,7 +885,7 @@ $(document).ready(function () {
 
         if (event.target.id.indexOf("camp_edit_") >= 0) {
             var id = event.target.id.replace('camp_edit_', '');
-            var url = 'http://www.newsfactsandanalysis.com/survey/edit_survey.php';
+            var url = 'https://www.newsfactsandanalysis.com/survey/edit_survey.php';
             $.post(url, {id: id}).done(function (data) {
                 $('#camp').html(data);
             });
@@ -808,7 +894,7 @@ $(document).ready(function () {
         if (event.target.id.indexOf("camp_del_") >= 0) {
             if (confirm('Delete current campaign?')) {
                 var id = event.target.id.replace('camp_del_', '');
-                var url = 'http://www.newsfactsandanalysis.com/survey/del_survey.php';
+                var url = 'https://www.newsfactsandanalysis.com/survey/del_survey.php';
                 $.post(url, {id: id}).done(function (data) {
                     console.log(data);
                     document.location.reload();
@@ -827,14 +913,14 @@ $(document).ready(function () {
 
         if (event.target.id.indexOf("camp_preview_") >= 0) {
             var id = event.target.id.replace('camp_preview_', '');
-            var url = 'http://www.newsfactsandanalysis.com/survey/preview_camp.php';
+            var url = 'https://www.newsfactsandanalysis.com/survey/preview_camp.php';
             $.post(url, {id: id}).done(function (data) {
                 $('#camp').html(data);
             });
         }
 
         if (event.target.id == 'back_camp') {
-            var url = 'http://www.newsfactsandanalysis.com/survey/get_survey_tab.php';
+            var url = 'https://www.newsfactsandanalysis.com/survey/get_survey_tab.php';
             $.post(url, {id: 1}).done(function (data) {
                 $('#camp').html(data);
                 $('#camps').DataTable();
@@ -844,7 +930,7 @@ $(document).ready(function () {
 
 
         if (event.target.id == 'logout_utils') {
-            var url = 'http://www.newsfactsandanalysis.com/lms/utils/logout.php';
+            var url = 'https://www.newsfactsandanalysis.com/lms/utils/logout.php';
             if (confirm('Logout from system?')) {
                 $.post(url, {item: 1}).done(function () {
                     window.location = 'http://www.newsfactsandanalysis.com/lms/utils';
@@ -853,7 +939,7 @@ $(document).ready(function () {
         }
 
         if (event.target.id == 'logout_account_archive') {
-            var url = 'http://www.newsfactsandanalysis.com/lms/archive/logout.php';
+            var url = 'https://www.newsfactsandanalysis.com/lms/archive/logout.php';
             if (confirm('Logout from system?')) {
                 $.post(url, {item: 1}).done(function () {
                     window.location = 'http://www.newsfactsandanalysis.com/lms/archive';
@@ -866,7 +952,7 @@ $(document).ready(function () {
             var content = CKEDITOR.instances.editor1.getData();
             var template = {id: id, content: content};
             if (confirm('Update current template?')) {
-                var url = 'http://www.newsfactsandanalysis.com/lms/utils/update_template.php';
+                var url = 'https://www.newsfactsandanalysis.com/lms/utils/update_template.php';
                 $.post(url, {template: JSON.stringify(template)}).done(function () {
                     document.location.reload();
                 });
@@ -879,7 +965,7 @@ $(document).ready(function () {
             var elid = '#a_img_' + id;
             var msg_elid = '#upload_msg_' + id;
             var file_data = $(elid).prop('files');
-            var url = 'http://www.newsfactsandanalysis.com/survey/upload_img.php';
+            var url = 'https://www.newsfactsandanalysis.com/survey/upload_img.php';
             var form_data = new FormData();
             form_data.append('a_id', id);
             $.each(file_data, function (key, value) {
@@ -900,7 +986,7 @@ $(document).ready(function () {
         if (event.target.id.indexOf("del_img_") >= 0) {
             var id = event.target.id.replace('del_img_', '');
             if (confirm('Delete current image?')) {
-                var url = 'http://www.newsfactsandanalysis.com/survey/del_img.php';
+                var url = 'https://www.newsfactsandanalysis.com/survey/del_img.php';
                 $.post(url, {id: id}).done(function () {
                     document.location.reload();
                 });
@@ -922,7 +1008,7 @@ $(document).ready(function () {
             } // end else
 
             var camp = {id: id, status: status};
-            var url = 'http://www.newsfactsandanalysis.com/survey/change_camp_status.php';
+            var url = 'https://www.newsfactsandanalysis.com/survey/change_camp_status.php';
             if (confirm(text)) {
                 $.post(url, {camp: JSON.stringify(camp)}).done(function () {
                     document.location.reload();
@@ -934,7 +1020,7 @@ $(document).ready(function () {
             var id = event.target.id.replace('camp_refresh_', '');
             var divelid = '#progress_div_' + id;
             $(divelid).fadeTo('fast', 0.33);
-            var url = 'http://www.newsfactsandanalysis.com/survey/update_camp_progress.php';
+            var url = 'https://www.newsfactsandanalysis.com/survey/update_camp_progress.php';
             $.post(url, {id: id}).done(function (data) {
                 $(divelid).html(data);
                 $(divelid).fadeTo('fast', 1);
@@ -950,7 +1036,7 @@ $(document).ready(function () {
         if (event.target.id == 'templates_list') {
             var elid = '#' + event.target.id;
             var id = $(elid).val();
-            var url = 'http://www.newsfactsandanalysis.com/lms/utils/get_email_template.php';
+            var url = 'https://www.newsfactsandanalysis.com/lms/utils/get_email_template.php';
             $.post(url, {id: id}).done(function (data) {
                 $('#template_content').html(data);
             });
@@ -961,7 +1047,7 @@ $(document).ready(function () {
             $('#res_loader').show();
             var chart_data = [];
             var campid = $('#res_campaigns_list').val();
-            var url = 'http://www.newsfactsandanalysis.com/survey/get_campaign_results.php';
+            var url = 'https://www.newsfactsandanalysis.com/survey/get_campaign_results.php';
             $.post(url, {id: campid}).done(function (data) {
                 $('#res_loader').hide();
                 $("#camp_result").html('');
@@ -1017,10 +1103,21 @@ $(document).ready(function () {
 
         if (event.target.id == 'camp_q_num') {
             var num = $('#camp_q_num').val();
-            var url = 'http://www.newsfactsandanalysis.com/survey/get_add_camp_questions_block.php';
+            var url = 'https://www.newsfactsandanalysis.com/survey/get_add_camp_questions_block.php';
             $.post(url, {num: num}).done(function (data) {
                 $('#q_container').html(data);
                 $('#button_container').show();
+            });
+        }
+
+        if (event.target.id == 'school') {
+            var url = 'https://www.newsfactsandanalysis.com/lms/custom/students/get_school_price.php';
+            var name = $('#school').val();
+            $.post(url, {name: name}).done(function (price) {
+                if ($.isNumeric(price)) {
+                    $('#price').val(price); // hidden value;
+                    $('#ui_price').html(price); // visible for students
+                }
             });
         }
 
@@ -1034,15 +1131,15 @@ $(document).ready(function () {
      ************************************************************************/
 
     $('.nav2').click(function () {
-        var iframeurl = $(this).data('url');
         var url = '/lms/custom/navigation/status.php';
-        console.log('Item URL: ' + iframeurl);
+        iframeurl = $(this).data('url');
         $.post(url, {num: 1}).done(function (data) {
             if (data == 1) {
+                console.log('Frame src: ' + iframeurl);
                 $('#page').attr('src', iframeurl);
             } // end if
             else {
-                var url = 'http://www.newsfactsandanalysis.com/';
+                var url = 'https://www.newsfactsandanalysis.com/';
                 window.location.href = url;
             }
         }); // end of post

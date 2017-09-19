@@ -39,6 +39,7 @@ class Tutor extends Utils {
 
     function tutor_signup($user) {
         $list = "";
+        $groups = array();
         $result = $this->signup($user);
         if ($result !== false) {
             $roleid = 4; // non-editing teacher
@@ -52,64 +53,48 @@ class Tutor extends Utils {
             $groupid = $this->create_group($course1);
             if ($groupid > 0) {
                 $this->add_to_group($groupid, $userid);
+                $groups[] = $groupid;
             }
 
             $course2 = $userObj->course2;
             $groupid = $this->create_group($course2);
             if ($groupid > 0) {
                 $this->add_to_group($groupid, $userid);
+                $groups[] = $groupid;
             }
 
             $course3 = $userObj->course3;
             $groupid = $this->create_group($course3);
             if ($groupid > 0) {
                 $this->add_to_group($groupid, $userid);
+                $groups[] = $groupid;
             }
 
             $course4 = $userObj->course4;
             $groupid = $this->create_group($course4);
             if ($groupid > 0) {
                 $this->add_to_group($groupid, $userid);
+                $groups[] = $groupid;
             }
 
             $course5 = $userObj->course5;
             $groupid = $this->create_group($course5);
             if ($groupid > 0) {
                 $this->add_to_group($groupid, $userid);
+                $groups[] = $groupid;
             }
 
             $course6 = $userObj->course6;
             $groupid = $this->create_group($course6);
             if ($groupid > 0) {
                 $this->add_to_group($groupid, $userid);
+                $groups[] = $groupid;
             }
 
-            if ($userObj->site != '') {
-                $token = strstr($userObj->site, 'globalizationplus.com');
-                if ($token !== FALSE) {
-                    $this->confirm_tutor($userObj);
-                    $userObj->confirmed = 1; // required for confirmation email
-                } // end if $token!==FALSE
-                else {
-                    $item = new stdClass();
-                    $item->url = $userObj->site;
-                    $item->email = $userObj->email;
-                    $item->username = $userObj->firstname . " " . $userObj->lastname;
-                    $status = $this->verify_tutor($item, FALSE);
-                    if (!$status) {
-                        $this->send_non_confirmed_tutor_notification($userObj);
-                        $userObj->confirmed = 0;
-                    } // end if 
-                    else {
-                        $userObj->confirmed = 1;
-                    } // end else
-                } // end else
-            } // end if $userObj->site!=''
-            else {
-                $this->send_non_confirmed_tutor_notification($userObj);
-                $userObj->confirmed = 0;
-            } // end else
-
+            $this->confirm_tutor($userObj);
+            $userObj->confirmed = 1;
+            $userObj->confirmed = 1;
+            $userObj->groups = $groups;
             $this->send_tutor_confirmation_email($userObj);
             $list.="Thank you for signup. Confirmation email is sent to $userObj->email .";
         } // end if $result!==false
@@ -181,6 +166,31 @@ class Tutor extends Utils {
         $this->send_email($subject, $msg, $recipientB);
     }
 
+    function get_tutor_classes_signup_links($user) {
+        $list = "";
+        $groups = $user->groups;
+        if (count($groups) > 0) {
+            foreach ($groups as $id) {
+                $name = $this->get_group_name($id);
+                $list.="<p><a href='http://www." . $_SERVER['SERVER_NAME'] . "/registerstudentbody.html?groupid=$id' target='_blank'>$name</a></p>";
+            } // end foreach
+        } // end if count($groups)>0
+
+        return $list;
+    }
+
+    function get_tutor_classes($user) {
+        $list = "";
+        $groups = $user->groups;
+        if (count($groups) > 0) {
+            foreach ($groups as $id) {
+                $name = $this->get_group_name($id);
+                $list.="<p>$name</p>";
+            } // end foreach
+        } // end if count($groups)>0
+        return $list;
+    }
+
     function get_tutor_confirmation_message($user) {
         if ($user->confirmed == 0) {
             $query = "select * from mdl_email_templates "
@@ -195,8 +205,11 @@ class Tutor extends Utils {
         while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
             $content = $row['template_content'];
         }
-        $search = array('{firstname}', '{lastname}', '{email}', '{password}', '{class}');
-        $replace = array($user->firstname, $user->lastname, $user->email, $user->pwd, $user->course1);
+
+        $classes = $this->get_tutor_classes($user);
+        $links = $this->get_tutor_classes_signup_links($user);
+        $search = array('{firstname}', '{lastname}', '{email}', '{password}', '{class}', '{links}');
+        $replace = array($user->firstname, $user->lastname, $user->email, $user->pwd, $classes, $links);
         $message = str_replace($search, $replace, $content);
         return $message;
     }

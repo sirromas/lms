@@ -7,7 +7,7 @@ $a = new Archive();
 
 <html>
     <head>
-        <title>GLOBALIZATION PLUS</title>
+        <title>NewsFacts &amp; Analysis</title>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
@@ -21,9 +21,12 @@ $a = new Archive();
 
         <!-- Latest compiled and minified JavaScript -->
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-
+        
+        <!-- Typehead library -->
+        <script type="text/javascript" src="/assets/js/typehead.js"></script>
+        
         <!-- Custom JS script -->
-        <script type="text/javascript" src="http://globalizationplus.com/assets/js/custom.js"></script>
+        <script type="text/javascript" src="http://www.newsfactsandanalysis.com/assets/js/custom.js"></script>
 
         <!-- Data tables JS -->
         <script type="text/javascript" src='https://cdn.datatables.net/1.10.13/js/jquery.dataTables.min.js' ></script>
@@ -39,7 +42,7 @@ $a = new Archive();
         <div class="panel panel-default" style="width:640px;margin: auto;">
             <div class="panel-heading"><div class='text-center'>Login</div></div>
             <div class="panel-body">
-                <form action="http://globalizationplus.com/lms/archive/dashboard.php" method="post">
+                <form action="http://www.newsfactsandanalysis.com/lms/archive/dashboard.php" method="post" id="archieve_login">
                     <div class="panel-body">
                         <div class="form-group">
                             <label for="username">Email*:</label>
@@ -52,6 +55,10 @@ $a = new Archive();
                         <div class="form-group">
                             <button type="submit" class="btn btn-default">Login</button>
                         </div>
+                        <div class="form-group" id='ajax_loader' style="text-align: center;display: none;">
+                            <img src="http://www.newsfactsandanalysis.com/assets/images/load.gif" height="50" width="450" alt="loading" />
+                        </div>
+                        
                     </div>
                 </form>
             </div>

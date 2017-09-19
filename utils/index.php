@@ -26,7 +26,7 @@ $u = new Utils2();
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 
         <!-- Custom JS script -->
-        <script type="text/javascript" src="http://www.newsfactsandanalysis.com/assets/js/custom.js"></script>
+        <script type="text/javascript" src="https://www.newsfactsandanalysis.com/assets/js/custom.js"></script>
 
         <!-- Data tables JS -->
         <script type="text/javascript" src='https://cdn.datatables.net/1.10.13/js/jquery.dataTables.min.js' ></script>
@@ -42,7 +42,7 @@ $u = new Utils2();
         <div class="panel panel-default" style="width:640px;margin: auto;">
             <div class="panel-heading"><div class='text-center'>Login</div></div>
             <div class="panel-body">
-                <form action="http://www.newsfactsandanalysis.com/lms/utils/dashboard.php" method="post">
+                <form action="https://www.newsfactsandanalysis.com/lms/utils/dashboard.php" method="post">
                     <div class="panel-body">
                         <div class="form-group">
                             <label for="username">Email*:</label>

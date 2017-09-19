@@ -242,4 +242,140 @@ class Navigation extends Utils {
         } // end else
     }
 
+    function get_section_instance($id) {
+        $query = "select * from mdl_course_modules where id=$id";
+        $result = $this->db->query($query);
+        while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+            $instanceid = $row['instance'];
+        }
+        return $instanceid;
+    }
+
+    function filter_content($data) {
+        $needle = '<div id="container20"></div>';
+        $pos = strpos($data, $needle);
+        $content = substr($data, ($pos - 20));
+        return $content;
+    }
+
+    function get_arcticle_content($url) {
+        $list = "";
+        $replace = 'http://www.newsfactsandanalysis.com/lms/mod/page/view.php?id=';
+        $id = trim(str_replace($replace, '', $url));
+        $instanceid = $this->get_section_instance($id);
+        $query = "select * from mdl_page where id=$instanceid";
+        $result = $this->db->query($query);
+        while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+            $content = $row['content'];
+        }
+        $list.=$content;
+        return $list;
+    }
+
+    function get_dictionary_content() {
+        $http_path = 'http://www.newsfactsandanalysis.com/dictionary/dictionary.html';
+        $list = file_get_contents($http_path);
+        return $list;
+    }
+
+    function get_archive_page($url) {
+        $list = file_get_contents($url);
+        return $list;
+    }
+
+    function get_course_grade_items($courseid) {
+        $query = "select * from mdl_grade_items "
+                . "where courseid=$courseid "
+                . "and itemmodule is not null  ";
+        $num = $this->db->numrows($query);
+        if ($num > 0) {
+            $result = $this->db->query($query);
+            while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+                $items[] = $row['id'];
+            } // end while
+        } // end if $num > 0
+        return $items;
+    }
+
+    function get_item_grade($item, $userid) {
+        $query = "select * from mdl_grade_grades "
+                . "where itemid=$item "
+                . "and userid=$userid "
+                . "and finalgrade is not null ";
+        $num = $this->db->numrows($query);
+        if ($num > 0) {
+            $result = $this->db->query($query);
+            while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+                $pr = new stdClass();
+                $name = $this->get_grade_item_name($item);
+                $date = date('m-d-Y', $row['timemodified']);
+                if ($row['finalgrade'] < 100) {
+                    $grade = round($row['finalgrade']);
+                } // end if 
+                else {
+                    $grade = round(($row['finalgrade'] / $row['rawgrademax']) * 100);
+                } // end else 
+                $pr->id = $item;
+                $pr->name = $name;
+                $pr->grade = $grade;
+                $pr->date = $date;
+                $pr->max = round($row['rawgrademax']);
+            } // end while
+        } // end if $num > 0
+        else {
+            $pr = null;
+        }
+        return $pr;
+    }
+
+    function get_grade_item_name($id) {
+        $query = "select * from mdl_grade_items where id=$id";
+        $result = $this->db->query($query);
+        while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+            $name = $row['itemname'];
+        }
+        return $name;
+    }
+
+    function get_student_grades() {
+        $list = "";
+        $userid = $this->user->id;
+
+        $items = $this->get_course_grade_items($this->courseid);
+        if (count($items) > 0) {
+
+            $list.="<br/><br/><div class='row-fluid' style='text-align:center;font-weight:bold;'>";
+            $list.="<span class='span6' style='margin-left:10%'>My Grades</span>";
+            $list.="</div><br/>";
+
+            $list.="<div class='row-fluid' style='text-align:left;'>";
+            $list.="<span class='span3'>Item name</span>";
+            $list.="<span class='span2'>Item grade</span>";
+            $list.="<span class='span2'>Item max point</span>";
+            $list.="<span class='span2'>Finish date</span>";
+            $list.="</div>";
+
+            foreach ($items as $itemid) {
+                $grade = $this->get_item_grade($itemid, $userid); // object
+
+                $list.="<div class='row-fluid' style='text-align:left;'>";
+                $list.="<span class='span3'>$grade->name</span>";
+                $list.="<span class='span2'>$grade->grade</span>";
+                $list.="<span class='span2'>$grade->max</span>";
+                $list.="<span class='span2'>$grade->date</span>";
+                $list.="</div>";
+
+                $list.="<div class='row-fluid'>";
+                $list.="<span class='span9'><hr/></span>";
+                $list.="</div>";
+            } // end foreach
+        } // end if
+        else {
+            $list.="<div class='row-fluid' style='text-align:center;'>";
+            $list.="<span class='span9'>You do not have any grades</span>";
+            $list.="</div>";
+        }
+        return $list;
+    }
+
 }

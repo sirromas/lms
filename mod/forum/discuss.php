@@ -234,7 +234,7 @@ if ($mark == 'read' or $mark == 'unread') {
     }
 }
 
-$searchform = forum_search_form($course);
+//$searchform = forum_search_form($course);
 
 $forumnode = $PAGE->navigation->find($cm->id, navigation_node::TYPE_ACTIVITY);
 if (empty($forumnode)) {
@@ -271,6 +271,7 @@ if ((!is_guest($modcontext, $USER) && isloggedin()) && has_capability('mod/forum
     }
 }
 
+$searchform = forum_search_form($course);
 
 /// Check to see if groups are being used in this forum
 /// If so, make sure the current person is allowed to see this discussion

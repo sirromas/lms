@@ -86,9 +86,11 @@ if ($id) {
     print_error('missingparameter');
 }
 
+/*
 if (!$PAGE->button) {
     $PAGE->set_button(forum_search_form($course, $search));
 }
+*/
 
 $context = context_module::instance($cm->id);
 $PAGE->set_context($context);
@@ -148,8 +150,10 @@ if (!empty($forum->intro) && $forum->type != 'single' && $forum->type != 'teache
     echo $OUTPUT->box(format_module_intro('forum', $forum, $cm->id), 'generalbox', 'intro');
 }
 
+$PAGE->set_button(forum_search_form($course, $search));
+
 /// find out current groups mode
-groups_print_activity_menu($cm, $CFG->wwwroot . '/mod/forum/view.php?id=' . $cm->id);
+//groups_print_activity_menu($cm, $CFG->wwwroot . '/mod/forum/view.php?id=' . $cm->id);
 
 $SESSION->fromdiscussion = qualified_me();   // Return here if we post or set subscription etc
 /// Print settings and things across the top
