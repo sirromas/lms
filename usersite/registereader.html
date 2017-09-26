@@ -1,0 +1,832 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+    <title>NewsFacts & Analysis</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+
+    <!-- Optional theme -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css">
+    <link rel="stylesheet" href="assets/css/nav.css">
+
+    <!-- Latest compiled and minified JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+    <script type="text/javascript"
+            src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-3-typeahead/4.0.1/bootstrap3-typeahead.js"></script>
+
+    <script src="/assets/js/custom.js"></script>
+
+    <!-- Data tables JS -->
+    <script type="text/javascript" src='https://cdn.datatables.net/1.10.13/js/jquery.dataTables.min.js'></script>
+    <script type="text/javascript" src='https://cdn.datatables.net/1.10.13/js/dataTables.bootstrap.min.js'></script>
+
+    <!-- Data tables CSS -->
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.13/css/dataTables.bootstrap.min.css">
+
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+
+            var getUrlParameter = function getUrlParameter(sParam) {
+                var sPageURL = decodeURIComponent(window.location.search.substring(1)),
+                    sURLVariables = sPageURL.split('&'),
+                    sParameterName,
+                    i;
+
+                for (i = 0; i < sURLVariables.length; i++) {
+                    sParameterName = sURLVariables[i].split('=');
+
+                    if (sParameterName[0] === sParam) {
+                        return sParameterName[1] === undefined ? true : sParameterName[1];
+                    }
+                }
+            };
+
+
+            $.get('https://www.newsfactsandanalysis.com/lms/custom/students/groups.json', function (data) {
+                $("#class").typeahead({source: data, items: 256000});
+            });
+
+            $.get('https://www.newsfactsandanalysis.com/lms/custom/students/un.json', function (data) {
+                $("#school").typeahead({source: data, items: 256000});
+            });
+
+            var groupid = getUrlParameter('groupid');
+            console.log('Group ID: ' + groupid);
+            if (jQuery.type(groupid) !== "undefined") {
+                var url = 'https://www.newsfactsandanalysis.com/lms/custom/students/get_class_name.php';
+                $.post(url, {groupid: groupid}).done(function (data) {
+                    console.log('Server response: ' + data);
+                    var item = jQuery.parseJSON(data);
+                    var name = item.name;
+                    var price = item.price;
+                    var school = item.school;
+                    $('#class').val(name);
+                    $('#school').val(school);
+                    $('#price').val(price);      // hidden value
+                    $('#ui_price').html(price);  // visible value
+                });
+            } // end if
+            else {
+                var priceUrl = 'https://www.newsfactsandanalysis.com/lms/custom/students/get_basic_price.php';
+                $.post(priceUrl, {id: 1}).done(function (price) {
+                    $('#price').val(price); // hidden value;
+                    $('#ui_price').html(price); // visible for students
+                });
+            } // end else
+
+        }); // end of document.ready
+
+    </script>
+
+
+    <style type="text/css" media="all">
+
+        body {
+            margin: 0px;
+            padding: 0px;
+        }
+
+        body {
+            color: #000000;
+        }
+
+        a:link {
+            color: #000000;
+            text-decoration: none;
+        }
+
+        a:visited {
+            color: #000000;
+        }
+
+        a:active {
+            color: #000000;
+        }
+
+        a:hover {
+            color: #5b88f8;
+        }
+
+        a.title:hover {
+            color: #000000;
+            font-weight: bold;
+            font-size: 28px;
+        }
+
+        a.dictionary:hover {
+            color: #000000;
+            font-size: 17px;
+        }
+
+        a.section:hover {
+            color: #000000;
+            font-size: 16px;
+        }
+
+        input:hover[type="submit"] {
+            background: #ffb6c1;
+        }
+
+        .ds5 /*agl rulekind: base;*/
+        {
+            font-size: 22px;
+        }
+
+        .ds19 /*agl rulekind: base;*/
+        {
+            color: #000;
+            font-size: 18px;
+        }
+
+        .ds22 /*agl rulekind: base;*/
+        {
+            color: #000;
+        }
+
+        .ds23 /*agl rulekind: base;*/
+        {
+            color: #fff;
+        }
+
+        .ds76 /*agl rulekind: base;*/
+        {
+            color: #000;
+            font-size: 48px;
+            font-family: serif;
+        }
+
+        .ds80 /*agl rulekind: base;*/
+        {
+            color: #000;
+            font-size: 18px;
+            font-family: serif;
+        }
+
+        .ds83 /*agl rulekind: base;*/
+        {
+            font-family: serif;
+            font-size: 18px;
+            vertical-align: text-top;
+        }
+
+        .ds84 /*agl rulekind: base;*/
+        {
+            color: #000;
+            font-size: 22px;
+            font-family: serif;
+        }
+
+        .ds85 /*agl rulekind: base;*/
+        {
+            color: #fff;
+            font-family: serif;
+        }
+
+        .ds97 /*agl rulekind: base;*/
+        {
+            font-size: 16px;
+            font-family: serif;
+        }
+
+        .ds105 /*agl rulekind: base;*/
+        {
+            color: #fff;
+            font-size: 16px;
+            font-family: serif;
+        }
+
+        #container34 {
+            width: 400px;
+            height: 10px;
+        }
+
+        #container29 {
+            width: 400px;
+            height: 1px;
+        }
+
+        #container30 {
+            background-color: #fff;
+            width: 400px;
+            height: 1px;
+        }
+
+        #container32 {
+            background-color: #fff;
+            width: 878px;
+            height: 44px;
+        }
+
+        #container33 {
+            width: 878px;
+            height: 248px;
+        }
+
+        #container6 {
+            background-color: #000;
+            width: 880px;
+            height: 47px;
+        }
+
+        #container28 {
+            width: 400px;
+            height: 13px;
+        }
+
+        #container20 {
+            width: 400px;
+            height: -2px;
+        }
+
+        #container2 {
+            background-color: #fff;
+            width: 877px;
+            height: 170px;
+        }
+
+        #container1 {
+            background-color: #000;
+            width: 882px;
+            height: 174px;
+            border: solid 1px #000265;
+        }
+
+        .ds106 /*agl rulekind: base;*/
+        {
+            text-align: left;
+            text-indent: 0;
+            margin: 0;
+        }
+
+        .dsR1019 /*agl rulekind: base;*/
+        {
+            width: 307px;
+            height: 12px;
+        }
+
+        #container15 {
+            width: 400px;
+            height: 1px;
+        }
+
+        #container13 {
+            width: 845px;
+            height: 183px;
+        }
+
+        .ds153 /*agl rulekind: base;*/
+        {
+            font-size: 17px;
+            font-family: cursive;
+        }
+
+        #container4 {
+            width: 400px;
+            height: 8px;
+        }
+
+        #container8 {
+            width: 806px;
+            height: 50px;
+        }
+
+        .ds154 /*agl rulekind: base;*/
+        {
+            font-size: 15px;
+        }
+
+        .ds155 /*agl rulekind: base;*/
+        {
+            font-size: 15px;
+            font-family: cursive;
+        }
+
+        .ds179 /*agl rulekind: base;*/
+        {
+            color: #830;
+            font-size: 48px;
+            font-family: serif;
+        }
+
+        .ds180 /*agl rulekind: base;*/
+        {
+            color: #830;
+            font-size: 22px;
+            font-family: serif;
+        }
+
+        .ds197 /*agl rulekind: base;*/
+        {
+            color: #830;
+            font-size: 60px;
+            font-family: serif;
+        }
+
+        .dsR2015 /*agl rulekind: base;*/
+        {
+            width: 878px;
+            height: 49px;
+        }
+
+        .dsR2056 /*agl rulekind: base;*/
+        {
+            width: 189px;
+        }
+
+        .dsR2132 /*agl rulekind: base;*/
+        {
+            width: 444px;
+        }
+
+        .dsR2189 /*agl rulekind: base;*/
+        {
+            width: 606px;
+            height: 12.6px;
+            padding: 0px;
+            margin: 0px;
+        }
+
+        div#login_err {
+            font-size: 14px;
+            font-family: serif;
+            line-height: 16px;
+            color: #883300;
+            font-style: oblique;
+            font-weight: bold;
+        }
+
+        .ds253 /*agl rulekind: base;*/
+        {
+            color: #000;
+            font-size: 60px;
+            font-family: serif;
+        }
+
+        .dsR2370 /*agl rulekind: base;*/
+        {
+            width: 890px;
+            height: 260px;
+        }
+
+        .dsR2383 /*agl rulekind: base;*/
+        {
+            width: 896px;
+            height: 263px;
+        }
+
+        .dsR2398 /*agl rulekind: base;*/
+        {
+            width: 904px;
+            height: 261px;
+        }
+
+        #container10 {
+            margin: 0;
+            padding: 0;
+            width: 816px;
+            height: 71px;
+        }
+
+        #container3 {
+            width: 809px;
+            height: 23px;
+        }
+
+        a:link {
+            color: #000;
+            text-decoration: none;
+        }
+
+        a:visited {
+            color: #000;
+        }
+
+        a:active {
+            color: #000;
+        }
+
+        body {
+            color: #000;
+        }
+
+        a:hover {
+            color: #856ce5;
+        }
+
+        .form-group {
+            display: inline-block;
+            width: 220px;
+        }
+
+        .form-control {
+            font-size: 14px !important;
+            width: 220px;
+        }
+
+        .form-group.dsR1140 {
+
+            padding-bottom: 0px;
+            margin-bottom: 0px;
+        }
+
+        body {
+            font-family: serif !important;
+            padding-top: 8px;
+        }
+
+        :focus {
+            /* -webkit-focus-ring-color = '#ffffff' */
+            outline: -webkit-focus-ring-color auto 0px;
+            outline: -webkit-focus-ring-color auto 0px;
+
+        .dsR1140 /*agl rulekind: base;*/
+        {
+            width: auto;
+            height: 42px;
+        }
+
+        #container35 {
+        }
+
+        .dsR1141 /*agl rulekind: base;*/
+        {
+            width: auto;
+            height: 18px;
+        }
+
+        #prof_signup {
+        }
+
+        .dsR1142 /*agl rulekind: base;*/
+        {
+            width: auto;
+            height: 861px;
+        }
+
+        .dsR1144 /*agl rulekind: base;*/
+        {
+            width: auto;
+            height: 853px;
+        }
+
+        .container.dsR1142 {
+            padding-bottom: 20px;
+        }
+
+        a, img {
+            border: none;
+        }
+    </style>
+
+    <script>
+        function windowopener() {
+            var le = (screen.width / 2) - 410;
+            var to = (screen.height / 2) - 204;
+            controlWindow = window.open("lms/loginpage.html", "dataitem", "toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=no,resizable=no,width=410,height=204,left=" + le + ",top=" + to + ",screenX=0,screenY=0'");
+        }
+
+    </script>
+
+</head>
+<body>
+
+
+<div align="center">
+
+    <div align="center">
+        <div id="container34"></div>
+        <div id="container6">
+            <div id="container29"></div>
+            <div id="container33">
+                <div id="container32">
+                    <div id="container30"></div>
+                    <table class="dsR2015" border="0" cellspacing="2" cellpadding="0">
+                        <tr>
+                            <td class="dsR2056">
+                                <div align="left">
+                                    <span class="ds105">         </span><a href="about.html" target="_top"><span
+                                        class="ds97">About Us</span></a><span class="ds19">  </span><span
+                                        class="ds83"><span class="ds85"> </span></span><span class="ds19">|</span><span
+                                        class="ds22"><span class="ds5">|</span></span><span class="ds19">|  </span><span
+                                        class="ds83"><span class="ds85"> </span></span></div>
+                            </td>
+                            <td class="dsR2132">
+                                <div align="center">            <img class="dsR1019"
+                                                                     src="assets/images/frontpageborder.gif" alt=""
+                                                                     border="0"></div>
+                            </td>
+                            <td>
+                                <div align="left">
+                                    <span class="ds105">                          </span><span
+                                        class="ds19">|</span><span class="ds22"><span class="ds5">|</span></span><span
+                                        class="ds19">|  </span><span class="ds83"><span
+                                        class="ds85"> </span></span><span class="ds97"><a
+                                        href="mailto:info@newsfactsandanalysis.com">Contact Us</a></span></div>
+                            </td>
+                        </tr>
+                    </table>
+                    <span class="ds83"><span class="ds85">   </span></span><a
+                        href="http://www.newsfactsandanalysis.com/registerstudent.html"
+                        style="text-decoration:none"><span class="ds23"></span><span class=""><span
+                        class=""></span></span></a><span class=""></span><span class="ds23"></span></div>
+            </div>
+        </div>
+    </div>
+    <div id="container28"></div>
+    <div id="container20"></div>
+    <div id="container1">
+        <div align="center">
+            <div id="container2">
+                <div align="center">
+                    <div align="center">
+                        <div id="container13">
+                            <div align="center">
+                                <div id="container15"></div>
+                                <span class="ds153"></span>
+                                <div id="container4"></div>
+                                <div id="container8">
+                                    <span class="ds155">Whatever may be our wishes, our inclination, or the dictates of our passions, they cannot</span><span
+                                        class="ds154"><br>
+                                                    </span><span class="ds155">alter the state of facts and evidence.&quot; </span><span
+                                        class="ds154">—</span><span class="ds155"> John Adams, President of the United States, 1797-1801<img
+                                        class="dsR2189" src="assets/images/line.gif" alt="" border="0"></span></div>
+                                <div id="container10">
+                                    <p><a href="index.html" target="_top"><span class="ds197">N</span><span
+                                            class="ds180"> </span><span class="ds179">e</span><span
+                                            class="ds180"> </span><span class="ds179">w</span><span
+                                            class="ds180"> </span><span class="ds179">s</span><span class="ds5"><span
+                                            class="ds180"> </span></span><span class="ds197">F</span><span
+                                            class="ds180"> </span><span class="ds179">a</span><span
+                                            class="ds180"> </span><span class="ds179">c</span><span
+                                            class="ds180"> </span><span class="ds179">t</span><span
+                                            class="ds180"> </span><span class="ds179">s &amp;</span><span
+                                            class="ds84"> </span><span class="ds253">A</span><span class="ds84"> </span><span
+                                            class="ds76">n</span><span class="ds84"> </span><span
+                                            class="ds76">a</span><span class="ds84"> </span><span
+                                            class="ds76">l</span><span class="ds84"> </span><span
+                                            class="ds76">y</span><span class="ds84"> </span><span
+                                            class="ds76">s</span><span class="ds84"> </span><span
+                                            class="ds76">i</span><span class="ds84"> </span><span class="ds76">s</span></a>
+                                    </p>
+                                </div>
+                                <div id="container3">
+                                    <span class="ds80">nonpartisan news assignments with no political, religious, or ideological affiliation of any kind</span>
+                                </div>
+                                <p></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div align="center">
+                    <div align="center">
+                        <div align="center"></div>
+                        <div align="center">
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <p class="ds106" align="center"></p>
+    </div>
+
+
+    <!-- Content part -->
+    <div class="container dsR1142" style="margin-top:10px;">
+
+        <div class="panel panel-default dsR1144">
+            <div class="panel-heading">
+                <div class='text-center'>
+                    <div align="center">
+                                    <span class="ds1">
+                                        <h3>Readers Registration<br/>
+                                        </h3>
+                                        <h4>($<span id="ui_price"></span> per semester)</h4>
+                                        <input type="hidden" id="price">
+                                    </span></div>
+                </div>
+            </div>
+            <div class="panel-body">
+                <form id="student_signup" method="post">
+                    <div class="form-group">
+                        <div align="left">
+                            <label for="first">First*</label> <input type="text" class="form-control" id="first"
+                                                                     name="first" required
+                                                                     placeholder="Enter Your Firstname"></div>
+                    </div>
+
+                    <div class="form-group">
+                        <div align="left">
+                            <label for="last">Last*</label> <input type="text" class="form-control" id="last"
+                                                                   name="last" required
+                                                                   placeholder="Enter Your Lastname"></div>
+                    </div>
+
+                    <div class="form-group">
+                        <div align="left">
+                            <label for="email">Email*</label> <input type="email" class="form-control" id="email"
+                                                                     name="email" required aria-describedby="emailHelp"
+                                                                     placeholder="Enter email"></div>
+                    </div>
+
+                    <div class="form-group">
+                        <div align="left">
+                            <label for="pwd">Password*</label> <input type="password" class="form-control" required
+                                                                      id="pwd" name="pwd" placeholder="Password"></div>
+                    </div>
+
+                    <div class="form-group">
+                        <div align="left">
+                            <label for="street">Street*</label> <input type="text" class="form-control" required
+                                                                       id="street" name="street"
+                                                                       placeholder="Enter Your Street"></div>
+                    </div>
+
+                    <div class="form-group">
+                        <div align="left">
+                            <label for="city">City*</label> <input type="text" class="form-control" id="city"
+                                                                   name="city" required placeholder="Enter Your City">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div align="left">
+                            <label for="state">State*</label> <select id="state" class='form-control'>
+                            <option value="0" selected="">State</option>
+                            <option value="1">Alabama</option>
+                            <option value="2">Alaska</option>
+                            <option value="3">Arkansas</option>
+                            <option value="4">Arizona</option>
+                            <option value="5">California</option>
+                            <option value="6">Colorado</option>
+                            <option value="7">Connecticut</option>
+                            <option value="8">Delaware</option>
+                            <option value="9">District of Colombia</option>
+                            <option value="10">Florida</option>
+                            <option value="11">Georgia</option>
+                            <option value="12">Hawaii</option>
+                            <option value="13">Idaho</option>
+                            <option value="14">Illinois</option>
+                            <option value="15">Indiana</option>
+                            <option value="16">Iowa</option>
+                            <option value="17">Kansas</option>
+                            <option value="18">Kentucky</option>
+                            <option value="19">Louisiana</option>
+                            <option value="20">Maine</option>
+                            <option value="21">Maryland</option>
+                            <option value="22">Massachusetts</option>
+                            <option value="23">Michigan</option>
+                            <option value="24">Minnesota</option>
+                            <option value="25">Mississippi</option>
+                            <option value="26">Missouri</option>
+                            <option value="27">Montana</option>
+                            <option value="28">Nebraska</option>
+                            <option value="29">Nevada</option>
+                            <option value="30">New Hampshire</option>
+                            <option value="31">New Jersey</option>
+                            <option value="32">New Mexico</option>
+                            <option value="33">New York</option>
+                            <option value="34">North Carolina</option>
+                            <option value="35">North Dakota</option>
+                            <option value="36">Ohio</option>
+                            <option value="37">Oklahoma</option>
+                            <option value="38">Oregon</option>
+                            <option value="39">Pennsylvania</option>
+                            <option value="40">Rhode Island</option>
+                            <option value="41">South Carolina</option>
+                            <option value="42">South Dakota</option>
+                            <option value="43">Tennessee</option>
+                            <option value="44">Texas</option>
+                            <option value="45">Utah</option>
+                            <option value="46">Vermont</option>
+                            <option value="47">Virginia</option>
+                            <option value="48">Washington</option>
+                            <option value="49">West Virginia</option>
+                            <option value="50">Wisconsin</option>
+                            <option value="51">Wyoming</option>
+                        </select></div>
+                    </div>
+
+                    <div class="form-group">
+                        <div align="left">
+                            <label for="zip">Zip*</label> <input type="text" class="form-control" id="zip" name="zip"
+                                                                 required placeholder="Enter Your ZIP"></div>
+                    </div>
+
+                    <div class="form-group">
+                        <div align="left">
+                            <label for="school">School Name*</label> <input type="text" class="form-control" id="school"
+                                                                            name="school"
+                                                                            placeholder="Enter Your School Name"></div>
+                    </div>
+
+                    <div class="form-group">
+                        <div align="left">
+                            <label for="class">Class Name*</label> <input type="text" id="class" value="N/A" disabled>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div align="left">
+                            <label for="cardholder">Card Holder*</label> <input type="text" class="form-control"
+                                                                                id="cardholder" name="cardholder"
+                                                                                required
+                                                                                placeholder="Enter Your Card Holder Name">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div align="left">
+                            <label for="cardnumber">Card Number*</label> <input type="text" class="form-control"
+                                                                                id="cardnumber" name="cardnumber"
+                                                                                required
+                                                                                placeholder="Enter Your Card Number">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div align="left">
+                            <label for="cvv">CVV code*</label> <input type="text" class="form-control" id="cvv"
+                                                                      name="cvv" required
+                                                                      placeholder="Enter Your Card CVV"></div>
+                    </div>
+
+                    <div class="form-group">
+                        <div align="left">
+                            <label for="card_month">Expiration Month*</label> <select id="cardmonth"
+                                                                                      class="form-control">
+                            <option value="0" selected="">Month</option>
+                            <option value="01">01</option>
+                            <option value="03">02</option>
+                            <option value="03">03</option>
+                            <option value="04">04</option>
+                            <option value="05">05</option>
+                            <option value="06">06</option>
+                            <option value="07">07</option>
+                            <option value="08">08</option>
+                            <option value="09">09</option>
+                            <option value="10">10</option>
+                            <option value="11">11</option>
+                            <option value="12">12</option>
+                        </select></div>
+                    </div>
+                    <div class="form-group">
+                        <div align="left">
+                            <label for="card_year">Expiration Year*</label> <select id="cardyear" class="form-control">
+                            <option value="0" selected="">Year</option>
+                            <option value="2017">2017</option>
+                            <option value="2018">2018</option>
+                            <option value="2019">2019</option>
+                            <option value="2020">2020</option>
+                            <option value="2021">2021</option>
+                            <option value="2022">2022</option>
+                            <option value="2023">2023</option>
+                            <option value="2024">2024</option>
+                            <option value="2025">2025</option>
+                            <option value="2026">2026</option>
+                            <option value="2027">2027</option>
+                            <option value="2028">2028</option>
+                            <option value="2029">2029</option>
+                            <option value="2030">2030</option>
+                        </select></div>
+                    </div>
+                    <div align="center">
+                        <div class="form-group">
+                            <div align="center">
+                                <div class="text-error" id="form_err"></div>
+                                <div class="form-group dsR1141">
+                                    <div align="center">
+                                        <div class="text-info" id="form_info"></div>
+                                        <div class="form-group dsR1140">
+                                            <div align="center">
+                                                <div class="text-info" id="ajax_loader"
+                                                     style="display:none;text-align: center;">
+                                                    <img src="assets/images/ajax.gif"/></div>
+                                                <br>
+                                                <button type="submit" class="btn btn-default">Submit</button>
+                                            </div>
+
+                                            <div align="center">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+
+</html>

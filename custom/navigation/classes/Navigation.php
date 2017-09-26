@@ -2,7 +2,8 @@
 
 require_once $_SERVER['DOCUMENT_ROOT'] . '/lms/custom/common/Utils.php';
 
-class Navigation extends Utils {
+class Navigation extends Utils
+{
 
     public $page_module_id = 15;
     public $assesment_module_id = 1;
@@ -10,17 +11,30 @@ class Navigation extends Utils {
     public $quiz_module_id = 16;
     public $glossary_module_id = 10;
 
-    function __construct() {
+    function __construct()
+    {
         parent::__construct();
     }
 
-    function get_section_data($moduleid) {
+    function get_student_group_name($userid)
+    {
+        $query = "select * from mdl_groups_members where userid=$userid";
+        $result = $this->db->query($query);
+        while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+            $groupid = $row['groupid'];
+        }
+        $group_name = $this->get_group_name($groupid);
+        return $group_name;
+    }
+
+    function get_section_data($moduleid)
+    {
         // Course activity/resources are same for all student's groups
         $pageid = 0;
         $query = "select * from mdl_course_modules "
-                . "where module=$moduleid "
-                . "and visible=1 "
-                . "order by id desc limit 0,1";
+            . "where module=$moduleid "
+            . "and visible=1 "
+            . "order by id desc limit 0,1";
         $num = $this->db->numrows($query);
         if ($num > 0) {
             $result = $this->db->query($query);
@@ -31,7 +45,8 @@ class Navigation extends Utils {
         return $pageid;
     }
 
-    function get_user_email($userid) {
+    function get_user_email($userid)
+    {
         $query = "select * from mdl_user where id=$userid";
         $result = $this->db->query($query);
         while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
@@ -40,38 +55,44 @@ class Navigation extends Utils {
         return $email;
     }
 
-    function get_assesment_id() {
+    function get_assesment_id()
+    {
         $pageid = $this->get_section_data($this->assesment_module_id);
         return $pageid;
     }
 
-    function get_page_id() {
+    function get_page_id()
+    {
         $pageid = $this->get_section_data($this->page_module_id);
         return $pageid;
     }
 
-    function get_forum_id() {
+    function get_forum_id()
+    {
         $pageid = $this->get_section_data($this->forum_module_id);
         return $pageid;
     }
 
-    function get_quiz_id() {
+    function get_quiz_id()
+    {
         $pageid = $this->get_section_data($this->quiz_module_id);
         return $pageid;
     }
 
-    function get_glossary_id() {
+    function get_glossary_id()
+    {
         $pageid = $this->get_section_data($this->glossary_module_id);
         return $pageid;
     }
 
-    function get_overrided_quiz_id() {
+    function get_overrided_quiz_id()
+    {
         $pageid = 0;
         $moduleid = $this->quiz_module_id;
         $usergroups = $this->get_user_groups();
         $query = "select * from mdl_course_modules "
-                . "where module=$moduleid "
-                . "and visible=1 order by added desc limit 0,1";
+            . "where module=$moduleid "
+            . "and visible=1 order by added desc limit 0,1";
         $num = $this->db->numrows($query);
         if ($num > 0) {
             $result = $this->db->query($query);
@@ -95,7 +116,8 @@ class Navigation extends Utils {
         return $pageid;
     }
 
-    function get_subscription_info() {
+    function get_subscription_info()
+    {
         $list = "";
         $userid = $this->user->id;
         $roleid = $this->get_user_role();
@@ -135,17 +157,18 @@ class Navigation extends Utils {
                 $e = date('m-d-Y', $paid_end);
             } // end if
 
-            $list.="<span style=''>Subscription period: $s - $e</span>";
+            $list .= "<span style=''>Subscription period: $s - $e</span>";
         } // end if $roleid != 0
 
         return $list;
     }
 
-    function get_previous_quiz_id() {
+    function get_previous_quiz_id()
+    {
         $id = 0;
         $query = "select * from mdl_course_modules "
-                . "where module=$this->quiz_module_id "
-                . "order by id desc limit 1,2";
+            . "where module=$this->quiz_module_id "
+            . "order by id desc limit 1,2";
         $num = $this->db->numrows($query);
         if ($num > 0) {
             $result = $this->db->query($query);
@@ -156,7 +179,8 @@ class Navigation extends Utils {
         return $id;
     }
 
-    function update_quiz_link() {
+    function update_quiz_link()
+    {
         $server = $_SERVER['SERVER_NAME'];
         $this->update_page_link();
         $old_id = $this->get_previous_quiz_id();
@@ -170,7 +194,7 @@ class Navigation extends Utils {
 
             $forum_id = $this->get_section_data($this->forum_module_id);
             $query = "select * from mdl_course_modules "
-                    . "where id=$forum_id";
+                . "where id=$forum_id";
             $result = $this->db->query($query);
             while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
                 $instanceid = $row['instance'];
@@ -188,11 +212,12 @@ class Navigation extends Utils {
         } // end else
     }
 
-    function get_previous_page_id() {
+    function get_previous_page_id()
+    {
         $id = 0;
         $query = "select * from mdl_course_modules "
-                . "where module=$this->page_module_id "
-                . "order by id desc limit 1,2";
+            . "where module=$this->page_module_id "
+            . "order by id desc limit 1,2";
         $num = $this->db->numrows($query);
         if ($num > 0) {
             $result = $this->db->query($query);
@@ -203,7 +228,8 @@ class Navigation extends Utils {
         return $id;
     }
 
-    function update_page_link() {
+    function update_page_link()
+    {
         $old_id = $this->get_previous_page_id();
         if ($old_id == 0) {
             return;
@@ -215,7 +241,7 @@ class Navigation extends Utils {
 
             $quiz_id = $this->get_section_data($this->quiz_module_id);
             $query = "select * from mdl_course_modules "
-                    . "where id=$quiz_id";
+                . "where id=$quiz_id";
             $result = $this->db->query($query);
             while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
                 $instanceid = $row['instance'];
@@ -233,7 +259,8 @@ class Navigation extends Utils {
         } // end else
     }
 
-    function is_logged() {
+    function is_logged()
+    {
         if (isloggedin()) {
             return 1;
         } // end if
@@ -242,7 +269,8 @@ class Navigation extends Utils {
         } // end else
     }
 
-    function get_section_instance($id) {
+    function get_section_instance($id)
+    {
         $query = "select * from mdl_course_modules where id=$id";
         $result = $this->db->query($query);
         while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
@@ -251,14 +279,16 @@ class Navigation extends Utils {
         return $instanceid;
     }
 
-    function filter_content($data) {
+    function filter_content($data)
+    {
         $needle = '<div id="container20"></div>';
         $pos = strpos($data, $needle);
         $content = substr($data, ($pos - 20));
         return $content;
     }
 
-    function get_arcticle_content($url) {
+    function get_arcticle_content($url)
+    {
         $list = "";
         $replace = 'http://www.newsfactsandanalysis.com/lms/mod/page/view.php?id=';
         $id = trim(str_replace($replace, '', $url));
@@ -268,25 +298,28 @@ class Navigation extends Utils {
         while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
             $content = $row['content'];
         }
-        $list.=$content;
+        $list .= $content;
         return $list;
     }
 
-    function get_dictionary_content() {
+    function get_dictionary_content()
+    {
         $http_path = 'http://www.newsfactsandanalysis.com/dictionary/dictionary.html';
         $list = file_get_contents($http_path);
         return $list;
     }
 
-    function get_archive_page($url) {
+    function get_archive_page($url)
+    {
         $list = file_get_contents($url);
         return $list;
     }
 
-    function get_course_grade_items($courseid) {
+    function get_course_grade_items($courseid)
+    {
         $query = "select * from mdl_grade_items "
-                . "where courseid=$courseid "
-                . "and itemmodule is not null  ";
+            . "where courseid=$courseid "
+            . "and itemmodule is not null  ";
         $num = $this->db->numrows($query);
         if ($num > 0) {
             $result = $this->db->query($query);
@@ -297,11 +330,12 @@ class Navigation extends Utils {
         return $items;
     }
 
-    function get_item_grade($item, $userid) {
+    function get_item_grade($item, $userid)
+    {
         $query = "select * from mdl_grade_grades "
-                . "where itemid=$item "
-                . "and userid=$userid "
-                . "and finalgrade is not null ";
+            . "where itemid=$item "
+            . "and userid=$userid "
+            . "and finalgrade is not null ";
         $num = $this->db->numrows($query);
         if ($num > 0) {
             $result = $this->db->query($query);
@@ -328,7 +362,8 @@ class Navigation extends Utils {
         return $pr;
     }
 
-    function get_grade_item_name($id) {
+    function get_grade_item_name($id)
+    {
         $query = "select * from mdl_grade_items where id=$id";
         $result = $this->db->query($query);
         while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
@@ -337,43 +372,44 @@ class Navigation extends Utils {
         return $name;
     }
 
-    function get_student_grades() {
+    function get_student_grades()
+    {
         $list = "";
         $userid = $this->user->id;
 
         $items = $this->get_course_grade_items($this->courseid);
         if (count($items) > 0) {
 
-            $list.="<br/><br/><div class='row-fluid' style='text-align:center;font-weight:bold;'>";
-            $list.="<span class='span6' style='margin-left:10%'>My Grades</span>";
-            $list.="</div><br/>";
+            $list .= "<br/><br/><div class='row-fluid' style='text-align:center;font-weight:bold;'>";
+            $list .= "<span class='span6' style='margin-left:10%'>My Grades</span>";
+            $list .= "</div><br/>";
 
-            $list.="<div class='row-fluid' style='text-align:left;'>";
-            $list.="<span class='span3'>Item name</span>";
-            $list.="<span class='span2'>Item grade</span>";
-            $list.="<span class='span2'>Item max point</span>";
-            $list.="<span class='span2'>Finish date</span>";
-            $list.="</div>";
+            $list .= "<div class='row-fluid' style='text-align:left;'>";
+            $list .= "<span class='span3'>Item name</span>";
+            $list .= "<span class='span2'>Item grade</span>";
+            $list .= "<span class='span2'>Item max point</span>";
+            $list .= "<span class='span2'>Finish date</span>";
+            $list .= "</div>";
 
             foreach ($items as $itemid) {
                 $grade = $this->get_item_grade($itemid, $userid); // object
 
-                $list.="<div class='row-fluid' style='text-align:left;'>";
-                $list.="<span class='span3'>$grade->name</span>";
-                $list.="<span class='span2'>$grade->grade</span>";
-                $list.="<span class='span2'>$grade->max</span>";
-                $list.="<span class='span2'>$grade->date</span>";
-                $list.="</div>";
+                $list .= "<div class='row-fluid' style='text-align:left;'>";
+                $list .= "<span class='span3'>$grade->name</span>";
+                $list .= "<span class='span2'>$grade->grade</span>";
+                $list .= "<span class='span2'>$grade->max</span>";
+                $list .= "<span class='span2'>$grade->date</span>";
+                $list .= "</div>";
 
-                $list.="<div class='row-fluid'>";
-                $list.="<span class='span9'><hr/></span>";
-                $list.="</div>";
+                $list .= "<div class='row-fluid'>";
+                $list .= "<span class='span9'><hr/></span>";
+                $list .= "</div>";
             } // end foreach
         } // end if
         else {
-            $list.="<div class='row-fluid' style='text-align:center;'>";
-            $list.="<span class='span9'>You do not have any grades</span>";
-            $list.="</div>";
+            $list .= "<div class='row-fluid' style='text-align:center;'>";
+            $list .= "<span class='span9'>You do not have any grades</span>";
+            $list .= "</div>";
         }
         return $list;
     }

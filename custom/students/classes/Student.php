@@ -3,18 +3,21 @@
 require_once $_SERVER['DOCUMENT_ROOT'] . '/lms/custom/common/Utils.php';
 require_once $_SERVER['DOCUMENT_ROOT'] . '/lms/custom/authorize/Payment.php';
 
-class Student extends Utils {
+class Student extends Utils
+{
 
     public $json_path;
     public $univesrity_path;
 
-    function __construct() {
+    function __construct()
+    {
         parent::__construct();
         $this->json_path = $_SERVER['DOCUMENT_ROOT'] . '/lms/custom/students/groups.json';
         $this->univesrity_path = $_SERVER['DOCUMENT_ROOT'] . '/lms/custom/students/un.json';
     }
 
-    function get_groups_list() {
+    function get_groups_list()
+    {
         $groups = array();
         $query = "select * from mdl_groups order by name";
         $result = $this->db->query($query);
@@ -25,7 +28,8 @@ class Student extends Utils {
         echo "Groups data are updated ....";
     }
 
-    function create_univsersity_data() {
+    function create_univsersity_data()
+    {
         $un = array();
         $query = "select * from mdl_price where id>1 and price<>0";
         $result = $this->db->query($query);
@@ -37,7 +41,8 @@ class Student extends Utils {
         echo "University data are updated ....";
     }
 
-    function get_class_data($groupid) {
+    function get_class_data($groupid)
+    {
         $teacherid = $this->get_group_teacher($groupid);
         $school = $this->get_school_name($teacherid);
         $class = $this->get_group_name($groupid);
@@ -46,7 +51,8 @@ class Student extends Utils {
         return json_encode($data);
     }
 
-    function get_student_message_from_template($user, $class, $payment_detailes) {
+    function get_student_message_from_template($user, $class, $payment_detailes)
+    {
         $date1 = date('m/d/Y', $payment_detailes->start_date);
         $date2 = date('m/d/Y', $payment_detailes->exp_date);
         $query = "select * from mdl_email_templates where template_name='student'";
@@ -60,93 +66,58 @@ class Student extends Utils {
         return $message;
     }
 
-    function get_confirmation_message($userid, $groupid, $user) {
+    function get_confirmation_message($userid, $groupid, $user)
+    {
         $list = "";
         $class = $this->get_group_name($groupid);
         $payment_detailes = $this->get_payment_detailes($userid, $groupid);
-        $list.=$this->get_student_message_from_template($user, $class, $payment_detailes);
-
-        /*
-         * 
-          $list.="<html>";
-          $list.="<body>";
-          $list.="<br>";
-          $list.="<p align='center'>Dear $user->firstname $user->lastname!</p>";
-          $list.="<p align='center'>Thank you for signup.</p>";
-          $list.="<table align='center'>";
-
-          $list.="<tr>";
-          $list.="<td style='padding:15px'>Username</td><td style='padding:15px'>$user->email</td>";
-          $list.="</tr>";
-
-          $list.="<tr>";
-          $list.="<td style='padding:15px'>Password</td><td style='padding:15px'>$user->pwd</td>";
-          $list.="</tr>";
-
-          $list.="<tr>";
-          $list.="<td style='padding:15px'>Class</td><td style='padding:15px'>$class</td>";
-          $list.="</tr>";
-
-          $list.="<tr>";
-          $list.="<td style='padding:15px'>Access key</td><td style='padding:15px'>$payment_detailes->auth_key</td>";
-          $list.="</tr>";
-
-          $list.="<tr>";
-          $list.="<td style='padding:15px'>Key validation period</td><td style='padding:15px'>From " . date('m/d/Y', $payment_detailes->start_date) . " to " . date('m/d/Y', $payment_detailes->exp_date) . "</td>";
-          $list.="</tr>";
-
-          $list.="</table>";
-
-          $list.="<p align='center'>Best regards, <br> Globalization Plus Team.</p>";
-
-          $list.="</body>";
-          $list.="</html>";
-         * 
-         */
-
+        $list .= $this->get_student_message_from_template($user, $class, $payment_detailes);
         return $list;
     }
 
-    function get_prolong_message($userid, $groupid, $user) {
+    function get_prolong_message($userid, $groupid, $user)
+    {
         $list = "";
         $class = $this->get_group_name($groupid);
         $payment_detailes = $this->get_payment_detailes($userid, $groupid);
 
-        $list.="<html>";
-        $list.="<body>";
-        $list.="<br>";
-        $list.="<p align='center'>Dear $user->firstname $user->lastname!</p>";
-        $list.="<p align='center'>Your subscription was renewed.</p>";
-        $list.="<table align='center'>";
+        $list .= "<html>";
+        $list .= "<body>";
+        $list .= "<br>";
+        $list .= "<p align='center'>Dear $user->firstname $user->lastname!</p>";
+        $list .= "<p align='center'>Your subscription was renewed.</p>";
+        $list .= "<table align='center'>";
 
-        $list.="<tr>";
-        $list.="<td style='padding:15px'>Class</td><td style='padding:15px'>$class</td>";
-        $list.="</tr>";
+        $list .= "<tr>";
+        $list .= "<td style='padding:15px'>Class</td><td style='padding:15px'>$class</td>";
+        $list .= "</tr>";
 
-        $list.="<tr>";
-        $list.="<td style='padding:15px'>Access key</td><td style='padding:15px'>$payment_detailes->auth_key</td>";
-        $list.="</tr>";
+        $list .= "<tr>";
+        $list .= "<td style='padding:15px'>Access key</td><td style='padding:15px'>$payment_detailes->auth_key</td>";
+        $list .= "</tr>";
 
-        $list.="<tr>";
-        $list.="<td style='padding:15px'>Key validation period</td><td style='padding:15px'>From " . date('m/d/Y', $payment_detailes->start_date) . " to " . date('m/d/Y', $payment_detailes->exp_date) . "</td>";
-        $list.="</tr>";
+        $list .= "<tr>";
+        $list .= "<td style='padding:15px'>Key validation period</td><td style='padding:15px'>From " . date('m/d/Y', $payment_detailes->start_date) . " to " . date('m/d/Y', $payment_detailes->exp_date) . "</td>";
+        $list .= "</tr>";
 
-        $list.="</table>";
+        $list .= "</table>";
 
-        $list.="<p align='center'>Best regards, <br> Globalization Plus Team.</p>";
+        $list .= "<p align='center'>Best regards, <br> Globalization Plus Team.</p>";
 
-        $list.="</body>";
-        $list.="</html>";
+        $list .= "</body>";
+        $list .= "</html>";
 
         return $list;
     }
 
-    function delete_user_registration($userid) {
+    function delete_user_registration($userid)
+    {
         $query = "delete mdl_user where id=$userid";
         $this->db->query($query);
     }
 
-    function student_signup($user) {
+    function student_signup($user)
+    {
         $list = "";
         $status = $this->signup($user); // $user is json encoded
         if ($status !== false) {
@@ -162,21 +133,21 @@ class Student extends Utils {
                 $subject = 'Signup confirmation';
                 $message = $this->get_confirmation_message($userid, $groupid, $userobj);
                 $this->send_email($subject, $message, $userobj->email);
-                $list.="Thank you for signup! Confirmation email is sent to $userobj->email";
+                $list .= "Thank you for signup! Confirmation email is sent to $userobj->email";
             } // end if $result !== false
             else {
                 $this->delete_user_registration($userid);
-                $list.="Credit card declined";
+                $list .= "Credit card declined";
             } // end else
         } // end if $status !== false
         else {
-            $this->delete_user_registration($userid);
-            $list.="Signup error happened";
+            $list .= "Signup error happened";
         }
         return $list;
     }
 
-    function prolong_subscription($user) {
+    function prolong_subscription($user)
+    {
         $list = "";
         $userObj = json_decode($user);
         $userObj->cardholder = $userObj->firstname . ' ' . $userObj->lastname;
@@ -197,15 +168,16 @@ class Student extends Utils {
             $subject = "Subscription Renew Confirmation";
             $message = $this->get_prolong_message($userObj->userid, $userObj->class, $userObj);
             $this->send_email($subject, $message, $userObj->email);
-            $list.="<p align='center'>Payment is succesfull. Thank you! <br> Your key is $key , expiration date $exp</p>";
+            $list .= "<p align='center'>Payment is succesfull. Thank you! <br> Your key is $key , expiration date $exp</p>";
         } //  end if $result !== false
         else {
-            $list.="Credit Card Declined";
+            $list .= "Credit Card Declined";
         }
         return $list;
     }
 
-    function get_basic_price($id) {
+    function get_basic_price($id)
+    {
         $query = "select * from mdl_price where id=$id";
         $result = $this->db->query($query);
         while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
@@ -214,7 +186,8 @@ class Student extends Utils {
         return $amount;
     }
 
-    function get_school_price($name) {
+    function get_school_price($name)
+    {
         $query = "select * from mdl_price where institute='$name'";
         $result = $this->db->query($query);
         while ($row = $result->fetch(PDO::FETCH_ASSOC)) {

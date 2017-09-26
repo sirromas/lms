@@ -105,29 +105,24 @@ if ($roleid == 4) {
 }
 
 if ($roleid == 5) {
+    // We show forum, grades, etc only for students, readers are skipped
+    $groupname = $nav->get_student_group_name($USER->id);
+    if ($groupname != 'N/A') {
+        if ($quizid > 0) {
+            echo "<div style='width:877px;margin:auto;text-align:center;'>";
+            echo "<span class='span9' style='text-align:center;margin-left:10%'><a href='https://www.newsfactsandanalysis.com/lms/mod/quiz/view.php?id=$quizid' target='_blank' style='font-weight:bold;font-size:18px;'>☞ Take the News Quiz<br><hr></a></span>";
+            echo "</div>";
+        } // end if
 
-    if ($quizid > 0) {
-        echo "<div style='width:877px;margin:auto;text-align:center;'>";
-        echo "<span class='span9' style='text-align:center;margin-left:10%'><a href='https://www.newsfactsandanalysis.com/lms/mod/quiz/view.php?id=$quizid' target='_blank' style='font-weight:bold;font-size:18px;'>☞ Take the News Quiz<br><hr></a></span>";
+        if ($forumid > 0) {
+            $forumurl = "https://www." . $_SERVER['SERVER_NAME'] . "/lms/mod/forum/view.php?id=$forumid";
+            echo "<div style='width:877px;margin:auto;'><iframe src='$forumurl' id='forumframe' width='100%' style='border:0' onload='resizeIframe(this)'></iframe></div>";
+        } // end if $forumid>0
+
+        echo "<div style='width:877px;margin:auto;text-align:center;display:none;' id='student_grades'>";
+        echo "<span class='span12' style='margin-left:15%' >$grades</span>";
         echo "</div>";
-    } // end if 
-
-    if ($forumid > 0) {
-        $forumurl = "https://www." . $_SERVER['SERVER_NAME'] . "/lms/mod/forum/view.php?id=$forumid";
-        echo "<div style='width:877px;margin:auto;'><iframe src='$forumurl' id='forumframe' width='100%' style='border:0' onload='resizeIframe(this)'></iframe></div>";
-    } // end if $forumid>0
-    
-    /*
-    echo "<div class='row-fluid' style='width:877px;margin:auto;'>";
-    echo "<span style='padding-left:2%'>";
-    echo "<button id='show_grades' class='btn btn-primary'>My Grades</button>";
-    echo "</span>";
-    echo "</div>";
-    */
-    
-    echo "<div style='width:877px;margin:auto;text-align:center;display:none;' id='student_grades'>";
-    echo "<span class='span12' style='margin-left:15%' >$grades</span>";
-    echo "</div>";
+    } // end if $groupname!='N/A'
 } // end if $roleid == 5
 
 echo $OUTPUT->footer();
@@ -150,7 +145,7 @@ echo $OUTPUT->footer();
         $('.no-overflow').css("overflow-x", "hidden");
 
         $('#show_grades').click(function () {
-            
+
         }); // end of click function
 
     }); // end of document ready

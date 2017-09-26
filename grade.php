@@ -1,6 +1,7 @@
 <?php
 require_once $_SERVER['DOCUMENT_ROOT'] . '/lms/custom/access/classes/Access.php';
 require_once $_SERVER['DOCUMENT_ROOT'] . '/lms/custom/navigation/classes/Navigation.php';
+require_once $_SERVER['DOCUMENT_ROOT'] . '/lms/custom/tutors/classes/Tutor.php';
 
 $ac = new Access();
 $nav = new Navigation();
@@ -12,6 +13,8 @@ if (!isloggedin()) {
 else {
 
     global $USER;
+    $t = new Tutor();
+    $archive = $t->get_archive_page();
     $sesskey = optional_param('sesskey', '__notpresent__', PARAM_RAW); // we want not null default to prevent required sesskey warning
     $courseid = $nav->get_actual_course_id();
     $pageid = $nav->get_page_id();
@@ -39,9 +42,16 @@ else {
             <!-- jQuery library -->
             <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
 
+            <!-- Bootstrap libraries -->
+            <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+            <script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
             <!-- Data tables JS -->
             <script type="text/javascript" src='https://cdn.datatables.net/1.10.13/js/jquery.dataTables.min.js' ></script>
             <script type="text/javascript" src='https://cdn.datatables.net/1.10.13/js/dataTables.bootstrap.min.js' ></script>
+
+            <!-- Data tables CSS --> 
+            <link rel="stylesheet" href="https://cdn.datatables.net/1.10.13/css/dataTables.bootstrap.min.css">
 
             <!-- Typehead JS -->
             <script type='text/javascript' src='https://cdnjs.cloudflare.com/ajax/libs/bootstrap-3-typeahead/4.0.1/bootstrap3-typeahead.js'></script>
@@ -66,21 +76,8 @@ else {
                 .ds19 /*agl rulekind: base;*/ { color: #000; font-size: 18px; }
                 .ds22 /*agl rulekind: base;*/ { color: #000; }
                 .ds23 /*agl rulekind: base;*/ { color: #fff; }
-                .ds76 /*agl rulekind: base;*/ { color: #000; font-size: 48px; font-family: serif; }
-                .ds80 /*agl rulekind: base;*/ { color: #000; font-size: 18px; font-family: serif; }
                 .ds83 /*agl rulekind: base;*/ { font-family: serif; font-size: 18px; vertical-align: text-top; }
-                .ds84 /*agl rulekind: base;*/ { color: #000; font-size: 22px; font-family: serif; }
                 .ds85 /*agl rulekind: base;*/ { color: #fff; font-family: serif; }
-                .ds106 /*agl rulekind: base;*/ { text-align: left; text-indent: 0; margin: 0; }
-                .ds153 /*agl rulekind: base;*/ { font-size: 17px; font-family: cursive; }
-                .ds154 /*agl rulekind: base;*/ { font-size: 15px; }
-                .ds155 /*agl rulekind: base;*/ { font-size: 15px; font-family: cursive; }
-                .ds179 /*agl rulekind: base;*/ { color: #830; font-size: 48px; font-family: serif; }
-                .ds180 /*agl rulekind: base;*/ { color: #830; font-size: 22px; font-family: serif; }
-                .ds197 /*agl rulekind: base;*/ { color: #830; font-size: 60px; font-family: serif; }
-                .ds199 /*agl rulekind: base;*/ { color: #000; font-size: 60px; font-family: serif; }
-                .dsR2160 /*agl rulekind: base;*/ { width: 890px; height: 264px;text-align:center; }
-                .ds200 /*agl rulekind: base;*/ { font-size: 17px; font-family: serif; }
                 .ds203 /*agl rulekind: base;*/ { font-size: 18px; font-family: serif; }
                 .ds204 /*agl rulekind: base;*/ { color: #fff; font-size: 18px; font-family: serif; }
                 #container34 { width: 400px; height: 10px; }
@@ -92,8 +89,6 @@ else {
                 #container13 { width: 845px; height: 11px; }
                 #container2 { background-color: #fff; width: 900px; height: 232px; }
                 #container1 { background-color: #000; width: 900px; height: 238px; border: solid 1px #000265; }
-                .dsR2183 /*agl rulekind: base;*/ { width: 904px; height: 298px; }
-                .dsR2185 /*agl rulekind: base;*/ { width: 896px; height: 278px; }
                 .dsR2175 /*agl rulekind: base;*/ { width: 876px; height: 27px; }
                 #container29 { width: 1024px; height: 1px; }
                 #container30 { background-color: #fff; width: 400px; height: 1px; }
@@ -102,56 +97,51 @@ else {
                 #container6 { background-color: #000; width: 900px; height: 47px; }
                 #container28 { width: 1024px; height: 3px; }
                 #container35 { width: 400px; height: 10px; }
-                .ds207 /*agl rulekind: base;*/ { font-size: 30px; }
-                .dsR2215 /*agl rulekind: base;*/ { width: 606px; height: 12.6px; }
-                -->
+
+
             </style>
 
         </head>
 
         <body>
-
-            <div id="header" style="width:95%;margin:auto;">
-
-                <div style='width:90%;margin:auto;'>
-                    <div align="center">
+            <div align="center">
+                <span id="header_img"><img src="../assets/images/gradeheader.jpeg" alt="" height="245" width="892" border="0"></span>
+                <div id="header" style="width:95%;margin:auto;">
+                    <div style='width:90%;margin:auto;'>
                         <div align="center">
                             <div align="center">
                                 <div align="center">
-                                    <div id="container35"></div>
-                                    <div id="container6">
-                                        <div id="container29"></div>
-                                        <div id="container33">
-                                            <div id="container32">
-                                                <div id="container30"></div>
-                                                <table class="dsR2175" border="0" cellspacing="2" cellpadding="0" width="100%">
-                                                    <tr>
-                                                        <td class="dsR2171">
-                                                            <div align="center" style="margin-top:5px;">
-                                                                <a href="#" onclick="return false" class="nav2" data-url="<?php echo $pageURL; ?>"><span class="ds203">Article</span></a><a href="#" onclick="return false" class="nav2" data-url="<?php echo $pageURL; ?>"><span class="ds203">&nbsp;&nbsp;&nbsp;</span></a><span class="ds19">|</span><span class="ds22"><span class="ds5">|</span></span><span class="ds19">|</span><a href="#" onclick="return false" class="nav2" data-url="<?php echo $pageURL; ?>"><span class="ds203">&nbsp;&nbsp;&nbsp;</span></a><a href="#" onclick="return false" class="nav2" data-url="<?php echo $gradeURL; ?>"><span class="ds203">Grades</span></a><a href="#" onclick="return false" class="nav2" data-url="<?php echo $pageURL; ?>"><span class="ds203">&nbsp;&nbsp;&nbsp;</span></a><span class="ds19">|</span><span class="ds22"><span class="ds5">|</span></span><span class="ds19">|</span>&nbsp;&nbsp;<span class="ds203"><a href="#" onclick="return false" class="nav2" data-url="<?php echo $forumURL; ?>">Discussion</a></span><a href="#" onclick="return false" class="nav2" data-url="<?php echo $pageURL; ?>"><span class="ds203">&nbsp;&nbsp;&nbsp;</span></a><span class="ds19">|</span><span class="ds22"><span class="ds5">|</span></span><span class="ds19">|</span><a href="#" onclick="return false" class="nav2" data-url="<?php echo $pageURL; ?>"><span class="ds203">&nbsp;&nbsp;&nbsp;</span></a><span class="ds203"><a href="#" onclick="return false;" class="nav2" data-url="<?php echo $quizURL; ?>">Quiz</a></span><a href="#" onclick="return false" class="nav2" data-url="<?php echo $pageURL; ?>"><span class="ds203">&nbsp;&nbsp;&nbsp;</span></a><span class="ds19">|</span><span class="ds22"><span class="ds5">|</span></span><span class="ds19">|</span><a href="#" onclick="return false" class="nav2" data-url="<?php echo $pageURL; ?>"><span class="ds203">&nbsp;&nbsp;&nbsp;</span></a><span class="ds203"><a href="#" class='nav2' onclick="return false;" data-url="<?php echo $dicURL; ?>">Dictionary</a></span><span class="ds203"></span><a href="#" onclick="return false" class="nav2" data-url="<?php echo $pageURL; ?>"><span class="ds203">&nbsp;&nbsp;&nbsp;</span></a><span class="ds19">|</span><span class="ds22"><span class="ds5">|</span></span><span class="ds19">|</span><a href="#" onclick="return false" class="nav2" data-url="<?php echo $pageURL; ?>"><span class="ds203">&nbsp;&nbsp;&nbsp;</span></a><span class="ds203"><a href="#" onclick="return false;" class='nav2' data-url='<?php echo $eXLS; ?>'>Export Grades: Excel</a></span><span class="ds83"><span class="ds204"> </span></span><span class="ds19">• </span><span class="ds203"><a href="#" onclick="return false;" class='nav2' data-url='<?php echo $eTXT; ?>'>Text</a></span><span class="ds203">&nbsp;&nbsp;&nbsp;</span><span class="ds19">|</span><span class="ds22"><span class="ds5">|</span></span><span class="ds19">|</span><span class="ds203">&nbsp;&nbsp;&nbsp;</span><a href="https://www.newsfactsandanalysis.com">Logout</a></div>
-                                                        </td>
-                                                    </tr>
-                                                </table>
-                                                <span class="ds83"><span class="ds85"></span></span><a href="" style="text-decoration:none"><span class="ds23"></span><span class=""><span class=""></span></span></a><span class=""></span><span class="ds23"></span></div>
+                                    <div align="center">
+                                        <div id="container35"></div>
+                                        <div id="container6">
+                                            <div id="container29"></div>
+                                            <div id="container33">
+                                                <div id="container32">
+                                                    <div id="container30"></div>
+                                                    <table class="dsR2175" border="0" cellspacing="2" cellpadding="0" width="100%">
+                                                        <tr>
+                                                            <td class="dsR2171">
+                                                                <div align="center" style="margin-top:5px;">
+                                                                    <a href="#" onclick="return false" class="nav2" data-url="<?php echo $pageURL; ?>">Article</a><span class="ds203">&nbsp;&nbsp;&nbsp;</span><span class="ds19">|</span><span class="ds22"><span class="ds5">|</span></span><span class="ds19">|</span><span class="ds203">&nbsp;&nbsp;&nbsp;</span><a class="ar" href="#" onclick="return false;">Archive</a><span class="ds203">&nbsp;&nbsp;&nbsp;</span><span class="ds19">|</span><span class="ds22"><span class="ds5">|</span></span><span class="ds19">|</span><a href="#" onclick="return false" class="nav2" data-url="<?php echo $pageURL; ?>"><span class="ds203">&nbsp;&nbsp;&nbsp;</span></a><a href="#" onclick="return false" class="nav2" data-url="<?php echo $gradeURL; ?>"><span class="ds203">Grades</span></a><a href="#" onclick="return false" class="nav2" data-url="<?php echo $pageURL; ?>"><span class="ds203">&nbsp;&nbsp;&nbsp;</span></a><span class="ds19">|</span><span class="ds22"><span class="ds5">|</span></span><span class="ds19">|</span>&nbsp;&nbsp;<span class="ds203"><a href="#" onclick="return false" class="nav2" data-url="<?php echo $forumURL; ?>">Discussion</a></span><a href="#" onclick="return false" class="nav2" data-url="<?php echo $pageURL; ?>"><span class="ds203">&nbsp;&nbsp;&nbsp;</span></a><span class="ds19">|</span><span class="ds22"><span class="ds5">|</span></span><span class="ds19">|</span><a href="#" onclick="return false" class="nav2" data-url="<?php echo $pageURL; ?>"><span class="ds203">&nbsp;&nbsp;&nbsp;</span></a><span class="ds203"><a href="#" onclick="return false;" class="nav2" data-url="<?php echo $quizURL; ?>">Quiz</a></span><a href="#" onclick="return false" class="nav2" data-url="<?php echo $pageURL; ?>"><span class="ds203">&nbsp;&nbsp;&nbsp;</span></a><span class="ds19">|</span><span class="ds22"><span class="ds5">|</span></span><span class="ds19">|</span><a href="#" onclick="return false" class="nav2" data-url="<?php echo $pageURL; ?>"><span class="ds203">&nbsp;&nbsp;&nbsp;</span></a><span class="ds203"><a href="#" class='nav2' onclick="return false;" data-url="<?php echo $dicURL; ?>">Dictionary</a></span><span class="ds203"></span><a href="#" onclick="return false" class="nav2" data-url="<?php echo $pageURL; ?>"><span class="ds203">&nbsp;&nbsp;&nbsp;</span></a><span class="ds19">|</span><span class="ds22"><span class="ds5">|</span></span><span class="ds19">|</span><a href="#" onclick="return false" class="nav2" data-url="<?php echo $pageURL; ?>"><span class="ds203">&nbsp;&nbsp;&nbsp;</span></a><span class="ds203"><a href="#" onclick="return false;" class='nav2' data-url='<?php echo $eXLS; ?>'>Export Grades: Excel</a></span><span class="ds83"><span class="ds204"> </span></span><span class="ds19">• </span><span class="ds203"><a href="#" onclick="return false;" class='nav2' data-url='<?php echo $eTXT; ?>'>Text</a></span><span class="ds203">&nbsp;&nbsp;&nbsp;</span><span class="ds19">|</span><span class="ds22"><span class="ds5">|</span></span><span class="ds19">|</span><span class="ds203">&nbsp;&nbsp;&nbsp;</span><a href="https://www.newsfactsandanalysis.com">Logout</a></div>
+                                                            </td>
+                                                        </tr>
+                                                    </table>
+                                                    <span class="ds83"><span class="ds85"></span></span><a href="" style="text-decoration:none"><span class="ds23"></span><span class=""><span class=""></span></span></a><span class=""></span><span class="ds23"></span></div>
+                                            </div>
                                         </div>
                                     </div>
+                                    <div id="container28"></div>
                                 </div>
-                                <div id="container28"></div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-
-            <div id="body"  style="width:935px;margin:auto;text-align:center;height:100%;padding-left:0px;border: none; ">
+            <div id="ext_container"  style="width:935px;margin:auto;text-align:left;height:100%;padding-left:0px;border: none;display:none; "><?php echo $archive; ?></div>
+            <div id="body"  style="width:935px;margin:auto;text-align:left;height:100%;padding-left:0px;border: none; ">
                 <iframe id='page' style="text-align:left;margin-left:0px;" src="<?php echo $gradeURL; ?>" frameborder="0"></iframe>
             </div>
-            <br/><br/>
-
-
             <!--<div style="width:1024px;margin:auto;text-align:center;"><br/><br/>© copyright 2017 by Executive Clarity. All Rights Reserved.</div>-->
-
-
         </body>
     </html>
 
@@ -163,6 +153,7 @@ else {
 <script type="text/javascript">
 
     $(document).ready(function () {
+        $('#archive_table').DataTable();
         $('#page').load(function () {
             $(this).height($(this).contents().height());
             $(this).width($(this).contents().width());

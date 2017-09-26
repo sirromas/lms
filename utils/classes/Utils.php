@@ -80,30 +80,30 @@ class Utils2 {
     function create_classes_list_tab($groups, $headers = true) {
         $list = "";
         if (count($groups) > 0) {
-            $list.="<br><br><table id='classes_table' class='table table-striped table-bordered' cellspacing='0' width='100%'>";
-            $list.="<thead>";
-            $list.="<tr>";
-            $list.="<th>Class Name</th>";
-            $list.="<th>Students Num</th>";
-            $list.="</tr>";
-            $list.="</thead>";
-            $list.="<tbody>";
+            $list .= "<br><br><table id='classes_table' class='table table-striped table-bordered' cellspacing='0' width='100%'>";
+            $list .= "<thead>";
+            $list .= "<tr>";
+            $list .= "<th>Class Name</th>";
+            $list .= "<th>Students Num</th>";
+            $list .= "</tr>";
+            $list .= "</thead>";
+            $list .= "<tbody>";
             foreach ($groups as $group) {
                 $num = $this->get_class_members_num($group->id);
                 if ($group->name != '' && $num > 0) {
-                    $list.="<tr>";
-                    $list.="<td>$group->name</td>";
-                    $list.="<td>$num</td>";
-                    $list.="</tr>";
+                    $list .= "<tr>";
+                    $list .= "<td>$group->name</td>";
+                    $list .= "<td>$num</td>";
+                    $list .= "</tr>";
                 } // end if $group->name!='' && $num>0
             } // end foreach
-            $list.="</tbody>";
-            $list.="</table>";
+            $list .= "</tbody>";
+            $list .= "</table>";
         } // end if count($groups)>0
         else {
-            $list.="<br><br><div class='container-fluid' style='text-align:left;'>";
-            $list.="<div class='span1'>N/A</div>";
-            $list.="</div>";
+            $list .= "<br><br><div class='container-fluid' style='text-align:left;'>";
+            $list .= "<div class='span1'>N/A</div>";
+            $list .= "</div>";
         } // end else
         return $list;
     }
@@ -205,13 +205,13 @@ class Utils2 {
             } // end while
             foreach ($groups as $groupid) {
                 $groupname = $this->get_group_name($groupid);
-                $list.="$groupname<br>";
+                $list .= "$groupname<br>";
             }
         } // end if $num > 0
         else {
-            $list.="<div class='container-fluid'>";
-            $list.="<div class='col-sm-3'>N/A</div>";
-            $list.="</div>";
+            $list .= "<div class='container-fluid'>";
+            $list .= "<div class='col-sm-3'>N/A</div>";
+            $list .= "</div>";
         } // end else
         return $list;
     }
@@ -251,32 +251,32 @@ class Utils2 {
     function create_tutors_list_tab($items, $headers = true) {
         $list = "";
         if (count($items) > 0) {
-            $list.="<br><br><table id='tutors_table' class='table table-striped table-bordered' cellspacing='0' width='100%'>";
-            $list.="<thead>";
-            $list.="<tr>";
-            $list.="<th>Professor</th>";
-            $list.="<th>Class Name</th>";
-            $list.="<th>Status</th>";
-            $list.="</tr>";
-            $list.="</thead>";
-            $list.="<tbody>";
+            $list .= "<br><br><table id='tutors_table' class='table table-striped table-bordered' cellspacing='0' width='100%'>";
+            $list .= "<thead>";
+            $list .= "<tr>";
+            $list .= "<th>Professor</th>";
+            $list .= "<th>Class Name</th>";
+            $list .= "<th>Status</th>";
+            $list .= "</tr>";
+            $list .= "</thead>";
+            $list .= "<tbody>";
             foreach ($items as $item) {
                 $user = $this->get_user_detailes($item->userid);
                 $groups = $this->get_user_groups($item->userid);
                 $status = ($user->policyagreed == 1) ? "Confirmed" : "Not confirmed&nbsp;<a href='#' class='confirm' onClick='return false;' data-userid='$item->userid'>Confrm</a>";
-                $list.="<tr>";
-                $list.="<td>$user->firstname $user->lastname<br>$user->email</td>";
-                $list.="<td>$groups</td>";
-                $list.="<td>$status</td>";
-                $list.="</tr>";
+                $list .= "<tr>";
+                $list .= "<td>$user->firstname $user->lastname<br>$user->email</td>";
+                $list .= "<td>$groups</td>";
+                $list .= "<td>$status</td>";
+                $list .= "</tr>";
             } // end foreach
-            $list.="</tbody>";
-            $list.="</table>";
+            $list .= "</tbody>";
+            $list .= "</table>";
         } // end if count($groups)>0
         else {
-            $list.="<br><br><div class='container-fluid' style='text-align:left;'>";
-            $list.="<div class='span1'>N/A</div>";
-            $list.="</div>";
+            $list .= "<br><br><div class='container-fluid' style='text-align:left;'>";
+            $list .= "<div class='span1'>N/A</div>";
+            $list .= "</div>";
         } // end else
         return $list;
     }
@@ -359,12 +359,12 @@ class Utils2 {
                 $tutor->userid = $row['id'];
                 $items[] = $tutor;
             } // end while
-            $list.=$this->create_tutors_list_tab($items, false);
+            $list .= $this->create_tutors_list_tab($items, false);
         } // end if $num > 0
         else {
-            $list.="<div class='container-fluid' style='text-align:center;'>";
-            $list.="<div class='col-sm-2'>N/A</div>";
-            $list.="</div>";
+            $list .= "<div class='container-fluid' style='text-align:center;'>";
+            $list .= "<div class='col-sm-2'>N/A</div>";
+            $list .= "</div>";
         }
         return $list;
     }
@@ -410,41 +410,41 @@ class Utils2 {
     function create_subscription_list($items, $headers = true) {
         $list = "";
         if (count($items) > 0) {
-            $list.="<br><br><table id='subs_table' class='table table-striped table-bordered' cellspacing='0' width='100%'>";
-            $list.="<thead>";
-            $list.="<tr>";
-            $list.="<th>Student</th>";
-            $list.="<th>Email</th>";
-            $list.="<th>Class Name</th>";
-            $list.="<th>Key</th>";
-            $list.="<th>Start Date</th>";
-            $list.="<th>Expiration Date</th>";
-            $list.="<th>Action</th>";
-            $list.="</tr>";
-            $list.="</thead>";
-            $list.="<tbody>";
+            $list .= "<br><br><table id='subs_table' class='table table-striped table-bordered' cellspacing='0' width='100%'>";
+            $list .= "<thead>";
+            $list .= "<tr>";
+            $list .= "<th>Student</th>";
+            $list .= "<th>Email</th>";
+            $list .= "<th>Class Name</th>";
+            $list .= "<th>Key</th>";
+            $list .= "<th>Start Date</th>";
+            $list .= "<th>Expiration Date</th>";
+            $list .= "<th>Action</th>";
+            $list .= "</tr>";
+            $list .= "</thead>";
+            $list .= "<tbody>";
             foreach ($items as $item) {
                 $user = $this->get_user_detailes($item->userid);
                 $class = $this->get_group_name($item->groupid);
                 $start = date('m-d-Y', $item->start_date);
                 $exp = date('m-d-Y', $item->exp_date);
-                $list.="<tr>";
-                $list.="<td>$user->firstname $user->lastname</td>";
-                $list.="<td>$user->email</td>";
-                $list.="<td>$class</td>";
-                $list.="<td>$item->auth_key</td>";
-                $list.="<td>$start</td>";
-                $list.="<td>$exp</td>";
-                $list.="<td><a href='#' onClick='return false;' class='adjust' data-userid='$item->userid' data-paymentid='$item->id' data-groupid='$item->groupid'>Adjust</a></td>";
-                $list.="</tr>";
+                $list .= "<tr>";
+                $list .= "<td>$user->firstname $user->lastname</td>";
+                $list .= "<td>$user->email</td>";
+                $list .= "<td>$class</td>";
+                $list .= "<td>$item->auth_key</td>";
+                $list .= "<td>$start</td>";
+                $list .= "<td>$exp</td>";
+                $list .= "<td><a href='#' onClick='return false;' class='adjust' data-userid='$item->userid' data-paymentid='$item->id' data-groupid='$item->groupid'>Adjust</a></td>";
+                $list .= "</tr>";
             } // end foreach
-            $list.="</tbody>";
-            $list.="</table>";
+            $list .= "</tbody>";
+            $list .= "</table>";
         } // end if count($items)>0
         else {
-            $list.="<br><br><div class='container-fluid' style='text-align:left;'>";
-            $list.="<div class='span1'>N/A</div>";
-            $list.="</div>";
+            $list .= "<br><br><div class='container-fluid' style='text-align:left;'>";
+            $list .= "<div class='span1'>N/A</div>";
+            $list .= "</div>";
         } // end else
         return $list;
     }
@@ -503,18 +503,18 @@ class Utils2 {
                     }
                     $items[] = $item;
                 } // end while 
-                $list.=$this->create_subscription_list($items, false);
+                $list .= $this->create_subscription_list($items, false);
             } // end if $num > 0
             else {
-                $list.="<div class='container-fluid' style='text-align:center;'>";
-                $list.="<div class='col-sm-2'>N/A</div>";
-                $list.="</div>";
+                $list .= "<div class='container-fluid' style='text-align:center;'>";
+                $list .= "<div class='col-sm-2'>N/A</div>";
+                $list .= "</div>";
             } // end else
         } // end if count($users_array) > 0
         else {
-            $list.="<div class='container-fluid' style='text-align:center;'>";
-            $list.="<div class='col-sm-2'>N/A</div>";
-            $list.="</div>";
+            $list .= "<div class='container-fluid' style='text-align:center;'>";
+            $list .= "<div class='col-sm-2'>N/A</div>";
+            $list .= "</div>";
         }
         return $list;
     }
@@ -587,18 +587,18 @@ class Utils2 {
                   print_r($items);
                   echo "</pre><br>";
                  */
-                $list.=$this->create_keys_list_tab($items, false);
+                $list .= $this->create_keys_list_tab($items, false);
             } // end if $num > 0
             else {
-                $list.="<div class='container-fluid' style='text-align:center;'>";
-                $list.="<div class='col-sm-2'>N/A</div>";
-                $list.="</div>";
+                $list .= "<div class='container-fluid' style='text-align:center;'>";
+                $list .= "<div class='col-sm-2'>N/A</div>";
+                $list .= "</div>";
             } // end else
         } // end if count($users_array) > 0
         else {
-            $list.="<div class='container-fluid' style='text-align:center;'>";
-            $list.="<div class='col-sm-2'>N/A</div>";
-            $list.="</div>";
+            $list .= "<div class='container-fluid' style='text-align:center;'>";
+            $list .= "<div class='col-sm-2'>N/A</div>";
+            $list .= "</div>";
         }
         return $list;
     }
@@ -636,46 +636,46 @@ class Utils2 {
         $this->create_json_data($item);
         $list = "";
 
-        $list.="<div class='row-fluid'>";
-        $list.="<span class='span3' style='padding-left:25px;'><br><button class='btn btn-default' id='add_trial_button'>Add Trial Key</button></span>";
-        $list.="</div>";
+        $list .= "<div class='row-fluid'>";
+        $list .= "<span class='span3' style='padding-left:25px;'><br><button class='btn btn-default' id='add_trial_button'>Add Trial Key</button></span>";
+        $list .= "</div>";
 
         if (count($items) > 0) {
-            $list.="<br><br><table id='trial_table' class='table table-striped table-bordered' cellspacing='0' width='100%'>";
-            $list.="<thead>";
-            $list.="<tr>";
-            $list.="<th>Student</th>";
-            $list.="<th>Email</th>";
+            $list .= "<br><br><table id='trial_table' class='table table-striped table-bordered' cellspacing='0' width='100%'>";
+            $list .= "<thead>";
+            $list .= "<tr>";
+            $list .= "<th>Student</th>";
+            $list .= "<th>Email</th>";
             // $list.="<th>Class Name</th>";
-            $list.="<th>Key</th>";
-            $list.="<th>Start Date</th>";
-            $list.="<th>Expiration Date</th>";
-            $list.="<th>Action</th>";
-            $list.="</tr>";
-            $list.="</thead>";
-            $list.="<tbody>";
+            $list .= "<th>Key</th>";
+            $list .= "<th>Start Date</th>";
+            $list .= "<th>Expiration Date</th>";
+            $list .= "<th>Action</th>";
+            $list .= "</tr>";
+            $list .= "</thead>";
+            $list .= "<tbody>";
             foreach ($items as $item) {
                 $user = $this->get_user_detailes($item->userid);
                 $class = $this->get_group_name($item->groupid);
                 $start = date('m-d-Y', $item->start_date);
                 $exp = date('m-d-Y', $item->exp_date);
-                $list.="<tr>";
-                $list.="<td>$user->firstname $user->lastname</td>";
-                $list.="<td>$user->email</td>";
+                $list .= "<tr>";
+                $list .= "<td>$user->firstname $user->lastname</td>";
+                $list .= "<td>$user->email</td>";
                 //$list.="<td>$class</td>";
-                $list.="<td>$item->auth_key</td>";
-                $list.="<td>$start</td>";
-                $list.="<td>$exp</td>";
-                $list.="<td><a href='#' onClick='return false;' class='trial_adjust' data-userid='$item->userid' data-groupid='$item->groupid'>Adjust</a></td>";
-                $list.="</tr>";
+                $list .= "<td>$item->auth_key</td>";
+                $list .= "<td>$start</td>";
+                $list .= "<td>$exp</td>";
+                $list .= "<td><a href='#' onClick='return false;' class='trial_adjust' data-userid='$item->userid' data-groupid='$item->groupid'>Adjust</a></td>";
+                $list .= "</tr>";
             } // end foreach
-            $list.="</tbody>";
-            $list.="</table>";
+            $list .= "</tbody>";
+            $list .= "</table>";
         } // end if count($items)>0
         else {
-            $list.="<br><br><div class='container-fluid' style='text-align:left;'>";
-            $list.="<div class='span1'>N/A</div>";
-            $list.="</div>";
+            $list .= "<br><br><div class='container-fluid' style='text-align:left;'>";
+            $list .= "<div class='span1'>N/A</div>";
+            $list .= "</div>";
         } // end else
         return $list;
     }
@@ -838,7 +838,7 @@ class Utils2 {
 
         $start = date('m/d/Y', $unix_start_date);
         $end = date('m/d/Y', $unix_exp_date);
-        $list.="<!-- Trigger the modal with a button -->
+        $list .= "<!-- Trigger the modal with a button -->
        
             <!-- Modal -->
             <div id='myModal_paid_$userid' class='modal fade' role='dialog'>
@@ -882,7 +882,8 @@ class Utils2 {
     }
 
     function get_add_trial_key_dialog() {
-        $list.="<!-- Trigger the modal with a button -->
+        $list = "";
+        $list .= "<!-- Trigger the modal with a button -->
        
             <!-- Modal -->
             <div id='myModal' class='modal fade' role='dialog'>
@@ -998,7 +999,7 @@ class Utils2 {
     function get_group_modal_dialog($users) {
         $list = "";
         $endcoded_users = json_encode($users);
-        $list.="<!-- Trigger the modal with a button -->
+        $list .= "<!-- Trigger the modal with a button -->
        
             <!-- Modal -->
             <div id='myModal' class='modal fade' role='dialog'>
@@ -1051,7 +1052,7 @@ class Utils2 {
             $end = date('m-d-Y', $row['exp_date']);
         }
 
-        $list.="<!-- Trigger the modal with a button -->
+        $list .= "<!-- Trigger the modal with a button -->
        
             <!-- Modal -->
             <div id='myModal_trial_$user->userid' class='modal fade' role='dialog'>
@@ -1104,7 +1105,7 @@ class Utils2 {
             $price = $row['price'];
         }
 
-        $list.="
+        $list .= "
             <!-- Modal -->
             <div id='myModal' class='modal fade' role='dialog'>
               <div class='modal-dialog'>
@@ -1147,7 +1148,7 @@ class Utils2 {
     function get_add_new_school_modal_dialog() {
         $list = "";
 
-        $list.="
+        $list .= "
             <!-- Modal -->
             <div id='myModal' class='modal fade' role='dialog'>
               <div class='modal-dialog'>
@@ -1185,6 +1186,42 @@ class Utils2 {
         return $list;
     }
 
+    function get_upload_price_csv_modal_dialog() {
+        $list = "";
+
+        $list .= "
+            <!-- Modal -->
+            <div id='myModal' class='modal fade' role='dialog'>
+              <div class='modal-dialog'>
+
+                <!-- Modal content-->
+                <div class='modal-content'>
+                  <div class='modal-header'>
+                    <h4 class='modal-title'>Upload schools CSV file</h4>
+                  </div>
+                  <div class='modal-body'>
+                     
+                    <div class='container-fluid' style='text-align:left;'>
+                    <div class='col-sm-3'>Filename*</div>
+                    <div class='col-sm-6'><input type='file' id='price_scv'></div>
+                    </div>
+                 
+                    <div class='container-fluid'>
+                    <div class='col-sm-12' id='price_err' style='color:red;'></div>
+                    </div>
+                   
+                  </div>
+                  <div class='modal-footer'>
+                    <button type='button' class='btn btn-default' id='upload_price_file'>Ok</button>
+                    <button type='button' class='btn btn-default' data-dismiss='modal' id='cancel_trial_'>Close</button>
+                  </div>
+                </div>
+
+              </div>
+            </div>";
+        return $list;
+    }
+
     function adjust_personal_trial_key($user) {
         $unix_start = strtotime($user->start);
         $unix_end = strtotime($user->end);
@@ -1216,33 +1253,33 @@ class Utils2 {
     function get_templates_list() {
         $list = "";
 
-        $list.="<select id='templates_list' style='width:365px;'>";
-        $list.="<option value='0' selected>Please select template</option>";
+        $list .= "<select id='templates_list' style='width:365px;'>";
+        $list .= "<option value='0' selected>Please select template</option>";
         $query = "select * from mdl_email_templates order by template_name";
         $result = $this->db->query($query);
         while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
             $id = $row['id'];
             $item = $row['template_name'];
-            $list.="<option value='$id'>$item</option>";
+            $list .= "<option value='$id'>$item</option>";
         }
-        $list.="</select>";
+        $list .= "</select>";
         return $list;
     }
 
     function get_account_tab() {
         $list = "";
         $templates = $this->get_templates_list();
-        $list.="<div class='container-fluid'>";
-        $list.="<span class='col-sm-6'>$templates</span>";
-        $list.="</div>";
+        $list .= "<div class='container-fluid'>";
+        $list .= "<span class='col-sm-6'>$templates</span>";
+        $list .= "</div>";
 
-        $list.="<div class='container-fluid'>";
-        $list.="<span class='col-sm-12' id='template_content'></span>";
-        $list.="</div><br><br>";
+        $list .= "<div class='container-fluid'>";
+        $list .= "<span class='col-sm-12' id='template_content'></span>";
+        $list .= "</div><br><br>";
 
-        $list.="<div class='container-fluid'>";
-        $list.="<span class='col-sm-6'><button type='button' class='btn btn-default' id='logout_utils'>Logout</button></span>";
-        $list.="</div>";
+        $list .= "<div class='container-fluid'>";
+        $list .= "<span class='col-sm-6'><button type='button' class='btn btn-default' id='logout_utils'>Logout</button></span>";
+        $list .= "</div>";
 
         return $list;
     }
@@ -1255,18 +1292,18 @@ class Utils2 {
             $content = $row['template_content'];
         }
 
-        $list.="<div class='container-fluid'>";
-        $list.="<span class='col-sm-12'>";
-        $list.="<br><textarea name='editor1' id='editor1' rows='10' style='width:675px;'>$content</textarea>";
-        $list.="<script>
+        $list .= "<div class='container-fluid'>";
+        $list .= "<span class='col-sm-12'>";
+        $list .= "<br><textarea name='editor1' id='editor1' rows='10' style='width:675px;'>$content</textarea>";
+        $list .= "<script>
                 CKEDITOR.replace( 'editor1' );
             </script>";
-        $list.="</span>";
-        $list.="</div><br>";
-        $list.="<input type='hidden' id='template_id' value='$id'>";
-        $list.="<div class='container-fluid'>";
-        $list.="<span class='col-sm-6'><button type='button' class='btn btn-default' id='update_template'>Update</button></span>";
-        $list.="</div><br>";
+        $list .= "</span>";
+        $list .= "</div><br>";
+        $list .= "<input type='hidden' id='template_id' value='$id'>";
+        $list .= "<div class='container-fluid'>";
+        $list .= "<span class='col-sm-6'><button type='button' class='btn btn-default' id='update_template'>Update</button></span>";
+        $list .= "</div><br>";
 
         return $list;
     }
@@ -1305,33 +1342,34 @@ class Utils2 {
         $list = "";
         $this->update_price_items();
 
-        $list.="<br><div class='padding-left:25px;'>";
-        $list.="<span class='span3' style='padding-left:25px;'><button class='btn btn-default' id='add_new_school'>Add New School</button></span>";
-        $list.="</div>";
+        $list .= "<br><div class='padding-left:25px;'>";
+        $list .= "<span class='col-sm-2'><button class='btn btn-default' id='add_new_school'>Add New School</button></span>";
+        $list .= "<span class='col-sm-2'><button class='btn btn-default' id='get_price_upload_dialog'>Upload</button></span>";
+        $list .= "</div>";
 
-        $list.="<br><br><table id='price_table' class='table table-striped table-bordered' cellspacing='0' width='100%'>";
-        $list.="<thead>";
-        $list.="<tr>";
-        $list.="<th>Schoolname</th>";
-        $list.="<th>Price</th>";
-        $list.="<th>Operations</th>";
-        $list.="</tr>";
-        $list.="</thead>";
-        $list.="<tbody>";
+        $list .= "<br><br><table id='price_table' class='table table-striped table-bordered' cellspacing='0' width='100%'>";
+        $list .= "<thead>";
+        $list .= "<tr>";
+        $list .= "<th>Schoolname</th>";
+        $list .= "<th>Price</th>";
+        $list .= "<th>Operations</th>";
+        $list .= "</tr>";
+        $list .= "</thead>";
+        $list .= "<tbody>";
         $query = "select * from mdl_price order by institute";
         $result = $this->db->query($query);
         while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
             $name = $row['institute'];
             $price = $row['price'];
             $link = "<a href='#' onClick='return false;' class='price_adjust' data-id='" . $row['id'] . "'>Adjust</a>";
-            $list.="<tr>";
-            $list.="<td>$name</td>";
-            $list.="<td>$$price</td>";
-            $list.="<td>$link</td>";
-            $list.="</tr>";
+            $list .= "<tr>";
+            $list .= "<td>$name</td>";
+            $list .= "<td>$$price</td>";
+            $list .= "<td>$link</td>";
+            $list .= "</tr>";
         }
-        $list.="</tbody>";
-        $list.="</table>";
+        $list .= "</tbody>";
+        $list .= "</table>";
         return $list;
     }
 
@@ -1349,6 +1387,174 @@ class Utils2 {
                 . "(institute,price) "
                 . "values ('$name','$price')";
         $this->db->query($query);
+    }
+
+    function get_archive_items() {
+        $items = array();
+        $query = "select * from mdl_archive order by adate desc";
+        $num = $this->db->numrows($query);
+        if ($num > 0) {
+            $result = $this->db->query($query);
+            while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+                $item = new stdClass();
+                foreach ($row as $key => $value) {
+                    $item->$key = $value;
+                }
+                $items[] = $item;
+            } // end while
+        } // end if $num > 0
+        return $items;
+    }
+
+    function get_archive_page() {
+        $list = "";
+        $items = $this->get_archive_items();
+        $list .= "<div class='row-fluid' style='padding-top: 15px;'>";
+        $list .= "<span class='col-sm-1'><button class='btn btn-default' id='article_upload_dialog' style='cursor: pointer;'>Upload</button></span>";
+        $list .= "</div>";
+
+
+        if (count($items) > 0) {
+            $list .= "<div class='row-fluid'>";
+            $list .= "<br><br><table id='archive_table' class='table table-striped table-bordered' cellspacing='0' width='100%'>";
+            $list .= "<thead>";
+            $list .= "<tr>";
+            $list .= "<th>Title</th>";
+            $list .= "<th>Link</th>";
+            $list .= "<th>Date</th>";
+            $list .= "<th>Operations</th>";
+            $list .= "</tr>";
+            $list .= "</thead>";
+            $list .= "<tbody>";
+
+            foreach ($items as $item) {
+                $date = date('m-d-Y', $item->adate);
+                $link = "https://" . $_SERVER['SERVER_NAME'] . "/lms/utils/archive/$item->path";
+                $path = "<a href='$link' target='_blank'>$item->path</a>";
+                $list .= "<tr>";
+                $list .= "<td>$item->title</td>";
+                $list .= "<td>$path</td>";
+                $list .= "<td>$date</td>";
+                $list .= "<td><a href='#' onclick='return false;' class='ar_item_del' data-id='$item->id'>Delete</a></td>";
+                $list .= "</tr>";
+            } // end foreach
+            $list .= "</tbody>";
+            $list .= "</table>";
+            $list .= "</div>";
+        } // end if (count($items) > 0
+        else {
+            $list .= "<div class='row-fluid' style='padding-top:10px;'>";
+            $list .= "<p style='text-align: center;'>There are no any archive pdf files uploaded</p>";
+            $list .= "</div>";
+        } // end else
+        return $list;
+    }
+
+    function get_upload_archive_modal_dialog() {
+        $list = "";
+
+        $list .= " <div id='myModal' class='modal fade' role='dialog'>
+              <div class='modal-dialog'>
+
+                <!-- Modal content-->
+                <div class='modal-content'>
+                  <div class='modal-header'>
+                    
+                    <h4 class='modal-title'>Upload PDF File</h4>
+                  </div>
+                  <div class='modal-body'>
+                 
+                    <div class='container-fluid' style='text-align:center;'>
+                    <div class='col-sm-3'>Title*</div>
+                    <div class='col-sm-3'><input type='text' id='title' ></div>
+                    </div>
+                    
+                    <div class='container-fluid' style='text-align:center;'>
+                    <div class='col-sm-3'>Date*</div>
+                    <div class='col-sm-3'><input type='text' id='adate'></div>
+                    </div>
+                    
+                    <div class='container-fluid' style='text-align:center;'>
+                    <div class='col-sm-3'>File*</div>
+                    <div class='col-sm-3'><input id='uploadBtn' type='file' class='upload' /></div>
+                    </div>
+
+                    <div class='container-fluid'>
+                    <div class='col-sm-3'>&nbsp;</div>
+                    <div class='col-sm-3' id='archive_err' style='color:red;'></div>
+                    </div>
+                    
+                    <div class='container-fluid'>
+                    <div class='col-sm-3'>&nbsp;</div>
+                    <div class='col-sm-3' style='display:none;' id='loader'><img src='https://www.newsfactsandanalysis.com/assets/images/load.gif'></div>
+                    </div>
+                   
+                  </div>
+                  <div class='modal-footer'>
+                    <button type='button' class='btn btn-default' id='upload_archive_ok'>Ok</button>
+                    <button type='button' class='btn btn-default' data-dismiss='modal'>Cancel</button>
+                  </div>
+                </div>
+
+              </div>
+            </div>";
+
+        return $list;
+    }
+
+    function upload_archive_article($files, $data) {
+        if ($files['error'] == 0 && $files['size'] > 0) {
+            $date = strtotime($data['adate']);
+            $now = time();
+            $title = $data['title'];
+            $destfile = "arcticle_$now.pdf";
+            $dest = $_SERVER['DOCUMENT_ROOT'] . "/lms/utils/archive/$destfile";
+            $status = move_uploaded_file($files['tmp_name'], $dest);
+            if ($status) {
+                $query = "insert into mdl_archive (title,path,adate) values ('$title','$destfile','$date')";
+                $this->db->query($query);
+            }
+        } // end if
+    }
+
+    function delete_archive_article($id) {
+        $query = "delete from mdl_archive where id=$id";
+        $this->db->query($query);
+    }
+
+    function upload_price_csv_data($files) {
+        if ($files['error'] == 0 && $files['size'] > 0) {
+            $now = time();
+            $destfile = "prices_$now.csv";
+            $dest = $_SERVER['DOCUMENT_ROOT'] . "/lms/utils/archive/$destfile";
+            $status = move_uploaded_file($files['tmp_name'], $dest);
+            if ($status) {
+                $csv = array_map('str_getcsv', file($dest));
+                /*
+                echo "<pre>";
+                print_r($csv);
+                echo "</pre>";
+                */
+
+
+                if (count($csv) > 0) {
+                    foreach ($csv as $item) {
+                        $title = $item[0];
+                        $price = $item[1];
+                        if ($title != '' && $price != '') {
+                            $exists = $this->is_price_item_exists($title);
+                            if ($exists == 0) {
+                                $query = "insert into mdl_price (institute,price) "
+                                        . "values ('$title','$price')";
+                                $this->db->query($query);
+                            } // end if $exists==0
+                        } // end if $title!='' && $price!=''
+                    } // end foreach
+                } // end if count($csv)>0
+
+
+            } // end if $status
+        } // end if files ...
     }
 
 }

@@ -41,7 +41,7 @@ class Utils {
         $this->course = $COURSE;
         $this->group = $GROUP;
         $this->session = $SESSION;
-        $this->signup_url = 'http://www.' . $_SERVER['SERVER_NAME'] . '/lms/login/mysignup.php';
+        $this->signup_url = 'https://www.' . $_SERVER['SERVER_NAME'] . '/lms/login/mysignup.php';
         $this->from = 'info@globalizationplus.com';
         $this->courseid = $this->get_actual_course_id();
     }
@@ -71,14 +71,7 @@ class Utils {
         );
 
         $context = stream_context_create($options);
-        $response = file_get_contents($this->signup_url, false, $context);
-
-        /*
-          echo "<pre>";
-          print_r($response);
-          echo "</pre>";
-         */
-
+        $response = @file_get_contents($this->signup_url, false, $context);
         return $response;
     }
 

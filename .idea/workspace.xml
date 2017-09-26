@@ -1,0 +1,949 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="9b2637cf-fe64-4a1b-b8f9-6506815218cf" name="Default" comment="">
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/custom/tutors/get_archive_page.php" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/usersite/registereader.html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/utils/delete_archive_artricle.php" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/utils/get_upload_archive_modal_dialog.php" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/utils/get_upload_price_csv_modal_dialog.php" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/utils/test_csv_upload.php" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/utils/upload_article.php" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/utils/upload_price_csv_data.php" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/utils/upload_test_csv.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/assets/js/custom.js" afterPath="$PROJECT_DIR$/assets/js/custom.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/custom/common/Utils.php" afterPath="$PROJECT_DIR$/custom/common/Utils.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/custom/navigation/classes/Navigation.php" afterPath="$PROJECT_DIR$/custom/navigation/classes/Navigation.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/custom/students/classes/Student.php" afterPath="$PROJECT_DIR$/custom/students/classes/Student.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/custom/tutors/classes/Tutor.php" afterPath="$PROJECT_DIR$/custom/tutors/classes/Tutor.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/grade.php" afterPath="$PROJECT_DIR$/grade.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/mod/page/view.php" afterPath="$PROJECT_DIR$/mod/page/view.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/usersite/index.html" afterPath="$PROJECT_DIR$/usersite/index.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/utils/classes/Utils.php" afterPath="$PROJECT_DIR$/utils/classes/Utils.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/utils/dashboard.php" afterPath="$PROJECT_DIR$/utils/dashboard.php" />
+    </list>
+    <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
+    <option name="TRACKING_ENABLED" value="true" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileEditorManager">
+    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="HTML File" />
+      </list>
+    </option>
+  </component>
+  <component name="FindInProjectRecents">
+    <findStrings>
+      <find>get_user_profil</find>
+      <find>$num</find>
+      <find>upload</find>
+      <find>trigger</find>
+      <find>ar_item_del</find>
+      <find>modal</find>
+      <find>ajax</find>
+      <find>upload_price_file</find>
+      <find>.submit</find>
+      <find>professors</find>
+    </findStrings>
+    <dirStrings>
+      <dir>$PROJECT_DIR$/utils</dir>
+    </dirStrings>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="IdeDocumentHistory">
+    <option name="CHANGED_PATHS">
+      <list>
+        <option value="$PROJECT_DIR$/grade.php" />
+        <option value="$PROJECT_DIR$/custom/tutors/get_archive_page.php" />
+        <option value="$PROJECT_DIR$/utils/dashboard.php" />
+        <option value="$PROJECT_DIR$/utils/get_upload_archive_modal_dialog.php" />
+        <option value="$PROJECT_DIR$/utils/upload_article.php" />
+        <option value="$PROJECT_DIR$/utils/delete_archive_artricle.php" />
+        <option value="$PROJECT_DIR$/custom/tutors/classes/Tutor.php" />
+        <option value="$PROJECT_DIR$/utils/upload_test_csv.php" />
+        <option value="$PROJECT_DIR$/utils/test_csv_upload.php" />
+        <option value="$PROJECT_DIR$/utils/classes/Utils.php" />
+        <option value="$PROJECT_DIR$/custom/students/classes/Student.php" />
+        <option value="$PROJECT_DIR$/custom/navigation/classes/Navigation.php" />
+        <option value="$PROJECT_DIR$/mod/page/view.php" />
+        <option value="$PROJECT_DIR$/assets/js/custom.js" />
+        <option value="$PROJECT_DIR$/custom/common/Utils.php" />
+        <option value="$PROJECT_DIR$/usersite/index.html" />
+        <option value="$PROJECT_DIR$/usersite/registereader.html" />
+      </list>
+    </option>
+  </component>
+  <component name="JsBuildToolGruntFileManager" detection-done="true" sorting="DEFINITION_ORDER">
+    <gruntfile path="$PROJECT_DIR$/Gruntfile.js" />
+  </component>
+  <component name="JsBuildToolPackageJson" detection-done="true" sorting="DEFINITION_ORDER" />
+  <component name="JsGulpfileManager">
+    <detection-done>true</detection-done>
+    <sorting>DEFINITION_ORDER</sorting>
+  </component>
+  <component name="NodeModulesDirectoryManager">
+    <handled-path value="$PROJECT_DIR$/node_modules" />
+  </component>
+  <component name="PhpWorkspaceProjectConfiguration" backward_compatibility_performed="true" />
+  <component name="ProjectFrameBounds">
+    <option name="y" value="23" />
+    <option name="width" value="1280" />
+    <option name="height" value="707" />
+  </component>
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectView">
+    <navigator currentView="ProjectPane" proportions="" version="1">
+      <flattenPackages />
+      <showMembers />
+      <showModules />
+      <showLibraryContents />
+      <hideEmptyPackages />
+      <abbreviatePackageNames />
+      <autoscrollToSource />
+      <autoscrollFromSource />
+      <sortByType />
+      <manualOrder />
+      <foldersAlwaysOnTop value="true" />
+    </navigator>
+    <panes>
+      <pane id="Scope" />
+      <pane id="Scratches" />
+      <pane id="ProjectPane">
+        <subPane>
+          <expand>
+            <path>
+              <item name="lms" type="b2602c69:ProjectViewProjectNode" />
+              <item name="lms" type="2a2b976b:PhpTreeStructureProvider$1" />
+            </path>
+          </expand>
+          <select />
+        </subPane>
+      </pane>
+    </panes>
+  </component>
+  <component name="PropertiesComponent">
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="nodejs_interpreter_path" value="/usr/local/bin/node" />
+    <property name="ToolWindowVersion Control.ShowToolbar" value="false" />
+    <property name="DefaultHtmlFileTemplate" value="HTML File" />
+  </component>
+  <component name="RunDashboard">
+    <option name="ruleStates">
+      <list>
+        <RuleState>
+          <option name="name" value="ConfigurationTypeDashboardGroupingRule" />
+        </RuleState>
+        <RuleState>
+          <option name="name" value="StatusDashboardGroupingRule" />
+        </RuleState>
+      </list>
+    </option>
+  </component>
+  <component name="ShelveChangesManager" show_recycled="false">
+    <option name="remove_strategy" value="false" />
+  </component>
+  <component name="StructureViewFactory">
+    <option name="ACTIVE_ACTIONS" value=",ALPHA_COMPARATOR" />
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="9b2637cf-fe64-4a1b-b8f9-6506815218cf" name="Default" comment="" />
+      <created>1506321410540</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1506321410540</updated>
+      <workItem from="1506321412269" duration="3216000" />
+      <workItem from="1506344606007" duration="12201000" />
+      <workItem from="1506397645072" duration="4739000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TimeTrackingManager">
+    <option name="totallyTimeSpent" value="20156000" />
+  </component>
+  <component name="ToolWindowManager">
+    <frame x="0" y="23" width="1280" height="707" extended-state="0" />
+    <layout>
+      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.17285945" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
+      <window_info id="Grunt " active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
+      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3293718" sideWeight="0.5" order="0" side_tool="true" content_ui="tabs" />
+      <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="Version Control" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32875606" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3293718" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
+      <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.24959612" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
+      <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
+      <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Thumbnails" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3293718" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
+      <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="3" side_tool="false" content_ui="combo" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+    </layout>
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="1" />
+  </component>
+  <component name="VcsContentAnnotationSettings">
+    <option name="myLimit" value="2678400000" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager />
+    <watches-manager />
+  </component>
+  <component name="editorHistoryManager">
+    <entry file="file://$PROJECT_DIR$/grade.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1935">
+          <caret line="129" column="30" lean-forward="false" selection-start-line="129" selection-start-column="17" selection-end-line="129" selection-end-column="30" />
+          <folding>
+            <element signature="n#style#0;n#div#1;n#body#0;n#html#0;n#!!top" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/assets/js/custom.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="10005">
+          <caret line="667" column="20" lean-forward="false" selection-start-line="667" selection-start-column="16" selection-end-line="667" selection-end-column="20" />
+          <folding>
+            <marker date="1506406582000" expanded="true" signature="13614:13626" ph="..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/utils/classes/Utils.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="21825">
+          <caret line="1455" column="65" lean-forward="false" selection-start-line="1455" selection-start-column="65" selection-end-line="1455" selection-end-column="65" />
+          <folding>
+            <marker date="1506402601000" expanded="true" signature="716:765" ph="select * fro... mdl_role_assignments" />
+            <marker date="1506402601000" expanded="true" signature="1082:1149" ph="select * fro... mdl_user" />
+            <marker date="1506402601000" expanded="true" signature="1958:1996" ph="select * fro... mdl_groups" />
+            <marker date="1506402601000" expanded="true" signature="3627:3643" ph="..." />
+            <marker date="1506402601000" expanded="true" signature="3834:3875" ph="select count... mdl_groups" />
+            <marker date="1506402601000" expanded="true" signature="4116:4201" ph="select count... mdl_groups_members" />
+            <marker date="1506402601000" expanded="true" signature="4648:4745" ph="select * fro... mdl_groups" />
+            <marker date="1506402601000" expanded="true" signature="5242:5285" ph="select * fro... mdl_groups" />
+            <marker date="1506402601000" expanded="true" signature="5990:6022" ph="select * fro... mdl_user" />
+            <marker date="1506402601000" expanded="true" signature="6389:6423" ph="select * fro... mdl_groups" />
+            <marker date="1506402601000" expanded="true" signature="6709:6755" ph="select * fro... mdl_groups_members" />
+            <marker date="1506402601000" expanded="true" signature="9492:9498" ph=" " />
+            <marker date="1506402601000" expanded="true" signature="10047:10063" ph="..." />
+            <marker date="1506402601000" expanded="true" signature="11543:11587" ph="update mdl_u... " />
+            <marker date="1506402601000" expanded="true" signature="11739:11871" ph="select * fro... mdl_user" />
+            <marker date="1506402601000" expanded="true" signature="12429:12575" ph="select * fro... mdl_user" />
+            <marker date="1506402601000" expanded="true" signature="13228:13246" ph="..." />
+            <marker date="1506402601000" expanded="true" signature="13431:13463" ph="select * fro... mdl_user" />
+            <marker date="1506402601000" expanded="true" signature="13823:13895" ph="select * fro... mdl_card_payments" />
+            <marker date="1506402601000" expanded="true" signature="16443:16459" ph="..." />
+            <marker date="1506402601000" expanded="true" signature="16657:16705" ph="select count... mdl_card_payments" />
+            <marker date="1506402601000" expanded="true" signature="17154:17264" ph="select * fro... mdl_card_payments" />
+            <marker date="1506402601000" expanded="true" signature="18061:18122" ph="select * fro... mdl_card_payments" />
+            <marker date="1506402601000" expanded="true" signature="18791:18809" ph="..." />
+            <marker date="1506402601000" expanded="true" signature="19052:19070" ph="..." />
+            <marker date="1506402601000" expanded="true" signature="19364:19411" ph="select * fro... mdl_groups_members" />
+            <marker date="1506402601000" expanded="true" signature="20749:20807" ph="select * fro... mdl_trial_keys" />
+            <marker date="1506402601000" expanded="true" signature="20958:21001" ph="select * fro... mdl_trial_keys" />
+            <marker date="1506402601000" expanded="true" signature="21842:21860" ph="..." />
+            <marker date="1506402601000" expanded="true" signature="22103:22121" ph="..." />
+            <marker date="1506402601000" expanded="true" signature="22416:22459" ph="select * fro... mdl_trial_keys" />
+            <marker date="1506402601000" expanded="true" signature="23482:23500" ph="..." />
+            <marker date="1506402601000" expanded="true" signature="25261:25277" ph="..." />
+            <marker date="1506402601000" expanded="true" signature="25977:26058" ph="select * fro... mdl_trial_keys" />
+            <marker date="1506402601000" expanded="true" signature="26649:26687" ph="select * fro... mdl_groups" />
+            <marker date="1506402601000" expanded="true" signature="29292:29330" ph="select * fro... mdl_user" />
+            <marker date="1506402601000" expanded="true" signature="29855:29893" ph="select * fro... mdl_groups" />
+            <marker date="1506402601000" expanded="true" signature="32567:32653" ph="select * fro... mdl_card_payments" />
+            <marker date="1506402601000" expanded="true" signature="33295:34942" ph="..." />
+            <marker date="1506402601000" expanded="true" signature="33336:34923" ph="..." />
+            <marker date="1506402601000" expanded="true" signature="33419:34901" ph="..." />
+            <marker date="1506402601000" expanded="true" signature="33464:33579" ph="..." />
+            <marker date="1506402601000" expanded="true" signature="33622:34540" ph="..." />
+            <marker date="1506402601000" expanded="false" signature="33868:33886" ph="..." />
+            <marker date="1506402601000" expanded="true" signature="33887:34072" ph="..." />
+            <marker date="1506402601000" expanded="false" signature="34130:34148" ph="..." />
+            <marker date="1506402601000" expanded="true" signature="34149:34335" ph="..." />
+            <marker date="1506402601000" expanded="true" signature="34386:34495" ph="..." />
+            <marker date="1506402601000" expanded="false" signature="34451:34461" ph="..." />
+            <marker date="1506402601000" expanded="true" signature="34585:34878" ph="..." />
+            <marker date="1506402601000" expanded="true" signature="35194:36643" ph="..." />
+            <marker date="1506402601000" expanded="true" signature="35235:36624" ph="..." />
+            <marker date="1506402601000" expanded="true" signature="35318:36602" ph="..." />
+            <marker date="1506402601000" expanded="true" signature="35363:35472" ph="..." />
+            <marker date="1506402601000" expanded="false" signature="35523:35541" ph="..." />
+            <marker date="1506402601000" expanded="true" signature="35542:36291" ph="..." />
+            <marker date="1506402601000" expanded="false" signature="35621:35637" ph="..." />
+            <marker date="1506402601000" expanded="true" signature="35638:35803" ph="..." />
+            <marker date="1506402601000" expanded="false" signature="35882:35898" ph="..." />
+            <marker date="1506402601000" expanded="true" signature="35899:36066" ph="..." />
+            <marker date="1506402601000" expanded="true" signature="36137:36246" ph="..." />
+            <marker date="1506402601000" expanded="false" signature="36202:36212" ph="..." />
+            <marker date="1506402601000" expanded="true" signature="36336:36579" ph="..." />
+            <marker date="1506402601000" expanded="true" signature="36746:36789" ph="select * fro... mdl_groups" />
+            <marker date="1506402601000" expanded="true" signature="37827:38461" ph="insert into mdl_trial_keys... " />
+            <marker date="1506402601000" expanded="true" signature="38873:39021" ph="update mdl_c... " />
+            <marker date="1506402601000" expanded="true" signature="39391:40909" ph="..." />
+            <marker date="1506402601000" expanded="true" signature="39432:40890" ph="..." />
+            <marker date="1506402601000" expanded="true" signature="39515:40868" ph="..." />
+            <marker date="1506402601000" expanded="true" signature="39560:39675" ph="..." />
+            <marker date="1506402601000" expanded="true" signature="39718:40545" ph="..." />
+            <marker date="1506402601000" expanded="false" signature="39899:39917" ph="..." />
+            <marker date="1506402601000" expanded="true" signature="39918:40089" ph="..." />
+            <marker date="1506402601000" expanded="false" signature="40147:40165" ph="..." />
+            <marker date="1506402601000" expanded="true" signature="40166:40340" ph="..." />
+            <marker date="1506402601000" expanded="true" signature="40391:40500" ph="..." />
+            <marker date="1506402601000" expanded="false" signature="40456:40466" ph="..." />
+            <marker date="1506402601000" expanded="true" signature="40590:40845" ph="..." />
+            <marker date="1506402601000" expanded="true" signature="41047:41136" ph="select * fro... mdl_trial_keys" />
+            <marker date="1506402601000" expanded="true" signature="41550:43209" ph="..." />
+            <marker date="1506402601000" expanded="true" signature="41591:43190" ph="..." />
+            <marker date="1506402601000" expanded="true" signature="41674:43168" ph="..." />
+            <marker date="1506402601000" expanded="true" signature="41719:41834" ph="..." />
+            <marker date="1506402601000" expanded="true" signature="41877:42806" ph="..." />
+            <marker date="1506402601000" expanded="false" signature="42132:42150" ph="..." />
+            <marker date="1506402601000" expanded="true" signature="42151:42337" ph="..." />
+            <marker date="1506402601000" expanded="false" signature="42395:42413" ph="..." />
+            <marker date="1506402601000" expanded="true" signature="42414:42601" ph="..." />
+            <marker date="1506402601000" expanded="true" signature="42652:42761" ph="..." />
+            <marker date="1506402601000" expanded="false" signature="42717:42727" ph="..." />
+            <marker date="1506402601000" expanded="true" signature="42851:43145" ph="..." />
+            <marker date="1506402601000" expanded="true" signature="43332:43365" ph="select * fro... mdl_price" />
+            <marker date="1506402601000" expanded="true" signature="43668:45116" ph="..." />
+            <marker date="1506402601000" expanded="true" signature="43709:45097" ph="..." />
+            <marker date="1506402601000" expanded="true" signature="43792:45075" ph="..." />
+            <marker date="1506402601000" expanded="true" signature="43837:43924" ph="..." />
+            <marker date="1506402601000" expanded="true" signature="43967:44758" ph="..." />
+            <marker date="1506402601000" expanded="false" signature="44130:44146" ph="..." />
+            <marker date="1506402601000" expanded="true" signature="44147:44287" ph="..." />
+            <marker date="1506402601000" expanded="false" signature="44349:44365" ph="..." />
+            <marker date="1506402601000" expanded="true" signature="44366:44552" ph="..." />
+            <marker date="1506402601000" expanded="true" signature="44603:44713" ph="..." />
+            <marker date="1506402601000" expanded="false" signature="44669:44679" ph="..." />
+            <marker date="1506402601000" expanded="true" signature="44803:45052" ph="..." />
+            <marker date="1506402601000" expanded="true" signature="45328:46699" ph="..." />
+            <marker date="1506402601000" expanded="true" signature="45369:46680" ph="..." />
+            <marker date="1506402601000" expanded="true" signature="45452:46658" ph="..." />
+            <marker date="1506402601000" expanded="true" signature="45497:45586" ph="..." />
+            <marker date="1506402601000" expanded="true" signature="45629:46340" ph="..." />
+            <marker date="1506402601000" expanded="false" signature="45709:45725" ph="..." />
+            <marker date="1506402601000" expanded="true" signature="45726:45890" ph="..." />
+            <marker date="1506402601000" expanded="false" signature="45952:45968" ph="..." />
+            <marker date="1506402601000" expanded="true" signature="45969:46133" ph="..." />
+            <marker date="1506402601000" expanded="true" signature="46184:46295" ph="..." />
+            <marker date="1506402601000" expanded="false" signature="46251:46261" ph="..." />
+            <marker date="1506402601000" expanded="true" signature="46385:46635" ph="..." />
+            <marker date="1506402601000" expanded="true" signature="46913:48068" ph="..." />
+            <marker date="1506402601000" expanded="true" signature="46954:48049" ph="..." />
+            <marker date="1506402601000" expanded="true" signature="47037:48027" ph="..." />
+            <marker date="1506402601000" expanded="true" signature="47082:47180" ph="..." />
+            <marker date="1506402601000" expanded="true" signature="47223:47712" ph="..." />
+            <marker date="1506402601000" expanded="false" signature="47303:47319" ph="..." />
+            <marker date="1506402601000" expanded="true" signature="47320:47488" ph="..." />
+            <marker date="1506402601000" expanded="true" signature="47556:47667" ph="..." />
+            <marker date="1506402601000" expanded="false" signature="47623:47633" ph="..." />
+            <marker date="1506402601000" expanded="true" signature="47757:48004" ph="..." />
+            <marker date="1506402601000" expanded="true" signature="49290:49302" ph="..." />
+            <marker date="1506402601000" expanded="true" signature="49404:49460" ph="select * fro... mdl_email_templates" />
+            <marker date="1506402601000" expanded="true" signature="50482:50525" ph="select * fro... mdl_email_templates" />
+            <marker date="1506402601000" expanded="true" signature="50865:50877" ph="..." />
+            <marker date="1506402601000" expanded="true" signature="50926:50995" ph="..." />
+            <marker date="1506402601000" expanded="true" signature="51635:51682" ph="select * fro... mdl_price" />
+            <marker date="1506402601000" expanded="true" signature="51833:51935" ph="select * fro... mdl_user" />
+            <marker date="1506402601000" expanded="true" signature="52367:52422" ph="insert into mdl_price... " />
+            <marker date="1506402601000" expanded="true" signature="53304:53346" ph="select * fro... mdl_price" />
+            <marker date="1506402601000" expanded="true" signature="54035:54080" ph="update mdl_p... " />
+            <marker date="1506402601000" expanded="true" signature="54248:54355" ph="insert into mdl_price... " />
+            <marker date="1506402601000" expanded="true" signature="54478:54523" ph="select * fro... mdl_archive" />
+            <marker date="1506402601000" expanded="true" signature="55121:55139" ph="..." />
+            <marker date="1506402601000" expanded="true" signature="55251:55267" ph="..." />
+            <marker date="1506402601000" expanded="true" signature="56675:56692" ph="..." />
+            <marker date="1506402601000" expanded="true" signature="56729:56748" ph="..." />
+            <marker date="1506402601000" expanded="true" signature="57021:59046" ph="..." />
+            <marker date="1506402601000" expanded="true" signature="57062:59027" ph="..." />
+            <marker date="1506402601000" expanded="true" signature="57145:59005" ph="..." />
+            <marker date="1506402601000" expanded="true" signature="57190:57301" ph="..." />
+            <marker date="1506402601000" expanded="true" signature="57344:58708" ph="..." />
+            <marker date="1506402601000" expanded="false" signature="57420:57438" ph="..." />
+            <marker date="1506402601000" expanded="true" signature="57439:57601" ph="..." />
+            <marker date="1506402601000" expanded="false" signature="57680:57698" ph="..." />
+            <marker date="1506402601000" expanded="true" signature="57699:57859" ph="..." />
+            <marker date="1506402601000" expanded="false" signature="57938:57956" ph="..." />
+            <marker date="1506402601000" expanded="true" signature="57957:58138" ph="..." />
+            <marker date="1506402601000" expanded="true" signature="58189:58356" ph="..." />
+            <marker date="1506402601000" expanded="false" signature="58233:58239" ph=" " />
+            <marker date="1506402601000" expanded="false" signature="58312:58322" ph="..." />
+            <marker date="1506402601000" expanded="true" signature="58427:58663" ph="..." />
+            <marker date="1506402601000" expanded="false" signature="58471:58477" ph=" " />
+            <marker date="1506402601000" expanded="false" signature="58533:58546" ph="..." />
+            <marker date="1506402601000" expanded="true" signature="58753:58982" ph="..." />
+            <marker date="1506402601000" expanded="true" signature="59549:59629" ph="insert into mdl_archive... " />
+            <marker date="1506402601000" expanded="true" signature="59776:59809" ph="delete from " />
+            <marker date="1506402601000" expanded="true" signature="60794:60905" ph="insert into mdl_price... " />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/utils/dashboard.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="30">
+          <caret line="2" column="18" lean-forward="true" selection-start-line="1" selection-start-column="0" selection-end-line="2" selection-end-column="18" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/custom/tutors/classes/Tutor.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="3390">
+          <caret line="226" column="0" lean-forward="false" selection-start-line="226" selection-start-column="0" selection-end-line="226" selection-end-column="0" />
+          <folding>
+            <marker date="1506363944000" expanded="true" signature="365:579" ph="insert into mdl_groups... " />
+            <marker date="1506363944000" expanded="true" signature="1062:1125" ph="update mdl_u... " />
+            <marker date="1506363944000" expanded="true" signature="3767:3830" ph="update mdl_u... " />
+            <marker date="1506363944000" expanded="true" signature="4590:4603" ph="..." />
+            <marker date="1506363944000" expanded="true" signature="4631:4644" ph="..." />
+            <marker date="1506363944000" expanded="true" signature="4742:4755" ph="..." />
+            <marker date="1506363944000" expanded="true" signature="4782:4795" ph="..." />
+            <marker date="1506363944000" expanded="true" signature="4892:4905" ph="..." />
+            <marker date="1506363944000" expanded="true" signature="4928:4941" ph="..." />
+            <marker date="1506363944000" expanded="true" signature="5035:5048" ph="..." />
+            <marker date="1506363944000" expanded="true" signature="5071:5084" ph="..." />
+            <marker date="1506363944000" expanded="true" signature="6418:6518" ph="select * fro... mdl_email_templates" />
+            <marker date="1506363944000" expanded="true" signature="6579:6675" ph="select * fro... mdl_email_templates" />
+            <marker date="1506363944000" expanded="true" signature="7627:7672" ph="select * fro... mdl_archive" />
+            <marker date="1506363944000" expanded="true" signature="9625:9642" ph="..." />
+            <marker date="1506363944000" expanded="true" signature="9679:9698" ph="..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/grade.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding>
+            <element signature="n#style#0;n#div#1;n#body#0;n#html#0;n#!!top" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/assets/js/custom.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="17235">
+          <caret line="1149" column="18" lean-forward="true" selection-start-line="1149" selection-start-column="18" selection-end-line="1149" selection-end-column="18" />
+          <folding>
+            <marker date="1506406582000" expanded="true" signature="13614:13626" ph="..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/custom/tutors/get_archive_page.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="150">
+          <caret line="10" column="21" lean-forward="true" selection-start-line="10" selection-start-column="21" selection-end-line="10" selection-end-column="21" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/custom/tutors/classes/Tutor.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="3360">
+          <caret line="224" column="13" lean-forward="false" selection-start-line="224" selection-start-column="13" selection-end-line="224" selection-end-column="13" />
+          <folding>
+            <marker date="1506363944000" expanded="true" signature="365:579" ph="insert into mdl_groups... " />
+            <marker date="1506363944000" expanded="true" signature="1062:1125" ph="update mdl_u... " />
+            <marker date="1506363944000" expanded="true" signature="3767:3830" ph="update mdl_u... " />
+            <marker date="1506363944000" expanded="true" signature="4590:4603" ph="..." />
+            <marker date="1506363944000" expanded="true" signature="4631:4644" ph="..." />
+            <marker date="1506363944000" expanded="true" signature="4742:4755" ph="..." />
+            <marker date="1506363944000" expanded="true" signature="4782:4795" ph="..." />
+            <marker date="1506363944000" expanded="true" signature="4892:4905" ph="..." />
+            <marker date="1506363944000" expanded="true" signature="4928:4941" ph="..." />
+            <marker date="1506363944000" expanded="true" signature="5035:5048" ph="..." />
+            <marker date="1506363944000" expanded="true" signature="5071:5084" ph="..." />
+            <marker date="1506363944000" expanded="true" signature="6418:6518" ph="select * fro... mdl_email_templates" />
+            <marker date="1506363944000" expanded="true" signature="6579:6675" ph="select * fro... mdl_email_templates" />
+            <marker date="1506363944000" expanded="true" signature="7627:7672" ph="select * fro... mdl_archive" />
+            <marker date="1506363944000" expanded="true" signature="9625:9642" ph="..." />
+            <marker date="1506363944000" expanded="true" signature="9679:9698" ph="..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/grade_orig.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="296">
+          <caret line="130" column="147" lean-forward="false" selection-start-line="130" selection-start-column="64" selection-end-line="130" selection-end-column="147" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../medical/lms/custom/my/classes/Dashboard.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="78">
+          <caret line="3368" column="28" lean-forward="false" selection-start-line="3368" selection-start-column="13" selection-end-line="3368" selection-end-column="28" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/survey/upload.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/utils/get_upload_archive_modal_dialog.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="30">
+          <caret line="2" column="0" lean-forward="false" selection-start-line="2" selection-start-column="0" selection-end-line="3" selection-end-column="18" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/custom/tutors/get_archive_page.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="45">
+          <caret line="8" column="35" lean-forward="true" selection-start-line="8" selection-start-column="35" selection-end-line="8" selection-end-column="35" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/utils/delete_archive_artricle.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="75">
+          <caret line="5" column="4" lean-forward="true" selection-start-line="5" selection-start-column="4" selection-end-line="5" selection-end-column="31" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/utils/upload_article.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="90">
+          <caret line="6" column="50" lean-forward="true" selection-start-line="6" selection-start-column="12" selection-end-line="6" selection-end-column="50" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/utils/dashboard.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="30">
+          <caret line="2" column="18" lean-forward="false" selection-start-line="1" selection-start-column="0" selection-end-line="2" selection-end-column="18" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/utils/upload_test_csv.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="120">
+          <caret line="13" column="0" lean-forward="true" selection-start-line="13" selection-start-column="0" selection-end-line="13" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/utils/test_csv_upload.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="true" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding>
+            <element signature="e#156#162#0#HTML" expanded="true" />
+            <element signature="e#162#168#0#HTML" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/utils/upload_price_csv_data.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="105">
+          <caret line="7" column="0" lean-forward="true" selection-start-line="4" selection-start-column="0" selection-end-line="7" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/utils/classes/Utils.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="404">
+          <caret line="1553" column="16" lean-forward="true" selection-start-line="1553" selection-start-column="16" selection-end-line="1553" selection-end-column="16" />
+          <folding>
+            <marker date="1506402601000" expanded="true" signature="716:765" ph="select * fro... mdl_role_assignments" />
+            <marker date="1506402601000" expanded="true" signature="1082:1149" ph="select * fro... mdl_user" />
+            <marker date="1506402601000" expanded="true" signature="1958:1996" ph="select * fro... mdl_groups" />
+            <marker date="1506402601000" expanded="true" signature="3627:3643" ph="..." />
+            <marker date="1506402601000" expanded="true" signature="3834:3875" ph="select count... mdl_groups" />
+            <marker date="1506402601000" expanded="true" signature="4116:4201" ph="select count... mdl_groups_members" />
+            <marker date="1506402601000" expanded="true" signature="4648:4745" ph="select * fro... mdl_groups" />
+            <marker date="1506402601000" expanded="true" signature="5242:5285" ph="select * fro... mdl_groups" />
+            <marker date="1506402601000" expanded="true" signature="5990:6022" ph="select * fro... mdl_user" />
+            <marker date="1506402601000" expanded="true" signature="6389:6423" ph="select * fro... mdl_groups" />
+            <marker date="1506402601000" expanded="true" signature="6709:6755" ph="select * fro... mdl_groups_members" />
+            <marker date="1506402601000" expanded="true" signature="9492:9498" ph=" " />
+            <marker date="1506402601000" expanded="true" signature="10047:10063" ph="..." />
+            <marker date="1506402601000" expanded="true" signature="11543:11587" ph="update mdl_u... " />
+            <marker date="1506402601000" expanded="true" signature="11739:11871" ph="select * fro... mdl_user" />
+            <marker date="1506402601000" expanded="true" signature="12429:12575" ph="select * fro... mdl_user" />
+            <marker date="1506402601000" expanded="true" signature="13228:13246" ph="..." />
+            <marker date="1506402601000" expanded="true" signature="13431:13463" ph="select * fro... mdl_user" />
+            <marker date="1506402601000" expanded="true" signature="13823:13895" ph="select * fro... mdl_card_payments" />
+            <marker date="1506402601000" expanded="true" signature="16443:16459" ph="..." />
+            <marker date="1506402601000" expanded="true" signature="16657:16705" ph="select count... mdl_card_payments" />
+            <marker date="1506402601000" expanded="true" signature="17154:17264" ph="select * fro... mdl_card_payments" />
+            <marker date="1506402601000" expanded="true" signature="18061:18122" ph="select * fro... mdl_card_payments" />
+            <marker date="1506402601000" expanded="true" signature="18791:18809" ph="..." />
+            <marker date="1506402601000" expanded="true" signature="19052:19070" ph="..." />
+            <marker date="1506402601000" expanded="true" signature="19364:19411" ph="select * fro... mdl_groups_members" />
+            <marker date="1506402601000" expanded="true" signature="20749:20807" ph="select * fro... mdl_trial_keys" />
+            <marker date="1506402601000" expanded="true" signature="20958:21001" ph="select * fro... mdl_trial_keys" />
+            <marker date="1506402601000" expanded="true" signature="21842:21860" ph="..." />
+            <marker date="1506402601000" expanded="true" signature="22103:22121" ph="..." />
+            <marker date="1506402601000" expanded="true" signature="22416:22459" ph="select * fro... mdl_trial_keys" />
+            <marker date="1506402601000" expanded="true" signature="23482:23500" ph="..." />
+            <marker date="1506402601000" expanded="true" signature="25261:25277" ph="..." />
+            <marker date="1506402601000" expanded="true" signature="25977:26058" ph="select * fro... mdl_trial_keys" />
+            <marker date="1506402601000" expanded="true" signature="26649:26687" ph="select * fro... mdl_groups" />
+            <marker date="1506402601000" expanded="true" signature="29292:29330" ph="select * fro... mdl_user" />
+            <marker date="1506402601000" expanded="true" signature="29855:29893" ph="select * fro... mdl_groups" />
+            <marker date="1506402601000" expanded="true" signature="32567:32653" ph="select * fro... mdl_card_payments" />
+            <marker date="1506402601000" expanded="true" signature="33295:34942" ph="..." />
+            <marker date="1506402601000" expanded="true" signature="33336:34923" ph="..." />
+            <marker date="1506402601000" expanded="true" signature="33419:34901" ph="..." />
+            <marker date="1506402601000" expanded="true" signature="33464:33579" ph="..." />
+            <marker date="1506402601000" expanded="true" signature="33622:34540" ph="..." />
+            <marker date="1506402601000" expanded="false" signature="33868:33886" ph="..." />
+            <marker date="1506402601000" expanded="true" signature="33887:34072" ph="..." />
+            <marker date="1506402601000" expanded="false" signature="34130:34148" ph="..." />
+            <marker date="1506402601000" expanded="true" signature="34149:34335" ph="..." />
+            <marker date="1506402601000" expanded="true" signature="34386:34495" ph="..." />
+            <marker date="1506402601000" expanded="false" signature="34451:34461" ph="..." />
+            <marker date="1506402601000" expanded="true" signature="34585:34878" ph="..." />
+            <marker date="1506402601000" expanded="true" signature="35194:36643" ph="..." />
+            <marker date="1506402601000" expanded="true" signature="35235:36624" ph="..." />
+            <marker date="1506402601000" expanded="true" signature="35318:36602" ph="..." />
+            <marker date="1506402601000" expanded="true" signature="35363:35472" ph="..." />
+            <marker date="1506402601000" expanded="false" signature="35523:35541" ph="..." />
+            <marker date="1506402601000" expanded="true" signature="35542:36291" ph="..." />
+            <marker date="1506402601000" expanded="false" signature="35621:35637" ph="..." />
+            <marker date="1506402601000" expanded="true" signature="35638:35803" ph="..." />
+            <marker date="1506402601000" expanded="false" signature="35882:35898" ph="..." />
+            <marker date="1506402601000" expanded="true" signature="35899:36066" ph="..." />
+            <marker date="1506402601000" expanded="true" signature="36137:36246" ph="..." />
+            <marker date="1506402601000" expanded="false" signature="36202:36212" ph="..." />
+            <marker date="1506402601000" expanded="true" signature="36336:36579" ph="..." />
+            <marker date="1506402601000" expanded="true" signature="36746:36789" ph="select * fro... mdl_groups" />
+            <marker date="1506402601000" expanded="true" signature="37827:38461" ph="insert into mdl_trial_keys... " />
+            <marker date="1506402601000" expanded="true" signature="38873:39021" ph="update mdl_c... " />
+            <marker date="1506402601000" expanded="true" signature="39391:40909" ph="..." />
+            <marker date="1506402601000" expanded="true" signature="39432:40890" ph="..." />
+            <marker date="1506402601000" expanded="true" signature="39515:40868" ph="..." />
+            <marker date="1506402601000" expanded="true" signature="39560:39675" ph="..." />
+            <marker date="1506402601000" expanded="true" signature="39718:40545" ph="..." />
+            <marker date="1506402601000" expanded="false" signature="39899:39917" ph="..." />
+            <marker date="1506402601000" expanded="true" signature="39918:40089" ph="..." />
+            <marker date="1506402601000" expanded="false" signature="40147:40165" ph="..." />
+            <marker date="1506402601000" expanded="true" signature="40166:40340" ph="..." />
+            <marker date="1506402601000" expanded="true" signature="40391:40500" ph="..." />
+            <marker date="1506402601000" expanded="false" signature="40456:40466" ph="..." />
+            <marker date="1506402601000" expanded="true" signature="40590:40845" ph="..." />
+            <marker date="1506402601000" expanded="true" signature="41047:41136" ph="select * fro... mdl_trial_keys" />
+            <marker date="1506402601000" expanded="true" signature="41550:43209" ph="..." />
+            <marker date="1506402601000" expanded="true" signature="41591:43190" ph="..." />
+            <marker date="1506402601000" expanded="true" signature="41674:43168" ph="..." />
+            <marker date="1506402601000" expanded="true" signature="41719:41834" ph="..." />
+            <marker date="1506402601000" expanded="true" signature="41877:42806" ph="..." />
+            <marker date="1506402601000" expanded="false" signature="42132:42150" ph="..." />
+            <marker date="1506402601000" expanded="true" signature="42151:42337" ph="..." />
+            <marker date="1506402601000" expanded="false" signature="42395:42413" ph="..." />
+            <marker date="1506402601000" expanded="true" signature="42414:42601" ph="..." />
+            <marker date="1506402601000" expanded="true" signature="42652:42761" ph="..." />
+            <marker date="1506402601000" expanded="false" signature="42717:42727" ph="..." />
+            <marker date="1506402601000" expanded="true" signature="42851:43145" ph="..." />
+            <marker date="1506402601000" expanded="true" signature="43332:43365" ph="select * fro... mdl_price" />
+            <marker date="1506402601000" expanded="true" signature="43668:45116" ph="..." />
+            <marker date="1506402601000" expanded="true" signature="43709:45097" ph="..." />
+            <marker date="1506402601000" expanded="true" signature="43792:45075" ph="..." />
+            <marker date="1506402601000" expanded="true" signature="43837:43924" ph="..." />
+            <marker date="1506402601000" expanded="true" signature="43967:44758" ph="..." />
+            <marker date="1506402601000" expanded="false" signature="44130:44146" ph="..." />
+            <marker date="1506402601000" expanded="true" signature="44147:44287" ph="..." />
+            <marker date="1506402601000" expanded="false" signature="44349:44365" ph="..." />
+            <marker date="1506402601000" expanded="true" signature="44366:44552" ph="..." />
+            <marker date="1506402601000" expanded="true" signature="44603:44713" ph="..." />
+            <marker date="1506402601000" expanded="false" signature="44669:44679" ph="..." />
+            <marker date="1506402601000" expanded="true" signature="44803:45052" ph="..." />
+            <marker date="1506402601000" expanded="true" signature="45328:46699" ph="..." />
+            <marker date="1506402601000" expanded="true" signature="45369:46680" ph="..." />
+            <marker date="1506402601000" expanded="true" signature="45452:46658" ph="..." />
+            <marker date="1506402601000" expanded="true" signature="45497:45586" ph="..." />
+            <marker date="1506402601000" expanded="true" signature="45629:46340" ph="..." />
+            <marker date="1506402601000" expanded="false" signature="45709:45725" ph="..." />
+            <marker date="1506402601000" expanded="true" signature="45726:45890" ph="..." />
+            <marker date="1506402601000" expanded="false" signature="45952:45968" ph="..." />
+            <marker date="1506402601000" expanded="true" signature="45969:46133" ph="..." />
+            <marker date="1506402601000" expanded="true" signature="46184:46295" ph="..." />
+            <marker date="1506402601000" expanded="false" signature="46251:46261" ph="..." />
+            <marker date="1506402601000" expanded="true" signature="46385:46635" ph="..." />
+            <marker date="1506402601000" expanded="true" signature="46913:48068" ph="..." />
+            <marker date="1506402601000" expanded="true" signature="46954:48049" ph="..." />
+            <marker date="1506402601000" expanded="true" signature="47037:48027" ph="..." />
+            <marker date="1506402601000" expanded="true" signature="47082:47180" ph="..." />
+            <marker date="1506402601000" expanded="true" signature="47223:47712" ph="..." />
+            <marker date="1506402601000" expanded="false" signature="47303:47319" ph="..." />
+            <marker date="1506402601000" expanded="true" signature="47320:47488" ph="..." />
+            <marker date="1506402601000" expanded="true" signature="47556:47667" ph="..." />
+            <marker date="1506402601000" expanded="false" signature="47623:47633" ph="..." />
+            <marker date="1506402601000" expanded="true" signature="47757:48004" ph="..." />
+            <marker date="1506402601000" expanded="true" signature="49290:49302" ph="..." />
+            <marker date="1506402601000" expanded="true" signature="49404:49460" ph="select * fro... mdl_email_templates" />
+            <marker date="1506402601000" expanded="true" signature="50482:50525" ph="select * fro... mdl_email_templates" />
+            <marker date="1506402601000" expanded="true" signature="50865:50877" ph="..." />
+            <marker date="1506402601000" expanded="true" signature="50926:50995" ph="..." />
+            <marker date="1506402601000" expanded="true" signature="51635:51682" ph="select * fro... mdl_price" />
+            <marker date="1506402601000" expanded="true" signature="51833:51935" ph="select * fro... mdl_user" />
+            <marker date="1506402601000" expanded="true" signature="52367:52422" ph="insert into mdl_price... " />
+            <marker date="1506402601000" expanded="true" signature="53304:53346" ph="select * fro... mdl_price" />
+            <marker date="1506402601000" expanded="true" signature="54035:54080" ph="update mdl_p... " />
+            <marker date="1506402601000" expanded="true" signature="54248:54355" ph="insert into mdl_price... " />
+            <marker date="1506402601000" expanded="true" signature="54478:54523" ph="select * fro... mdl_archive" />
+            <marker date="1506402601000" expanded="true" signature="55121:55139" ph="..." />
+            <marker date="1506402601000" expanded="true" signature="55251:55267" ph="..." />
+            <marker date="1506402601000" expanded="true" signature="56675:56692" ph="..." />
+            <marker date="1506402601000" expanded="true" signature="56729:56748" ph="..." />
+            <marker date="1506402601000" expanded="true" signature="57021:59046" ph="..." />
+            <marker date="1506402601000" expanded="true" signature="57062:59027" ph="..." />
+            <marker date="1506402601000" expanded="true" signature="57145:59005" ph="..." />
+            <marker date="1506402601000" expanded="true" signature="57190:57301" ph="..." />
+            <marker date="1506402601000" expanded="true" signature="57344:58708" ph="..." />
+            <marker date="1506402601000" expanded="false" signature="57420:57438" ph="..." />
+            <marker date="1506402601000" expanded="true" signature="57439:57601" ph="..." />
+            <marker date="1506402601000" expanded="false" signature="57680:57698" ph="..." />
+            <marker date="1506402601000" expanded="true" signature="57699:57859" ph="..." />
+            <marker date="1506402601000" expanded="false" signature="57938:57956" ph="..." />
+            <marker date="1506402601000" expanded="true" signature="57957:58138" ph="..." />
+            <marker date="1506402601000" expanded="true" signature="58189:58356" ph="..." />
+            <marker date="1506402601000" expanded="false" signature="58233:58239" ph=" " />
+            <marker date="1506402601000" expanded="false" signature="58312:58322" ph="..." />
+            <marker date="1506402601000" expanded="true" signature="58427:58663" ph="..." />
+            <marker date="1506402601000" expanded="false" signature="58471:58477" ph=" " />
+            <marker date="1506402601000" expanded="false" signature="58533:58546" ph="..." />
+            <marker date="1506402601000" expanded="true" signature="58753:58982" ph="..." />
+            <marker date="1506402601000" expanded="true" signature="59549:59629" ph="insert into mdl_archive... " />
+            <marker date="1506402601000" expanded="true" signature="59776:59809" ph="delete from " />
+            <marker date="1506402601000" expanded="true" signature="60794:60905" ph="insert into mdl_price... " />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/grade.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="139" column="30" lean-forward="false" selection-start-line="139" selection-start-column="30" selection-end-line="139" selection-end-column="30" />
+          <folding>
+            <element signature="n#style#0;n#div#1;n#body#0;n#html#0;n#!!top" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/utils/get_upload_price_csv_modal_dialog.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="90">
+          <caret line="6" column="0" lean-forward="true" selection-start-line="6" selection-start-column="0" selection-end-line="6" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/custom/tutors/classes/Tutor.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="347">
+          <caret line="50" column="0" lean-forward="true" selection-start-line="50" selection-start-column="0" selection-end-line="50" selection-end-column="0" />
+          <folding>
+            <marker date="1506363944000" expanded="true" signature="365:579" ph="insert into mdl_groups... " />
+            <marker date="1506363944000" expanded="true" signature="1062:1125" ph="update mdl_u... " />
+            <marker date="1506363944000" expanded="true" signature="3767:3830" ph="update mdl_u... " />
+            <marker date="1506363944000" expanded="true" signature="4590:4603" ph="..." />
+            <marker date="1506363944000" expanded="true" signature="4631:4644" ph="..." />
+            <marker date="1506363944000" expanded="true" signature="4742:4755" ph="..." />
+            <marker date="1506363944000" expanded="true" signature="4782:4795" ph="..." />
+            <marker date="1506363944000" expanded="true" signature="4892:4905" ph="..." />
+            <marker date="1506363944000" expanded="true" signature="4928:4941" ph="..." />
+            <marker date="1506363944000" expanded="true" signature="5035:5048" ph="..." />
+            <marker date="1506363944000" expanded="true" signature="5071:5084" ph="..." />
+            <marker date="1506363944000" expanded="true" signature="6418:6518" ph="select * fro... mdl_email_templates" />
+            <marker date="1506363944000" expanded="true" signature="6579:6675" ph="select * fro... mdl_email_templates" />
+            <marker date="1506363944000" expanded="true" signature="7627:7672" ph="select * fro... mdl_archive" />
+            <marker date="1506363944000" expanded="true" signature="9625:9642" ph="..." />
+            <marker date="1506363944000" expanded="true" signature="9679:9698" ph="..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/custom/tutors/signup.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="75">
+          <caret line="5" column="20" lean-forward="false" selection-start-line="5" selection-start-column="20" selection-end-line="5" selection-end-column="20" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/custom/tutors/is_group_exists.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="75">
+          <caret line="5" column="22" lean-forward="false" selection-start-line="5" selection-start-column="22" selection-end-line="5" selection-end-column="22" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/mod/page/view.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="383">
+          <caret line="126" column="0" lean-forward="true" selection-start-line="126" selection-start-column="0" selection-end-line="126" selection-end-column="0" />
+          <folding>
+            <marker date="1506406168000" expanded="true" signature="3852:3876" ph="..." />
+            <marker date="1506406168000" expanded="true" signature="3938:3946" ph="..." />
+            <marker date="1506406168000" expanded="true" signature="4263:4305" ph="..." />
+            <marker date="1506406168000" expanded="true" signature="4355:4388" ph="..." />
+            <marker date="1506406168000" expanded="true" signature="4493:4525" ph="..." />
+            <marker date="1506406168000" expanded="true" signature="4781:4805" ph="..." />
+            <marker date="1506406168000" expanded="true" signature="4867:4875" ph="..." />
+            <marker date="1506406168000" expanded="true" signature="4981:5036" ph="..." />
+            <marker date="1506406168000" expanded="true" signature="5103:5118" ph="..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/custom/navigation/classes/Navigation.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="360">
+          <caret line="27" column="5" lean-forward="true" selection-start-line="27" selection-start-column="5" selection-end-line="27" selection-end-column="5" />
+          <folding>
+            <marker date="1506406030000" expanded="true" signature="429:475" ph="select * fro... mdl_groups_members" />
+            <marker date="1506406030000" expanded="true" signature="884:1031" ph="select * fro... mdl_course_modules" />
+            <marker date="1506406030000" expanded="true" signature="1397:1429" ph="select * fro... mdl_user" />
+            <marker date="1506406030000" expanded="true" signature="2460:2593" ph="select * fro... mdl_course_modules" />
+            <marker date="1506406030000" expanded="true" signature="2901:2945" ph="select * fro... mdl_quiz_overrides" />
+            <marker date="1506406030000" expanded="true" signature="3633:3675" ph="select * fro... mdl_trial_keys" />
+            <marker date="1506406030000" expanded="true" signature="4077:4122" ph="select * fro... mdl_card_payments" />
+            <marker date="1506406030000" expanded="true" signature="5207:5335" ph="select * fro... mdl_course_modules" />
+            <marker date="1506406030000" expanded="true" signature="6214:6277" ph="select * fro... mdl_course_modules" />
+            <marker date="1506406030000" expanded="true" signature="6484:6517" ph="select * fro... mdl_forum" />
+            <marker date="1506406030000" expanded="true" signature="6786:6835" ph="update mdl_f... " />
+            <marker date="1506406030000" expanded="true" signature="6993:7121" ph="select * fro... mdl_course_modules" />
+            <marker date="1506406030000" expanded="true" signature="7966:8029" ph="select * fro... mdl_course_modules" />
+            <marker date="1506406030000" expanded="true" signature="8235:8267" ph="select * fro... mdl_quiz" />
+            <marker date="1506406030000" expanded="true" signature="8536:8584" ph="update mdl_q... " />
+            <marker date="1506406030000" expanded="true" signature="8895:8937" ph="select * fro... mdl_course_modules" />
+            <marker date="1506406030000" expanded="true" signature="9620:9652" ph="select * fro... mdl_page" />
+            <marker date="1506406030000" expanded="true" signature="10264:10379" ph="select * fro... mdl_grade_items" />
+            <marker date="1506406030000" expanded="true" signature="10754:10900" ph="select * fro... mdl_grade_grades" />
+            <marker date="1506406030000" expanded="true" signature="11901:11940" ph="select * fro... mdl_grade_items" />
+            <marker date="1506406030000" expanded="true" signature="12382:12417" ph="..." />
+            <marker date="1506406030000" expanded="true" signature="12471:12486" ph="..." />
+            <marker date="1506406030000" expanded="true" signature="12596:12612" ph="..." />
+            <marker date="1506406030000" expanded="true" signature="13076:13092" ph="..." />
+            <marker date="1506406030000" expanded="true" signature="13669:13687" ph="..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/usersite/registerstudentbody.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-1906">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="487" selection-end-column="11" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/assets/js/custom.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="224">
+          <caret line="245" column="37" lean-forward="true" selection-start-line="245" selection-start-column="32" selection-end-line="245" selection-end-column="37" />
+          <folding>
+            <marker date="1506406582000" expanded="true" signature="13614:13626" ph="..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/custom/students/classes/Student.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="139">
+          <caret line="122" column="32" lean-forward="true" selection-start-line="122" selection-start-column="32" selection-end-line="122" selection-end-column="32" />
+          <folding>
+            <marker date="1506404671000" expanded="true" signature="580:618" ph="select * fro... mdl_groups" />
+            <marker date="1506404671000" expanded="true" signature="1006:1053" ph="select * fro... mdl_price" />
+            <marker date="1506404671000" expanded="true" signature="2019:2082" ph="select * fro... mdl_email_templates" />
+            <marker date="1506404671000" expanded="true" signature="3481:3493" ph="..." />
+            <marker date="1506404671000" expanded="true" signature="3516:3528" ph="..." />
+            <marker date="1506404671000" expanded="true" signature="3625:3637" ph="..." />
+            <marker date="1506404671000" expanded="true" signature="3665:3677" ph="..." />
+            <marker date="1506404671000" expanded="true" signature="3795:3807" ph="..." />
+            <marker date="1506404671000" expanded="true" signature="3846:3858" ph="..." />
+            <marker date="1506404671000" expanded="true" signature="6702:6735" ph="select * fro... mdl_price" />
+            <marker date="1506404671000" expanded="true" signature="6982:7029" ph="select * fro... mdl_price" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/custom/common/Utils.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="202">
+          <caret line="74" column="0" lean-forward="false" selection-start-line="74" selection-start-column="0" selection-end-line="74" selection-end-column="0" />
+          <folding>
+            <marker date="1506407015000" expanded="true" signature="694:784" ph="select * fro... mdl_course" />
+            <marker date="1506407015000" expanded="true" signature="1471:1519" ph="select * fro... mdl_groups" />
+            <marker date="1506407015000" expanded="true" signature="1650:1744" ph="select * fro... mdl_user" />
+            <marker date="1506407015000" expanded="true" signature="2384:2427" ph="select * fro... mdl_user" />
+            <marker date="1506407015000" expanded="true" signature="2653:2784" ph="select id fr... mdl_context" />
+            <marker date="1506407015000" expanded="true" signature="3019:3120" ph="select id fr... mdl_enrol" />
+            <marker date="1506407015000" expanded="true" signature="3508:3935" ph="insert into mdl_user_enrolments... " />
+            <marker date="1506407015000" expanded="true" signature="4044:4471" ph="insert into mdl_role_assignments... " />
+            <marker date="1506407015000" expanded="true" signature="5553:5599" ph="select * fro... mdl_course_modules" />
+            <marker date="1506407015000" expanded="true" signature="5990:6038" ph="select * fro... mdl_groups" />
+            <marker date="1506407015000" expanded="true" signature="6269:6301" ph="select * fro... mdl_user" />
+            <marker date="1506407015000" expanded="true" signature="6700:6786" ph="select * fro... mdl_card_payments" />
+            <marker date="1506407015000" expanded="true" signature="7141:7188" ph="select * fro... mdl_groups_members" />
+            <marker date="1506407015000" expanded="true" signature="7433:7481" ph="select * fro... mdl_role_assignments" />
+            <marker date="1506407015000" expanded="true" signature="8098:8130" ph="select * fro... mdl_user" />
+            <marker date="1506407015000" expanded="true" signature="8385:8419" ph="select * fro... mdl_groups" />
+            <marker date="1506407015000" expanded="true" signature="8942:9065" ph="select * fro... mdl_role_assignments" />
+            <marker date="1506407015000" expanded="true" signature="9534:9580" ph="select * fro... mdl_groups_members" />
+            <marker date="1506407015000" expanded="true" signature="10259:10304" ph="select * fro... mdl_card_payments" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/custom/students/students_signup.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="75">
+          <caret line="5" column="19" lean-forward="false" selection-start-line="5" selection-start-column="19" selection-end-line="5" selection-end-column="19" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/usersite/index.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="165">
+          <caret line="244" column="562" lean-forward="false" selection-start-line="244" selection-start-column="562" selection-end-line="244" selection-end-column="562" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/usersite/registereader.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="323">
+          <caret line="609" column="51" lean-forward="false" selection-start-line="609" selection-start-column="51" selection-end-line="609" selection-end-column="51" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+  </component>
+</project>

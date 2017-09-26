@@ -1,12 +1,11 @@
-
 $(document).ready(function () {
     console.log("ready!");
     /**********************************************************************
-     * 
-     *  
+     *
+     *
      *                     Code related to survey
-     *   
-     *    
+     *
+     *
      **********************************************************************/
     var iframeurl;
     $('#camps').DataTable();
@@ -124,11 +123,11 @@ $(document).ready(function () {
     });
 
     /**********************************************************************
-     * 
-     *  
+     *
+     *
      *                     Code related to LMS
-     *   
-     *    
+     *
+     *
      **********************************************************************/
 
     $("body").on("click mousedown mouseup focus blur keydown change", function (e) {
@@ -232,7 +231,6 @@ $(document).ready(function () {
     });
 
 
-
     // Students signup
     $("#student_signup").submit(function (event) {
         event.preventDefault();
@@ -246,6 +244,7 @@ $(document).ready(function () {
             var amount = $('#price').val();
 
             var groupname = $('#class').val();
+            console.log('Class name: '+groupname);
             var email = $('#email').val();
 
             var clean_holder = cardholder.replace(/\s\s+/g, ' ');
@@ -288,16 +287,16 @@ $(document).ready(function () {
 
 
             $('#form_err').html('');
-            var url = 'https://www.newsfactsandanalysis.com/lms/custom/tutors/is_email_exists.php';
+            var url = '/lms/custom/tutors/is_email_exists.php';
             $.post(url, {email: email}).done(function (data) {
                 if (data == 0) {
                     $('#form_err').html('');
-                    var url = 'https://www.newsfactsandanalysis.com/lms/custom/tutors/is_group_exists.php';
+                    var url = '/lms/custom/tutors/is_group_exists.php';
                     $.post(url, {groupname: groupname}).done(function (data) {
                         if (data > 0) {
                             $('#ajax_loader').show();
                             var user = {
-                                item: 'Globalization Plus - Tuition',
+                                item: 'NewsFacts & Analysis - Tuition',
                                 courseid: 2,
                                 amount: amount,
                                 firstname: $('#first').val(),
@@ -312,7 +311,7 @@ $(document).ready(function () {
                                 title: 'Student',
                                 dep: 'n/a',
                                 site: 'n/a',
-                                class: $('#class').val(),
+                                class: groupname,
                                 cardholder: cardholder,
                                 cardnumber: $('#cardnumber').val(),
                                 cvv: $('#cvv').val(),
@@ -339,7 +338,6 @@ $(document).ready(function () {
             $('#form_err').html('Please provide all required fields');
         }
     });
-
 
 
     $("#archieve_login").submit(function () {
@@ -387,7 +385,8 @@ $(document).ready(function () {
         if (group > 0 && state != 0 && cardmonth > 0 && cardyear > 0) {
             $('#form_err').html('');
             $('#ajax_loader').show();
-            var user = {firstname: firstname,
+            var user = {
+                firstname: firstname,
                 lastname: lastname,
                 userid: userid,
                 cardnumber: cardnumber,
@@ -400,7 +399,8 @@ $(document).ready(function () {
                 street: address,
                 state: state,
                 city: city,
-                zip: zip};
+                zip: zip
+            };
             var url = "/lms/custom/students/students_prolong.php";
             $.post(url, {user: JSON.stringify(user)}).done(function (data) {
                 $('#ajax_loader').hide();
@@ -753,10 +753,93 @@ $(document).ready(function () {
         });
     });
 
+    $('.ar_item_del').click(function () {
+        var id = $(this).data('id');
+        if (confirm('Delete this article from archive?')) {
+            var url = '/lms/utils/delete_archive_artricle.php';
+            $.post(url, {id: id}).done(function () {
+                document.location.reload();
+            });
+        }
+    });
+
 
     $('body').on('click', function (event) {
 
         console.log('Event ID: ' + event.target.id);
+
+        if (event.target.id == 'get_price_upload_dialog') {
+            var url = '/lms/utils/get_upload_price_csv_modal_dialog.php';
+            $.post(url, {id: 1}).done(function (data) {
+                $("body").append(data);
+                $("#myModal").modal('show');
+            });
+        }
+
+        if (event.target.id == 'upload_price_file') {
+            var file = $('#price_scv').val();
+            if (file == '') {
+                $('#price_err').html('Please select CSV file to upload');
+            } // end if
+            else {
+                $('#price_err').html('');
+                var file_data = $('#price_scv').prop('files');
+                var url = '/lms/utils/upload_price_csv_data.php';
+                var form_data = new FormData();
+                $.each(file_data, function (key, value) {
+                    form_data.append(key, value);
+                });
+                $('#loader').show();
+                $.ajax({
+                    url: url,
+                    data: form_data,
+                    processData: false,
+                    contentType: false,
+                    type: 'POST',
+                    success: function (data) {
+                        console.log(data);
+                        $("[data-dismiss=modal]").trigger({type: "click"});
+                        $('#myModal').data('modal', null);
+                        //document.location.reload();
+                    } // end of success
+                }); // end of $.ajax ..
+            } // end else
+        }
+
+        if (event.target.id == 'upload_archive_ok') {
+            var title = $('#title').val();
+            var adate = $('#adate').val();
+            var fileval = $('#uploadBtn').val();
+            var file_data = $('#uploadBtn').prop('files');
+            console.log('File data: ' + JSON.stringify(file_data));
+            if (title == '' || adate == '' || fileval == '') {
+                $('#archive_err').html('* required fields');
+            } // end if
+            else {
+                $('#archive_err').html('');
+                var url = '/lms/utils/upload_article.php';
+                var form_data = new FormData();
+                form_data.append('title', title);
+                form_data.append('adate', adate);
+                $.each(file_data, function (key, value) {
+                    form_data.append(key, value);
+                });
+                $('#loader').show();
+                $.ajax({
+                    url: url,
+                    data: form_data,
+                    processData: false,
+                    contentType: false,
+                    type: 'POST',
+                    success: function () {
+                        $("[data-dismiss=modal]").trigger({type: "click"});
+                        $('#myModal').data('modal', null);
+                        document.location.reload();
+                    } // end of success
+                }); // end of $.ajax ..
+            } // end else
+        }
+
 
         if (event.target.id == 'add_new_school_to_db') {
             var name = $('#name').val();
@@ -866,11 +949,13 @@ $(document).ready(function () {
                 } // end for
                 $('#camp_err').html('');
                 if (confirm('Add new campaign?')) {
-                    var camp = {from: from,
+                    var camp = {
+                        from: from,
                         subject: subject,
                         title: title,
                         content: content,
-                        questions: questions};
+                        questions: questions
+                    };
                     var url = 'https://www.newsfactsandanalysis.com/survey/add_camp.php';
                     $.post(url, {camp: JSON.stringify(camp)}).done(function (data) {
                         console.log(data);
@@ -1125,17 +1210,26 @@ $(document).ready(function () {
 
 
     /************************************************************************
-     * 
+     *
      *                             Tutors grades page
-     * 
+     *
      ************************************************************************/
 
     $('.nav2').click(function () {
+        $('#body').show();
+        $('#ext_container').hide();
         var url = '/lms/custom/navigation/status.php';
         iframeurl = $(this).data('url');
         $.post(url, {num: 1}).done(function (data) {
             if (data == 1) {
+                //$('#archive_table').DataTable();
                 console.log('Frame src: ' + iframeurl);
+                if (iframeurl.indexOf('page') !== -1) {
+                    $('#header_img').hide();
+                }  // end if
+                else {
+                    $('#header_img').show();
+                } // end else
                 $('#page').attr('src', iframeurl);
             } // end if
             else {
@@ -1144,6 +1238,55 @@ $(document).ready(function () {
             }
         }); // end of post
     }); // end of click
+
+    $('.ar').click(function () {
+        $('#header_img').show();
+        $('#body').hide();
+        var url = '/lms/custom/tutors/get_archive_page.php';
+        $.post(url, {num: 1}).done(function (data) {
+            $('#ext_container').html(data);
+            $('#ext_container').show();
+        });
+    });
+
+    $('#ajax_upload_file').click(function () {
+        var filname = $('#uploadBtn').val();
+        if (filname == '') {
+            $('#upload_err').html('Please select file');
+        } // end if
+        else {
+            $('#upload_err').html('');
+            var title = $('#title').val();
+            var url = '/lms/utils/upload_article.php';
+            var file_data = $('#uploadBtn').prop('files');
+            var form_data = new FormData();
+
+            $.each(file_data, function (key, value) {
+                form_data.append(key, value);
+            });
+            $.ajax({
+                url: url,
+                data: form_data,
+                processData: false,
+                contentType: false,
+                type: 'POST',
+                success: function (data) {
+                    $('#form_err').html(data);
+                } // end of success
+            }); // end of $.ajax ..
+        } // end else
+
+    });
+
+    $('#article_upload_dialog').click(function () {
+        var url = '/lms/utils/get_upload_archive_modal_dialog.php';
+        $.post(url, {id: 1}).done(function (data) {
+            $("body").append(data);
+            $("#myModal").modal('show');
+            $("#adate").datepicker();
+        });
+    });
+
 
 }); // end of document ready
 

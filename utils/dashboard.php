@@ -15,6 +15,8 @@ if ($_REQUEST) {
 
     if ($_SESSION['logged'] == 1) {
 
+        $archive = $u->get_archive_page();
+
         $class_total = $u->get_classes_num();
         $classes = $u->get_classes_list();
         $class_search = $u->get_search_block('class');
@@ -39,107 +41,139 @@ if ($_REQUEST) {
         <!DOCTYPE html>
 
         <html>
-            <head>
-                <title>NewsFacts & Analysis</title>
-                <meta charset="UTF-8">
-                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <head>
+            <title>NewsFacts & Analysis</title>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-                <!-- ********************** JS libraries ********************** -->
+            <!-- ********************** JS libraries ********************** -->
 
-                <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+            <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
 
-                <!-- Latest compiled and minified JavaScript -->
-                <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+            <!-- Latest compiled and minified JavaScript -->
+            <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 
-                <!-- Editor CDN -->
-                <script src="//cdn.ckeditor.com/4.6.2/full/ckeditor.js"></script>
+            <!-- Editor CDN -->
+            <script src="//cdn.ckeditor.com/4.6.2/full/ckeditor.js"></script>
 
-                <!-- Typehead JS -->
-                <script type='text/javascript' src='https://cdnjs.cloudflare.com/ajax/libs/bootstrap-3-typeahead/4.0.1/bootstrap3-typeahead.js'></script>
+            <!-- Typehead JS -->
+            <script type='text/javascript'
+                    src='https://cdnjs.cloudflare.com/ajax/libs/bootstrap-3-typeahead/4.0.1/bootstrap3-typeahead.js'></script>
 
-                <!-- Pagination JS -->
-                <script type="text/javascript" src="/assets/js/pagination/jquery.simplePagination.js"></script>
+            <!-- Pagination JS -->
+            <script type="text/javascript" src="/assets/js/pagination/jquery.simplePagination.js"></script>
 
-                <!-- Data tables JS -->
-                <script type="text/javascript" src='https://cdn.datatables.net/1.10.13/js/jquery.dataTables.min.js' ></script>
-                <script type="text/javascript" src='https://cdn.datatables.net/1.10.13/js/dataTables.bootstrap.min.js' ></script>
+            <!-- Data tables JS -->
+            <script type="text/javascript"
+                    src='https://cdn.datatables.net/1.10.13/js/jquery.dataTables.min.js'></script>
+            <script type="text/javascript"
+                    src='https://cdn.datatables.net/1.10.13/js/dataTables.bootstrap.min.js'></script>
 
-                <!-- Custom JS script -->
-                <script type="text/javascript" src="https://www.newsfactsandanalysis.com/assets/js/custom.js"></script>
+            <!-- Custom JS script -->
+            <script type="text/javascript" src="https://www.newsfactsandanalysis.com/assets/js/custom.js"></script>
 
-                <!-- ********************** CSS libraries ********************** -->
+            <!-- ********************** CSS libraries ********************** -->
 
-                <!-- Latest compiled and minified Bootstrap CSS -->
-                <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" >
+            <!-- Latest compiled and minified Bootstrap CSS -->
+            <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 
-                <!-- Optional theme -->
-                <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" >
+            <!-- Optional theme -->
+            <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css">
 
-                <!-- DatePicker JS -->
-                <script type="text/javascript" src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+            <!-- DatePicker JS -->
+            <script type="text/javascript" src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
 
-                <!-- DatePicker CSS -->
-                <link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
+            <!-- DatePicker CSS -->
+            <link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
 
-                <!-- Data tables CSS -->
-                <link rel="stylesheet" href="https://cdn.datatables.net/1.10.13/css/dataTables.bootstrap.min.css">
+            <!-- Data tables CSS -->
+            <link rel="stylesheet" href="https://cdn.datatables.net/1.10.13/css/dataTables.bootstrap.min.css">
 
-                <!-- Pagination CSS -->
-                <link rel="stylesheet" href="/assets/js/pagination/simplePagination.css">
+            <!-- Pagination CSS -->
+            <link rel="stylesheet" href="/assets/js/pagination/simplePagination.css">
 
-            </head>
-            <body>
-                <br><br><br>
-                <div class="panel panel-default" style="width:80%;margin: auto;">
-                    <div class="panel-heading"><div class='text-center'>Dashboard</div></div>
-                    <div class="panel-body">
-                        <ul class="nav nav-tabs">
-                            <li class="active"><a data-toggle="tab" href="#classes">Classes</a></li>
-                            <li><a data-toggle="tab" href="#tutors">Professors</a></li>
-                            <li><a data-toggle="tab" href="#paid_keys">Subscription</a></li>
-                            <li><a data-toggle="tab" href="#trial_keys">Trial Keys</a></li>
-                            <li><a data-toggle="tab" href="#prices">Prices</a></li>
-                            <li><a data-toggle="tab" href="#logout_account">Account</a></li>
-                        </ul>
+            <style>
 
-                        <div class="tab-content">
-                            <div id="classes" class="tab-pane fade in active">
-                                <?php echo $classes; ?>
-                            </div>
-                            <div id="tutors" class="tab-pane fade">
-                                <?php echo $tutors; ?>
-                            </div>
-                            <div id="paid_keys" class="tab-pane fade">
-                                <?php echo $subs; ?>
-                            </div>
-                            <div id="trial_keys" class="tab-pane fade">
-                                <?php echo $trial; ?>
-                            </div>
-                            <div id="prices" class="tab-pane fade">
-                                <?php echo $prices; ?>
-                            </div>
-                            <div id="logout_account" class="tab-pane fade">
-                                <br><br><?php echo $account_tab; ?></div>
-                            <p></p>
-                        </div>
+                .fileUpload {
+                    position: relative;
+                    overflow: hidden;
+                    margin: 10px;
+                }
+
+                .fileUpload input.upload {
+                    position: absolute;
+                    top: 0;
+                    right: 0;
+                    margin: 0;
+                    padding: 0;
+                    font-size: 20px;
+                    cursor: pointer;
+                    opacity: 0;
+                    filter: alpha(opacity=0);
+                }
+
+
+            </style>
+
+        </head>
+        <body>
+        <br><br><br>
+        <div class="panel panel-default" style="width:80%;margin: auto;">
+            <div class="panel-heading">
+                <div class='text-center'>Dashboard</div>
+            </div>
+            <div class="panel-body">
+                <ul class="nav nav-tabs">
+                    <li class="active"><a data-toggle="tab" href="#classes">Classes</a></li>
+                    <li><a data-toggle="tab" href="#tutors">Professors</a></li>
+                    <li><a data-toggle="tab" href="#paid_keys">Subscription</a></li>
+                    <li><a data-toggle="tab" href="#trial_keys">Trial Keys</a></li>
+                    <li><a data-toggle="tab" href="#prices">Prices</a></li>
+                    <li><a data-toggle="tab" href="#utils_archive">Archive</a></li>
+                    <li><a data-toggle="tab" href="#logout_account">Account</a></li>
+                </ul>
+
+                <div class="tab-content">
+                    <div id="classes" class="tab-pane fade in active">
+                        <?php echo $classes; ?>
                     </div>
+                    <div id="tutors" class="tab-pane fade">
+                        <?php echo $tutors; ?>
+                    </div>
+                    <div id="paid_keys" class="tab-pane fade">
+                        <?php echo $subs; ?>
+                    </div>
+                    <div id="trial_keys" class="tab-pane fade">
+                        <?php echo $trial; ?>
+                    </div>
+                    <div id="prices" class="tab-pane fade">
+                        <?php echo $prices; ?>
+                    </div>
+                    <div id="utils_archive" class="tab-pane fade">
+                        <?php echo $archive; ?>
+                    </div>
+                    <div id="logout_account" class="tab-pane fade">
+                        <br><br><?php echo $account_tab; ?></div>
+                    <p></p>
                 </div>
             </div>
-            <script type="text/javascript">
+        </div>
+        </div>
+        <script type="text/javascript">
 
-                $(document).ready(function () {
+            $(document).ready(function () {
 
-                    $('#classes_table').DataTable();
-                    $('#tutors_table').DataTable();
-                    $('#subs_table').DataTable();
-                    $('#price_table').DataTable();
-                    $('#trial_table').DataTable();
+                $('#classes_table').DataTable();
+                $('#tutors_table').DataTable();
+                $('#subs_table').DataTable();
+                $('#price_table').DataTable();
+                $('#trial_table').DataTable();
+                $('#archive_table').DataTable();
 
-                }); // end of document ready
+            }); // end of document ready
 
 
-
-            </script>
+        </script>
 
         </body>
         </html>
