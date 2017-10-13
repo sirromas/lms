@@ -1,14 +1,15 @@
 <?php
 require_once './classes/Tutor.php';
 $t = new Tutor();
-$list = $t->get_archive_page();
+$userid = $_REQUEST['userid'];
+$list = $t->get_export_page($userid);
 echo $list;
 ?>
 
 <script type="text/javascript">
 
     $(document).ready(function () {
-       $('#archive_table').DataTable();
+        $('#export_table').DataTable();
     });
 
-</script>    
+</script>

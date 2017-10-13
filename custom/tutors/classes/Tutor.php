@@ -2,21 +2,31 @@
 
 require_once $_SERVER['DOCUMENT_ROOT'] . '/lms/custom/common/Utils.php';
 
-class Tutor extends Utils {
+class Tutor extends Utils
+{
 
-    function __construct() {
+    /**
+     * Tutor constructor.
+     */
+    function __construct()
+    {
         parent::__construct();
     }
 
-    function create_group($groupname) {
+    /**
+     * @param $groupname
+     * @return int
+     */
+    function create_group($groupname)
+    {
         if ($groupname != '') {
             $status = $this->is_group_exists($groupname);
             if ($status == 0) {
                 $query = "insert into mdl_groups "
-                        . "(courseid,idnumber,name) "
-                        . "values($this->courseid,"
-                        . " ' ',"
-                        . " '" . $groupname . "')";
+                    . "(courseid,idnumber,name) "
+                    . "values($this->courseid,"
+                    . " ' ',"
+                    . " '" . $groupname . "')";
                 $this->db->query($query);
                 $stmt = $this->db->query("SELECT LAST_INSERT_ID()");
                 $lastid_arr = $stmt->fetch(PDO::FETCH_NUM);
@@ -32,12 +42,21 @@ class Tutor extends Utils {
         return $lastId;
     }
 
-    function confirm_tutor($user) {
+    /**
+     * @param $user
+     */
+    function confirm_tutor($user)
+    {
         $query = "update mdl_user set policyagreed='1' where email='$user->email'";
         $this->db->query($query);
     }
 
-    function tutor_signup($user) {
+    /**
+     * @param $user
+     * @return string
+     */
+    function tutor_signup($user)
+    {
         $list = "";
         $groups = array();
         $result = $this->signup($user);
@@ -96,15 +115,21 @@ class Tutor extends Utils {
             $userObj->confirmed = 1;
             $userObj->groups = $groups;
             $this->send_tutor_confirmation_email($userObj);
-            $list.="Thank you for signup. Confirmation email is sent to $userObj->email .";
+            $list .= "Thank you for signup. Confirmation email is sent to $userObj->email .";
         } // end if $result!==false
         else {
-            $list.="Signup error happened";
+            $list .= "Signup error happened";
         } // end else 
         return $list;
     }
 
-    function verify_tutor($user, $output = TRUE) {
+    /**
+     * @param $user
+     * @param bool $output
+     * @return bool|string
+     */
+    function verify_tutor($user, $output = TRUE)
+    {
         $list = "";
         $page = file_get_contents($user->url);
         $status1 = strstr($page, $user->email);
@@ -113,7 +138,7 @@ class Tutor extends Utils {
             $query = "update mdl_user set policyagreed='1' where email='$user->email'";
             $this->db->query($query);
             if ($output) {
-                $list.="Thank you. Your membership is confirmed";
+                $list .= "Thank you. Your membership is confirmed";
             } // end if
             else {
                 return TRUE;
@@ -121,7 +146,7 @@ class Tutor extends Utils {
         } // end if
         else {
             if ($output) {
-                $list.="Your membership was not confirmed";
+                $list .= "Your membership was not confirmed";
             } // end if 
             else {
                 return FALSE;
@@ -130,34 +155,38 @@ class Tutor extends Utils {
         return $list;
     }
 
-    function send_non_confirmed_tutor_notification($user) {
+    /**
+     * @param $user
+     */
+    function send_non_confirmed_tutor_notification($user)
+    {
         $msg = "";
-        $msg.="<html>";
-        $msg.="<body>";
+        $msg .= "<html>";
+        $msg .= "<body>";
 
-        $msg.="<p>Non-confirmed professor's registration:</p>";
+        $msg .= "<p>Non-confirmed professor's registration:</p>";
 
-        $msg.="<table>";
+        $msg .= "<table>";
 
-        $msg.="<tr>";
-        $msg.="<td style='padding:15px;'>First name</td><td style='padding:15px;'>$user->firstname</td>";
-        $msg.="</tr>";
+        $msg .= "<tr>";
+        $msg .= "<td style='padding:15px;'>First name</td><td style='padding:15px;'>$user->firstname</td>";
+        $msg .= "</tr>";
 
-        $msg.="<tr>";
-        $msg.="<td style='padding:15px;'>Last name</td><td style='padding:15px;'>$user->lastname</td>";
-        $msg.="</tr>";
+        $msg .= "<tr>";
+        $msg .= "<td style='padding:15px;'>Last name</td><td style='padding:15px;'>$user->lastname</td>";
+        $msg .= "</tr>";
 
-        $msg.="<tr>";
-        $msg.="<td style='padding:15px;'>Email</td><td style='padding:15px;'>$user->email</td>";
-        $msg.="</tr>";
+        $msg .= "<tr>";
+        $msg .= "<td style='padding:15px;'>Email</td><td style='padding:15px;'>$user->email</td>";
+        $msg .= "</tr>";
 
-        $msg.="<tr>";
-        $msg.="<td style='padding:15px;'>Phone</td><td style='padding:15px;'>$user->phone</td>";
-        $msg.="</tr>";
+        $msg .= "<tr>";
+        $msg .= "<td style='padding:15px;'>Phone</td><td style='padding:15px;'>$user->phone</td>";
+        $msg .= "</tr>";
 
-        $msg.="</table>";
-        $msg.="</body>";
-        $msg.="</html>";
+        $msg .= "</table>";
+        $msg .= "</body>";
+        $msg .= "</html>";
 
         $subject = "Non-confirmed professor's registration";
         $recipientA = 'sirromas@gmail.com';
@@ -166,39 +195,54 @@ class Tutor extends Utils {
         $this->send_email($subject, $msg, $recipientB);
     }
 
-    function get_tutor_classes_signup_links($user) {
+    /**
+     * @param $user
+     * @return string
+     */
+    function get_tutor_classes_signup_links($user)
+    {
         $list = "";
         $groups = $user->groups;
         if (count($groups) > 0) {
             foreach ($groups as $id) {
                 $name = $this->get_group_name($id);
-                $list.="<p><a href='http://www." . $_SERVER['SERVER_NAME'] . "/registerstudentbody.html?groupid=$id' target='_blank'>$name</a></p>";
+                $list .= "<p><a href='http://www." . $_SERVER['SERVER_NAME'] . "/registerstudentbody.html?groupid=$id' target='_blank'>$name</a></p>";
             } // end foreach
         } // end if count($groups)>0
 
         return $list;
     }
 
-    function get_tutor_classes($user) {
+    /**
+     * @param $user
+     * @return string
+     */
+    function get_tutor_classes($user)
+    {
         $list = "";
         $groups = $user->groups;
         if (count($groups) > 0) {
             foreach ($groups as $id) {
                 $name = $this->get_group_name($id);
-                $list.="<p>$name</p>";
+                $list .= "<p>$name</p>";
             } // end foreach
         } // end if count($groups)>0
         return $list;
     }
 
-    function get_tutor_confirmation_message($user) {
+    /**
+     * @param $user
+     * @return mixed
+     */
+    function get_tutor_confirmation_message($user)
+    {
         if ($user->confirmed == 0) {
             $query = "select * from mdl_email_templates "
-                    . "where template_name='tutor_non_confirmed'";
+                . "where template_name='tutor_non_confirmed'";
         } // end if 
         else {
             $query = "select * from mdl_email_templates "
-                    . "where template_name='tutor_confirmed'";
+                . "where template_name='tutor_confirmed'";
         } // end else
 
         $result = $this->db->query($query);
@@ -214,15 +258,24 @@ class Tutor extends Utils {
         return $message;
     }
 
-    function send_tutor_confirmation_email($user) {
+    /**
+     * @param $user
+     * @return bool
+     */
+    function send_tutor_confirmation_email($user)
+    {
         $subject = 'Signup confirmation';
         $msg = "";
-        $msg.=$this->get_tutor_confirmation_message($user);
+        $msg .= $this->get_tutor_confirmation_message($user);
         $result = $this->send_email($subject, $msg, $user->email);
         return $result;
     }
 
-    function get_archive_items() {
+    /**
+     * @return array
+     */
+    function get_archive_items()
+    {
         $items = array();
         $query = "select * from mdl_archive order by adate desc";
         $num = $this->db->numrows($query);
@@ -239,7 +292,11 @@ class Tutor extends Utils {
         return $items;
     }
 
-    function get_archive_page() {
+    /**
+     * @return string
+     */
+    function get_archive_page()
+    {
         $list = "";
         $items = $this->get_archive_items();
         if (count($items) > 0) {
@@ -250,7 +307,7 @@ class Tutor extends Utils {
             $list .= "<th align='left'>Title</th>";
             $list .= "<th align='left'>Link</th>";
             $list .= "<th align='left'>Date</th>";
-            $list .= "<th align='left'>Operations</th>";
+            //$list .= "<th align='left'>Operations</th>";
             $list .= "</tr>";
             $list .= "</thead>";
             $list .= "<tbody>";
@@ -262,7 +319,7 @@ class Tutor extends Utils {
                 $list .= "<td>$item->title</td>";
                 $list .= "<td>$path</td>";
                 $list .= "<td>$date</td>";
-                $list .= "<td><a href='#' onclick='return false;' class='ar_item_del' data-id='$item->id'>Delete</a></td>";
+                //$list .= "<td><a href='#' onclick='return false;' class='ar_item_del' data-id='$item->id'>Delete</a></td>";
                 $list .= "</tr>";
             } // end foreach
             $list .= "</tbody>";
@@ -277,4 +334,359 @@ class Tutor extends Utils {
         return $list;
     }
 
+    /**
+     * @param $name
+     * @return mixed
+     */
+    public function get_employee_id_by_name($name)
+    {
+        $names = explode(' ', $name);
+        if (count($names) == 2) {
+            $query = "select * from tblstaff 
+                    where firstname='" . $names[0] . "' 
+                    and lastname='" . $names[1] . "'";
+        } // end if
+        else {
+            $query = "select * from tblstaff 
+                    where firstname='" . $names[0] . "'";
+        } // end else
+        $result = $this->db->query($query);
+        foreach ($result->result() as $row) {
+            $id = $row->id;
+        }
+        return $id;
+    }
+
+    /*****************************************************************************************************************
+     *
+     *                                       Grades page code
+     *
+     *****************************************************************************************************************/
+
+    public function get_group_name_by_id($groupid)
+    {
+        $query = "select * from mdl_groups where id=$groupid";
+        $result = $this->db->query($query);
+        while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+            $name = $row['name'];
+        }
+        return $name;
+    }
+
+    /**
+     * @param $userid
+     * @return array
+     */
+    public function get_tutors_groups_list($userid)
+    {
+        $groups = array();
+        $query = "select * from mdl_groups_members where userid=$userid";
+        $num = $this->db->numrows($query);
+        if ($num > 0) {
+            $result = $this->db->query($query);
+            while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+                $groups[] = $row['groupid'];
+            }
+        }
+        return $groups;
+    }
+
+    /**
+     * @param $userid
+     * @return bool
+     */
+    function is_user_student($userid)
+    {
+        $contextid = $this->get_course_context();
+        $query = "select * from mdl_role_assignments 
+                  WHERE contextid=$contextid and userid=$userid";
+        $result = $this->db->query($query);
+        while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+            $roleid = $row['roleid'];
+        }
+        $status = ($roleid == 5) ? true : false;
+        return $status;
+    }
+
+    /**
+     * @param $groupid
+     * @return array
+     */
+    public function get_group_students($groupid)
+    {
+        $students = array();
+        $query = "select * from mdl_groups_members where groupid=$groupid";
+        $num = $this->db->numrows($query);
+        if ($num > 0) {
+            $result = $this->db->query($query);
+            while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+                $userid = $row['userid'];
+                $status = $this->is_user_student($userid);
+                if ($status) {
+                    $students[] = $userid;
+                } // end if status
+            } // end while
+        } // end if $num > 0
+        return $students;
+    }
+
+    /**
+     * @param $userid
+     * @return array
+     */
+    public function get_tutor_students_list($userid)
+    {
+        $students = array();
+        $groups = $this->get_tutors_groups_list($userid);
+        if (count($groups) > 0) {
+            foreach ($groups as $groupid) {
+                $group_students = $this->get_group_students($groupid);
+                if (count($group_students) > 0) {
+                    foreach ($group_students as $userid) {
+                        $students[] = $userid;
+                    } // end foreach
+                } // end if count($group_students)>0
+            } // end foreach
+        } // end if count($groups)>0
+        return $students;
+    }
+
+    /**
+     * @return array
+     */
+    public function get_quiz_qrade_items()
+    {
+        $ids = array();
+        $query = "select * from mdl_grade_items where itemmodule='quiz'";
+        $result = $this->db->query($query);
+        while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+            $ids[] = $row['id'];
+        }
+        return $ids;
+    }
+
+    /**
+     * @return array
+     */
+    public function get_forum_grade_items()
+    {
+        $ids = array();
+        $query = "select * from mdl_grade_items where itemmodule='forum'";
+        $result = $this->db->query($query);
+        while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+            $ids[] = $row['id'];
+        }
+        return $ids;
+    }
+
+    /**
+     * @param $id
+     * @return mixed
+     */
+    public function get_item_name($id)
+    {
+        $query = "select * from mdl_grade_items where id=$id";
+        $result = $this->db->query($query);
+        while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+            $name = $row['itemname'];
+        }
+        return $name;
+    }
+
+    /**
+     * @param $itemid
+     * @param $userid
+     * @return string
+     */
+    public function get_student_grade_item_grades($itemid, $userid)
+    {
+        $query = "select * from mdl_grade_grades 
+                where itemid=$itemid and userid=$userid";
+        $result = $this->db->query($query);
+        while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+            $g = $row['finalgrade'];
+        }
+        $grade = ($g == null) ? '-' : $g;
+        return $grade;
+    }
+
+    /**
+     * @param $itemid
+     * @param $userid
+     * @return false|string
+     */
+    public function get_student_grades_date($itemid, $userid)
+    {
+        $query = "select * from mdl_grade_grades 
+                where itemid=$itemid and userid=$userid";
+        $result = $this->db->query($query);
+        while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+            $date = date('m-d-Y', $row['timemodified']);
+        }
+        return $date;
+    }
+
+    /**
+     * @param $userid
+     * @return array
+     */
+    public function get_student_quiz_scores($userid)
+    {
+        $list = "";
+        $total = 0;
+        $items = $this->get_quiz_qrade_items();
+        if (count($items) > 0) {
+            foreach ($items as $itemid) {
+                $item_name = $this->get_item_name($itemid);
+                $item_grade = round($this->get_student_grade_item_grades($itemid, $userid));
+                $item_date = $this->get_student_grades_date($itemid, $userid);
+                $total = $total + $item_grade;
+
+                $list .= "<div class='row-fluid'>";
+                $list .= "<span>Quiz:</span>";
+                $list .= "<span>$item_name</span>";
+                $list .= "</div>";
+
+                $list .= "<div class='row-fluid'>";
+                $list .= "<span>Grade: </span>";
+                $list .= "<span>$item_grade</span>";
+                $list .= "</div>";
+
+                if ($item_grade > 0) {
+                    $list .= "<div class='row-fluid'>";
+                    $list .= "<span>Date: </span>";
+                    $list .= "<span><br>$item_date</span>";
+                    $list .= "</div>";
+                }
+
+            } // end foreach
+        } // end if count($items)>0
+        $scores = array('list' => $list, 'total' => $total);
+        return $scores;
+    }
+
+    /**
+     * @param $userid
+     * @return array
+     */
+    public function get_student_forum_scores($userid)
+    {
+        $list = "";
+        $total = 0;
+        $items = $this->get_forum_grade_items();
+        if (count($items) > 0) {
+            foreach ($items as $itemid) {
+                $item_name = $this->get_item_name($itemid);
+                $item_grade = round($this->get_student_grade_item_grades($itemid, $userid));
+                $item_date = $this->get_student_grades_date($itemid, $userid);
+                $total = $total + $item_grade;
+
+                $list .= "<div class='row-fluid'>";
+                $list .= "<span>Forum: </span>";
+                $list .= "<span>$item_name</span>";
+                $list .= "</div>";
+
+                $list .= "<div class='row-fluid'>";
+                $list .= "<span>Grade: </span>";
+                $list .= "<span>$item_grade</span>";
+                $list .= "</div>";
+
+                if ($item_grade > 0) {
+                    $list .= "<div class='row-fluid'>";
+                    $list .= "<span>Date: </span>";
+                    $list .= "<span><br>$item_date</span>";
+                    $list .= "</div>";
+                }
+
+            } // end foreach
+        } // end if count($items)>0
+        $scores = array('list' => $list, 'total' => $total);
+        return $scores;
+    }
+
+    /**
+     * @param $userid
+     * @return mixed
+     */
+    public function get_student_class($userid)
+    {
+        $query = "select * from mdl_groups_members where userid=$userid";
+        $result = $this->db->query($query);
+        while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+            $groupid = $row['groupid'];
+        }
+        $groupname = $this->get_group_name($groupid);
+        return $groupname;
+    }
+
+    /**
+     * @param $userid
+     * @return string
+     */
+    public function get_grades_page($userid)
+    {
+        $list = "";
+        $list .= "<div class='row-fluid'>";
+        $list .= "<br><br><table id='grades_table' class='table table-striped table-bordered' cellspacing='0' width='100%'>";
+        $list .= "<thead>";
+        $list .= "<tr>";
+        $list .= "<th>Student</th>";
+        $list .= "<th>Email Address</th>";
+        $list .= "<th>Class</th>";
+        $list .= "<th>Quiz</th>";
+        $list .= "<th>Forum</th>";
+        $list .= "<th>Course Total</th>";
+        $list .= "</tr>";
+        $list .= "</thead>";
+        $students = $this->get_tutor_students_list($userid);
+        $list .= "<tbody>";
+        if (count($students) > 0) {
+            foreach ($students as $studentid) {
+                $userdata = $this->get_user_details($studentid);
+                $fname = $userdata->firstname;
+                $lname = $userdata->lastname;
+                $email = $userdata->email;
+                $groupname = $this->get_student_class($studentid);
+                $qscore = $this->get_student_quiz_scores($studentid);
+                $fscore = $this->get_student_forum_scores($studentid);
+                $quizScore = $qscore['list'];
+                $forumScore = $fscore['list'];
+                $courseTotal = $qscore['total'] + $fscore['total'];
+                $list .= "<tr>";
+                $list .= "<td>$fname $lname</td>";
+                $list .= "<td>$email</td>";
+                $list .= "<td>$groupname</td>";
+                $list .= "<td>$quizScore</td>";
+                $list .= "<td>$forumScore</td>";
+                $list .= "<td>$courseTotal</td>";
+                $list .= "</tr>";
+            }  // end foreach
+        } // end if count($students)>0
+        $list .= "</tbody>";
+        $list .= "</table>";
+        $list .= "</div>";
+        return $list;
+    }
+
+
+    /*****************************************************************************************************************
+     *
+     *                                       Export page code
+     *
+     *****************************************************************************************************************/
+
+    public function get_export_page($userid)
+    {
+        $list = "";
+
+        $list .= "<div class='row-fluid'>";
+        $list .= "<br><br><table id='export_table' class='table table-striped table-bordered' cellspacing='0' width='100%'>";
+
+
+        $list .="</table>";
+        $list .="</div>";
+
+
+        return $list;
+    }
 }
