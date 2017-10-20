@@ -451,13 +451,31 @@ class Tutor extends Utils
         return $students;
     }
 
+
     /**
+     * @param null $users
      * @return array
      */
-    public function get_quiz_qrade_items()
+    public function get_quiz_qrade_items($users = null)
     {
         $ids = array();
-        $query = "select * from mdl_grade_items where itemmodule='quiz'";
+        if ($users == null) {
+            $query = "select * from mdl_grade_items where itemmodule='quiz'";
+        } // end if
+        else {
+            $query = "select g.id, 
+                      g.itemname, 
+                      g.itemtype, 
+                      g.itemmodule, 
+                      g.iteminstance, 
+                      gr.userid, 
+                      gr.finalgrade, 
+                      gr.timemodified from mdl_grade_items g, mdl_grade_grades gr 
+                      where  g.id=gr.itemid 
+                      and g.itemtype='mod' 
+                      and g.itemmodule='quiz' 
+                      and gr.userid in ($users)";
+        }
         $result = $this->db->query($query);
         while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
             $ids[] = $row['id'];
@@ -465,13 +483,31 @@ class Tutor extends Utils
         return $ids;
     }
 
+
     /**
+     * @param null $users
      * @return array
      */
-    public function get_forum_grade_items()
+    public function get_forum_grade_items($users = null)
     {
         $ids = array();
-        $query = "select * from mdl_grade_items where itemmodule='forum'";
+        if ($users == null) {
+            $query = "select * from mdl_grade_items where itemmodule='forum'";
+        } // end if
+        else {
+            $query = "select g.id, 
+                      g.itemname, 
+                      g.itemtype, 
+                      g.itemmodule, 
+                      g.iteminstance, 
+                      gr.userid, 
+                      gr.finalgrade, 
+                      gr.timemodified from mdl_grade_items g, mdl_grade_grades gr 
+                      where  g.id=gr.itemid 
+                      and g.itemtype='mod' 
+                      and g.itemmodule='forum' 
+                      and gr.userid in ($users)";
+        } // end else
         $result = $this->db->query($query);
         while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
             $ids[] = $row['id'];
@@ -519,9 +555,15 @@ class Tutor extends Utils
     {
         $query = "select * from mdl_grade_grades 
                 where itemid=$itemid and userid=$userid";
-        $result = $this->db->query($query);
-        while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
-            $date = date('m-d-Y', $row['timemodified']);
+        $num = $this->db->numrows($query);
+        if ($num > 0) {
+            $result = $this->db->query($query);
+            while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+                $date = date('m-d-Y', $row['timemodified']);
+            }
+        } // end if
+        else {
+            $date = 'N/A';
         }
         return $date;
     }
@@ -675,18 +717,103 @@ class Tutor extends Utils
      *
      *****************************************************************************************************************/
 
+    public function get_tutor_groups_dropdown($groups)
+    {
+        $list = "";
+        $list .= "<select id='tutor_groups' style='width: 175px;'>";
+        $list .= "<option value='0' selected>Please select class</option>";
+        foreach ($groups as $groupid) {
+            $groupname = $this->get_group_name($groupid);
+            $list .= "<option value='$groupid'>$groupname</option>";
+        }
+        $list .= "</select>";
+        return $list;
+    }
+
+
+    /**
+     * @param $userid
+     * @return string
+     */
     public function get_export_page($userid)
     {
         $list = "";
+        $groups = $this->get_tutors_groups_list($userid);
+        $groups_dropdown = $this->get_tutor_groups_dropdown($groups);
 
+        $list .= "<br><br><div class='row-fluid' style='text-align: center;margin-left: 10%;'>";
+        $list .= "<span class='col-md-3'>$groups_dropdown</span>";
+        $list .= "<span class='col-md-2'><input type='checkbox' class='items' value='quiz' id='quiz_grades'>&nbsp; Quiz</span>";
+        $list .= "<span class='col-md-2'><input type='checkbox' class='items' value='forum' id='forum_grades'>&nbsp; Forum</span>";
+        // $list .= "<span class='col-md-2'><input type='checkbox' class='items' value='total' id='total_grades'>&nbsp; Total</span>";
+        $list .= "<span class='col-md-2'><button id='make_export'>Go</button></span>";
+        $list .= "</div>";
+
+        $list .= "<br><br><div class='row-fluid' style='text-align: center;'>";
+        $list .= "<span class='col-md-12' style='color: red;' id='export_err'></span>";
+        $list .= "</div>";
+
+        $list .= "<br><br><div class='row-fluid' style='text-align: center;' id='export_links'></div>";
+        return $list;
+    }
+
+
+    public function get_quiz_export_data($studentid) {
+
+    }
+
+    public function get_forum_quiz_data($studentid) {
+
+    }
+
+
+    /**
+     * @param $item
+     * @return string
+     */
+    public function create_export_data($item)
+    {
+        $list = "";
+        $groupid = $item->groupid;
+        $items = explode(',', $item->items); // array of items to be exported
+        $students = $this->get_group_students($groupid);
+        $students_list = implode(',', $students);
+        foreach ($students as $studentid) {
+            $userdata = $this->get_user_details($studentid);
+            foreach ($items as $itemid) {
+                switch ($itemid) {
+                    case 'quiz':
+                        $qpath = $_SERVER['DOCUMENT_ROOT'] . "/lms/custom/tutors/quiz_$groupid.csv";
+                        $output1 = fopen($qpath, 'w');
+                        $gradeitems = $this->get_quiz_qrade_items($students_list);
+                        foreach ($gradeitems as $gr_item) {
+                            $itemname = $this->get_item_name($gr_item);
+                            $itemgrade = $this->get_student_grade_item_grades($gr_item, $studentid);
+                            $itemdate = $this->get_student_grades_date($gr_item, $studentid);
+                            fputcsv($output1, array($userdata->firstname, $userdata->lastname, $itemname, $itemgrade, $itemdate));
+                        }
+                        break;
+                    case 'forum':
+                        $fpath = $_SERVER['DOCUMENT_ROOT'] . "/lms/custom/tutors/forum_$groupid.csv";
+                        $output2 = fopen($fpath, 'w');
+                        $gradeitems = $this->get_forum_grade_items($students_list);
+                        foreach ($gradeitems as $gr_item) {
+                            $itemname = $this->get_item_name($gr_item);
+                            $itemgrade = $this->get_student_grade_item_grades($gr_item, $studentid);
+                            $itemdate = $this->get_student_grades_date($gr_item, $studentid);
+                            fputcsv($output2, array($userdata->firstname, $userdata->lastname, $itemname, $itemgrade, $itemdate));
+                        }
+                        break;
+                } // end of switch
+            } // end foreach items foreach to be exported
+        } // end foreach for students
+        fclose($output1);
+        fclose($output2);
+        $http_q = "http://" . $_SERVER['SERVER_NAME'] . "/lms/custom/tutors/quiz_$groupid.csv";
+        $http_f = "http://" . $_SERVER['SERVER_NAME'] . "/lms/custom/tutors/forum_$groupid.csv";
         $list .= "<div class='row-fluid'>";
-        $list .= "<br><br><table id='export_table' class='table table-striped table-bordered' cellspacing='0' width='100%'>";
-
-
-        $list .="</table>";
-        $list .="</div>";
-
-
+        $list .= "<span class='col-md-6'><a href='$http_q' target='_blank'>QUIZ GRADES</a></span><span class='col-md-6'><a href='$http_f' target='_blank'>FORUM GRADES</a></span>";
+        $list .= "</div>";
         return $list;
     }
 }

@@ -137,9 +137,9 @@ $(document).ready(function () {
     // Monitor for Login errors reported from LMS
     var getUrlParameter = function getUrlParameter(sParam) {
         var sPageURL = decodeURIComponent(window.location.search.substring(1)),
-                sURLVariables = sPageURL.split('&'),
-                sParameterName,
-                i;
+            sURLVariables = sPageURL.split('&'),
+            sParameterName,
+            i;
 
         for (i = 0; i < sURLVariables.length; i++) {
             sParameterName = sURLVariables[i].split('=');
@@ -244,7 +244,7 @@ $(document).ready(function () {
             var amount = $('#price').val();
 
             var groupname = $('#class').val();
-            console.log('Class name: '+groupname);
+            console.log('Class name: ' + groupname);
             var email = $('#email').val();
 
             var clean_holder = cardholder.replace(/\s\s+/g, ' ');
@@ -768,6 +768,28 @@ $(document).ready(function () {
 
         console.log('Event ID: ' + event.target.id);
 
+        if (event.target.id == 'make_export') {
+            var selected = [];
+            var groupid = $('#tutor_groups').val();
+            $('input[type=checkbox]').each(function () {
+                if ($(this).is(":checked")) {
+                    selected.push($(this).val());
+                }
+            }); // end foreach
+            if (groupid == 0 || selected.length == 0) {
+                $('#export_err').html('Please select class and items to be exported');
+            } // end if
+            else {
+                $('#export_err').html('');
+                var export_items = {groupid: groupid, items: selected.toString()};
+                var url = '/lms/custom/tutors/create_export.php';
+                $.post(url, {item: JSON.stringify(export_items)}).done(function (data) {
+                    $('#export_links').html(data);
+                });
+            }
+
+        }
+
         if (event.target.id == 'get_price_upload_dialog') {
             var url = '/lms/utils/get_upload_price_csv_modal_dialog.php';
             $.post(url, {id: 1}).done(function (data) {
@@ -1176,10 +1198,10 @@ $(document).ready(function () {
                             }
                         },
                         series: [{
-                                type: 'pie',
-                                name: 'Hits',
-                                data: chart_data
-                            }]
+                            type: 'pie',
+                            name: 'Hits',
+                            data: chart_data
+                        }]
                     });
                 }); // end of each
 
@@ -1222,7 +1244,8 @@ $(document).ready(function () {
         iframeurl = $(this).data('url');
         $.post(url, {num: 1}).done(function (data) {
             if (data == 1) {
-                //$('#archive_table').DataTable();
+                $('#page').height($('#page').contents().height());
+                $('#page').width($('#page').contents().width());
                 console.log('Frame src: ' + iframeurl);
                 if (iframeurl.indexOf('page') !== -1) {
                     $('#header_img').hide();
@@ -1248,6 +1271,30 @@ $(document).ready(function () {
             $('#ext_container').show();
         });
     });
+
+    $('.gr').click(function () {
+        $('#header_img').show();
+        $('#body').hide();
+        var userid = $('#userid').val();
+        var url = '/lms/custom/tutors/get_grades_page.php';
+        $.post(url, {userid: userid}).done(function (data) {
+            $('#ext_container').html(data);
+            $('#ext_container').show();
+        });
+    });
+
+    $('.ex').click(function () {
+        $('#header_img').show();
+        $('#body').hide();
+        var userid = $('#userid').val();
+        console.log('User ID: ' + userid);
+        var url = '/lms/custom/tutors/get_export_page.php';
+        $.post(url, {userid: userid}).done(function (data) {
+            $('#ext_container').html(data);
+            $('#ext_container').show();
+        });
+    });
+
 
     $('#ajax_upload_file').click(function () {
         var filname = $('#uploadBtn').val();

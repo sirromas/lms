@@ -6,10 +6,3 @@ $list = $t->get_export_page($userid);
 echo $list;
 ?>
 
-<script type="text/javascript">
-
-    $(document).ready(function () {
-        $('#export_table').DataTable();
-    });
-
-</script>
