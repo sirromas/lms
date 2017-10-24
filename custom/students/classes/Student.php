@@ -16,6 +16,9 @@ class Student extends Utils
         $this->univesrity_path = $_SERVER['DOCUMENT_ROOT'] . '/lms/custom/students/un.json';
     }
 
+    /**
+     *
+     */
     function get_groups_list()
     {
         $groups = array();
@@ -28,6 +31,9 @@ class Student extends Utils
         echo "Groups data are updated ....";
     }
 
+    /**
+     *
+     */
     function create_univsersity_data()
     {
         $un = array();
@@ -41,6 +47,10 @@ class Student extends Utils
         echo "University data are updated ....";
     }
 
+    /**
+     * @param $groupid
+     * @return string
+     */
     function get_class_data($groupid)
     {
         $teacherid = $this->get_group_teacher($groupid);
@@ -51,6 +61,12 @@ class Student extends Utils
         return json_encode($data);
     }
 
+    /**
+     * @param $user
+     * @param $class
+     * @param $payment_detailes
+     * @return mixed
+     */
     function get_student_message_from_template($user, $class, $payment_detailes)
     {
         $date1 = date('m/d/Y', $payment_detailes->start_date);
@@ -66,6 +82,12 @@ class Student extends Utils
         return $message;
     }
 
+    /**
+     * @param $userid
+     * @param $groupid
+     * @param $user
+     * @return string
+     */
     function get_confirmation_message($userid, $groupid, $user)
     {
         $list = "";
@@ -75,6 +97,12 @@ class Student extends Utils
         return $list;
     }
 
+    /**
+     * @param $userid
+     * @param $groupid
+     * @param $user
+     * @return string
+     */
     function get_prolong_message($userid, $groupid, $user)
     {
         $list = "";
@@ -110,12 +138,19 @@ class Student extends Utils
         return $list;
     }
 
+    /**
+     * @param $userid
+     */
     function delete_user_registration($userid)
     {
         $query = "delete mdl_user where id=$userid";
         $this->db->query($query);
     }
 
+    /**
+     * @param $user
+     * @return string
+     */
     function student_signup($user)
     {
         $list = "";
@@ -146,6 +181,10 @@ class Student extends Utils
         return $list;
     }
 
+    /**
+     * @param $user
+     * @return string
+     */
     function prolong_subscription($user)
     {
         $list = "";
@@ -176,6 +215,10 @@ class Student extends Utils
         return $list;
     }
 
+    /**
+     * @param $id
+     * @return mixed
+     */
     function get_basic_price($id)
     {
         $query = "select * from mdl_price where id=$id";
@@ -186,6 +229,10 @@ class Student extends Utils
         return $amount;
     }
 
+    /**
+     * @param $name
+     * @return mixed
+     */
     function get_school_price($name)
     {
         $query = "select * from mdl_price where institute='$name'";
@@ -194,6 +241,83 @@ class Student extends Utils
             $amount = $row['price'];
         }
         return $amount;
+    }
+
+    /**
+     * @param $userid
+     * @return string
+     */
+    function get_my_grades($userid)
+    {
+        $items = array();
+        $list = "";
+        $query = "select * from mdl_grade_grades where userid=$userid and finalgrade is not null";
+        $num = $this->db->numrows($query);
+        if ($num > 0) {
+            $result = $this->db->query($query);
+            while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+                $item = new stdClass();
+                foreach ($row as $key => $value) {
+                    $item->$key = $value;
+                }
+                $items[] = $item;
+            } // end while
+        } // end if $num > 0
+        $list .= $this->create_student_grade_table($items);
+        return $list;
+    }
+
+
+    /**
+     * @param $items
+     * @return string
+     */
+    function create_student_grade_table($items)
+    {
+        $list = "";
+        $list .= "<div class='row-fluid'>";
+        $list .= "<br><br><table id='grades_table' class='table table-striped table-bordered' cellspacing='0' width='100%'>";
+        $list .= "<thead>";
+        $list .= "<tr>";
+        $list .= "<th>Grade Item</th>";
+        $list .= "<th>Score</th>";
+        $list .= "<th>Date</th>";
+        $list .= "</tr>";
+        $list .= "</thead>";
+        $list .= "<tbody>";
+        if (count($items) > 0) {
+            foreach ($items as $item) {
+                $name = $this->get_grade_item_name($item->itemid);
+                $score = round($item->finalgrade);
+                $date = date('m-d-Y', $item->timemodified);
+                if ($name != '') {
+                    $list .= "<tr>";
+                    $list .= "<td>$name</td>";
+                    $list .= "<td>$score</td>";
+                    $list .= "<td>$date</td>";
+                    $list .= "</tr>";
+                }
+            } // end foreach
+        } // end if
+        $list .= "</tbody>";
+        $list .= "</table>";
+        $list .= "<div>";
+        return $list;
+    }
+
+
+    /**
+     * @param $itemid
+     * @return mixed
+     */
+    function get_grade_item_name($itemid)
+    {
+        $query = "select * from mdl_grade_items where id=$itemid";
+        $result = $this->db->query($query);
+        while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+            $name = $row['itemname'];
+        }
+        return $name;
     }
 
 }

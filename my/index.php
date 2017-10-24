@@ -179,7 +179,7 @@ if ($roleid == 4) {
 
     $groupid = $groups[0];
     //$url = "http://www." . $_SERVER['SERVER_NAME'] . "/lms/grade/report/grader/index.php?id=" . $ac->courseid . "&group=$groupid";
-    $url = "http://www." . $_SERVER['SERVER_NAME'] . "/lms/grade.php";
+    $url = "https://www." . $_SERVER['SERVER_NAME'] . "/lms/grade.php";
     header("Location: $url");
 } // end if $roleid == 4
 
@@ -199,7 +199,8 @@ if ($roleid == 5) {
     $pageid = $nav->get_page_id(); // you need to find workaround
     //echo "My index Page ID: ".$pageid."<br>";
     if ($pageid != 0 && $userid != 2) {
-        $url = "http://www." . $_SERVER['SERVER_NAME'] . "/lms/mod/page/view.php?id=" . $pageid . "";
+        //$url = "http://www." . $_SERVER['SERVER_NAME'] . "/lms/mod/page/view.php?id=" . $pageid . "";
+        $url = "https://www." . $_SERVER['SERVER_NAME'] . "/lms/students.php";
         header("Location: $url");
     } // end if $pageid != 0
     else {

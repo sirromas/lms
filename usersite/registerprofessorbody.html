@@ -14,13 +14,13 @@
 
         <!-- Optional theme -->
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" >
-        <link rel="stylesheet" href="assets/css/nav.css">
+        <link rel="stylesheet" href="/assets/css/nav.css">
 
         <!-- Latest compiled and minified JavaScript -->
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 
         <!-- Custom JS script -->
-        <script src="http://www.newsfactsandanalysis.com/assets/js/custom.js"></script>
+        <script src="https://www.newsfactsandanalysis.com/assets/js/custom.js"></script>
 
         <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-3-typeahead/4.0.1/bootstrap3-typeahead.js"></script>
 
@@ -178,7 +178,7 @@
                         controlWindow = window.open("lms/login.html", "dataitem", "toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=no,resizable=no,width=410,height=204,left=" + le + ",top=" + to + ",screenX=0,screenY=0'");
                     }
 
-                    $.get('http://www.newsfactsandanalysis.com/lms/custom/students/un.json', function (data) {
+                    $.get('https://www.newsfactsandanalysis.com/lms/custom/students/un.json', function (data) {
                         $("#school").typeahead({source: data, items: 256000});
                     });
 

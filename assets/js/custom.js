@@ -1247,12 +1247,16 @@ $(document).ready(function () {
                 $('#page').height($('#page').contents().height());
                 $('#page').width($('#page').contents().width());
                 console.log('Frame src: ' + iframeurl);
+
+                /*
                 if (iframeurl.indexOf('page') !== -1) {
                     $('#header_img').hide();
                 }  // end if
                 else {
                     $('#header_img').show();
                 } // end else
+                */
+
                 $('#page').attr('src', iframeurl);
             } // end if
             else {
@@ -1334,6 +1338,74 @@ $(document).ready(function () {
         });
     });
 
+
+    /************************************************************************
+     *
+     *                       Students  page
+     *
+     ************************************************************************/
+
+    $('.nav3').click(function () {
+        $('#body').show();
+        $('#ext_container').hide();
+        var iframeurl = $(this).data('url');
+        var item = $(this).data('item');
+        var url = '/lms/custom/navigation/status.php';
+        console.log('Item: ' + item);
+        $.post(url, {num: 1}).done(function (data) {
+            if (data == 1) {
+
+                switch (item) {
+
+                    case 'article':
+                        $('#page').attr('src', iframeurl);
+                        $('#page').height($('#page').contents().height());
+                        $('#page').width($('#page').contents().width());
+                        break;
+                    case 'quiz':
+                        $('#page').attr('src', iframeurl);
+                        $('#page').height($('#page').contents().height());
+                        $('#page').width($('#page').contents().width());
+                        break;
+                    case 'forum':
+                        $('#page').attr('src', iframeurl);
+                        $('#page').height($('#page').contents().height());
+                        $('#page').width($('#page').contents().width());
+                        break;
+                    case 'dic':
+                        $('#page').attr('src', iframeurl);
+                        $('#page').height($('#page').contents().height());
+                        $('#page').width($('#page').contents().width());
+                        break;
+                    case 'archive':
+                        $('#body').hide();
+                        var url = '/lms/custom/tutors/get_archive_page.php';
+                        $.post(url, {num: 1}).done(function (data) {
+                            $('#ext_container').html(data);
+                            $('#ext_container').show();
+                        });
+                        break;
+                    case 'grades':
+                        $('#body').hide();
+                        var url = '/lms/custom/students/my_grades.php';
+                        var userid = $('#userid').val();
+                        $.post(url, {userid: userid}).done(function (data) {
+                            $('#ext_container').html(data);
+                            $('#ext_container').show();
+                        });
+                        break;
+
+                }
+
+
+            } // end if
+            else {
+                var url = 'https://www.newsfactsandanalysis.com/';
+                window.location.href = url;
+            }
+        }); // end of post
+
+    });
 
 }); // end of document ready
 

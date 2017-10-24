@@ -3267,9 +3267,12 @@ EOD;
             }
 
             $returnstr = "";
+
+            /*
             if ($roleid == 5) {
                 $returnstr.="<span>$subscription_info</span>&nbsp;&nbsp;";
             }
+            */
 
             // If during initial install, return the empty return string.
             if (during_initial_install()) {
