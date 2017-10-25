@@ -758,12 +758,54 @@ class Tutor extends Utils
     }
 
 
-    public function get_quiz_export_data($studentid) {
-
+    /**
+     * @param $studentid
+     * @return array
+     */
+    public function get_student_quiz_grades($studentid)
+    {
+        $grades = array();
+        $quiz_items = implode(',', $this->get_quiz_qrade_items());
+        $query = "select * from mdl_grade_grades 
+                where userid=$studentid 
+                and itemid in ($quiz_items) and finalgrade is not null";
+        $num = $this->db->numrows($query);
+        if ($num > 0) {
+            $result = $this->db->query($query);
+            while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+                $grade = new stdClass();
+                foreach ($row as $key => $value) {
+                    $grade->$key = $value;
+                } // end foreach
+                $grades[] = $grade;
+            } // end while
+        } // end if $num > 0
+        return $grades;
     }
 
-    public function get_forum_quiz_data($studentid) {
-
+    /**
+     * @param $studentid
+     * @return array
+     */
+    public function get_student_forum_grades($studentid)
+    {
+        $grades = array();
+        $forum_items = implode(',', $this->get_forum_grade_items());
+        $query = "select * from mdl_grade_grades 
+                where userid=$studentid 
+                and itemid in ($forum_items) and finalgrade is not null";
+        $num = $this->db->numrows($query);
+        if ($num > 0) {
+            $result = $this->db->query($query);
+            while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+                $grade = new stdClass();
+                foreach ($row as $key => $value) {
+                    $grade->$key = $value;
+                } // end foreach
+                $grades[] = $grade;
+            } // end while
+        } // end if $num > 0
+        return $grades;
     }
 
 
@@ -777,42 +819,50 @@ class Tutor extends Utils
         $groupid = $item->groupid;
         $items = explode(',', $item->items); // array of items to be exported
         $students = $this->get_group_students($groupid);
-        $students_list = implode(',', $students);
+
+        $qpath = $_SERVER['DOCUMENT_ROOT'] . "/lms/custom/tutors/quiz_$groupid.csv";
+        $output1 = fopen($qpath, 'w');
+
+        $fpath = $_SERVER['DOCUMENT_ROOT'] . "/lms/custom/tutors/forum_$groupid.csv";
+        $output2 = fopen($fpath, 'w');
+
         foreach ($students as $studentid) {
             $userdata = $this->get_user_details($studentid);
             foreach ($items as $itemid) {
                 switch ($itemid) {
                     case 'quiz':
-                        $qpath = $_SERVER['DOCUMENT_ROOT'] . "/lms/custom/tutors/quiz_$groupid.csv";
-                        $output1 = fopen($qpath, 'w');
-                        $gradeitems = $this->get_quiz_qrade_items($students_list);
-                        foreach ($gradeitems as $gr_item) {
-                            $itemname = $this->get_item_name($gr_item);
-                            $itemgrade = $this->get_student_grade_item_grades($gr_item, $studentid);
-                            $itemdate = $this->get_student_grades_date($gr_item, $studentid);
-                            fputcsv($output1, array($userdata->firstname, $userdata->lastname, $itemname, $itemgrade, $itemdate));
-                        }
+                        $gradeitems = $this->get_student_quiz_grades($studentid);
+                        if (count($gradeitems) > 0) {
+                            foreach ($gradeitems as $gr_item) {
+                                $itemname = $this->get_item_name($gr_item->itemid);
+                                $itemgrade = $this->get_student_grade_item_grades($gr_item->itemid, $studentid);
+                                $itemdate = $this->get_student_grades_date($gr_item->itemid, $studentid);
+                                $data = array($userdata->firstname, $userdata->lastname, $itemname, $itemgrade, $itemdate);
+                                fputcsv($output1, $data);
+                            } // end froeach
+                        } // end if count($gradeitems)>0
                         break;
                     case 'forum':
-                        $fpath = $_SERVER['DOCUMENT_ROOT'] . "/lms/custom/tutors/forum_$groupid.csv";
-                        $output2 = fopen($fpath, 'w');
-                        $gradeitems = $this->get_forum_grade_items($students_list);
-                        foreach ($gradeitems as $gr_item) {
-                            $itemname = $this->get_item_name($gr_item);
-                            $itemgrade = $this->get_student_grade_item_grades($gr_item, $studentid);
-                            $itemdate = $this->get_student_grades_date($gr_item, $studentid);
-                            fputcsv($output2, array($userdata->firstname, $userdata->lastname, $itemname, $itemgrade, $itemdate));
-                        }
+                        $gradeitems = $this->get_student_forum_grades($studentid);
+                        if (count($gradeitems) > 0) {
+                            foreach ($gradeitems as $gr_item) {
+                                $itemname = $this->get_item_name($gr_item->itemid);
+                                $itemgrade = $this->get_student_grade_item_grades($gr_item->itemid, $studentid);
+                                $itemdate = $this->get_student_grades_date($gr_item->itemid, $studentid);
+                                $data = array($userdata->firstname, $userdata->lastname, $itemname, $itemgrade, $itemdate);
+                                fputcsv($output2, $data);
+                            } // end foreach
+                        } // end if count($gradeitems)>0
                         break;
                 } // end of switch
             } // end foreach items foreach to be exported
         } // end foreach for students
         fclose($output1);
         fclose($output2);
-        $http_q = "http://" . $_SERVER['SERVER_NAME'] . "/lms/custom/tutors/quiz_$groupid.csv";
-        $http_f = "http://" . $_SERVER['SERVER_NAME'] . "/lms/custom/tutors/forum_$groupid.csv";
+        $http_q = "https://www." . $_SERVER['SERVER_NAME'] . "/lms/custom/tutors/quiz_$groupid.csv";
+        $http_f = "https://www." . $_SERVER['SERVER_NAME'] . "/lms/custom/tutors/forum_$groupid.csv";
         $list .= "<div class='row-fluid'>";
-        $list .= "<span class='col-md-6'><a href='$http_q' target='_blank'>QUIZ GRADES</a></span><span class='col-md-6'><a href='$http_f' target='_blank'>FORUM GRADES</a></span>";
+        $list .= "<span class='col-md-6'><a href='$http_q' target='_blank'>QUIZ GRADES</a></span><span class='col-md-6'><a href='$http_f' target='_blank'>DISCUSSION GRADES</a></span>";
         $list .= "</div>";
         return $list;
     }
