@@ -130,7 +130,7 @@ class Student extends Utils
 
         $list .= "</table>";
 
-        $list .= "<p align='center'>Best regards, <br> Globalization Plus Team.</p>";
+        $list .= "<p align='center'>Best regards, <br> NewsFacts & Analysis Team.</p>";
 
         $list .= "</body>";
         $list .= "</html>";

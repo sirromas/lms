@@ -1,5 +1,5 @@
 <?php
-require_once './Classes/Payment.php';
+require_once $_SERVER['DOCUMENT_ROOT'].'/lms/payments/Classes/Payment.php';
 $p = new StudentPayment();
 $userid = $_REQUEST['userid'];
 $groupslist = $_REQUEST['groups'];
@@ -29,7 +29,7 @@ $form = $p->get_student_payment_form($userid, $groupslist);
         <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-3-typeahead/4.0.1/bootstrap3-typeahead.js"></script>
 
         <!-- Custom JS script -->
-        <script src="http://www.newsfactsandanalysis.com/assets/js/custom.js"></script>
+        <script src="https://www.newsfactsandanalysis.com/assets/js/custom.js"></script>
 
         <!-- Data tables JS -->
         <script type="text/javascript" src='https://cdn.datatables.net/1.10.13/js/jquery.dataTables.min.js' ></script>

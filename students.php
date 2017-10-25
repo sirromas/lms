@@ -26,6 +26,8 @@ else {
     $quizURL = "https://www." . $_SERVER['SERVER_NAME'] . "/lms/mod/quiz/view.php?id=$quizid";
     $dicid = $nav->get_glossary_id();
     $dicURL = "https://www." . $_SERVER['SERVER_NAME'] . "/lms/mod/glossary/view.php?id=$dicid";
+    $rgroup = 13; // This is special group for readers only
+    $groups = $nav->get_user_groups(); // array
 
     ?>
 
@@ -260,65 +262,131 @@ else {
                                     <div id="container33">
                                         <div id="container32">
                                             <div id="container30"></div>
-                                            <table class="dsR2175" border="0" cellspacing="2" cellpadding="0"
-                                                   width="100%">
-                                                <tr>
-                                                    <td class="dsR2171">
-                                                        <div align="center" style="margin-top:5px;">
-                                                            <a href="#" onclick="return false" class="nav3"
-                                                               data-url="<?php echo $pageURL; ?>" data-item="article"><span class="ds203">Article</span></a><span
-                                                                    class="ds203">     </span><span
-                                                                    class="ds19">|</span><span class="ds22"><span
-                                                                        class="ds5">|</span></span><span
-                                                                    class="ds19">|</span><span
-                                                                    class="ds203"></span>
 
-                                                            <a href="#" onclick="return false" class="nav3"
-                                                               data-url="<?php echo $quizURL; ?>" data-item="quiz"><span class="ds203">&nbsp;&nbsp;&nbsp;News Quiz</span></a><span
-                                                                    class="ds203">     </span><span
-                                                                    class="ds19">|</span><span class="ds22"><span
-                                                                        class="ds5">|</span></span><span
-                                                                    class="ds19">|</span><span
-                                                                    class="ds203"></span>
 
-                                                            <a class="nav3" href="#" onclick="return false;"
-                                                               data-url="<?php echo $forumURL; ?>" data-item="forum"><span
-                                                                        class="ds203">&nbsp;&nbsp;&nbsp;Dicussion Board</span></a><span
-                                                                    class="ds203">     </span><span
-                                                                    class="ds19">|</span><span class="ds22"><span
-                                                                        class="ds5">|</span></span><span
-                                                                    class="ds19">|</span><span
-                                                                    class="ds203"> </span>
+                                            <?php if (!in_array($rgroup, $groups)) {
 
-                                                            <a class="nav3" href="#" onclick="return false;"
-                                                               data-url="<?php echo $dicURL; ?>" data-item="dic"><span
-                                                                        class="ds203">&nbsp;&nbsp;Political Dictionary</span></a><span
-                                                                    class="ds203">     </span><span
-                                                                    class="ds19">|</span><span class="ds22"><span
-                                                                        class="ds5">|</span></span><span
-                                                                    class="ds19">|</span><span
-                                                                    class="ds203"> </span>
+                                                ?>
+                                                <table class="dsR2175" border="0" cellspacing="2" cellpadding="0"
+                                                       width="100%">
+                                                    <tr>
+                                                        <td class="dsR2171">
+                                                            <div align="center" style="margin-top:5px;">
+                                                                <a href="#" onclick="return false" class="nav3"
+                                                                   data-url="<?php echo $pageURL; ?>"
+                                                                   data-item="article"><span
+                                                                            class="ds203">Article</span></a><span
+                                                                        class="ds203">     </span><span
+                                                                        class="ds19">|</span><span class="ds22"><span
+                                                                            class="ds5">|</span></span><span
+                                                                        class="ds19">|</span><span
+                                                                        class="ds203"></span>
 
-                                                            <a href="#" onclick="return false;" class="nav3"
-                                                               data-url="" data-item="archive">
-                                                                <span class="ds203">&nbsp;Archives&nbsp;&nbsp;&nbsp;</span></a><span
-                                                                    class="ds203"></span>
-                                                            <span class="ds19">|</span><span class="ds22"><span
-                                                                        class="ds5">|</span></span><span
-                                                                    class="ds19">|</span><span class="ds203">     
+                                                                <a href="#" onclick="return false" class="nav3"
+                                                                   data-url="<?php echo $quizURL; ?>"
+                                                                   data-item="quiz"><span class="ds203">&nbsp;&nbsp;&nbsp;News Quiz</span></a><span
+                                                                        class="ds203">     </span><span
+                                                                        class="ds19">|</span><span class="ds22"><span
+                                                                            class="ds5">|</span></span><span
+                                                                        class="ds19">|</span><span
+                                                                        class="ds203"></span>
+
+                                                                <a class="nav3" href="#" onclick="return false;"
+                                                                   data-url="<?php echo $forumURL; ?>"
+                                                                   data-item="forum"><span
+                                                                            class="ds203">&nbsp;&nbsp;&nbsp;Dicussion Board</span></a><span
+                                                                        class="ds203">     </span><span
+                                                                        class="ds19">|</span><span class="ds22"><span
+                                                                            class="ds5">|</span></span><span
+                                                                        class="ds19">|</span><span
+                                                                        class="ds203"> </span>
+
+                                                                <a class="nav3" href="#" onclick="return false;"
+                                                                   data-url="<?php echo $dicURL; ?>"
+                                                                   data-item="dic"><span
+                                                                            class="ds203">&nbsp;&nbsp;Political Dictionary</span></a><span
+                                                                        class="ds203">     </span><span
+                                                                        class="ds19">|</span><span class="ds22"><span
+                                                                            class="ds5">|</span></span><span
+                                                                        class="ds19">|</span><span
+                                                                        class="ds203"> </span>
+
+                                                                <a href="#" onclick="return false;" class="nav3"
+                                                                   data-url="" data-item="archive">
+                                                                    <span class="ds203">&nbsp;Archives&nbsp;&nbsp;&nbsp;</span></a><span
+                                                                        class="ds203"></span>
+                                                                <span class="ds19">|</span><span class="ds22"><span
+                                                                            class="ds5">|</span></span><span
+                                                                        class="ds19">|</span><span class="ds203">     
 
                                                             <a href="#" onclick="return false" class="nav3"
                                                                data-url="" data-item="grades">Grades&nbsp;</a>&nbsp;&nbsp;&nbsp;</span>
-                                                            <span class="ds19">|</span><span class="ds22"><span
-                                                                        class="ds5">|</span></span><span
-                                                                    class="ds19">|</span>
+                                                                <span class="ds19">|</span><span class="ds22"><span
+                                                                            class="ds5">|</span></span><span
+                                                                        class="ds19">|</span>
 
-                                                            <a href="https://www.newsfactsandanalysis.com"><span
-                                                                        class="ds203">&nbsp;&nbsp;&nbsp;Logout</span></a>
-                                                        </div>
-                                                    </td>
-                                                </tr>
-                                            </table>
+                                                                <a href="https://www.newsfactsandanalysis.com"><span
+                                                                            class="ds203">&nbsp;&nbsp;&nbsp;Logout</span></a>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                </table>
+
+                                                <?php
+
+                                            } // end if it is university student
+
+                                            else {
+
+                                                ?>
+
+                                                <table class="dsR2175" border="0" cellspacing="2" cellpadding="0"
+                                                       width="100%">
+                                                    <tr>
+                                                        <td class="dsR2171">
+                                                            <div align="center" style="margin-top:5px;">
+                                                                <a href="#" onclick="return false" class="nav3"
+                                                                   data-url="<?php echo $pageURL; ?>"
+                                                                   data-item="article"><span
+                                                                            class="ds203">Article</span></a><span
+                                                                        class="ds203">     </span><span
+                                                                        class="ds19">|</span><span class="ds22"><span
+                                                                            class="ds5">|</span></span><span
+                                                                        class="ds19">|</span><span
+                                                                        class="ds203"></span>
+
+
+                                                                <a class="nav3" href="#" onclick="return false;"
+                                                                   data-url="<?php echo $dicURL; ?>"
+                                                                   data-item="dic"><span
+                                                                            class="ds203">&nbsp;&nbsp;Political Dictionary</span></a><span
+                                                                        class="ds203">     </span><span
+                                                                        class="ds19">|</span><span class="ds22"><span
+                                                                            class="ds5">|</span></span><span
+                                                                        class="ds19">|</span><span
+                                                                        class="ds203"> </span>
+
+                                                                <a href="#" onclick="return false;" class="nav3"
+                                                                   data-url="" data-item="archive">
+                                                                    <span class="ds203">&nbsp;Archives&nbsp;&nbsp;&nbsp;</span></a><span
+                                                                        class="ds203"></span>
+                                                                <span class="ds19">|</span><span class="ds22"><span
+                                                                            class="ds5">|</span></span><span
+                                                                        class="ds19">|</span><span class="ds203">     
+
+                                                                <a href="https://www.newsfactsandanalysis.com"><span
+                                                                            class="ds203">&nbsp;&nbsp;&nbsp;Logout</span></a>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                </table>
+
+
+                                                <?php
+
+                                            }
+
+                                            ?>
 
 
                                             <span class="ds83"><span class="ds85"></span></span><a href=""

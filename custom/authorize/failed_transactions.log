@@ -2,3 +2,465 @@
 09-30-2016 04:36:30
 09-30-2016 04:37:40
 09-30-2016 06:10:39
+09-05-2017 09:05:06
+net\authorize\api\contract\v1\TransactionResponseType Object
+(
+    [responseCode:net\authorize\api\contract\v1\TransactionResponseType:private] => 3
+    [rawResponseCode:net\authorize\api\contract\v1\TransactionResponseType:private] => 
+    [authCode:net\authorize\api\contract\v1\TransactionResponseType:private] => 
+    [avsResultCode:net\authorize\api\contract\v1\TransactionResponseType:private] => P
+    [cvvResultCode:net\authorize\api\contract\v1\TransactionResponseType:private] => 
+    [cavvResultCode:net\authorize\api\contract\v1\TransactionResponseType:private] => 
+    [transId:net\authorize\api\contract\v1\TransactionResponseType:private] => 0
+    [refTransID:net\authorize\api\contract\v1\TransactionResponseType:private] => 
+    [transHash:net\authorize\api\contract\v1\TransactionResponseType:private] => 522CFFB7F3D8FFDAF90983B288388086
+    [testRequest:net\authorize\api\contract\v1\TransactionResponseType:private] => 0
+    [accountNumber:net\authorize\api\contract\v1\TransactionResponseType:private] => XXXX3900
+    [accountType:net\authorize\api\contract\v1\TransactionResponseType:private] => 
+    [splitTenderId:net\authorize\api\contract\v1\TransactionResponseType:private] => 
+    [prePaidCard:net\authorize\api\contract\v1\TransactionResponseType:private] => 
+    [messages:net\authorize\api\contract\v1\TransactionResponseType:private] => 
+    [errors:net\authorize\api\contract\v1\TransactionResponseType:private] => Array
+        (
+            [0] => net\authorize\api\contract\v1\TransactionResponseType\ErrorsAType\ErrorAType Object
+                (
+                    [errorCode:net\authorize\api\contract\v1\TransactionResponseType\ErrorsAType\ErrorAType:private] => 6
+                    [errorText:net\authorize\api\contract\v1\TransactionResponseType\ErrorsAType\ErrorAType:private] => The credit card number is invalid.
+                )
+
+        )
+
+    [splitTenderPayments:net\authorize\api\contract\v1\TransactionResponseType:private] => 
+    [userFields:net\authorize\api\contract\v1\TransactionResponseType:private] => 
+    [shipTo:net\authorize\api\contract\v1\TransactionResponseType:private] => 
+    [secureAcceptance:net\authorize\api\contract\v1\TransactionResponseType:private] => 
+)
+09-05-2017 11:59:54
+net\authorize\api\contract\v1\TransactionResponseType Object
+(
+    [responseCode:net\authorize\api\contract\v1\TransactionResponseType:private] => 3
+    [rawResponseCode:net\authorize\api\contract\v1\TransactionResponseType:private] => 
+    [authCode:net\authorize\api\contract\v1\TransactionResponseType:private] => 
+    [avsResultCode:net\authorize\api\contract\v1\TransactionResponseType:private] => P
+    [cvvResultCode:net\authorize\api\contract\v1\TransactionResponseType:private] => 
+    [cavvResultCode:net\authorize\api\contract\v1\TransactionResponseType:private] => 
+    [transId:net\authorize\api\contract\v1\TransactionResponseType:private] => 0
+    [refTransID:net\authorize\api\contract\v1\TransactionResponseType:private] => 
+    [transHash:net\authorize\api\contract\v1\TransactionResponseType:private] => 522CFFB7F3D8FFDAF90983B288388086
+    [testRequest:net\authorize\api\contract\v1\TransactionResponseType:private] => 0
+    [accountNumber:net\authorize\api\contract\v1\TransactionResponseType:private] => XXXX0507
+    [accountType:net\authorize\api\contract\v1\TransactionResponseType:private] => 
+    [splitTenderId:net\authorize\api\contract\v1\TransactionResponseType:private] => 
+    [prePaidCard:net\authorize\api\contract\v1\TransactionResponseType:private] => 
+    [messages:net\authorize\api\contract\v1\TransactionResponseType:private] => 
+    [errors:net\authorize\api\contract\v1\TransactionResponseType:private] => Array
+        (
+            [0] => net\authorize\api\contract\v1\TransactionResponseType\ErrorsAType\ErrorAType Object
+                (
+                    [errorCode:net\authorize\api\contract\v1\TransactionResponseType\ErrorsAType\ErrorAType:private] => 6
+                    [errorText:net\authorize\api\contract\v1\TransactionResponseType\ErrorsAType\ErrorAType:private] => The credit card number is invalid.
+                )
+
+        )
+
+    [splitTenderPayments:net\authorize\api\contract\v1\TransactionResponseType:private] => 
+    [userFields:net\authorize\api\contract\v1\TransactionResponseType:private] => 
+    [shipTo:net\authorize\api\contract\v1\TransactionResponseType:private] => 
+    [secureAcceptance:net\authorize\api\contract\v1\TransactionResponseType:private] => 
+)
+09-05-2017 12:07:20
+net\authorize\api\contract\v1\TransactionResponseType Object
+(
+    [responseCode:net\authorize\api\contract\v1\TransactionResponseType:private] => 3
+    [rawResponseCode:net\authorize\api\contract\v1\TransactionResponseType:private] => 
+    [authCode:net\authorize\api\contract\v1\TransactionResponseType:private] => 
+    [avsResultCode:net\authorize\api\contract\v1\TransactionResponseType:private] => P
+    [cvvResultCode:net\authorize\api\contract\v1\TransactionResponseType:private] => 
+    [cavvResultCode:net\authorize\api\contract\v1\TransactionResponseType:private] => 
+    [transId:net\authorize\api\contract\v1\TransactionResponseType:private] => 0
+    [refTransID:net\authorize\api\contract\v1\TransactionResponseType:private] => 
+    [transHash:net\authorize\api\contract\v1\TransactionResponseType:private] => 522CFFB7F3D8FFDAF90983B288388086
+    [testRequest:net\authorize\api\contract\v1\TransactionResponseType:private] => 0
+    [accountNumber:net\authorize\api\contract\v1\TransactionResponseType:private] => XXXX0507
+    [accountType:net\authorize\api\contract\v1\TransactionResponseType:private] => 
+    [splitTenderId:net\authorize\api\contract\v1\TransactionResponseType:private] => 
+    [prePaidCard:net\authorize\api\contract\v1\TransactionResponseType:private] => 
+    [messages:net\authorize\api\contract\v1\TransactionResponseType:private] => 
+    [errors:net\authorize\api\contract\v1\TransactionResponseType:private] => Array
+        (
+            [0] => net\authorize\api\contract\v1\TransactionResponseType\ErrorsAType\ErrorAType Object
+                (
+                    [errorCode:net\authorize\api\contract\v1\TransactionResponseType\ErrorsAType\ErrorAType:private] => 6
+                    [errorText:net\authorize\api\contract\v1\TransactionResponseType\ErrorsAType\ErrorAType:private] => The credit card number is invalid.
+                )
+
+        )
+
+    [splitTenderPayments:net\authorize\api\contract\v1\TransactionResponseType:private] => 
+    [userFields:net\authorize\api\contract\v1\TransactionResponseType:private] => 
+    [shipTo:net\authorize\api\contract\v1\TransactionResponseType:private] => 
+    [secureAcceptance:net\authorize\api\contract\v1\TransactionResponseType:private] => 
+)
+09-05-2017 12:14:08
+net\authorize\api\contract\v1\TransactionResponseType Object
+(
+    [responseCode:net\authorize\api\contract\v1\TransactionResponseType:private] => 3
+    [rawResponseCode:net\authorize\api\contract\v1\TransactionResponseType:private] => 
+    [authCode:net\authorize\api\contract\v1\TransactionResponseType:private] => 
+    [avsResultCode:net\authorize\api\contract\v1\TransactionResponseType:private] => P
+    [cvvResultCode:net\authorize\api\contract\v1\TransactionResponseType:private] => 
+    [cavvResultCode:net\authorize\api\contract\v1\TransactionResponseType:private] => 
+    [transId:net\authorize\api\contract\v1\TransactionResponseType:private] => 0
+    [refTransID:net\authorize\api\contract\v1\TransactionResponseType:private] => 
+    [transHash:net\authorize\api\contract\v1\TransactionResponseType:private] => 522CFFB7F3D8FFDAF90983B288388086
+    [testRequest:net\authorize\api\contract\v1\TransactionResponseType:private] => 0
+    [accountNumber:net\authorize\api\contract\v1\TransactionResponseType:private] => XXXX0507
+    [accountType:net\authorize\api\contract\v1\TransactionResponseType:private] => 
+    [splitTenderId:net\authorize\api\contract\v1\TransactionResponseType:private] => 
+    [prePaidCard:net\authorize\api\contract\v1\TransactionResponseType:private] => 
+    [messages:net\authorize\api\contract\v1\TransactionResponseType:private] => 
+    [errors:net\authorize\api\contract\v1\TransactionResponseType:private] => Array
+        (
+            [0] => net\authorize\api\contract\v1\TransactionResponseType\ErrorsAType\ErrorAType Object
+                (
+                    [errorCode:net\authorize\api\contract\v1\TransactionResponseType\ErrorsAType\ErrorAType:private] => 6
+                    [errorText:net\authorize\api\contract\v1\TransactionResponseType\ErrorsAType\ErrorAType:private] => The credit card number is invalid.
+                )
+
+        )
+
+    [splitTenderPayments:net\authorize\api\contract\v1\TransactionResponseType:private] => 
+    [userFields:net\authorize\api\contract\v1\TransactionResponseType:private] => 
+    [shipTo:net\authorize\api\contract\v1\TransactionResponseType:private] => 
+    [secureAcceptance:net\authorize\api\contract\v1\TransactionResponseType:private] => 
+)
+09-05-2017 12:14:49
+net\authorize\api\contract\v1\TransactionResponseType Object
+(
+    [responseCode:net\authorize\api\contract\v1\TransactionResponseType:private] => 3
+    [rawResponseCode:net\authorize\api\contract\v1\TransactionResponseType:private] => 
+    [authCode:net\authorize\api\contract\v1\TransactionResponseType:private] => 
+    [avsResultCode:net\authorize\api\contract\v1\TransactionResponseType:private] => P
+    [cvvResultCode:net\authorize\api\contract\v1\TransactionResponseType:private] => 
+    [cavvResultCode:net\authorize\api\contract\v1\TransactionResponseType:private] => 
+    [transId:net\authorize\api\contract\v1\TransactionResponseType:private] => 0
+    [refTransID:net\authorize\api\contract\v1\TransactionResponseType:private] => 
+    [transHash:net\authorize\api\contract\v1\TransactionResponseType:private] => 522CFFB7F3D8FFDAF90983B288388086
+    [testRequest:net\authorize\api\contract\v1\TransactionResponseType:private] => 0
+    [accountNumber:net\authorize\api\contract\v1\TransactionResponseType:private] => XXXX3233
+    [accountType:net\authorize\api\contract\v1\TransactionResponseType:private] => 
+    [splitTenderId:net\authorize\api\contract\v1\TransactionResponseType:private] => 
+    [prePaidCard:net\authorize\api\contract\v1\TransactionResponseType:private] => 
+    [messages:net\authorize\api\contract\v1\TransactionResponseType:private] => 
+    [errors:net\authorize\api\contract\v1\TransactionResponseType:private] => Array
+        (
+            [0] => net\authorize\api\contract\v1\TransactionResponseType\ErrorsAType\ErrorAType Object
+                (
+                    [errorCode:net\authorize\api\contract\v1\TransactionResponseType\ErrorsAType\ErrorAType:private] => 6
+                    [errorText:net\authorize\api\contract\v1\TransactionResponseType\ErrorsAType\ErrorAType:private] => The credit card number is invalid.
+                )
+
+        )
+
+    [splitTenderPayments:net\authorize\api\contract\v1\TransactionResponseType:private] => 
+    [userFields:net\authorize\api\contract\v1\TransactionResponseType:private] => 
+    [shipTo:net\authorize\api\contract\v1\TransactionResponseType:private] => 
+    [secureAcceptance:net\authorize\api\contract\v1\TransactionResponseType:private] => 
+)
+09-05-2017 12:16:06
+net\authorize\api\contract\v1\TransactionResponseType Object
+(
+    [responseCode:net\authorize\api\contract\v1\TransactionResponseType:private] => 3
+    [rawResponseCode:net\authorize\api\contract\v1\TransactionResponseType:private] => 
+    [authCode:net\authorize\api\contract\v1\TransactionResponseType:private] => 
+    [avsResultCode:net\authorize\api\contract\v1\TransactionResponseType:private] => P
+    [cvvResultCode:net\authorize\api\contract\v1\TransactionResponseType:private] => 
+    [cavvResultCode:net\authorize\api\contract\v1\TransactionResponseType:private] => 
+    [transId:net\authorize\api\contract\v1\TransactionResponseType:private] => 0
+    [refTransID:net\authorize\api\contract\v1\TransactionResponseType:private] => 
+    [transHash:net\authorize\api\contract\v1\TransactionResponseType:private] => 522CFFB7F3D8FFDAF90983B288388086
+    [testRequest:net\authorize\api\contract\v1\TransactionResponseType:private] => 0
+    [accountNumber:net\authorize\api\contract\v1\TransactionResponseType:private] => XXXX3233
+    [accountType:net\authorize\api\contract\v1\TransactionResponseType:private] => 
+    [splitTenderId:net\authorize\api\contract\v1\TransactionResponseType:private] => 
+    [prePaidCard:net\authorize\api\contract\v1\TransactionResponseType:private] => 
+    [messages:net\authorize\api\contract\v1\TransactionResponseType:private] => 
+    [errors:net\authorize\api\contract\v1\TransactionResponseType:private] => Array
+        (
+            [0] => net\authorize\api\contract\v1\TransactionResponseType\ErrorsAType\ErrorAType Object
+                (
+                    [errorCode:net\authorize\api\contract\v1\TransactionResponseType\ErrorsAType\ErrorAType:private] => 6
+                    [errorText:net\authorize\api\contract\v1\TransactionResponseType\ErrorsAType\ErrorAType:private] => The credit card number is invalid.
+                )
+
+        )
+
+    [splitTenderPayments:net\authorize\api\contract\v1\TransactionResponseType:private] => 
+    [userFields:net\authorize\api\contract\v1\TransactionResponseType:private] => 
+    [shipTo:net\authorize\api\contract\v1\TransactionResponseType:private] => 
+    [secureAcceptance:net\authorize\api\contract\v1\TransactionResponseType:private] => 
+)
+09-05-2017 12:17:04
+net\authorize\api\contract\v1\TransactionResponseType Object
+(
+    [responseCode:net\authorize\api\contract\v1\TransactionResponseType:private] => 3
+    [rawResponseCode:net\authorize\api\contract\v1\TransactionResponseType:private] => 
+    [authCode:net\authorize\api\contract\v1\TransactionResponseType:private] => 
+    [avsResultCode:net\authorize\api\contract\v1\TransactionResponseType:private] => P
+    [cvvResultCode:net\authorize\api\contract\v1\TransactionResponseType:private] => 
+    [cavvResultCode:net\authorize\api\contract\v1\TransactionResponseType:private] => 
+    [transId:net\authorize\api\contract\v1\TransactionResponseType:private] => 0
+    [refTransID:net\authorize\api\contract\v1\TransactionResponseType:private] => 
+    [transHash:net\authorize\api\contract\v1\TransactionResponseType:private] => 522CFFB7F3D8FFDAF90983B288388086
+    [testRequest:net\authorize\api\contract\v1\TransactionResponseType:private] => 0
+    [accountNumber:net\authorize\api\contract\v1\TransactionResponseType:private] => XXXX3233
+    [accountType:net\authorize\api\contract\v1\TransactionResponseType:private] => 
+    [splitTenderId:net\authorize\api\contract\v1\TransactionResponseType:private] => 
+    [prePaidCard:net\authorize\api\contract\v1\TransactionResponseType:private] => 
+    [messages:net\authorize\api\contract\v1\TransactionResponseType:private] => 
+    [errors:net\authorize\api\contract\v1\TransactionResponseType:private] => Array
+        (
+            [0] => net\authorize\api\contract\v1\TransactionResponseType\ErrorsAType\ErrorAType Object
+                (
+                    [errorCode:net\authorize\api\contract\v1\TransactionResponseType\ErrorsAType\ErrorAType:private] => 6
+                    [errorText:net\authorize\api\contract\v1\TransactionResponseType\ErrorsAType\ErrorAType:private] => The credit card number is invalid.
+                )
+
+        )
+
+    [splitTenderPayments:net\authorize\api\contract\v1\TransactionResponseType:private] => 
+    [userFields:net\authorize\api\contract\v1\TransactionResponseType:private] => 
+    [shipTo:net\authorize\api\contract\v1\TransactionResponseType:private] => 
+    [secureAcceptance:net\authorize\api\contract\v1\TransactionResponseType:private] => 
+)
+09-05-2017 02:23:08
+net\authorize\api\contract\v1\TransactionResponseType Object
+(
+    [responseCode:net\authorize\api\contract\v1\TransactionResponseType:private] => 3
+    [rawResponseCode:net\authorize\api\contract\v1\TransactionResponseType:private] => 
+    [authCode:net\authorize\api\contract\v1\TransactionResponseType:private] => 
+    [avsResultCode:net\authorize\api\contract\v1\TransactionResponseType:private] => P
+    [cvvResultCode:net\authorize\api\contract\v1\TransactionResponseType:private] => 
+    [cavvResultCode:net\authorize\api\contract\v1\TransactionResponseType:private] => 
+    [transId:net\authorize\api\contract\v1\TransactionResponseType:private] => 0
+    [refTransID:net\authorize\api\contract\v1\TransactionResponseType:private] => 
+    [transHash:net\authorize\api\contract\v1\TransactionResponseType:private] => 522CFFB7F3D8FFDAF90983B288388086
+    [testRequest:net\authorize\api\contract\v1\TransactionResponseType:private] => 0
+    [accountNumber:net\authorize\api\contract\v1\TransactionResponseType:private] => XXXX4967
+    [accountType:net\authorize\api\contract\v1\TransactionResponseType:private] => 
+    [splitTenderId:net\authorize\api\contract\v1\TransactionResponseType:private] => 
+    [prePaidCard:net\authorize\api\contract\v1\TransactionResponseType:private] => 
+    [messages:net\authorize\api\contract\v1\TransactionResponseType:private] => 
+    [errors:net\authorize\api\contract\v1\TransactionResponseType:private] => Array
+        (
+            [0] => net\authorize\api\contract\v1\TransactionResponseType\ErrorsAType\ErrorAType Object
+                (
+                    [errorCode:net\authorize\api\contract\v1\TransactionResponseType\ErrorsAType\ErrorAType:private] => 6
+                    [errorText:net\authorize\api\contract\v1\TransactionResponseType\ErrorsAType\ErrorAType:private] => The credit card number is invalid.
+                )
+
+        )
+
+    [splitTenderPayments:net\authorize\api\contract\v1\TransactionResponseType:private] => 
+    [userFields:net\authorize\api\contract\v1\TransactionResponseType:private] => 
+    [shipTo:net\authorize\api\contract\v1\TransactionResponseType:private] => 
+    [secureAcceptance:net\authorize\api\contract\v1\TransactionResponseType:private] => 
+)
+10-25-2017 07:52:20
+net\authorize\api\contract\v1\TransactionResponseType Object
+(
+    [responseCode:net\authorize\api\contract\v1\TransactionResponseType:private] => 3
+    [rawResponseCode:net\authorize\api\contract\v1\TransactionResponseType:private] => 
+    [authCode:net\authorize\api\contract\v1\TransactionResponseType:private] => 
+    [avsResultCode:net\authorize\api\contract\v1\TransactionResponseType:private] => P
+    [cvvResultCode:net\authorize\api\contract\v1\TransactionResponseType:private] => 
+    [cavvResultCode:net\authorize\api\contract\v1\TransactionResponseType:private] => 
+    [transId:net\authorize\api\contract\v1\TransactionResponseType:private] => 0
+    [refTransID:net\authorize\api\contract\v1\TransactionResponseType:private] => 
+    [transHash:net\authorize\api\contract\v1\TransactionResponseType:private] => 6A0E7BF3A4525556630FE54E3CB088F5
+    [testRequest:net\authorize\api\contract\v1\TransactionResponseType:private] => 0
+    [accountNumber:net\authorize\api\contract\v1\TransactionResponseType:private] => XXXX4582
+    [accountType:net\authorize\api\contract\v1\TransactionResponseType:private] => 
+    [splitTenderId:net\authorize\api\contract\v1\TransactionResponseType:private] => 
+    [prePaidCard:net\authorize\api\contract\v1\TransactionResponseType:private] => 
+    [messages:net\authorize\api\contract\v1\TransactionResponseType:private] => 
+    [errors:net\authorize\api\contract\v1\TransactionResponseType:private] => Array
+        (
+            [0] => net\authorize\api\contract\v1\TransactionResponseType\ErrorsAType\ErrorAType Object
+                (
+                    [errorCode:net\authorize\api\contract\v1\TransactionResponseType\ErrorsAType\ErrorAType:private] => 6
+                    [errorText:net\authorize\api\contract\v1\TransactionResponseType\ErrorsAType\ErrorAType:private] => The credit card number is invalid.
+                )
+
+        )
+
+    [splitTenderPayments:net\authorize\api\contract\v1\TransactionResponseType:private] => 
+    [userFields:net\authorize\api\contract\v1\TransactionResponseType:private] => 
+    [shipTo:net\authorize\api\contract\v1\TransactionResponseType:private] => 
+    [secureAcceptance:net\authorize\api\contract\v1\TransactionResponseType:private] => 
+)
+10-25-2017 07:52:59
+net\authorize\api\contract\v1\TransactionResponseType Object
+(
+    [responseCode:net\authorize\api\contract\v1\TransactionResponseType:private] => 3
+    [rawResponseCode:net\authorize\api\contract\v1\TransactionResponseType:private] => 
+    [authCode:net\authorize\api\contract\v1\TransactionResponseType:private] => 
+    [avsResultCode:net\authorize\api\contract\v1\TransactionResponseType:private] => P
+    [cvvResultCode:net\authorize\api\contract\v1\TransactionResponseType:private] => 
+    [cavvResultCode:net\authorize\api\contract\v1\TransactionResponseType:private] => 
+    [transId:net\authorize\api\contract\v1\TransactionResponseType:private] => 0
+    [refTransID:net\authorize\api\contract\v1\TransactionResponseType:private] => 
+    [transHash:net\authorize\api\contract\v1\TransactionResponseType:private] => 6A0E7BF3A4525556630FE54E3CB088F5
+    [testRequest:net\authorize\api\contract\v1\TransactionResponseType:private] => 0
+    [accountNumber:net\authorize\api\contract\v1\TransactionResponseType:private] => XXXX0236
+    [accountType:net\authorize\api\contract\v1\TransactionResponseType:private] => 
+    [splitTenderId:net\authorize\api\contract\v1\TransactionResponseType:private] => 
+    [prePaidCard:net\authorize\api\contract\v1\TransactionResponseType:private] => 
+    [messages:net\authorize\api\contract\v1\TransactionResponseType:private] => 
+    [errors:net\authorize\api\contract\v1\TransactionResponseType:private] => Array
+        (
+            [0] => net\authorize\api\contract\v1\TransactionResponseType\ErrorsAType\ErrorAType Object
+                (
+                    [errorCode:net\authorize\api\contract\v1\TransactionResponseType\ErrorsAType\ErrorAType:private] => 6
+                    [errorText:net\authorize\api\contract\v1\TransactionResponseType\ErrorsAType\ErrorAType:private] => The credit card number is invalid.
+                )
+
+        )
+
+    [splitTenderPayments:net\authorize\api\contract\v1\TransactionResponseType:private] => 
+    [userFields:net\authorize\api\contract\v1\TransactionResponseType:private] => 
+    [shipTo:net\authorize\api\contract\v1\TransactionResponseType:private] => 
+    [secureAcceptance:net\authorize\api\contract\v1\TransactionResponseType:private] => 
+)
+10-25-2017 07:53:19
+net\authorize\api\contract\v1\TransactionResponseType Object
+(
+    [responseCode:net\authorize\api\contract\v1\TransactionResponseType:private] => 3
+    [rawResponseCode:net\authorize\api\contract\v1\TransactionResponseType:private] => 
+    [authCode:net\authorize\api\contract\v1\TransactionResponseType:private] => 
+    [avsResultCode:net\authorize\api\contract\v1\TransactionResponseType:private] => P
+    [cvvResultCode:net\authorize\api\contract\v1\TransactionResponseType:private] => 
+    [cavvResultCode:net\authorize\api\contract\v1\TransactionResponseType:private] => 
+    [transId:net\authorize\api\contract\v1\TransactionResponseType:private] => 0
+    [refTransID:net\authorize\api\contract\v1\TransactionResponseType:private] => 
+    [transHash:net\authorize\api\contract\v1\TransactionResponseType:private] => 6A0E7BF3A4525556630FE54E3CB088F5
+    [testRequest:net\authorize\api\contract\v1\TransactionResponseType:private] => 0
+    [accountNumber:net\authorize\api\contract\v1\TransactionResponseType:private] => XXXX0236
+    [accountType:net\authorize\api\contract\v1\TransactionResponseType:private] => 
+    [splitTenderId:net\authorize\api\contract\v1\TransactionResponseType:private] => 
+    [prePaidCard:net\authorize\api\contract\v1\TransactionResponseType:private] => 
+    [messages:net\authorize\api\contract\v1\TransactionResponseType:private] => 
+    [errors:net\authorize\api\contract\v1\TransactionResponseType:private] => Array
+        (
+            [0] => net\authorize\api\contract\v1\TransactionResponseType\ErrorsAType\ErrorAType Object
+                (
+                    [errorCode:net\authorize\api\contract\v1\TransactionResponseType\ErrorsAType\ErrorAType:private] => 6
+                    [errorText:net\authorize\api\contract\v1\TransactionResponseType\ErrorsAType\ErrorAType:private] => The credit card number is invalid.
+                )
+
+        )
+
+    [splitTenderPayments:net\authorize\api\contract\v1\TransactionResponseType:private] => 
+    [userFields:net\authorize\api\contract\v1\TransactionResponseType:private] => 
+    [shipTo:net\authorize\api\contract\v1\TransactionResponseType:private] => 
+    [secureAcceptance:net\authorize\api\contract\v1\TransactionResponseType:private] => 
+)
+10-25-2017 07:58:49
+net\authorize\api\contract\v1\TransactionResponseType Object
+(
+    [responseCode:net\authorize\api\contract\v1\TransactionResponseType:private] => 3
+    [rawResponseCode:net\authorize\api\contract\v1\TransactionResponseType:private] => 
+    [authCode:net\authorize\api\contract\v1\TransactionResponseType:private] => 
+    [avsResultCode:net\authorize\api\contract\v1\TransactionResponseType:private] => P
+    [cvvResultCode:net\authorize\api\contract\v1\TransactionResponseType:private] => 
+    [cavvResultCode:net\authorize\api\contract\v1\TransactionResponseType:private] => 
+    [transId:net\authorize\api\contract\v1\TransactionResponseType:private] => 0
+    [refTransID:net\authorize\api\contract\v1\TransactionResponseType:private] => 
+    [transHash:net\authorize\api\contract\v1\TransactionResponseType:private] => 6A0E7BF3A4525556630FE54E3CB088F5
+    [testRequest:net\authorize\api\contract\v1\TransactionResponseType:private] => 0
+    [accountNumber:net\authorize\api\contract\v1\TransactionResponseType:private] => XXXX4418
+    [accountType:net\authorize\api\contract\v1\TransactionResponseType:private] => 
+    [splitTenderId:net\authorize\api\contract\v1\TransactionResponseType:private] => 
+    [prePaidCard:net\authorize\api\contract\v1\TransactionResponseType:private] => 
+    [messages:net\authorize\api\contract\v1\TransactionResponseType:private] => 
+    [errors:net\authorize\api\contract\v1\TransactionResponseType:private] => Array
+        (
+            [0] => net\authorize\api\contract\v1\TransactionResponseType\ErrorsAType\ErrorAType Object
+                (
+                    [errorCode:net\authorize\api\contract\v1\TransactionResponseType\ErrorsAType\ErrorAType:private] => 6
+                    [errorText:net\authorize\api\contract\v1\TransactionResponseType\ErrorsAType\ErrorAType:private] => The credit card number is invalid.
+                )
+
+        )
+
+    [splitTenderPayments:net\authorize\api\contract\v1\TransactionResponseType:private] => 
+    [userFields:net\authorize\api\contract\v1\TransactionResponseType:private] => 
+    [shipTo:net\authorize\api\contract\v1\TransactionResponseType:private] => 
+    [secureAcceptance:net\authorize\api\contract\v1\TransactionResponseType:private] => 
+)
+10-25-2017 08:07:54
+net\authorize\api\contract\v1\TransactionResponseType Object
+(
+    [responseCode:net\authorize\api\contract\v1\TransactionResponseType:private] => 3
+    [rawResponseCode:net\authorize\api\contract\v1\TransactionResponseType:private] => 
+    [authCode:net\authorize\api\contract\v1\TransactionResponseType:private] => 
+    [avsResultCode:net\authorize\api\contract\v1\TransactionResponseType:private] => P
+    [cvvResultCode:net\authorize\api\contract\v1\TransactionResponseType:private] => 
+    [cavvResultCode:net\authorize\api\contract\v1\TransactionResponseType:private] => 
+    [transId:net\authorize\api\contract\v1\TransactionResponseType:private] => 0
+    [refTransID:net\authorize\api\contract\v1\TransactionResponseType:private] => 
+    [transHash:net\authorize\api\contract\v1\TransactionResponseType:private] => 6A0E7BF3A4525556630FE54E3CB088F5
+    [testRequest:net\authorize\api\contract\v1\TransactionResponseType:private] => 0
+    [accountNumber:net\authorize\api\contract\v1\TransactionResponseType:private] => XXXX4418
+    [accountType:net\authorize\api\contract\v1\TransactionResponseType:private] => 
+    [splitTenderId:net\authorize\api\contract\v1\TransactionResponseType:private] => 
+    [prePaidCard:net\authorize\api\contract\v1\TransactionResponseType:private] => 
+    [messages:net\authorize\api\contract\v1\TransactionResponseType:private] => 
+    [errors:net\authorize\api\contract\v1\TransactionResponseType:private] => Array
+        (
+            [0] => net\authorize\api\contract\v1\TransactionResponseType\ErrorsAType\ErrorAType Object
+                (
+                    [errorCode:net\authorize\api\contract\v1\TransactionResponseType\ErrorsAType\ErrorAType:private] => 6
+                    [errorText:net\authorize\api\contract\v1\TransactionResponseType\ErrorsAType\ErrorAType:private] => The credit card number is invalid.
+                )
+
+        )
+
+    [splitTenderPayments:net\authorize\api\contract\v1\TransactionResponseType:private] => 
+    [userFields:net\authorize\api\contract\v1\TransactionResponseType:private] => 
+    [shipTo:net\authorize\api\contract\v1\TransactionResponseType:private] => 
+    [secureAcceptance:net\authorize\api\contract\v1\TransactionResponseType:private] => 
+)
+10-25-2017 08:15:17
+net\authorize\api\contract\v1\TransactionResponseType Object
+(
+    [responseCode:net\authorize\api\contract\v1\TransactionResponseType:private] => 3
+    [rawResponseCode:net\authorize\api\contract\v1\TransactionResponseType:private] => 
+    [authCode:net\authorize\api\contract\v1\TransactionResponseType:private] => 
+    [avsResultCode:net\authorize\api\contract\v1\TransactionResponseType:private] => P
+    [cvvResultCode:net\authorize\api\contract\v1\TransactionResponseType:private] => 
+    [cavvResultCode:net\authorize\api\contract\v1\TransactionResponseType:private] => 
+    [transId:net\authorize\api\contract\v1\TransactionResponseType:private] => 0
+    [refTransID:net\authorize\api\contract\v1\TransactionResponseType:private] => 
+    [transHash:net\authorize\api\contract\v1\TransactionResponseType:private] => 6A0E7BF3A4525556630FE54E3CB088F5
+    [testRequest:net\authorize\api\contract\v1\TransactionResponseType:private] => 0
+    [accountNumber:net\authorize\api\contract\v1\TransactionResponseType:private] => XXXX4418
+    [accountType:net\authorize\api\contract\v1\TransactionResponseType:private] => 
+    [splitTenderId:net\authorize\api\contract\v1\TransactionResponseType:private] => 
+    [prePaidCard:net\authorize\api\contract\v1\TransactionResponseType:private] => 
+    [messages:net\authorize\api\contract\v1\TransactionResponseType:private] => 
+    [errors:net\authorize\api\contract\v1\TransactionResponseType:private] => Array
+        (
+            [0] => net\authorize\api\contract\v1\TransactionResponseType\ErrorsAType\ErrorAType Object
+                (
+                    [errorCode:net\authorize\api\contract\v1\TransactionResponseType\ErrorsAType\ErrorAType:private] => 6
+                    [errorText:net\authorize\api\contract\v1\TransactionResponseType\ErrorsAType\ErrorAType:private] => The credit card number is invalid.
+                )
+
+        )
+
+    [splitTenderPayments:net\authorize\api\contract\v1\TransactionResponseType:private] => 
+    [userFields:net\authorize\api\contract\v1\TransactionResponseType:private] => 
+    [shipTo:net\authorize\api\contract\v1\TransactionResponseType:private] => 
+    [secureAcceptance:net\authorize\api\contract\v1\TransactionResponseType:private] => 
+)
