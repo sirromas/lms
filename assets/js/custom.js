@@ -210,7 +210,9 @@ $(document).ready(function () {
                             var url = 'https://www.newsfactsandanalysis.com/lms/custom/tutors/signup.php';
                             $.post(url, {user: JSON.stringify(user)}).done(function (data) {
                                 $('#ajax_loader').hide();
-                                $('#form_info').html(data);
+                                //$('#form_info').html(data);
+                                var url = 'https://newsfactsandanalysis.com/assets/images/thankyou/index.html';
+                                window.location.href = url;
                             });
                         } // end if data==0
                         else {
@@ -321,7 +323,9 @@ $(document).ready(function () {
                             var url = 'https://www.newsfactsandanalysis.com/lms/custom/students/students_signup.php';
                             $.post(url, {user: JSON.stringify(user)}).done(function (data) {
                                 $('#ajax_loader').hide();
-                                $('#form_info').html("<span style='color:black;'>" + data + "</span>");
+                                //$('#form_info').html("<span style='color:black;'>" + data + "</span>");
+                                var url = 'https://newsfactsandanalysis.com/assets/images/thankyou/index.html';
+                                window.location.href = url;
                             }); // end of post
                         } // end if data>0 (group exists)
                         else {
