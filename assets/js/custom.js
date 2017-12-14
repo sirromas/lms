@@ -211,7 +211,8 @@ $(document).ready(function () {
                             $.post(url, {user: JSON.stringify(user)}).done(function (data) {
                                 $('#ajax_loader').hide();
                                 //$('#form_info').html(data);
-                                var url = 'https://newsfactsandanalysis.com/assets/images/thankyou/index.html';
+                                //var url = 'https://newsfactsandanalysis.com/assets/images/thankyou/index.html';
+                                var url = 'https://newsfactsandanalysis.com/registerthankyou.html';
                                 window.location.href = url;
                             });
                         } // end if data==0
@@ -324,7 +325,7 @@ $(document).ready(function () {
                             $.post(url, {user: JSON.stringify(user)}).done(function (data) {
                                 $('#ajax_loader').hide();
                                 //$('#form_info').html("<span style='color:black;'>" + data + "</span>");
-                                var url = 'https://newsfactsandanalysis.com/assets/images/thankyou/index.html';
+                                var url = 'https://newsfactsandanalysis.com/registerthankyou.html';
                                 window.location.href = url;
                             }); // end of post
                         } // end if data>0 (group exists)
@@ -1353,6 +1354,7 @@ $(document).ready(function () {
         $('#body').show();
         $('#ext_container').hide();
         var iframeurl = $(this).data('url');
+        var dictionary_url='https://www.newsfactsandanalysis.com/dictionary/politicaldictionary.html';
         var item = $(this).data('item');
         var url = '/lms/custom/navigation/status.php';
         console.log('Item: ' + item);
@@ -1377,7 +1379,7 @@ $(document).ready(function () {
                         $('#page').width($('#page').contents().width());
                         break;
                     case 'dic':
-                        $('#page').attr('src', iframeurl);
+                        $('#page').attr('src', dictionary_url);
                         $('#page').height($('#page').contents().height());
                         $('#page').width($('#page').contents().width());
                         break;

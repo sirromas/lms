@@ -1,0 +1,312 @@
+
+<!DOCTYPE html>
+
+<html>
+    <head>
+        <title>NewsFacts & Analysis</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+        <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+
+        <!-- Latest compiled and minified CSS -->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" >
+
+        <!-- Optional theme -->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" >
+        <link rel="stylesheet" href="assets/css/nav.css">
+
+        <!-- Latest compiled and minified JavaScript -->
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+        <!-- Custom JS script -->
+        <script src="http://www.newsfactsandanalysis.com/assets/js/custom.js"></script>
+
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-3-typeahead/4.0.1/bootstrap3-typeahead.js"></script>
+
+        <!-- Data tables JS -->
+        <script type="text/javascript" src='https://cdn.datatables.net/1.10.13/js/jquery.dataTables.min.js' ></script>
+        <script type="text/javascript" src='https://cdn.datatables.net/1.10.13/js/dataTables.bootstrap.min.js' ></script>
+
+        <!-- Data tables CSS -->
+        <link rel="stylesheet" href="https://cdn.datatables.net/1.10.13/css/dataTables.bootstrap.min.css">
+
+        <style type="text/css" media="all"><!--
+
+            a:link { color: #000; text-decoration: none; }
+            a:visited { color: #000; }
+            a:active { color: #000; }
+            body { color: #000; }
+            a:hover { 
+                color: #000000; font-weight: bold; 
+            }
+            a.colorlink:hover { 
+                color: #856ce5; font-weight: normal; 
+            }
+
+            .form-group { display: inline-block; width: 220px; }
+
+            .form-control { font-size: 14px !important;width:220px;}
+
+            .form-group.dsR1140 {
+
+                padding-bottom: 0px;
+                margin-bottom: 0px;
+            }
+
+            body { 
+                font-family: serif !important; padding-top: 8px;
+            }
+
+            :focus {
+                /* -webkit-focus-ring-color = '#ffffff' */
+                outline: -webkit-focus-ring-color auto 0px;
+
+                img {
+
+                    border-radius: 4px; }
+
+
+                #email { width: auto; height: auto; }
+                #last { width: 211px; height: auto; }
+                #street { width: auto; height: auto; }
+                #city { width: 246px; height: 23px; }
+                #email { width: auto; height: auto; }
+                #pwd { width: 121px; height: auto; }
+                #first { width: 75px; height: auto; }
+                #form_info { width: auto; height: 1px; }
+                .ds1 /*agl rulekind: base;*/ { font-weight: bold; }
+                .dsR1139 /*agl rulekind: base;*/ { width: auto; height: 1px; }
+                #state { }
+                #email2 { }
+                #title { }
+                #school { }
+                #dep { }
+                #site { }
+                #course1 { }
+                #course4 { }
+                #course2 { }
+                #course5 { }
+                #course3 { }
+                #course6 { }
+                #form_err { }
+                #ajax_loader { }
+                .dsR1140 /*agl rulekind: base;*/ { width: auto; height: 42px; }
+                #container35 { }
+                .dsR1141 /*agl rulekind: base;*/ { width: auto; height: 18px; }
+                #prof_signup { }
+                .dsR1142 /*agl rulekind: base;*/ { width: auto; height: 861px; }
+                .dsR1144 /*agl rulekind: base;*/ { width: auto; height: 853px; }
+
+
+
+                a,img { border: none; }
+                .dsR1145 /*agl rulekind: base;*/ { width: 698px; height: 178px; }
+                --></style>
+
+            <script>
+                function windowopener() {
+                    var le = (screen.width / 2) - 410;
+                    var to = (screen.height / 2) - 204;
+                    controlWindow = window.open("lms/login.html", "dataitem", "toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=no,resizable=no,width=410,height=204,left=" + le + ",top=" + to + ",screenX=0,screenY=0'");
+                }
+            </script>
+
+        </head>
+
+        <body>
+            <div align="center">
+                <div align="center">
+                    <div align="center">
+                        <p></p>
+                    </div>
+                </div>
+            </div>
+            <div class="container dsR1142">
+                <div class="header clearfix dsR1139">
+                    <div align="center"></div>
+                </div>
+                <div class="panel panel-default dsR1144">
+                    <div class="panel-heading">
+                        <div class='text-center'>
+                            <div align="center">
+                                <span class="ds1">
+                                    <h3>Complimentary Educator Registration<br />
+                                    </h3>
+                                    <h4>(there is no registration fee for professors)</h4>
+                                </span></div>
+                        </div>
+                    </div>
+                    <div class="panel-body" align="left">
+                        <form action="" method="post" id='prof_signup'>
+                            <div align="left">
+                                <div class="form-group" align="left">
+                                    <div align="left">
+                                        <label for="first">First*</label> <input type="text" class="form-control" id="first" required="required" name="first" placeholder="" /></div>
+                                </div>
+                                <div class="form-group">
+                                    <div align="left">
+                                        <label for="last">Last*</label> <input type="text" class="form-control" id="last" required="required" name="last" placeholder="" /></div>
+                                </div>
+                                <div class="form-group">
+                                    <div align="left">
+                                        <label for="street">Street*</label> <input type="text" class="form-control" id="street" name="street" required="required" placeholder="" /></div>
+                                </div>
+                                <div class="form-group">
+                                    <div align="left">
+                                        <label for="city">City*</label> <input type="text" class="form-control" id="city" name="city" required="required" placeholder="" /></div>
+                                </div>
+                                <div class="form-group">
+                                    <div align="left">
+                                        <label for="state">State*</label> <select id="state" class='form-control'>
+                                            <option value="0" selected="">State</option><option value="1">Alabama</option>
+                                            <option value="2">Alaska</option>
+                                            <option value="3">Arkansas</option>
+                                            <option value="4">Arizona</option>
+                                            <option value="5">California</option>
+                                            <option value="6">Colorado</option>
+                                            <option value="7">Connecticut</option>
+                                            <option value="8">Delaware</option>
+                                            <option value="9">District of Colombia</option>
+                                            <option value="10">Florida</option>
+                                            <option value="11">Georgia</option>
+                                            <option value="12">Hawaii</option>
+                                            <option value="13">Idaho</option>
+                                            <option value="14">Illinois</option>
+                                            <option value="15">Indiana</option>
+                                            <option value="16">Iowa</option>
+                                            <option value="17">Kansas</option>
+                                            <option value="18">Kentucky</option>
+                                            <option value="19">Louisiana</option>
+                                            <option value="20">Maine</option>
+                                            <option value="21">Maryland</option>
+                                            <option value="22">Massachusetts</option>
+                                            <option value="23">Michigan</option>
+                                            <option value="24">Minnesota</option>
+                                            <option value="25">Mississippi</option>
+                                            <option value="26">Missouri</option>
+                                            <option value="27">Montana</option>
+                                            <option value="28">Nebraska</option>
+                                            <option value="29">Nevada</option>
+                                            <option value="30">New Hampshire</option>
+                                            <option value="31">New Jersey</option>
+                                            <option value="32">New Mexico</option>
+                                            <option value="33">New York</option>
+                                            <option value="34">North Carolina</option>
+                                            <option value="35">North Dakota</option>
+                                            <option value="36">Ohio</option>
+                                            <option value="37">Oklahoma</option>
+                                            <option value="38">Oregon</option>
+                                            <option value="39">Pennsylvania</option>
+                                            <option value="40">Rhode Island</option>
+                                            <option value="41">South Carolina</option>
+                                            <option value="42">South Dakota</option>
+                                            <option value="43">Tennessee</option>
+                                            <option value="44">Texas</option>
+                                            <option value="45">Utah</option>
+                                            <option value="46">Vermont</option>
+                                            <option value="47">Virginia</option>
+                                            <option value="48">Washington</option>
+                                            <option value="49">West Virginia</option>
+                                            <option value="50">Wisconsin</option>
+                                            <option value="51">Wyoming</option></select></div>
+                                </div>
+                                <div class="form-group">
+                                    <div align="left">
+                                        <label for="zip">Zip*</label> <input type="text" class="form-control" id="zip" name="zip" required="required" placeholder="ZIP" /></div>
+                                </div>
+                                <div class="form-group">
+                                    <div align="left">
+                                        <label for="email">Email*</label> <input type="email" class="form-control" id="email" name="email" required="required" aria-describedby="emailHelp" placeholder="" /></div>
+                                    <small id="emailHelp" class="form-text text-muted"></small></div>
+
+                                <div class="form-group">
+                                    <div align="left">
+                                        <label for="phone">Telephone*</label> <input type="text" class="form-control" required id="phone" name="phone" placeholder="Phone" /></div>
+                                </div>
+
+                                <!--
+                                <div class="form-group">
+                                <div align="left">
+                                    <label for="pwd">Password*</label> <input type="password" class="form-control" id="pwd" name="Password" required="required" placeholder="Password" /></div>
+                                </div>
+                                -->
+
+                                <div class="form-group">
+                                    <div align="left">
+                                        <label for="school">University Name*</label> <input type="text" class="form-control" id="school" name="school" required="required" placeholder="" /></div>
+                                </div>
+                                <div class="form-group">
+                                    <div align="left">
+                                        <label for="dep">University Department*</label> <input type="text" class="form-control" id="dep" name="dep" required="required" placeholder="" /></div>
+                                </div>
+                                <div class="form-group">
+                                    <div align="left">
+                                        <label for="title">Title*</label> <input type="text" class="form-control" id="title" name="stitle" required="required" placeholder="" /></div>
+                                </div>
+
+                                <div class="form-group">
+                                    <div align="left">
+                                        <label for="site">University Website Adress</label> <input type="text" class="form-control" id="site" name="site" placeholder="University Personal Page" /></div>
+                                </div>
+
+
+                                <br />
+                                <span class="ds1"><b>Choose a name for each course that will be using NewsFacts & Analysis.<br />
+                                        Students should input the name of the course in which they are enrolled when registering.</b></span><br />
+                            </div>
+                    </div>
+                    <div align="center">
+                        <div class="form-group">
+                            <div align="left">
+                                <label for="course1">Course Name 1*</label> <input type="text" class="form-control" id="course1" required="required" name="course1" placeholder="Example: Voting & News Literacy" /></div>
+                        </div>
+                        <div class="form-group">
+                            <div align="left">
+                                <label for="course4">Course Name 4</label> <input type="text" class="form-control" id="course4" name="course4" placeholder="Example: Religious Nationalism" /></div>
+                        </div>
+                        <div class="form-group">
+                            <div align="left">
+                                <label for="course2">Course Name 2</label> <input type="text" class="form-control" id="course2" name="course2" placeholder="Example: Gender-Based Poverty" /></div>
+                        </div>
+                        <div class="form-group">
+                            <div align="left">
+                                <label for="course5">Course Name 5</label> <input type="text" class="form-control" id="course5" name="course5" placeholder="Example: U.S. Political Diversity" /></div>
+                        </div>
+                        <div class="form-group">
+                            <div align="left">
+                                <label for="course3">Course Name 3</label> <input type="text" class="form-control" id="course3" name="course3" placeholder="Example: South Asian Conflicts" /></div>
+                        </div>
+                        <div class="form-group">
+                            <div align="left">
+                                <label for="course6">Course Name 6</label> <input type="text" class="form-control" id="course6" name="course6" placeholder="Example: Economic Hegemony" /></div>
+                        </div>
+                        <div class="form-group">
+                            <div align="center">
+                                <div class="text-error" id="form_err"></div>
+                                <div class="form-group dsR1141">
+                                    <div align="center">
+                                        <div class="text-info" id="form_info"></div>
+                                        <div class="form-group dsR1140">
+                                            <div align="center">
+                                                <div class="text-info" id="ajax_loader" style="display:none;text-align: center;">
+                                                    <img src="assets/images/ajax.gif" /></div>
+                                                <button type="submit" class="btn btn-default">Submit</button></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+
+        </div>
+        <footer class="footer">
+            <div class="text-center">
+                <p align="center"><span class="ds110">©</span><span class="ds111"> copyright 2017 by Executive Clarity. All Rights Reserved.</span></p>
+            </div>
+        </p></div></footer><!-- /container --></div>
+</body>
+
+</html>

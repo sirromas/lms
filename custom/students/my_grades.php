@@ -2,7 +2,8 @@
 
 require_once './classes/Student.php';
 $st = new Student();
-$userid = $_POST['userid'];
+$userid = $_REQUEST['userid'];
+//echo "User ID: ".$userid."<br>";
 $list = $st->get_my_grades($userid);
 echo $list;
 
