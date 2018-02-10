@@ -445,4 +445,14 @@ class Utils
         } // end else 
     }
 
+    function get_article_page()
+    {
+        $query = "select * from mdl_archive order by adate desc limit 0,1";
+        $result = $this->db->query($query);
+        while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+            $link = "https://www." . $_SERVER['SERVER_NAME'] . "/lms/utils/archive/" . $row['path'] . "";
+        }
+        return $link;
+    }
+
 }

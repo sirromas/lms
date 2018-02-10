@@ -39,6 +39,48 @@ $(document).ready(function () {
         $('#login_form').submit();
     }
 
+    function get_correct_answers_by_class(id) {
+        var ca = [];
+        var text;
+        var ca_class = '.correct_answers' + id;
+        $(ca_class).each(function (index) {
+            if ($(this).is(':checked')) {
+                text = 'Yes';
+            } // end if
+            else {
+                text = 'No';
+            }
+            var item = {id: $(this).data('id'), text: text};
+            ca.push(item);
+        }); // end of each
+        return ca;
+    }
+
+    function get_correct_answers_by_id(id, i) {
+        var elid = '#ca_' + id + '_' + i;
+        if ($(elid).is(':checked')) {
+            text = 'Yes';
+        } // end if
+        else {
+            text = 'No';
+        }
+        var item = {status: text};
+        return item;
+    }
+
+    function get_question_answers(id) {
+        var a = [];
+        var a_class = '.answers' + id;
+        $(a_class).each(function (index) {
+            if ($(this).val() != '') {
+                var ca = get_correct_answers_by_id(id, $(this).data('id'));
+                var item = {id: $(this).data('id'), text: $(this).val(), ca: ca};
+                a.push(item);
+            }
+        }); // end of each
+        return a;
+    }
+
     function show_loader() {
         console.log('Function called ..');
         $('#login_err').html('');
@@ -490,6 +532,96 @@ $(document).ready(function () {
 
     $('body').on('click', 'button', function (event) {
 
+        if (event.target.id == 'add_poll') {
+            var type = 1;
+            var url = '/lms/utils/get_news_wizard.php';
+            $.post(url, {type: type}).done(function (data) {
+                $('#quiz').html(data);
+                $.get('/lms/utils/data/articles.json', function (data) {
+                    $("#article").typeahead({source: data, items: 256000});
+                });
+            });
+        }
+
+        if (event.target.id == 'add_quiz') {
+            var type = 2;
+            var url = '/lms/utils/get_news_wizard.php';
+            $.post(url, {type: type}).done(function (data) {
+                $('#quiz').html(data);
+                $.get('/lms/utils/data/articles.json', function (data) {
+                    $("#article").typeahead({source: data, items: 256000});
+                });
+            });
+
+        }
+
+        if (event.target.id == 'cancelQuiz') {
+            var url = '/lms/utils/get_qiz_page.php';
+            $.post(url, {type: 1}).done(function (data) {
+                $('#quiz').html(data);
+                $('#poll_table').DataTable();
+            });
+        }
+
+        if (event.target.id == 'qnextStep2') {
+            var title = $('#qtitle').val();
+            var article = $('#article').val();
+            var total = $('#q_total').val();
+            var type = $('#type').val();
+            if (title == '' || article == '') {
+                $('#qStep1Error').html('Please provide title and select related article');
+            } // end if
+            else {
+                $('#qStep1Error').html('');
+                $("#qnextStep2").prop("disabled", true);
+                var item = {title: title, article: article, total: total, type: type};
+                var url = '/lms/utils/get_quiz_page_step2.php';
+                $.post(url, {item: JSON.stringify(item)}).done(function (data) {
+                    $('#quiz').append(data);
+                });
+            }
+        }
+
+
+        if (event.target.id == 'add_new_quiz_item') {
+            var questions = [];
+
+            var title = $('#qtitle').val();
+            var article = $('#article').val();
+            var total = $('#q_total').val();
+            var type = $('#type').val();
+
+            if (title == '' || article == '') {
+                $('#quiz_err').html('');
+                $('#quiz_err').html('Please provide title and select related article');
+                return false;
+            }
+
+            $(".questions").each(function (index) {
+                var a = get_question_answers($(this).data('id'));
+                if ($(this).val() != '' && a.length != 0) {
+                    var item = {id: $(this).data('id'), text: $(this).val(), a: a};
+                    questions.push(item);
+                }
+            }); // end of each
+            // console.log('Questions array: ' + JSON.stringify(questions));
+
+            if (questions.length == 0) {
+                $('#quiz_err').html('');
+                $('#quiz_err').html('Please provide questions text with answers');
+                return false;
+            }
+
+            $('#quiz_err').html('');
+            var item = {title: title, article: article, total: total, type: type, questions: questions};
+            var url = '/lms/utils/add_new_quiz.php';
+            $.post(url, {item: JSON.stringify(item)}).done(function (data) {
+                $('#quiz').html(data);
+            });
+
+        }
+
+
         if (event.target.id == 'modal_ok') {
             if (confirm('Adjust key expiration for current student?')) {
                 var userid = $('#userid').val();
@@ -762,8 +894,9 @@ $(document).ready(function () {
         var id = $(this).data('id');
         if (confirm('Delete this article from archive?')) {
             var url = '/lms/utils/delete_archive_artricle.php';
-            $.post(url, {id: id}).done(function () {
-                document.location.reload();
+            $.post(url, {id: id}).done(function (data) {
+                console.log(data);
+                //document.location.reload();
             });
         }
     });
@@ -801,6 +934,43 @@ $(document).ready(function () {
                 $("body").append(data);
                 $("#myModal").modal('show');
             });
+        }
+
+        if (event.target.id == 'publish') {
+            var file_data = $('#files').prop('files');
+            var file = $('#files').val();
+            var date1 = $('#a_date1').val();
+            var date2 = $('#a_date2').val();
+            var title = $('#title').val();
+            if (file != '' && date1 != '' && date2 != '' && title != '') {
+                $('#pub_err').html('');
+                $('#ajax_loader').show();
+                var file_data = $('#files').prop('files');
+                var url = '/lms/utils/upload_article_file.php';
+                var form_data = new FormData();
+                $.each(file_data, function (key, value) {
+                    form_data.append(key, value);
+                });
+                form_data.append('date1', date1);
+                form_data.append('date2', date2);
+                form_data.append('title', title);
+                $('#loader').show();
+                $.ajax({
+                    url: url,
+                    data: form_data,
+                    processData: false,
+                    contentType: false,
+                    type: 'POST',
+                    success: function (data) {
+                        $('#ajax_loader').hide();
+                        $('#pub_err').html(data);
+                        $('#pub_err').css({"color": "black"});
+                    } // end of success
+                }); // end of $.ajax ..
+            } // end if
+            else {
+                $('#pub_err').html('Please select file, provide news title and dates');
+            }
         }
 
         if (event.target.id == 'upload_price_file') {
@@ -1140,6 +1310,42 @@ $(document).ready(function () {
         }
 
 
+        if (event.target.id == 'add_forum') {
+            var url = '/lms/utils/add_forum.php';
+            $.post(url, {id: 1}).done(function (data) {
+                $('#forum').html(data);
+                $.get('/lms/utils/data/articles.json', function (data) {
+                    $("#article").typeahead({source: data, items: 256000});
+                });
+            });
+        }
+
+        if (event.target.id == 'cancelForum') {
+            var url = '/lms/utils/get_forum_page.php';
+            $.post(url, {id: 1}).done(function (data) {
+                $('#forum').html(data);
+                $('#forum_table').DataTable();
+            });
+        }
+
+        if (event.target.id == 'add_forum_done') {
+            var title = $('#ftitle').val();
+            var article = $('#article').val();
+            if (title == '' || article == '') {
+                $('#forum_err').html('Please provide forum title and select related article');
+                return false;
+            } // end if
+            else {
+                $('#forum_err').html('');
+                var item = {article: article, title: title};
+                var url = '/lms/utils/add_forum_done.php';
+                $.post(url, {item: JSON.stringify(item)}).done(function (data) {
+                    $('#forum').html(data);
+                });
+            }
+        }
+
+
     }); // end of body click event
 
     $('body').on('change', function (event) {
@@ -1242,34 +1448,31 @@ $(document).ready(function () {
      *
      ************************************************************************/
 
-    $('.nav2').click(function () {
-        $('#body').show();
+    var dictionary_url = 'https://www.newsfactsandanalysis.com/lms/dictionary/index.php';
+
+    $('.dictionary').click(function () {
         $('#ext_container').hide();
-        var url = '/lms/custom/navigation/status.php';
-        iframeurl = $(this).data('url');
-        $.post(url, {num: 1}).done(function (data) {
-            if (data == 1) {
-                $('#page').height($('#page').contents().height());
-                $('#page').width($('#page').contents().width());
-                console.log('Frame src: ' + iframeurl);
+        $('#page').attr('src', dictionary_url);
+        $('#page').height($('#page').contents().height());
+        $('#page').width($('#page').contents().width());
+        $('#body').show();
+    });
 
-                /*
-                if (iframeurl.indexOf('page') !== -1) {
-                    $('#header_img').hide();
-                }  // end if
-                else {
-                    $('#header_img').show();
-                } // end else
-                */
+    $('.article').click(function () {
 
-                $('#page').attr('src', iframeurl);
-            } // end if
-            else {
-                var url = 'https://www.newsfactsandanalysis.com/';
-                window.location.href = url;
-            }
-        }); // end of post
-    }); // end of click
+        /*
+        var url = '/lms/custom/students/get_article_page.php';
+        $.post(url, {id: 1}).done(function (link) {
+            console.log('Link: ' + link);
+            $('#ext_container').show();
+            PDFObject.embed(link, "#ext_container");
+            $('.pdfobject-container').css('height', '100%');
+            $('.pdfobject-container').css('width', '900px');
+            $('.pdfobject-container').css('display', 'block');
+        });
+        */
+
+    });
 
     $('.ar').click(function () {
         $('#header_img').show();
@@ -1350,36 +1553,58 @@ $(document).ready(function () {
      *
      ************************************************************************/
 
+
+    function make_base_auth(user, password) {
+        var tok = user + ':' + password;
+        var hash = btoa(tok);
+        return "Basic " + hash;
+    }
+
+
+    /*
     $('.nav3').click(function () {
         $('#body').show();
         $('#ext_container').hide();
+
+        var USERNAME = 'Dictionary';
+        var PASSWORD = 'News4Democracy!';
+        var header = btoa(USERNAME + ":" + PASSWORD);
+
         var iframeurl = $(this).data('url');
-        var dictionary_url='https://www.newsfactsandanalysis.com/dictionary/politicaldictionary.html';
+        var dictionary_url = 'https://www.newsfactsandanalysis.com/lms/dictionary/index.php';
         var item = $(this).data('item');
         var url = '/lms/custom/navigation/status.php';
-        console.log('Item: ' + item);
         $.post(url, {num: 1}).done(function (data) {
+            console.log('Student status: '+data);
             if (data == 1) {
 
                 switch (item) {
-
                     case 'article':
-                        $('#page').attr('src', iframeurl);
+
+                        console.log('Item clicked: '+item);
+
+                        var articleURL='https://www.newsfactsandanalysis.com/lms/current/index.html';
+                        console.log('URL: '+articleURL);
+                        $('#page').prop('src', articleURL);
+                        $('#page').prop('padding-top', '45px');
                         $('#page').height($('#page').contents().height());
                         $('#page').width($('#page').contents().width());
+
+
                         break;
                     case 'quiz':
-                        $('#page').attr('src', iframeurl);
+                        $('#page').prop('src', iframeurl);
                         $('#page').height($('#page').contents().height());
                         $('#page').width($('#page').contents().width());
                         break;
+
                     case 'forum':
-                        $('#page').attr('src', iframeurl);
+                        $('#page').prop('src', iframeurl);
                         $('#page').height($('#page').contents().height());
                         $('#page').width($('#page').contents().width());
                         break;
                     case 'dic':
-                        $('#page').attr('src', dictionary_url);
+                        $('#page').prop('src', dictionary_url);
                         $('#page').height($('#page').contents().height());
                         $('#page').width($('#page').contents().width());
                         break;
@@ -1400,10 +1625,7 @@ $(document).ready(function () {
                             $('#ext_container').show();
                         });
                         break;
-
-                }
-
-
+                } // end switch
             } // end if
             else {
                 var url = 'https://www.newsfactsandanalysis.com/';
@@ -1411,7 +1633,8 @@ $(document).ready(function () {
             }
         }); // end of post
 
-    });
+    }); // end of .nav3 click
+    */
 
 }); // end of document ready
 

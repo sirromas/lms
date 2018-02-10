@@ -33,6 +33,10 @@ if ($_REQUEST) {
         $trial = $u->get_trial_keys_tab();
         $trial_search = $u->get_search_block('trial');
 
+	    $publish=$u->get_publish_page();
+        $quiz=$u->get_news_quiz_page();
+        $forum=$u->get_news_forum_page();
+
         $prices = $u->get_prices_page();
 
         $account_tab = $u->get_account_tab();
@@ -112,6 +116,46 @@ if ($_REQUEST) {
                     filter: alpha(opacity=0);
                 }
 
+                .stepwizard-step p {
+                    margin-top: 10px;
+                }
+                .stepwizard-row {
+                    display: table-row;
+                }
+                .stepwizard {
+                    display: table;
+                    width: 50%;
+                    position: relative;
+                }
+                .stepwizard-step button[disabled] {
+                    opacity: 1 !important;
+                    filter: alpha(opacity=100) !important;
+                }
+                .stepwizard-row:before {
+                    top: 14px;
+                    bottom: 0;
+                    position: absolute;
+                    content: " ";
+                    width: 100%;
+                    height: 1px;
+                    background-color: #ccc;
+                    z-order: 0;
+                }
+                .stepwizard-step {
+                    display: table-cell;
+                    text-align: center;
+                    position: relative;
+                }
+                .btn-circle {
+                    width: 30px;
+                    height: 30px;
+                    text-align: center;
+                    padding: 6px 0;
+                    font-size: 12px;
+                    line-height: 1.428571429;
+                    border-radius: 15px;
+                }
+
 
             </style>
 
@@ -129,6 +173,9 @@ if ($_REQUEST) {
                     <li><a data-toggle="tab" href="#paid_keys">Subscription</a></li>
                     <li><a data-toggle="tab" href="#trial_keys">Trial Keys</a></li>
                     <li><a data-toggle="tab" href="#prices">Prices</a></li>
+                    <li><a data-toggle="tab" href="#publish">Publish Article</a></li>
+                    <li><a data-toggle="tab" href="#quiz">Quiz</a></li>
+                    <li><a data-toggle="tab" href="#forum">Discussion Board</a></li>
                     <li><a data-toggle="tab" href="#utils_archive">Archive</a></li>
                     <li><a data-toggle="tab" href="#logout_account">Account</a></li>
                 </ul>
@@ -145,6 +192,15 @@ if ($_REQUEST) {
                     </div>
                     <div id="trial_keys" class="tab-pane fade">
                         <?php echo $trial; ?>
+                    </div>
+                    <div id="publish" class="tab-pane fade">
+		                <?php echo $publish; ?>
+                    </div>
+                    <div id="quiz" class="tab-pane fade">
+		                <?php echo $quiz; ?>
+                    </div>
+                    <div id="forum" class="tab-pane fade">
+		                <?php echo $forum; ?>
                     </div>
                     <div id="prices" class="tab-pane fade">
                         <?php echo $prices; ?>
@@ -169,6 +225,18 @@ if ($_REQUEST) {
                 $('#price_table').DataTable();
                 $('#trial_table').DataTable();
                 $('#archive_table').DataTable();
+                $('#poll_table').DataTable();
+                $('#forum_table').DataTable();
+
+
+                // ***** Articles code *****
+                $('#a_date1').datepicker();
+                $('#a_date2').datepicker();
+
+
+
+
+
 
             }); // end of document ready
 
