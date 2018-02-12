@@ -1752,14 +1752,16 @@ class Utils2 {
 		$now             = time();
 		$newsdir         = $this->get_article_directory( $post['date1'], $post['date2'] );
 		$news_dir_status = $this->is_news_exists( $newsdir );
+		$expire=strtotime($post['date2']);
 		if ( $news_dir_status == 0 ) {
-			$query = "insert into mdl_article (title,  path, added)
-					values ('" . $post['title'] . "','" . $newsdir . "','" . $now . "')";
+			$query = "insert into mdl_article (title,  path, expire, added)
+					values ('" . $post['title'] . "','" . $newsdir . "', '$expire', '" . $now . "')";
 		} // end if
 		else {
 			$query = "update mdl_article set added='$now' where path='$newsdir'";
 		}
 		$this->db->query( $query );
+		$this->create_json_data('article');
 	}
 
 
@@ -2175,7 +2177,7 @@ class Utils2 {
 		$query = "insert into mdl_board (aid, title, added) values ($aid, '$item->title','$now')";
 		$this->db->query( $query );
 		$list .= "<div class='row' style='margin-top: 15px;'>";
-		$list .= "<span class='col-md-6'>New Disscussion Board was successfully added.</span>";
+		$list .= "<span class='col-md-5'>New Disscussion Board was successfully added.</span>";
 		$list .= "<span class='col-md-3'><button class='btn btn-primary' id='cancelForum'>Return</button></span>";
 		$list .= "</div>";
 
