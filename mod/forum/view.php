@@ -65,7 +65,8 @@ if ($id) {
     require_course_login($course, true, $cm);
     $strforums = get_string("modulenameplural", "forum");
     $strforum = get_string("modulename", "forum");
-} else if ($f) {
+} // end if
+else if ($f) {
 
     if (!$forum = $DB->get_record("forum", array("id" => $f))) {
         print_error('invalidforumid', 'forum');
@@ -82,7 +83,9 @@ if ($id) {
     require_course_login($course, true, $cm);
     $strforums = get_string("modulenameplural", "forum");
     $strforum = get_string("modulename", "forum");
-} else {
+} // end if
+
+else {
     print_error('missingparameter');
 }
 
@@ -110,7 +113,7 @@ $PAGE->set_heading($course->fullname);
 
 
 /// Some capability checks.
-if (empty($cm->visible) and ! has_capability('moodle/course:viewhiddenactivities', $context)) {
+if (empty($cm->visible) and !has_capability('moodle/course:viewhiddenactivities', $context)) {
     notice(get_string("activityiscurrentlyhidden"));
 }
 
@@ -133,15 +136,7 @@ forum_view($forum, $course, $cm, $context);
 $nav = new Navigation();
 $quizid = $nav->get_quiz_id();
 $roleid = $nav->get_user_role();
-if ($roleid == 5 && $quizid > 0) {
-    /*
-    $quizurl = "http://globalizationplus.com/lms/mod/quiz/view.php?id=$quizid";
-    echo "<br><br><div class='row-fluid' style='text-align:center;'>";
-    echo "<span class='span12'><img src='http://" . $_SERVER['SERVER_NAME'] . "/assets/images/checkmark.png' width='20' height='20' valign='middle'>&nbsp;<a href='$quizurl' target='_blank'>Take our new quiz</a></span>";
-    echo "</div><br><br>";
-    */
-} // end if $roleid==5 && $quizid>0
-
+$groups=$nav->get_user_groups(); // array
 
 echo $OUTPUT->header();
 
@@ -209,13 +204,16 @@ switch ($forum->type) {
         echo '<p class="mdl-align">';
         if (forum_user_can_post_discussion($forum, null, -1, $cm)) {
             print_string("allowsdiscussions", "forum");
-        } else {
+        } // end if
+        else {
             echo '&nbsp;';
         }
+
         echo '</p>';
         if (!empty($showall)) {
             forum_print_latest_discussions($course, $forum, 0, 'header', '', -1, -1, -1, 0, $cm);
-        } else {
+        } // end if
+        else {
             forum_print_latest_discussions($course, $forum, -1, 'header', '', -1, -1, $page, $CFG->forum_manydiscussions, $cm);
         }
         break;
@@ -223,7 +221,8 @@ switch ($forum->type) {
     case 'teacher':
         if (!empty($showall)) {
             forum_print_latest_discussions($course, $forum, 0, 'header', '', -1, -1, -1, 0, $cm);
-        } else {
+        } // end if
+        else {
             forum_print_latest_discussions($course, $forum, -1, 'header', '', -1, -1, $page, $CFG->forum_manydiscussions, $cm);
         }
         break;
