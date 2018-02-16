@@ -5,9 +5,11 @@ require_once $_SERVER['DOCUMENT_ROOT'] . '/lms/custom/common/Utils.php';
 class Grades extends Utils {
 
 	public $users = array();
-	public $student_poll_score;
-	public $student_quiz_score;
-	public $studemt_forum_score;
+	public $news_poll_questions = array();
+	public $news_quiz_questions = array();
+	public $student_poll_score = array();
+	public $student_quiz_score = array();
+	public $student_forum_score = array();
 	public $articleID;
 
 	function __construct() {
@@ -51,11 +53,289 @@ class Grades extends Utils {
 		return $groupid;
 	}
 
-	function create_grades_page( $users ) {
-		$list            = "";
-		$this->articleID = $this->get_news_id();
-		$list            .= "<div class='row' style='margin-top: 25px;'>";
-		$list            .= "<span class='col-md-12'>";
+	function get_student_preface_block( $userid ) {
+		$list      = "";
+		$user      = $this->get_user_details( $userid );
+		$name      = $user->firstname . ' ' . $user->lastname;
+		$gorupid   = $this->get_postuser_group( $userid );
+		$groupname = $this->get_group_name( $gorupid );
+
+		$list .= "<div class='row' style='font-weight:bold;text-align: left;margin-bottom: 15px; '>";
+		$list .= "<span class='col-md-12' style=''>$name (class: $groupname)</span>";
+		$list .= "</div>";
+
+		return $list;
+	}
+
+	function get_articles_list() {
+		$articles = array();
+		$now      = time();
+		//$query    = "select * from mdl_article where start<$now order by added desc";
+		$query = "select * from mdl_article order by added ";
+		$num   = $this->db->numrows( $query );
+		if ( $num > 0 ) {
+			$result = $this->db->query( $query );
+			while ( $row = $result->fetch( PDO::FETCH_ASSOC ) ) {
+				$articles[] = $row['id'];
+			}
+		} // end if $num>0
+
+		return $articles;
+	}
+
+	function get_article_poll_item( $aid, $type ) {
+		$pid   = 0;
+		$query = "select * from mdl_poll where aid=$aid and type=$type";
+		$num   = $this->db->numrows( $query );
+		if ( $num > 0 ) {
+			$result = $this->db->query( $query );
+			while ( $row = $result->fetch( PDO::FETCH_ASSOC ) ) {
+				$pid = $row['id'];
+			} // end while
+		} // end if $num > 0
+
+		return $pid;
+	}
+
+	function get_poll_questions( $pid ) {
+		$q     = array();
+		$query = "select * from mdl_poll_q where pid=$pid";
+		$num   = $this->db->numrows( $query );
+		if ( $num > 0 ) {
+			$result = $this->db->query( $query );
+			while ( $row = $result->fetch( PDO::FETCH_ASSOC ) ) {
+				$q[] = $row['id'];
+			} // end while
+		} // end if $num > 0
+
+		return $q;
+	}
+
+	function get_poll_question_answers( $qid ) {
+		$a     = array();
+		$query = "select * from mdl_poll_a where qid=$qid";
+		$num   = $this->db->numrows( $query );
+		if ( $num > 0 ) {
+			$result = $this->db->query( $query );
+			while ( $row = $result->fetch( PDO::FETCH_ASSOC ) ) {
+				$a[] = $row['id'];
+			} // end while
+		} // end if $num > 0
+
+		return $a;
+	}
+
+	function get_student_answers( $userid, $answers ) {
+		$sta = array();
+		if ( count( $answers ) > 0 ) {
+			$as    = implode( ',', $answers );
+			$query = "select * from mdl_poll_student_answers where userid=$userid and aid in ($as)";
+			$num   = $this->db->numrows( $query );
+			if ( $num > 0 ) {
+				$result = $this->db->query( $query );
+				while ( $row = $result->fetch( PDO::FETCH_ASSOC ) ) {
+					$sta[] = $row['id'];
+				} // end while
+			} // end if  $num > 0
+		} // end if count($answers)>0
+
+		return $sta;
+	}
+
+	function get_item_total_count( $qid ) {
+		$query = "select * from mdl_poll_a where $qid=$qid";
+		$num   = $this->db->numrows( $query );
+
+		return $num;
+	}
+
+	function get_question_answerid( $id ) {
+		$query  = "select * from mdl_poll_student_answers where id=$id";
+		$result = $this->db->query( $query );
+		while ( $row = $result->fetch( PDO::FETCH_ASSOC ) ) {
+			$aid = $row['aid'];
+		}
+
+		return $aid;
+	}
+
+	function get_answer_question_id( $id ) {
+		$aid    = $this->get_question_answerid( $id );
+		$query  = "select * from mdl_poll_a where id=$aid";
+		$result = $this->db->query( $query );
+		while ( $row = $result->fetch( PDO::FETCH_ASSOC ) ) {
+			$qid = $row['qid'];
+		}
+
+		return $qid;
+	}
+
+	function get_student_answer_aid( $id ) {
+		$query  = "select * from mdl_poll_student_answers where id=$id";
+		$result = $this->db->query( $query );
+		while ( $row = $result->fetch( PDO::FETCH_ASSOC ) ) {
+			$aid = $row['aid'];
+		}
+
+		return $aid;
+	}
+
+	function get_student_item_score( $sta, $total ) {
+		$correct = 0;
+		foreach ( $sta as $id ) {
+			$aid    = $this->get_student_answer_aid( $id );
+			$status = $this->is_answer_correct( $aid );
+			if ( $status == 1 ) {
+				$correct ++;
+			} // end if
+		} // end foreach
+		$pers           = round( ( $correct / $total ) * 100 );
+		$score          = new stdClass();
+		$score->correct = $correct;
+		$score->total   = $total;
+		$score->pers    = $pers;
+
+		return $score;
+	}
+
+	function get_student_article_poll_grades( $aid, $userid, $type ) {
+		$score = 'N/A';
+		$list  = "";
+		$pid   = $this->get_article_poll_item( $aid, $type );
+		if ( $pid > 0 ) {
+			$q = $this->get_poll_questions( $pid );
+			if ( count( $q ) > 0 ) {
+				foreach ( $q as $qid ) {
+					$a = $this->get_poll_question_answers( $qid );
+					foreach ( $a as $id ) {
+						$an[] = $id;
+					}    // end foreach
+				} // end foreach
+				if ( count( $an ) > 0 ) {
+					$sta = $this->get_student_answers( $userid, $an );
+					if ( count( $sta ) > 0 ) {
+						$score = $this->get_student_item_score( $sta, count( $q ) );
+					} // end if count($sta)>0
+				} // end if count($a)>0
+			} // end if count($q)>0
+		} // end if $pid>0
+
+		if ( is_object( $score ) ) {
+			$correct = $score->correct;
+			$total   = $score->total;
+			$pers    = $score->pers;
+			$list    .= "$correct out of $total <br> $pers %";
+		} // end if
+		else {
+			$list .= $score;
+		}
+
+		return $list;
+	}
+
+
+	function get_student_article_forum_grades( $aid, $userid ) {
+		$list  = "";
+		$bid   = $this->get_board_id( $aid );
+		$posts = $this->get_student_board_posts( $bid, $userid );
+		$total = count( $posts );
+		$list  .= "Total posts: $total";
+
+		return $list;
+	}
+
+	function get_student_board_posts( $bid, $userid ) {
+		$posts = array();
+		$query = "select * from mdl_board_posts where bid=$bid and userid=$userid";
+		$num   = $this->db->numrows( $query );
+		if ( $num > 0 ) {
+			$result = $this->db->query( $query );
+			while ( $row = $result->fetch( PDO::FETCH_ASSOC ) ) {
+				$posts[] = $row['id'];
+			}
+		}
+
+		return $posts;
+	}
+
+	function get_student_class( $userid ) {
+		$gorupid   = $this->get_postuser_group( $userid );
+		$groupname = $this->get_group_name( $gorupid );
+
+		return $groupname;
+	}
+
+	function get_individual_student_grades( $userid ) {
+		$list     = "";
+		$articles = $this->get_articles_list();
+
+		$list .= "<table id='student_grades_$userid' class='table table-striped table-bordered' cellspacing='0' width='100%'>";
+		$list .= "<thead>";
+		$list .= "<tr>";
+		$list .= "<th>Article</th>";
+		$list .= "<th>Poll Score</th>";
+		$list .= "<th>Quiz Score</th>";
+		$list .= "<th>Forum Posts</th>";
+		$list .= "<th>Ops</th>";
+		$list .= "</tr>";
+		$list .= "</thead>";
+
+		if ( count( $articles ) > 0 ) {
+			$list .= "<tbody>";
+			foreach ( $articles as $aid ) {
+				$pollGrades  = $this->get_student_article_poll_grades( $aid, $userid, 1 );
+				$quizGrades  = $this->get_student_article_poll_grades( $aid, $userid, 2 );
+				$foruGrades  = $this->get_student_article_forum_grades( $aid, $userid );
+				$articleName = $this->get_article_name_by_id( $aid );
+				$ops         = $this->get_ops_block( $aid, $userid );
+				$class       = $this->get_student_class( $userid );
+				$this->create_grade_students_data( $aid, $userid, $class, $pollGrades, $quizGrades, $foruGrades );
+
+				$list .= "<tr>";
+				$list .= "<td>$articleName</td>";
+				$list .= "<td>$pollGrades</td>";
+				$list .= "<td>$quizGrades</td>";
+				$list .= "<td>$foruGrades</td>";
+				$list .= "<td>$ops</td>";
+				$list .= "</tr>";
+			} // end foreach
+			$list .= "</tbody>";
+		} // end if count($articles)>0
+
+		$list .= "</table>";
+
+		return $list;
+	}
+
+	function prepare_student_grades_block( $userid ) {
+		$list = "";
+
+		$grades = $this->get_individual_student_grades( $userid );
+		$list   .= "<div class='row'>";
+		$list   .= "<span class='col-md-12'>$grades</span>";
+		$list   .= "</div>";
+
+		$list .= "<div class='row'>";
+		$list .= "<span class='col-mdd-12'><hr/></span>";
+		$list .= "</div>";
+
+		return $list;
+	}
+
+	function get_student_block( $userid ) {
+		$list   = "";
+		$user   = $this->get_user_details( $userid );
+		$name   = $user->firstname . ' ' . $user->lastname;
+		$roleid = $this->get_user_role_by_id( $userid );
+		$status = ( $roleid == 5 ) ? 'Student' : 'Teacher';
+		$list   .= $name . "<br>($status)";
+
+		return $list;
+	}
+
+
+	function create_grade_pages_new( $users ) {
+		$list = "";
 
 		$list .= "<table id='grades_table' class='table table-striped table-bordered' cellspacing='0' width='100%'>";
 
@@ -63,75 +343,64 @@ class Grades extends Utils {
 		$list .= "<tr>";
 		$list .= "<th>Student</th>";
 		$list .= "<th>Class</th>";
-		$list .= "<th>Poll Score</th>";
-		$list .= "<th>Quiz Score</th>";
-		$list .= "<th>Forum Score</th>";
-		$list .= "<th>Course Total</th>";
-		$list .= "<th>Ops</th>";
+		$list .= "<th>Scores</th>";
 		$list .= "</tr>";
 		$list .= "</thead>";
 
 		$list .= "<tbody>";
 
+		if ( count( $users ) > 0 ) {
+			foreach ( $users as $userid ) {
+				$student   = $this->get_student_block( $userid );
+				$gorupid   = $this->get_postuser_group( $userid );
+				$groupname = $this->get_group_name( $gorupid );
+				$grades    = $this->prepare_student_grades_block( $userid );
 
-		foreach ( $users as $userid ) {
-			$userdata = $this->get_user_details( $userid );
-			$groupid  = $this->get_postuser_group( $userid );
-			$class    = $this->get_group_name( $groupid );
-
-			$pollA     = $this->get_student_pol_scores( $userid );
-			$pollScore = $this->get_section_score_block( $pollA );
-
-			$quizA     = $this->get_student_quiz_scores( $userid );
-			$quizScore = $this->get_section_score_block( $quizA );
-
-			$forumA     = $this->get_student_forum_scores( $userid );
-			$forumScore = count( $forumA );
-
-			$courseTotal = $pollScore + $quizScore + $forumScore;
-
-			$ops = $this->get_ops_block( $this->articleID, $userid );
-
-			$path   = $_SERVER['DOCUMENT_ROOT'] . "/lms/custom/common/data/grades_$userid.csv";
-			$output = fopen( $path, 'w' );
-
-			$data = array( $userdata->firstname, $userdata->lastname, $class, $pollScore, $quizScore, $forumScore, $courseTotal );
-			fputcsv( $output, $data );
-			fclose( $path );
-
-			$list .= "<tr>";
-			$list .= "<td>$userdata->firstname $userdata->lastname</td>";
-			$list .= "<td>$class</td>";
-			$list .= "<td>$pollScore</td>";
-			$list .= "<td>$quizScore</td>";
-			$list .= "<td>$forumScore</td>";
-			$list .= "<td>$courseTotal</td>";
-			$list .= "<td>$ops</td>";
-			$list .= "</tr>";
-
-		} // end foreach
-
+				$list .= "<tr>";
+				$list .= "<td>$student</td>";
+				$list .= "<td>$groupname</td>";
+				$list .= "<td>$grades</td>";
+				$list .= "</tr>";
+			} // end foreach
+		} // end if count($users)>0
 
 		$list .= "</tbody>";
 
 		$list .= "</table>";
-		$list .= "</span>";
-		$list .= "</div>";
 
 		return $list;
 	}
 
+	function create_grades_page( $users ) {
+		$list = "";
+		$list .= $this->create_grade_pages_new( $users );
+
+		return $list;
+	}
+
+	function create_grade_students_data( $aid, $userid, $class, $pollScore, $quizScore, $forumScore ) {
+		$gpath    = $userid . '_' . $aid;
+		$path     = $_SERVER['DOCUMENT_ROOT'] . "/lms/custom/common/data/grades_$gpath.csv";
+		$output   = fopen( $path, 'w' );
+		$userdata = $this->get_user_details( $userid );
+
+		$data = array( $userdata->firstname, $userdata->lastname, $class, $pollScore, $quizScore, $forumScore );
+		fputcsv( $output, $data );
+		fclose( $path );
+	}
+
 	function get_ops_block( $aid, $userid ) {
 		$list = "";
-
-		$link="https://".$_SERVER['SERVER_NAME']."/lms/custom/common/data/grades_$userid.csv";
+		$path = $userid . '_' . $aid;
+		$link = "https://" . $_SERVER['SERVER_NAME'] . "/lms/custom/common/data/grades_$path.csv";
 		$list .= "<a href='$link' target='_blank'><button id='export_student_grades' data-aid='$aid' data-userid='$userid'>Export</button></a>";
 
 		return $list;
 	}
 
 	function is_answer_correct( $aid ) {
-		$query  = "select * from mdl_poll_a where id=$aid";
+		$query = "select * from mdl_poll_a where id=$aid";
+		//echo "Query: " . $query . "<br>";
 		$result = $this->db->query( $query );
 		while ( $row = $result->fetch( PDO::FETCH_ASSOC ) ) {
 			$correct = $row['correct'];
@@ -140,113 +409,56 @@ class Grades extends Utils {
 		return $correct;
 	}
 
-	function get_section_score_block( $answers, $table = true ) {
-		$list    = "";
-		$total   = 0;
-		$correct = 0;
-		if ( count( $answers ) == 0 ) {
-			$list .= "N/A";
-		} // end if
-		else {
-			foreach ( $answers as $a ) {
-				$status = $this->is_answer_correct( $a->aid );
-				if ( $status == 1 ) {
-					$correct ++;
-				}
-				$total ++;
-			} // end foreach
-			if ( $table ) {
-				$list .= $correct . ' out of ' . $total;
-
-				return $list;
-			} // end if
-			else {
-				$data = array( 'correct' => $correct, 'total' => $total );
-
-				return $data;
-			}
-		} // end else
-
-
-	}
-
-	function get_news_qestions( $aid, $type ) {
-		$query  = "select * from mdl_poll where aid=$aid and type=$type";
+	function get_article_name_by_id( $id ) {
+		$query  = "select * from mdl_article where id=$id ";
 		$result = $this->db->query( $query );
 		while ( $row = $result->fetch( PDO::FETCH_ASSOC ) ) {
-			$pid = $row['id'];
-		}
-		$query  = "select * from mdl_poll_q where pid=$pid";
-		$result = $this->db->query( $query );
-		while ( $row = $result->fetch( PDO::FETCH_ASSOC ) ) {
-			$q[] = $row['id'];
+			$title = $row['title'];
 		}
 
-		return $q;
-	}
-
-	function get_news_student_answers( $userid, $questions ) {
-		$answers = array();
-		$qs      = implode( ',', $questions );
-		$query   = "select * from mdl_poll_a where qid in ($qs)";
-		$result  = $this->db->query( $query );
-		while ( $row = $result->fetch( PDO::FETCH_ASSOC ) ) {
-			$a[] = $row['id'];
-		}
-		$as    = implode( ',', $a );
-		$query = "select * from mdl_poll_student_answers where userid=$userid and aid in ($as)";
-		//echo 'Query: '.$query."<br>";
-		$result = $this->db->query( $query );
-		while ( $row = $result->fetch( PDO::FETCH_ASSOC ) ) {
-			$sta = new stdClass();
-			foreach ( $row as $key => $value ) {
-				$sta->$key = $value;
-			} // end foreach
-			$answers[] = $sta;
-		} // end while
-
-		return $answers;
+		return $title;
 	}
 
 	function get_student_quiz_scores( $userid ) {
-		$questions = $this->get_news_qestions( $this->articleID, 2 );
-		$answers   = $this->get_news_student_answers( $userid, $questions );
-
-		return $answers;
-	}
-
-	function get_student_pol_scores( $userid ) {
-		$questions = $this->get_news_qestions( $this->articleID, 1 );
-		$answers   = $this->get_news_student_answers( $userid, $questions );
+		$this->get_news_qestions( 2 );
+		$answers = $this->get_news_student_answers( $userid, 2 );
 
 		return $answers;
 	}
 
 	function get_board_id( $aid ) {
-		$query  = "select * from mdl_board where aid=$aid";
-		$result = $this->db->query( $query );
-		while ( $row = $result->fetch( PDO::FETCH_ASSOC ) ) {
-			$bid = $row['id'];
+		$query = "select * from mdl_board where aid=$aid";
+		$num   = $this->db->numrows( $query );
+		if ( $num > 0 ) {
+			$result = $this->db->query( $query );
+			while ( $row = $result->fetch( PDO::FETCH_ASSOC ) ) {
+				$bid = $row['id'];
+			}
+		} // end if
+		else {
+			$bid = 0;
 		}
 
 		return $bid;
 	}
 
-	function get_student_forum_scores( $userid ) {
-		$answers = array();
-		$bid     = $this->get_board_id( $this->articleID );
-		$query   = "select * from mdl_board_posts where bid=$bid and userid=$userid";
-		$result  = $this->db->query( $query );
-		while ( $row = $result->fetch( PDO::FETCH_ASSOC ) ) {
-			$sta = new stdClass();
-			foreach ( $row as $key => $value ) {
-				$sta->$key = $value;
-			} // end foreach
-			$answers[] = $sta;
-		} // end while
+	function get_news_boards() {
+		$boards = array();
+		$query  = "select * from mdl_board order by added desc";
+		$num    = $this->db->numrows( $query );
+		if ( $num > 0 ) {
+			$result = $this->db->query( $query );
+			while ( $row = $result->fetch( PDO::FETCH_ASSOC ) ) {
+				$b        = new stdClass();
+				$b->aid   = $row['aid'];
+				$b->bid   = $row['id'];
+				$boards[] = $b;
+			} // end while
+		} // end if $num > 0
 
-		return $answers;
+		return $boards;
 	}
+
 
 	function get_csv_student_grades( $item ) {
 		$aid      = $item->aid;
@@ -254,9 +466,6 @@ class Grades extends Utils {
 		$userdata = $this->get_user_details( $userid );
 		$groupid  = $this->get_postuser_group( $userid );
 		$class    = $this->get_group_name( $groupid );
-
-		$path   = $_SERVER['DOCUMENT_ROOT'] . "/lms/custom/tutors/grades_$userid.csv";
-		$output = fopen( $path, 'w' );
 
 		$pollA         = $this->get_student_pol_scores( $userid );
 		$pollScoreData = $this->get_section_score_block( $pollA, false );
@@ -268,6 +477,9 @@ class Grades extends Utils {
 
 		$forumA     = $this->get_student_forum_scores( $userid, false );
 		$forumScore = count( $forumA );
+
+		$path   = $_SERVER['DOCUMENT_ROOT'] . "/lms/custom/tutors/grades_$userid.csv";
+		$output = fopen( $path, 'w' );
 
 		$data = array( $userdata->firstname, $userdata->lastname, $class, $pollScore, $quizScore, $forumScore );
 		fputcsv( $output, $data );

@@ -127,37 +127,39 @@ class Forum extends Utils {
 	}
 
 	function get_news_forum( $userid ) {
-		$list  = "";
-		$aid   = $this->get_news_id();
-		$query = "select * from  mdl_board where aid=$aid";
-		$num   = $this->db->numrows( $query );
-		if ( $num > 0 ) {
+		$list = "";
+		$aid  = $this->get_news_id();
+		if ( $aid > 0 ) {
+			$query = "select * from  mdl_board where aid=$aid";
+			$num   = $this->db->numrows( $query );
+			if ( $num > 0 ) {
 
-			$result = $this->db->query( $query );
-			while ( $row = $result->fetch( PDO::FETCH_ASSOC ) ) {
-				$forumid = $row['id'];
-				$title   = $row['title'];
-				$added   = $row['added'];
-			}
-			$posts = $this->get_forum_posts( $forumid, $title, $added, $userid );
-			$list  .= "<div id='container36' style='width: 738px;height: auto;margin-bottom: 35px;text-align: center;'>";
-			$list  .= "<input type='hidden' id='forumid' value='$forumid'>";
+				$result = $this->db->query( $query );
+				while ( $row = $result->fetch( PDO::FETCH_ASSOC ) ) {
+					$forumid = $row['id'];
+					$title   = $row['title'];
+					$added   = $row['added'];
+				}
+				$posts = $this->get_forum_posts( $forumid, $title, $added, $userid );
+				$list  .= "<div id='container36' style='width: 738px;height: auto;margin-bottom: 35px;text-align: center;'>";
+				$list  .= "<input type='hidden' id='forumid' value='$forumid'>";
 
-			$list .= "<div class='row' style='padding-bottom: 15px;padding-top: 15px'>";
-			$list .= "<span style='font-size: 20px;border-bottom: 2px solid #000000;padding-bottom: 2px;'>Disscussion board</span>";
-			$list .= "</div>";
+				$list .= "<div class='row' style='padding-bottom: 15px;padding-top: 15px'>";
+				$list .= "<span style='font-size: 20px;border-bottom: 2px solid #000000;padding-bottom: 2px;'>Disscussion board</span>";
+				$list .= "</div>";
 
-			$list .= "<div class='row' style='text-align: center;margin: 15px;'>";
-			$list .= "<span class='col-md-10'>$posts</span>";
-			$list .= "</div>";
+				$list .= "<div class='row' style='text-align: center;margin: 15px;'>";
+				$list .= "<span class='col-md-10'>$posts</span>";
+				$list .= "</div>";
 
-			$list .= "<div class='row' style='margin-top: 15px;margin-bottom: 35px;'>";
-			$list .= "<span class='col-md-2'></span>";
-			$list .= "</div>";
+				$list .= "<div class='row' style='margin-top: 15px;margin-bottom: 35px;'>";
+				$list .= "<span class='col-md-2'></span>";
+				$list .= "</div>";
 
-			$list .= "</div>";
+				$list .= "</div>";
 
-		} // end if $num>0
+			} // end if $num>0
+		}
 
 		return $list;
 	}

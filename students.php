@@ -40,7 +40,7 @@ require_once './sheader.php';
 
         $('#dicIframe').load(function () {
             $(this).height($(this).contents().height());
-            $(this).width($(this).contents().width());
+            //$(this).width($(this).contents().width());
         });
 
         $('#pageIframe').load(function () {
@@ -55,7 +55,6 @@ require_once './sheader.php';
             $('#poll_container').height('#poll_container').contents().height();
         });
 
-
         // Get news quiz
         $.post(pollURL, {type: 2}).done(function (data) {
             $('#quiz_container').html(data);
@@ -68,13 +67,6 @@ require_once './sheader.php';
             $('#forum_container').height('#forum_container').contents().height();
         });
 
-        // Get news forum
-        function get_news_forum(forumid) {
-            $.post(forumURL, {userid: userid}).done(function (data) {
-                $('#forum_container').html(data);
-                $('#forum_container').height('#forum_container').contents().height();
-            });
-        }
 
         $('body').on('click', function (event) {
 
@@ -179,12 +171,12 @@ require_once './sheader.php';
             }
 
             if (event.target.id.indexOf("export_student_grades_") >= 0) {
-                var id=event.target.id.replace("export_student_grades_", "");
-                var elid='#export_student_grades_'+id;
+                var id = event.target.id.replace("export_student_grades_", "");
+                var elid = '#export_student_grades_' + id;
                 var aid = $(elid).data('aid');
                 var userid = $(elid).data('userid');
                 var item = {aid: aid, userid: userid};
-                var url='/lms/custom/common/get_csv_student_grades.php';
+                var url = '/lms/custom/common/get_csv_student_grades.php';
             }
 
         }); // end of  body.click event
@@ -198,7 +190,8 @@ require_once './sheader.php';
                     var url = '/lms/custom/common/get_grades_page.php';
                     $.post(url, {userid: userid}).done(function (data) {
                         $('#ajax_container').html(data);
-                        $('#grades_table').DataTable();
+                        var tableid = '#student_grades_' + userid;
+                        $(tableid).DataTable();
                         $('#ajax_container').show();
 
                         $('#page').hide();

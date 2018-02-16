@@ -1752,10 +1752,11 @@ class Utils2 {
 		$now             = time();
 		$newsdir         = $this->get_article_directory( $post['date1'], $post['date2'] );
 		$news_dir_status = $this->is_news_exists( $newsdir );
+		$start=strtotime($post['date1']);
 		$expire=strtotime($post['date2']);
 		if ( $news_dir_status == 0 ) {
-			$query = "insert into mdl_article (title,  path, expire, added)
-					values ('" . $post['title'] . "','" . $newsdir . "', '$expire', '" . $now . "')";
+			$query = "insert into mdl_article (title,  path, start, expire, added)
+					values ('" . $post['title'] . "','" . $newsdir . "', '$start', '$expire', '" . $now . "')";
 		} // end if
 		else {
 			$query = "update mdl_article set added='$now' where path='$newsdir'";

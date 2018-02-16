@@ -13,7 +13,7 @@ class Quiz {
 
 	function get_news_id() {
 		$now    = time();
-		$query  = "select * from mdl_article where expire>=$now order by id desc limit 0,1";
+		$query  = "select * from mdl_article where $now  between  start and  expire order by id desc limit 0,1";
 		$result = $this->db->query( $query );
 		while ( $row = $result->fetch( PDO::FETCH_ASSOC ) ) {
 			$aid = $row['id'];
@@ -51,20 +51,21 @@ class Quiz {
 			while ( $row = $result->fetch( PDO::FETCH_ASSOC ) ) {
 				$pid = $row['id'];
 			} // end while;
+			if ( $pid > 0 ) {
+				$query  = "select * from mdl_poll_q where pid=$pid";
+				$result = $this->db->query( $query );
+				while ( $row = $result->fetch( PDO::FETCH_ASSOC ) ) {
+					$answers = $this->get_question_answers( $row['id'], $type );
+					$title   = $row['title'];
+					$list    .= "<div class='row'>";
+					$list    .= "<span class='col-md-12' style='margin-bottom: 10px;font-weight: bold; '>$title</span>";
+					$list    .= $answers;
+					$list    .= "</div>";
 
-			$query  = "select * from mdl_poll_q where pid=$pid";
-			$result = $this->db->query( $query );
-			while ( $row = $result->fetch( PDO::FETCH_ASSOC ) ) {
-				$answers = $this->get_question_answers( $row['id'], $type );
-				$title   = $row['title'];
-				$list    .= "<div class='row'>";
-				$list    .= "<span class='col-md-12' style='margin-bottom: 10px;font-weight: bold; '>$title</span>";
-				$list    .= $answers;
-				$list    .= "</div>";
-
-				$list .= "<div class='row'>";
-				$list .= "<span class='col-md-12'><br></span>";
-				$list .= "</div>";
+					$list .= "<div class='row'>";
+					$list .= "<span class='col-md-12'><br></span>";
+					$list .= "</div>";
+				}
 
 			}
 		} // end if $num>0
@@ -75,27 +76,28 @@ class Quiz {
 
 	function get_poll_page( $type ) {
 		$list = "";
-
 		$title    = ( $type == 1 ) ? 'Polling Questions' : 'News Quiz';
 		$btnID    = ( $type == 1 ) ? 'submit_poll' : 'submit_quiz';
 		$btnTitle = ( $type == 1 ) ? 'Submit Research' : 'Submit Quiz';
 		$aid      = $this->get_news_id();
-		$data     = $this->get_poll_data( $aid, $type );
-		$list     .= "<div id='container36' style='width: 738px;height: auto;'>";
+		if ( $aid > 0 ) {
+			$data = $this->get_poll_data( $aid, $type );
+			$list .= "<div id='container36' style='width: 738px;height: auto;'>";
 
-		$list .= "<div class='row' style='margin-top: 15px;margin-bottom: 15px;'>";
-		$list .= "<span style='font-size: 20px;border-bottom: 2px solid #000000;padding-bottom: 2px;'>$title</span>";
-		$list .= "</div>";
+			$list .= "<div class='row' style='margin-top: 15px;margin-bottom: 15px;'>";
+			$list .= "<span style='font-size: 20px;border-bottom: 2px solid #000000;padding-bottom: 2px;'>$title</span>";
+			$list .= "</div>";
 
-		$list .= "<div class='row'>";
-		$list .= "<span class='col-md-12'>$data</span>";
-		$list .= "</div>";
+			$list .= "<div class='row'>";
+			$list .= "<span class='col-md-12'>$data</span>";
+			$list .= "</div>";
 
-		$list .= "<div class='row' style='text-align: center;margin-bottom: 25px;'>";
-		$list .= "<span class='sol-md-12'><button class='btn btn-primary' id='$btnID'>$btnTitle</button></span>";
-		$list .= "</dv>";
+			$list .= "<div class='row' style='text-align: center;margin-bottom: 25px;'>";
+			$list .= "<span class='sol-md-12'><button class='btn btn-primary' id='$btnID'>$btnTitle</button></span>";
+			$list .= "</dv>";
 
-		$list .= "</div>";
+			$list .= "</div>";
+		}
 
 		return $list;
 	}

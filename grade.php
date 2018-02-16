@@ -5,9 +5,11 @@ require_once './pheader.php';
 ?>
 
 <input type="hidden" id="userid" value="<?php echo $USER->id; ?>">
+<input type="hidden" id="group_users" value="<?php echo $groups_string; ?>">
 
 <!-- Article iFrame -->
-<br><br><div class="row" id="page" style="margin: auto;text-align: center;">
+<br><br>
+<div class="row" id="page" style="margin: auto;text-align: center;">
 
     <iframe id='pageIframe' style="margin-top:15px;width:935px;margin-left-30px;text-align: left;" frameborder="0"
             src="<?php echo $articleURL; ?>"></iframe>
@@ -20,7 +22,7 @@ require_once './pheader.php';
 </div>
 
 <!-- Container for all pages loaded via AJAX -->
-<div id="ajax_container" style="width: 935px;margin-top: 15px;"></div>
+<div id="ajax_container" style="width: 935px;margin-top: 15px;text-align: left;"></div>
 
 <div id="poll_container" style="width: 935px;margin-top: 15px;"></div>
 <div id="quiz_container" style="width: 935px;margin-top: 15px;"></div>
@@ -44,7 +46,7 @@ require_once './pheader.php';
 
         $('#dicIframe').load(function () {
             $(this).height($(this).contents().height());
-            $(this).width($(this).contents().width());
+            //$(this).width($(this).contents().width());
         });
 
         $('#pageIframe').load(function () {
@@ -74,6 +76,13 @@ require_once './pheader.php';
         var gradesURL = '/lms/custom/common/get_grades_page.php';
         $.post(gradesURL, {userid: userid}).done(function (data) {
             $('#ajax_container').html(data);
+            var users = $('#group_users').val();
+            console.log('Grpoup users: ' + users);
+            var group_users = users.split(",");
+            for (i = 0; i < group_users.length; i++) {
+                var tableid = '#student_grades_' + group_users[i];
+                $(tableid).DataTable();
+            }
             $('#grades_table').DataTable();
             $('#ajax_container').show();
         });
@@ -201,11 +210,20 @@ require_once './pheader.php';
                     var url = '/lms/custom/common/get_grades_page.php';
                     $.post(url, {userid: userid}).done(function (data) {
                         $('#ajax_container').html(data);
+                        var users = $('#group_users').val();
+                        var group_users = users.split(",");
+                        for (i = 0; i < group_users.length; i++) {
+                            var tableid = '#student_grades_' + group_users[i];
+                            $(tableid).DataTable();
+                        }
                         $('#grades_table').DataTable();
                         $('#ajax_container').show();
 
                         $('#page').hide();
                         $('#dic').hide();
+                        $('#poll_container').hide();
+                        $('#quiz_container').hide();
+                        $('#forum_container').hide();
 
                     });
 

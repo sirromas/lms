@@ -21,17 +21,26 @@ else {
 global $USER;
 $userid     = $USER->id;
 $articleURL = $nav->get_article_url();
+$groupUsers = array();
+//$dicURL     = "https://www." . $_SERVER['SERVER_NAME'] . "/lms/dictionary/index.php";
+$dicURL="https://www.newsfactsandanalysis.com/lms/mod/glossary/view.php?id=6";
+$rgroup     = 13; // This is special group for readers only
+$groups     = $nav->get_user_groups(); // array
+foreach ( $groups as $groupid ) {
+	$gu = $nav->get_group_users( $groupid );
+	foreach ( $gu as $userid ) {
+		array_push( $groupUsers, $userid );
+	}
+}
 
-$dicURL = "https://www." . $_SERVER['SERVER_NAME'] . "/lms/dictionary/index.php";
-$rgroup = 13; // This is special group for readers only
-$groups = $nav->get_user_groups(); // array
+$groups_string = implode( ',', $groupUsers );
 
 $ar      = new Archive();
 $archive = $ar->get_archive_page();
 
 $gr         = new Grades();
 $gradesPage = $gr->get_grades_page( $userid );
-$groupname  = $gr->get_group_name( $gr->get_postuser_group( $userid ) ) ;
+$groupname  = $gr->get_group_name( $gr->get_postuser_group( $userid ) );
 $meetURL    = "https://demo.bigbluebutton.org/b/meetings/$groupname";
 
 ?>

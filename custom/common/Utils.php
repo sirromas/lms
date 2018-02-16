@@ -402,6 +402,24 @@ class Utils {
 		return $roleid;
 	}
 
+	function get_user_role_by_id( $userid ) {
+		$contextid = $this->get_course_context();
+		if ( $userid != 2 ) {
+			$query  = "select * from mdl_role_assignments "
+			          . "where contextid=$contextid "
+			          . "and userid=$userid";
+			$result = $this->db->query( $query );
+			while ( $row = $result->fetch( PDO::FETCH_ASSOC ) ) {
+				$roleid = $row['roleid'];
+			}
+		} // end if
+		else {
+			$roleid = 0; // Admin & Manager
+		} // end else
+
+		return $roleid;
+	}
+
 	/**
 	 * @return array
 	 */
@@ -468,7 +486,7 @@ class Utils {
 	 */
 	function get_news_id() {
 		$now    = time();
-		$query  = "select * from mdl_article where expire>=$now order by id desc limit 0,1";
+		$query  = "select * from mdl_article where $now between start and expire order by id desc limit 0,1";
 		$result = $this->db->query( $query );
 		while ( $row = $result->fetch( PDO::FETCH_ASSOC ) ) {
 			$aid = $row['id'];
