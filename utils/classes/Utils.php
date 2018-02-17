@@ -1752,8 +1752,8 @@ class Utils2 {
 		$now             = time();
 		$newsdir         = $this->get_article_directory( $post['date1'], $post['date2'] );
 		$news_dir_status = $this->is_news_exists( $newsdir );
-		$start=strtotime($post['date1']);
-		$expire=strtotime($post['date2']);
+		$start           = strtotime( $post['date1'] );
+		$expire          = strtotime( $post['date2'] );
 		if ( $news_dir_status == 0 ) {
 			$query = "insert into mdl_article (title,  path, start, expire, added)
 					values ('" . $post['title'] . "','" . $newsdir . "', '$start', '$expire', '" . $now . "')";
@@ -1762,7 +1762,7 @@ class Utils2 {
 			$query = "update mdl_article set added='$now' where path='$newsdir'";
 		}
 		$this->db->query( $query );
-		$this->create_json_data('article');
+		$this->create_json_data( 'article' );
 	}
 
 
@@ -2022,40 +2022,58 @@ class Utils2 {
 		return $id;
 	}
 
+	function is_poll_exists( $aid, $type ) {
+		$query = "select * from mdl_poll where aid=$aid and type=$type";
+		$num   = $this->db->numrows( $query );
+
+		return $num;
+	}
+
 
 	function add_new_quiz( $item ) {
 		$list     = "";
 		$response = ( $item->type == 1 ) ? 'poll' : 'quiz';
 
-		$now   = time();
-		$aid   = $this->get_article_id_by_title( $item->article );
-		$query = "insert into mdl_poll (aid, type, title, added) values ($aid, $item->type, '" . addslashes( $item->title ) . "', '$now') ";
-		$this->db->query( $query );
-		$stmt       = $this->db->query( "SELECT LAST_INSERT_ID()" );
-		$lastid_arr = $stmt->fetch( PDO::FETCH_NUM );
-		$pollID     = $lastid_arr[0];
+		$now = time();
+		$aid = $this->get_article_id_by_title( $item->article );
 
-		$questions = $item->questions;
-		foreach ( $questions as $q ) {
-			$query = "insert into mdl_poll_q (pid, title, added) values ($pollID, '" . addslashes( $q->text ) . "', '$now')";
+		$status = $this->is_poll_exists( $aid, $item->type );
+
+		if ( $status == 0 ) {
+			$query = "insert into mdl_poll (aid, type, title, added) values ($aid, $item->type, '" . addslashes( $item->title ) . "', '$now') ";
 			$this->db->query( $query );
 			$stmt       = $this->db->query( "SELECT LAST_INSERT_ID()" );
 			$lastid_arr = $stmt->fetch( PDO::FETCH_NUM );
-			$questionID = $lastid_arr[0];
+			$pollID     = $lastid_arr[0];
 
-			$answers = $q->a;
-			foreach ( $answers as $a ) {
-				$ca    = ( $a->ca->status == 'Yes' ) ? '1' : '0';
-				$query = "insert into mdl_poll_a (qid, a, correct) values ($questionID, '" . addslashes( $a->text ) . "', $ca)";
-				//echo "Query: " . $query . "<br>";
+			$questions = $item->questions;
+			foreach ( $questions as $q ) {
+				$query = "insert into mdl_poll_q (pid, title, added) values ($pollID, '" . addslashes( $q->text ) . "', '$now')";
 				$this->db->query( $query );
-			} // end foreach
-		} // end foreach
+				$stmt       = $this->db->query( "SELECT LAST_INSERT_ID()" );
+				$lastid_arr = $stmt->fetch( PDO::FETCH_NUM );
+				$questionID = $lastid_arr[0];
 
-		$list .= "<div class='row' style='margin-top: 15px;'>";
-		$list .= "<span class='col-md-4'>New $response was successfully added</span>";
-		$list .= "<span class='col-md-3'><button class='btn btn-primary' id='cancelQuiz'>Back to quizzes</button></span>";
-		$list .= "</div>";
+				$answers = $q->a;
+				foreach ( $answers as $a ) {
+					$ca    = ( $a->ca->status == 'Yes' ) ? '1' : '0';
+					$query = "insert into mdl_poll_a (qid, a, correct) values ($questionID, '" . addslashes( $a->text ) . "', $ca)";
+					//echo "Query: " . $query . "<br>";
+					$this->db->query( $query );
+				} // end foreach
+			} // end foreach
+
+			$list .= "<div class='row' style='margin-top: 15px;'>";
+			$list .= "<span class='col-md-4'>New $response was successfully added</span>";
+			$list .= "<span class='col-md-3'><button class='btn btn-primary' id='cancelQuiz'>Back to quizzes</button></span>";
+			$list .= "</div>";
+		} // end if
+		else {
+			$list .= "<div class='row' style='margin-top: 15px;'>";
+			$list .= "<span class='col-md-4'>This item already exists</span>";
+			$list .= "<span class='col-md-3'><button class='btn btn-primary' id='cancelQuiz'>Back to quizzes</button></span>";
+			$list .= "</div>";
+		} // end else
 
 		return $list;
 	}
@@ -2171,16 +2189,34 @@ class Utils2 {
 		return $list;
 	}
 
+	function is_forum_exists( $aid ) {
+		$query = "select * from mdl_board where aid=$aid";
+		$num   = $this->db->numrows( $query );
+
+		return $num;
+	}
+
 	function add_new_forum( $item ) {
-		$list  = "";
-		$now   = time();
-		$aid   = $this->get_article_id_by_title( $item->article );
-		$query = "insert into mdl_board (aid, title, added) values ($aid, '$item->title','$now')";
-		$this->db->query( $query );
-		$list .= "<div class='row' style='margin-top: 15px;'>";
-		$list .= "<span class='col-md-5'>New Disscussion Board was successfully added.</span>";
-		$list .= "<span class='col-md-3'><button class='btn btn-primary' id='cancelForum'>Return</button></span>";
-		$list .= "</div>";
+		$list   = "";
+		$now    = time();
+		$aid    = $this->get_article_id_by_title( $item->article );
+		$status = $this->is_forum_exists( $aid );
+		if ( $status == 0 ) {
+			$query = "insert into mdl_board (aid, title, added) values ($aid, '$item->title','$now')";
+			$this->db->query( $query );
+
+			$list .= "<div class='row' style='margin-top: 15px;'>";
+			$list .= "<span class='col-md-5'>New Disscussion Board was successfully added.</span>";
+			$list .= "<span class='col-md-3'><button class='btn btn-primary' id='cancelForum'>Return</button></span>";
+			$list .= "</div>";
+		} // end if
+		else {
+			$list .= "<div class='row' style='margin-top: 15px;'>";
+			$list .= "<span class='col-md-5'>Item already exists</span>";
+			$list .= "<span class='col-md-3'><button class='btn btn-primary' id='cancelForum'>Return</button></span>";
+			$list .= "</div>";
+		} // end else
+
 
 		return $list;
 	}

@@ -38,7 +38,7 @@ class Archive extends Utils {
 			$list .= "<th>Title</th>";
 			$list .= "<th>Link</th>";
 			$list .= "<th>Date</th>";
-			$list .= "<th>Operations</th>";
+			//$list .= "<th>Operations</th>";
 			$list .= "</tr>";
 			$list .= "</thead>";
 			$list .= "<tbody>";
@@ -51,7 +51,7 @@ class Archive extends Utils {
 				$list .= "<td>$item->title</td>";
 				$list .= "<td>$path</td>";
 				$list .= "<td>$date</td>";
-				$list .= "<td><a href='#' onclick='return false;' class='ar_item_del' data-id='$item->id'>Delete</a></td>";
+				//$list .= "<td><a href='#' onclick='return false;' class='ar_item_del' data-id='$item->id'>Delete</a></td>";
 				$list .= "</tr>";
 			} // end foreach
 			$list .= "</tbody>";

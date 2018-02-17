@@ -72,6 +72,14 @@ require_once './pheader.php';
             $('#forum_container').height('#forum_container').contents().height();
         });
 
+
+        function get_news_forum() {
+            $.post(forumURL, {userid: userid}).done(function (data) {
+                $('#forum_container').html(data);
+                $('#forum_container').height('#forum_container').contents().height();
+            });
+        }
+
         // Make grades page first during app open
         var gradesURL = '/lms/custom/common/get_grades_page.php';
         $.post(gradesURL, {userid: userid}).done(function (data) {

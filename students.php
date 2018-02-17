@@ -68,6 +68,14 @@ require_once './sheader.php';
         });
 
 
+        function get_news_forum() {
+            $.post(forumURL, {userid: userid}).done(function (data) {
+                $('#forum_container').html(data);
+                $('#forum_container').height('#forum_container').contents().height();
+            });
+        }
+
+
         $('body').on('click', function (event) {
 
             if (event.target.id == 'submit_poll') {

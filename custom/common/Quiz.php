@@ -1,25 +1,11 @@
 <?php
 
-require_once $_SERVER['DOCUMENT_ROOT'] . '/lms/class.database.php';
+require_once $_SERVER['DOCUMENT_ROOT'] . '/lms/custom/common/Utils.php';
 
-class Quiz {
-
-	public $db;
+class Quiz extends Utils {
 
 	function __construct() {
-		$this->db = new pdo_db();
-	}
-
-
-	function get_news_id() {
-		$now    = time();
-		$query  = "select * from mdl_article where $now  between  start and  expire order by id desc limit 0,1";
-		$result = $this->db->query( $query );
-		while ( $row = $result->fetch( PDO::FETCH_ASSOC ) ) {
-			$aid = $row['id'];
-		}
-
-		return $aid;
+		parent::__construct();
 	}
 
 	function get_question_answers( $qid, $type ) {
@@ -74,14 +60,93 @@ class Quiz {
 
 	}
 
-	function get_poll_page( $type ) {
-		$list = "";
-		$title    = ( $type == 1 ) ? 'Polling Questions' : 'News Quiz';
+	function get_poll_id( $aid, $type ) {
+		$pid   = 0;
+		$query = "select * from mdl_poll where aid=$aid and type=$type";
+		$num   = $this->db->numrows( $query );
+		if ( $num > 0 ) {
+			$result = $this->db->query( $query );
+			while ( $row = $result->fetch( PDO::FETCH_ASSOC ) ) {
+				$pid = $row['id'];
+			}
+		} // end if $num > 0
+
+		return $pid;
+	}
+
+	function get_poll_questions( $pid ) {
+		$q     = array();
+		$query = "select * from mdl_poll_q where pid=$pid";
+		$num   = $this->db->numrows( $query );
+		if ( $num > 0 ) {
+			$result = $this->db->query( $query );
+			while ( $row = $result->fetch( PDO::FETCH_ASSOC ) ) {
+				$q[] = $row['id'];
+			}
+		} // end if $num>0
+
+		return $q;
+	}
+
+	function get_poll_answers( $aid, $type ) {
+		$a   = array();
+		$pid = $this->get_poll_id( $aid, $type );
+		if ( $pid > 0 ) {
+			$q = $this->get_poll_questions( $pid );
+			if ( count( $q ) > 0 ) {
+				$qs    = implode( ',', $q );
+				$query = "select * from mdl_poll_a where qid in ($qs)";
+				$num   = $this->db->numrows( $query );
+				if ( $num > 0 ) {
+					$result = $this->db->query( $query );
+					while ( $row = $result->fetch( PDO::FETCH_ASSOC ) ) {
+						$a[] = $row['id'];
+					}
+				} // end if $num>0
+			} // end if count($q)>0
+		} // end if $pid > 0
+
+		return $a;
+
+	}
+
+
+	function is_student_already_took_poll( $aid, $type, $userid ) {
+		$status = 0;
+		$a      = $this->get_poll_answers( $aid, $type );
+		if ( count( $a ) > 0 ) {
+			$as     = implode( ',', $a );
+			$query  = "select * from mdl_poll_student_answers where userid=$userid and aid in ($as)";
+			$status = $this->db->numrows( $query );
+		} // end if count($a)>0
+
+		return $status;
+	}
+
+	function get_poll_submit_btn( $aid, $type, $userid ) {
+		$list     = "";
 		$btnID    = ( $type == 1 ) ? 'submit_poll' : 'submit_quiz';
 		$btnTitle = ( $type == 1 ) ? 'Submit Research' : 'Submit Quiz';
-		$aid      = $this->get_news_id();
+		$status   = $this->is_student_already_took_poll( $aid, $type, $userid );
+		if ( $status > 0 ) {
+			$list .= "<button class='btn btn-primary' id='$btnID' disabled>$btnTitle</button>";
+		} // end if
+		else {
+			$list .= "<button class='btn btn-primary' id='$btnID'>$btnTitle</button>";
+		}
+
+		return $list;
+	}
+
+	function get_poll_page( $type ) {
+		$list = "";
+		$aid  = $this->get_news_id();
 		if ( $aid > 0 ) {
-			$data = $this->get_poll_data( $aid, $type );
+			$title  = ( $type == 1 ) ? 'Polling Questions' : 'News Quiz';
+			$userid = $this->user->id;
+			$data   = $this->get_poll_data( $aid, $type );
+			$btn    = $this->get_poll_submit_btn( $aid, $type, $userid );
+
 			$list .= "<div id='container36' style='width: 738px;height: auto;'>";
 
 			$list .= "<div class='row' style='margin-top: 15px;margin-bottom: 15px;'>";
@@ -93,7 +158,7 @@ class Quiz {
 			$list .= "</div>";
 
 			$list .= "<div class='row' style='text-align: center;margin-bottom: 25px;'>";
-			$list .= "<span class='sol-md-12'><button class='btn btn-primary' id='$btnID'>$btnTitle</button></span>";
+			$list .= "<span class='sol-md-12'>$btn</span>";
 			$list .= "</dv>";
 
 			$list .= "</div>";

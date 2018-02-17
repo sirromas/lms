@@ -492,6 +492,8 @@ class Utils {
 			$aid = $row['id'];
 		}
 
+		//$aid=12; // temp workaround for testing
+
 		return $aid;
 	}
 
