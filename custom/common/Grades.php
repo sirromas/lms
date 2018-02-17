@@ -44,13 +44,20 @@ class Grades extends Utils {
 	}
 
 	function get_postuser_group( $userid ) {
-		$query  = "select * from mdl_groups_members where userid=$userid";
+		$query = "select * from mdl_groups_members where userid=$userid";
+		//echo "Query: " . $query . "<br>";
 		$result = $this->db->query( $query );
 		while ( $row = $result->fetch( PDO::FETCH_ASSOC ) ) {
 			$groupid = $row['groupid'];
 		}
+		if ( isset( $groupid ) ) {
+			return $groupid;
+		} // end if
+		else {
+			$groupid = 0;
 
-		return $groupid;
+			return $groupid;
+		}
 	}
 
 	function get_student_preface_block( $userid ) {
