@@ -1,0 +1,4 @@
+AuthType Basic
+AuthName "Access to /newsfactsandanalysis/dictionary"
+AuthUserFile /kunden/homepages/17/d212585247/htpasswd
+Require user Dictionary
