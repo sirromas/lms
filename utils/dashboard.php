@@ -36,7 +36,7 @@ if ($_REQUEST) {
 	    $publish=$u->get_publish_page();
         $quiz=$u->get_news_quiz_page();
         $forum=$u->get_news_forum_page();
-
+        $onlineClasses=$u->get_online_classes_page();
         $prices = $u->get_prices_page();
 
         $account_tab = $u->get_account_tab();
@@ -173,10 +173,11 @@ if ($_REQUEST) {
                     <li><a data-toggle="tab" href="#paid_keys">Subscription</a></li>
                     <li><a data-toggle="tab" href="#trial_keys">Trial Keys</a></li>
                     <li><a data-toggle="tab" href="#prices">Prices</a></li>
-                    <li><a data-toggle="tab" href="#publish">Publish Article</a></li>
+                    <li><a data-toggle="tab" href="#publish">Articles</a></li>
                     <li><a data-toggle="tab" href="#quiz">Quiz</a></li>
-                    <li><a data-toggle="tab" href="#forum">Discussion Board</a></li>
-                    <li><a data-toggle="tab" href="#utils_archive">Archive</a></li>
+                    <li><a data-toggle="tab" href="#forum">Board</a></li>
+                    <li><a data-toggle="tab" href="#oclasses">Online Classes</a></li>
+                    <!--<li><a data-toggle="tab" href="#utils_archive">Archive</a></li>-->
                     <li><a data-toggle="tab" href="#logout_account">Account</a></li>
                 </ul>
 
@@ -202,6 +203,9 @@ if ($_REQUEST) {
                     <div id="forum" class="tab-pane fade">
 		                <?php echo $forum; ?>
                     </div>
+                    <div id="oclasses" class="tab-pane fade">
+                        <?php echo $onlineClasses; ?>
+                    </div>
                     <div id="prices" class="tab-pane fade">
                         <?php echo $prices; ?>
                     </div>
@@ -215,6 +219,11 @@ if ($_REQUEST) {
             </div>
         </div>
         </div>
+
+        <!-- Date Time Picker -->
+        <link rel="stylesheet" type="text/css" href="/assets/js/jquery.datetimepicker.css"/ >
+        <script src="/assets/js/jquery.datetimepicker.full.min.js"></script>
+
         <script type="text/javascript">
 
             $(document).ready(function () {
@@ -227,12 +236,18 @@ if ($_REQUEST) {
                 $('#archive_table').DataTable();
                 $('#poll_table').DataTable();
                 $('#forum_table').DataTable();
+                $('#online_classes_table').DataTable();
 
 
                 // ***** Articles code *****
                 $('#a_date1').datepicker();
                 $('#a_date2').datepicker();
 
+                // ***** Video chat code *****
+                $.get('/lms/utils/data/groups.json', function (data) {
+                    $("#oclass_classes").typeahead({source: data, items: 256000});
+                });
+                $('#oclass_date').datetimepicker();
 
 
 

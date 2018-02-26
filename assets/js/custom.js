@@ -39,6 +39,22 @@ $(document).ready(function () {
         $('#login_form').submit();
     }
 
+    function get_online_classes_table() {
+        var url = '/lms/utils/get_online_classes.php';
+        $.post(url, {id: 1}).done(function (data) {
+            $('#oclasses').html(data);
+            $('#online_classes_table').DataTable();
+        });
+    }
+
+    function get_articles_table() {
+        var url = '/lms/utils/get_articles_table.php';
+        $.post(url, {id: 1}).done(function (data) {
+            $('#publish').html(data);
+            $('#archive_table').DataTable();
+        });
+    }
+
     function get_correct_answers_by_class(id) {
         var ca = [];
         var text;
@@ -895,8 +911,7 @@ $(document).ready(function () {
         if (confirm('Delete this article from archive?')) {
             var url = '/lms/utils/delete_archive_artricle.php';
             $.post(url, {id: id}).done(function (data) {
-                console.log(data);
-                //document.location.reload();
+                get_articles_table();
             });
         }
     });
@@ -905,6 +920,33 @@ $(document).ready(function () {
     $('body').on('click', function (event) {
 
         console.log('Event ID: ' + event.target.id);
+
+        if (event.target.id == 'add_new_video_chat') {
+            var title = $('#oclass_title').val();
+            var group = $('#oclass_classes').val();
+            var cdate = $('#oclass_date').val();
+            if (title == '' || group == '' || cdate == '') {
+                $('#oclass_err').html('Please provide all required fields');
+            } // end if
+            else {
+                $('#oclass_err').html('');
+                var item = {title: title, group: group, cdate: cdate};
+                var url = '/lms/utils/add_new_online_class.php';
+                $.post(url, {item: JSON.stringify(item)}).done(function (data) {
+                    get_online_classes_table();
+                });
+            } // end else
+        }
+
+        if (event.target.id.indexOf("del_online_class_") >= 0) {
+            var id = event.target.id.replace('del_online_class_', '');
+            if (confirm('Delete current class?')) {
+                var url = '/lms/utils/delete_online_class.php';
+                $.post(url, {id: id}).done(function (data) {
+                    get_online_classes_table();
+                });
+            }
+        }
 
         if (event.target.id == 'make_export') {
             var selected = [];
@@ -1458,22 +1500,6 @@ $(document).ready(function () {
         $('#body').show();
     });
 
-    $('.article').click(function () {
-
-        /*
-        var url = '/lms/custom/students/get_article_page.php';
-        $.post(url, {id: 1}).done(function (link) {
-            console.log('Link: ' + link);
-            $('#ext_container').show();
-            PDFObject.embed(link, "#ext_container");
-            $('.pdfobject-container').css('height', '100%');
-            $('.pdfobject-container').css('width', '900px');
-            $('.pdfobject-container').css('display', 'block');
-        });
-        */
-
-    });
-
     $('.ar').click(function () {
         $('#header_img').show();
         $('#body').hide();
@@ -1560,81 +1586,6 @@ $(document).ready(function () {
         return "Basic " + hash;
     }
 
-
-    /*
-    $('.nav3').click(function () {
-        $('#body').show();
-        $('#ext_container').hide();
-
-        var USERNAME = 'Dictionary';
-        var PASSWORD = 'News4Democracy!';
-        var header = btoa(USERNAME + ":" + PASSWORD);
-
-        var iframeurl = $(this).data('url');
-        var dictionary_url = 'https://www.newsfactsandanalysis.com/lms/dictionary/index.php';
-        var item = $(this).data('item');
-        var url = '/lms/custom/navigation/status.php';
-        $.post(url, {num: 1}).done(function (data) {
-            console.log('Student status: '+data);
-            if (data == 1) {
-
-                switch (item) {
-                    case 'article':
-
-                        console.log('Item clicked: '+item);
-
-                        var articleURL='https://www.newsfactsandanalysis.com/lms/current/index.html';
-                        console.log('URL: '+articleURL);
-                        $('#page').prop('src', articleURL);
-                        $('#page').prop('padding-top', '45px');
-                        $('#page').height($('#page').contents().height());
-                        $('#page').width($('#page').contents().width());
-
-
-                        break;
-                    case 'quiz':
-                        $('#page').prop('src', iframeurl);
-                        $('#page').height($('#page').contents().height());
-                        $('#page').width($('#page').contents().width());
-                        break;
-
-                    case 'forum':
-                        $('#page').prop('src', iframeurl);
-                        $('#page').height($('#page').contents().height());
-                        $('#page').width($('#page').contents().width());
-                        break;
-                    case 'dic':
-                        $('#page').prop('src', dictionary_url);
-                        $('#page').height($('#page').contents().height());
-                        $('#page').width($('#page').contents().width());
-                        break;
-                    case 'archive':
-                        $('#body').hide();
-                        var url = '/lms/custom/tutors/get_archive_page.php';
-                        $.post(url, {num: 1}).done(function (data) {
-                            $('#ext_container').html(data);
-                            $('#ext_container').show();
-                        });
-                        break;
-                    case 'grades':
-                        $('#body').hide();
-                        var url = '/lms/custom/students/my_grades.php';
-                        var userid = $('#userid').val();
-                        $.post(url, {userid: userid}).done(function (data) {
-                            $('#ext_container').html(data);
-                            $('#ext_container').show();
-                        });
-                        break;
-                } // end switch
-            } // end if
-            else {
-                var url = 'https://www.newsfactsandanalysis.com/';
-                window.location.href = url;
-            }
-        }); // end of post
-
-    }); // end of .nav3 click
-    */
 
 }); // end of document ready
 
