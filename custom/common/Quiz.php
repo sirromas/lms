@@ -43,6 +43,7 @@ class Quiz extends Utils {
 				while ( $row = $result->fetch( PDO::FETCH_ASSOC ) ) {
 					$answers = $this->get_question_answers( $row['id'], $type );
 					$title   = $row['title'];
+
 					$list    .= "<div class='row'>";
 					$list    .= "<span class='col-md-12' style='margin-bottom: 10px;font-weight: bold; '>$title</span>";
 					$list    .= $answers;
@@ -51,6 +52,7 @@ class Quiz extends Utils {
 					$list .= "<div class='row'>";
 					$list .= "<span class='col-md-12'><br></span>";
 					$list .= "</div>";
+
 				}
 
 			}
@@ -147,6 +149,29 @@ class Quiz extends Utils {
 			$data   = $this->get_poll_data( $aid, $type );
 			$btn    = $this->get_poll_submit_btn( $aid, $type, $userid );
 
+			$list.="<div id='container138'>
+						<div id='container127'></div>
+						<div id='container137'>
+							<div id='container136'>
+								<div id='container128'></div>
+								<div id='container135'>
+									<div id='container145'>
+										<br><p><span class='underline' style='margin-top: 15px;'>$title</span></p>
+										<div id='container144'>
+											
+												<br >$data <br>
+												$btn
+											    <br><br>
+											        
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>	
+					</div>";
+
+
+			/*
 			$list .= "<div id='container36' style='width: 738px;height: auto;'>";
 
 			$list .= "<div class='row' style='margin-top: 15px;margin-bottom: 15px;'>";
@@ -162,6 +187,7 @@ class Quiz extends Utils {
 			$list .= "</dv>";
 
 			$list .= "</div>";
+			*/
 		}
 
 		return $list;

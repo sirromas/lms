@@ -15,6 +15,8 @@ require_once './pheader.php';
             src="<?php echo $articleURL; ?>"></iframe>
 </div>
 
+<div id="meeting_container"><?php echo $meetURL; ?></div>
+
 <!-- Dictionary iFrame -->
 <div class="row" id="dic" style="margin: auto;text-align: center;">
     <iframe id="dicIframe" style="margin-top:15px;width:935px;margin-left-30px;text-align: left;" frameborder="0"
@@ -24,9 +26,9 @@ require_once './pheader.php';
 <!-- Container for all pages loaded via AJAX -->
 <div id="ajax_container" style="width: 935px;margin-top: 15px;text-align: left;"></div>
 
-<div id="poll_container" style="width: 935px;margin-top: 15px;"></div>
-<div id="quiz_container" style="width: 935px;margin-top: 15px;"></div>
-<div id="forum_container" style="width: 935px;margin-top: 15px;"></div>
+<div id="poll_container" style="width: 935px;margin-top: 15px;display: none;"></div>
+<div id="quiz_container" style="width: 935px;margin-top: 15px;display: none;"></div>
+<div id="forum_container" style="width: 935px;margin-top: 15px;margin-bottom: 15px;"></div><br><br><br>
 
 
 <script type="text/javascript">
@@ -43,6 +45,7 @@ require_once './pheader.php';
         $('#poll_container').hide();
         $('#quiz_container').hide();
         $('#forum_container').hide();
+        $('#meeting_container').hide();
 
         $('#dicIframe').load(function () {
             $(this).height($(this).contents().height());
@@ -232,6 +235,7 @@ require_once './pheader.php';
                         $('#poll_container').hide();
                         $('#quiz_container').hide();
                         $('#forum_container').hide();
+                        $('#meeting_container').hide();
 
                     });
 
@@ -241,13 +245,13 @@ require_once './pheader.php';
                     $("#pageIframe").attr("src", '<?php echo $articleURL; ?>');
                     $('#page').show();
 
-                    $('#poll_container').show().delay(3000);
-                    $('#quiz_container').show().delay(4000);
-                    $('#forum_container').show().delay(5000);
+                    $('#poll_container').hide();
+                    $('#quiz_container').hide();
+                    $('#forum_container').show();
 
-                    $('#ajax_container').hide();
                     $('#dic').hide();
-
+                    $('#ajax_container').hide();
+                    $('#meeting_container').show();
                     break;
 
                 case 'archive':
@@ -263,8 +267,23 @@ require_once './pheader.php';
                         $('#poll_container').hide();
                         $('#quiz_container').hide();
                         $('#forum_container').hide();
+                        $('#meeting_container').hide();
+
 
                     });
+                    break;
+
+
+                case 'quiz':
+                    $('#ajax_container').hide();
+                    $('#page').hide();
+                    $('#meet').hide();
+                    $('#dic').hide();
+                    $('#poll_container').show();
+                    $('#quiz_container').show();
+                    $('#forum_container').hide();
+                    $('#meeting_container').hide();
+
                     break;
 
                 case 'dic':
@@ -276,6 +295,7 @@ require_once './pheader.php';
                     $('#poll_container').hide();
                     $('#quiz_container').hide();
                     $('#forum_container').hide();
+                    $('#meeting_container').hide();
 
                     break;
 
@@ -294,6 +314,7 @@ require_once './pheader.php';
                         $('#quiz_container').hide();
                         $('#forum_container').hide();
                         $('#ajax_container').hide();
+                        $('#meeting_container').hide();
 
                     });
                     break;

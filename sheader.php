@@ -32,9 +32,7 @@ $ar=new Archive();
 $archive=$ar->get_archive_page();
 
 $gr     = new Grades();
-$gradesPage = $gr->get_grades_page( $userid );
-$groupname  = $gr->get_group_name( $gr->get_postuser_group( $userid ) ) ;
-$meetURL="https://demo.bigbluebutton.org/b/meetings/$groupname";
+$meetURL=$gr->get_meeting_url($userid);
 
 ?>
 
@@ -67,326 +65,12 @@ $meetURL="https://demo.bigbluebutton.org/b/meetings/$groupname";
     <script type='text/javascript'
             src='https://cdnjs.cloudflare.com/ajax/libs/bootstrap-3-typeahead/4.0.1/bootstrap3-typeahead.js'></script>
 
-    <!-- Custom JS file -->
-    <!--<script type="text/javascript" src="https://www.newsfactsandanalysis.com/assets/js/custom.js"></script>-->
-
     <!-- PDF Library -->
     <script type="text/javascript" src="https://www.newsfactsandanalysis.com/assets/js/pdf/pdfobject.js"></script>
 
+    <link rel="stylesheet" href="./body.css">
+    <link rel="stylesheet" href="./quiz.css">
 
-    <style type="text/css" media="all">
-
-        body {
-            margin-top: 0px;
-            padding-top: 0px;
-        }
-
-        a:link {
-            color: #000000;
-            text-decoration: none;
-        }
-
-        a:visited {
-            color: #000000;
-        }
-
-        a:active {
-            color: #000000;
-        }
-
-        body {
-            color: #000000;
-        }
-
-        a:hover {
-            color: #000000;
-            font-size: 16px;
-            font-weight: bold;
-        }
-
-        a.title:hover {
-            color: #000000;
-            font-weight: bold;
-            font-size: 28px;
-            font-weight: bold;
-        }
-
-        a.dictionary:hover {
-            color: #000000;
-            font-size: 17px;
-            font-weight: normal;
-        }
-
-        a.section:hover {
-            color: #000000;
-            font-size: 16px;
-            font-weight: normal;
-        }
-
-        .ds5 /*agl rulekind: base;*/
-        {
-            font-size: 22px;
-        }
-
-        .ds19 /*agl rulekind: base;*/
-        {
-            color: #000;
-            font-size: 18px;
-        }
-
-        .ds22 /*agl rulekind: base;*/
-        {
-            color: #000;
-        }
-
-        .ds23 /*agl rulekind: base;*/
-        {
-            color: #fff;
-        }
-
-        .ds76 /*agl rulekind: base;*/
-        {
-            color: #000;
-            font-size: 48px;
-            font-family: serif;
-        }
-
-        .ds80 /*agl rulekind: base;*/
-        {
-            color: #000;
-            font-size: 18px;
-            font-family: serif;
-        }
-
-        .ds83 /*agl rulekind: base;*/
-        {
-            font-family: serif;
-            font-size: 18px;
-            vertical-align: text-top;
-        }
-
-        .ds84 /*agl rulekind: base;*/
-        {
-            color: #000;
-            font-size: 22px;
-            font-family: serif;
-        }
-
-        .ds85 /*agl rulekind: base;*/
-        {
-            color: #fff;
-            font-family: serif;
-        }
-
-        .ds153 /*agl rulekind: base;*/
-        {
-            font-size: 17px;
-            font-family: cursive;
-        }
-
-        .ds154 /*agl rulekind: base;*/
-        {
-            font-size: 15px;
-        }
-
-        .ds155 /*agl rulekind: base;*/
-        {
-            font-size: 15px;
-            font-family: cursive;
-        }
-
-        .ds179 /*agl rulekind: base;*/
-        {
-            color: #830;
-            font-size: 48px;
-            font-family: serif;
-        }
-
-        .ds180 /*agl rulekind: base;*/
-        {
-            color: #830;
-            font-size: 22px;
-            font-family: serif;
-        }
-
-        .ds197 /*agl rulekind: base;*/
-        {
-            color: #830;
-            font-size: 60px;
-            font-family: serif;
-        }
-
-        .ds199 /*agl rulekind: base;*/
-        {
-            color: #000;
-            font-size: 60px;
-            font-family: serif;
-        }
-
-        .ds200 /*agl rulekind: base;*/
-        {
-            font-size: 17px;
-            font-family: serif;
-        }
-
-        .ds202 /*agl rulekind: base;*/
-        {
-            font-size: 18px;
-        }
-
-        .ds203 /*agl rulekind: base;*/
-        {
-            font-size: 18px;
-            font-family: serif;
-        }
-
-        .ds204 /*agl rulekind: base;*/
-        {
-            color: #fff;
-            font-size: 18px;
-            font-family: serif;
-        }
-
-        .ds207 /*agl rulekind: base;*/
-        {
-            font-size: 30px;
-        }
-
-        #container37 {
-            background-color: #fff;
-            width: 906px;
-            height: 320px;
-            border-style: solid;
-            border-width: 2px 1px 1px;
-        }
-
-        #container38 {
-            background-color: #cccccc;
-            background-image: url(/assets/images/assignmentbackground2.jpg);
-            width: 941px;
-            height: 341px;
-            border-style: solid;
-            border-width: 3px 1px 2px 2px;
-        }
-
-        #container36 {
-            background-color: #fff;
-            width: 972px;
-            height: 358px;
-            border-style: solid;
-            border-width: 6px 1px 3px;
-        }
-
-        .dsR2216 /*agl rulekind: base;*/
-        {
-            width: 606px;
-            height: 12.6px;
-        }
-
-        .dsR2217 /*agl rulekind: base;*/
-        {
-            width: 876px;
-            height: 27px;
-        }
-
-        .dsR2218 /*agl rulekind: base;*/
-        {
-            width: 896px;
-            height: 278px;
-        }
-
-        #container39 {
-            width: 400px;
-            height: 10px;
-        }
-
-        #container21 {
-            width: 400px;
-            height: -2px;
-        }
-
-        #container16 {
-            width: 400px;
-            height: 1px;
-        }
-
-        #container5 {
-            width: 400px;
-            height: 8px;
-        }
-
-        #container9 {
-            width: 685px;
-            height: 43px;
-        }
-
-        #container11 {
-            width: 816px;
-            height: 75px;
-        }
-
-        #container14 {
-            width: 845px;
-            height: 11px;
-        }
-
-        #container3 {
-            background-color: #fff;
-            width: 877px;
-            height: 232px;
-        }
-
-        #container7 {
-            background-color: #000;
-            width: 882px;
-            height: 238px;
-            border: solid 1px #000265;
-        }
-
-        #container40 {
-            width: 400px;
-            height: 10px;
-        }
-
-        #container31 {
-            width: 400px;
-            height: 1px;
-        }
-
-        #container41 {
-            background-color: #fff;
-            width: 400px;
-            height: 1px;
-        }
-
-        #container42 {
-            background-color: #fff;
-            width: 878px;
-            height: 44px;
-        }
-
-        #container43 {
-            width: 878px;
-            height: 47px;
-        }
-
-        #container12 {
-            background-color: #000;
-            width: 880px;
-            height: 47px;
-        }
-
-        #container44 {
-            width: 400px;
-            height: 3px;
-        }
-
-        #container34 {
-            width: 400px;
-            height: 10px;
-        }
-
-    </style>
 
 
 </head>
@@ -491,11 +175,27 @@ $meetURL="https://demo.bigbluebutton.org/b/meetings/$groupname";
                                                                                     class="ds19"> </span></span><span
                                                                                 class="ds83">
 
+                                                                    <!-- Quiz -->
+                                                                    <span class="ds203"><a href="#" data-item="quiz"
+                                                                                           class="nav3"
+                                                                                           onclick="return false;">News Quiz</a></span><span
+                                                                                    class="ds202"><span
+                                                                                        class="ds19"> </span></span><span
+                                                                                    class="ds83"><span
+                                                                                        class="ds204"> </span></span><span
+                                                                                    class="ds19">|</span><span
+                                                                                    class="ds22"><span
+                                                                                        class="ds5">|</span></span><span
+                                                                                    class="ds19">|</span><span
+                                                                                    class="ds202"><span
+                                                                                        class="ds19"> </span></span><span
+                                                                                    class="ds83">
+
 
                                                                     <!-- Dic -->
                                                                     <span class="ds203"><a href="#" data-item="dic"
                                                                                            class="nav3"
-                                                                                           onclick="return false;">Dictionary</a></span><span
+                                                                                           onclick="return false;">Political Dictionary</a></span><span
                                                                                     class="ds202"><span
                                                                                         class="ds19"> </span></span><span
                                                                                     class="ds83"><span
@@ -541,22 +241,6 @@ $meetURL="https://demo.bigbluebutton.org/b/meetings/$groupname";
                                                                                         class="ds19"> </span></span><span
                                                                                     class="ds83"><span
                                                                                         class="ds204"> </span></span>
-
-                                                                            <!-- Class Room -->
-                                                                    <span class="ds203"><a target="_blank"
-                                                                                href="<?php echo $meetURL; ?>" class="nav3" data-item="class">
-                                                                                Class Room</a></span><span
-                                                                                    class="ds202"><span
-                                                                                        class="ds19"> </span></span><span
-                                                                                    class="ds83"><span
-                                                                                        class="ds204"> </span></span><span
-                                                                                    class="ds19">|</span><span
-                                                                                    class="ds22"><span
-                                                                                        class="ds5">|</span></span><span
-                                                                                    class="ds19">|</span><span
-                                                                                    class="ds202"><span
-                                                                                        class="ds19"> </span></span><span
-                                                                                    class="ds83">
 
                                                                     <!-- Logout -->
                                                                         <span class="ds204"> </span></span>

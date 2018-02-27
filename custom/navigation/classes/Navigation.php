@@ -411,6 +411,7 @@ class Navigation extends Utils {
 	function get_article_url() {
 		$now    = time();
 		$query  = "select * from mdl_article where $now between start and expire order by id desc limit 0,1";
+		//echo "Query: ".$query."<br>";
 		$result = $this->db->query( $query );
 		while ( $row = $result->fetch( PDO::FETCH_ASSOC ) ) {
 			$path = $row['path'];

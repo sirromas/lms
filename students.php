@@ -12,6 +12,10 @@ require_once './sheader.php';
             src="<?php echo $articleURL; ?>"></iframe>
 </div>
 
+<div style="" class="row" id="meeting_container"><?php echo $meetURL; ?></div>
+
+
+
 <!-- Dictionary iFrame -->
 <div class="row" id="dic" style="margin: auto;text-align: center;display: none;">
     <iframe id="dicIframe" style="margin-top:15px;width:935px;margin-left-30px;text-align: left;" frameborder="0"
@@ -21,8 +25,8 @@ require_once './sheader.php';
 <!-- Container for all pages loaded via AJAX -->
 <div id="ajax_container" style="width: 935px;margin-top: 15px;"></div>
 
-<div id="poll_container" style="width: 935px;margin-top: 15px;"></div>
-<div id="quiz_container" style="width: 935px;margin-top: 15px;"></div>
+<div id="poll_container" style="width: 935px;margin-top: 15px;display: none;"></div>
+<div id="quiz_container" style="width: 935px;margin-top: 15px;display: none;"></div>
 <div id="forum_container" style="width: 935px;margin-top: 15px;"></div>
 
 </body>
@@ -207,11 +211,23 @@ require_once './sheader.php';
                         $('#poll_container').hide();
                         $('#quiz_container').hide();
                         $('#forum_container').hide();
+                        $('#meeting_container').hide();
                     });
 
                     break;
                 case 'article':
                     document.location.reload();
+                    break;
+
+                case 'quiz':
+
+                    $('#ajax_container').hide();
+                    $('#page').hide();
+                    $('#dic').hide();
+                    $('#poll_container').show();
+                    $('#quiz_container').show();
+                    $('#forum_container').hide();
+                    $('#meeting_container').hide();
                     break;
 
                 case 'archive':
@@ -227,6 +243,7 @@ require_once './sheader.php';
                         $('#poll_container').hide();
                         $('#quiz_container').hide();
                         $('#forum_container').hide();
+                        $('#meeting_container').hide();
 
                     });
                     break;
@@ -240,6 +257,7 @@ require_once './sheader.php';
                     $('#poll_container').hide();
                     $('#quiz_container').hide();
                     $('#forum_container').hide();
+                    $('#meeting_container').hide();
 
                     break;
 
@@ -258,6 +276,7 @@ require_once './sheader.php';
                         $('#quiz_container').hide();
                         $('#forum_container').hide();
                         $('#ajax_container').hide();
+                        $('#meeting_container').hide();
 
                     });
                     break;

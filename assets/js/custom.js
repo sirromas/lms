@@ -43,7 +43,11 @@ $(document).ready(function () {
         var url = '/lms/utils/get_online_classes.php';
         $.post(url, {id: 1}).done(function (data) {
             $('#oclasses').html(data);
+            $('#oclass_date').datetimepicker();
             $('#online_classes_table').DataTable();
+            $.get('/lms/utils/data/groups.json', function (data) {
+                $("#oclass_classes").typeahead({source: data, items: 256000});
+            });
         });
     }
 
