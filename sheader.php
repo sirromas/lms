@@ -23,8 +23,8 @@ global $USER;
 $userid     = $USER->id;
 $articleURL = $nav->get_article_url();
 
-//$dicURL     = "https://www." . $_SERVER['SERVER_NAME'] . "/lms/dictionary/index.php";
-$dicURL="https://www.newsfactsandanalysis.com/lms/mod/glossary/view.php?id=6";
+$dicURL     = "https://www." . $_SERVER['SERVER_NAME'] . "/lms/dictionary/index.php";
+//$dicURL="https://www.newsfactsandanalysis.com/lms/mod/glossary/view.php?id=6";
 $rgroup     = 13; // This is special group for readers only
 $groups     = $nav->get_user_groups(); // array
 
