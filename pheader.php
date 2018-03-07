@@ -22,8 +22,8 @@ global $USER;
 $userid     = $USER->id;
 $articleURL = $nav->get_article_url();
 $groupUsers = array();
-$dicURL     = "https://www." . $_SERVER['SERVER_NAME'] . "/lms/dictionary/index.php";
-//$dicURL="https://www.newsfactsandanalysis.com/lms/mod/glossary/view.php?id=6";
+//$dicURL     = "https://www." . $_SERVER['SERVER_NAME'] . "/lms/dictionary/index.php";
+$dicURL="https://www.newsfactsandanalysis.com/dictionary/politicaldictionary.html";
 $rgroup     = 13; // This is special group for readers only
 $groups     = $nav->get_user_groups(); // array
 foreach ( $groups as $groupid ) {
@@ -240,6 +240,37 @@ $meetURL    = $gr->get_meeting_url($userid);
                                                                                 onclick="return false;"
                                                                                 data-item="grades">Grades</a></span><span
                                                                             class="ds202"><span
+                                                                                class="ds19"> </span></span><span
+                                                                            class="ds83"><span
+                                                                                class="ds204"> </span></span><span
+                                                                            class="ds19">|</span><span
+                                                                            class="ds22"><span
+                                                                                class="ds5">|</span></span><span
+                                                                            class="ds19">|</span><span
+                                                                            class="ds202"><span
+                                                                                class="ds19"> </span></span>
+
+                                                                    <!-- About Us -->
+                                                                    <span class="ds203"><a
+                                                                                href="https://newsfactsandanalysis.com/about.html"
+                                                                                class="nav2"
+                                                                                target="_blank">About Us</a></span><span
+                                                                            class="ds202"><span
+                                                                                class="ds19"> </span></span><span
+                                                                            class="ds83"><span
+                                                                                class="ds204"> </span></span><span
+                                                                            class="ds19">|</span><span
+                                                                            class="ds22"><span
+                                                                                class="ds5">|</span></span><span
+                                                                            class="ds19">|</span><span
+                                                                            class="ds202"><span
+                                                                                class="ds19"> </span></span>
+
+                                                                    <!-- Contact Us -->
+                                                                    <span class="ds203"><a
+                                                                                href="mailto:info@newsfactsandanalysis.com"
+                                                                                class="nav2">Contact Us</a></span>
+                                                                    <span class="ds202"><span
                                                                                 class="ds19"> </span></span><span
                                                                             class="ds83"><span
                                                                                 class="ds204"> </span></span><span

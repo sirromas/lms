@@ -28,8 +28,10 @@ require_once './pheader.php';
 
 <div id="poll_container" style="width: 935px;margin-top: 15px;display: none;"></div>
 <div id="quiz_container" style="width: 935px;margin-top: 15px;display: none;"></div>
-<div id="forum_container" style="width: 935px;margin-top: 15px;margin-bottom: 15px;"></div><br><br><br>
+<div id="forum_container" style="width: 935px;margin-top: 15px;margin-bottom: 15px;text-align: center;margin-left: 9%"></div><br><br><br>
 
+<div id="copyright_part1" style="width: 935px;text-align: center;"><hr></div>
+<div id="copyright_part2" style="width: 935px;text-align: center;margin-bottom: 25px;">© copyright 2018 by NewsFacts & Analysis. All Rights Reserved.</div>
 
 <script type="text/javascript">
 

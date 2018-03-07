@@ -1,8 +1,10 @@
 <?php
 
 $referer = $_SERVER['HTTP_REFERER'];
+echo "Referrer: ".$referer."<br>";
 
-if ($referer=='https://www.newsfactsandanalysis.com/lms/students.php' || $referer=='https://www.newsfactsandanalysis.com/lms/grade.php') {
+if ( $referer=='' || $referer=='https://www.newsfactsandanalysis.com/lms/students.php'
+    || $referer=='https://www.newsfactsandanalysis.com/lms/grade.php') {
 
 ?>
 

@@ -29,6 +29,9 @@ require_once './sheader.php';
 <div id="quiz_container" style="width: 935px;margin-top: 15px;display: none;"></div>
 <div id="forum_container" style="width: 935px;margin-top: 15px;"></div>
 
+<div id="copyright_part1" style="width: 935px;text-align: center;"><hr></div>
+<div id="copyright_part2" style="width: 935px;text-align: center;margin-bottom: 25px;">© copyright 2018 by NewsFacts & Analysis. All Rights Reserved.</div>
+
 </body>
 </html>
 
@@ -45,6 +48,11 @@ require_once './sheader.php';
         $('#dicIframe').load(function () {
             $(this).height($(this).contents().height());
             //$(this).width($(this).contents().width());
+        });
+
+        var iframe= $('#dicIframe').contents();
+        iframe.find(".dnavigation").click(function(){
+            console.log('Link inside iframe clicked ...');
         });
 
         $('#pageIframe').load(function () {

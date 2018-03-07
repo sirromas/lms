@@ -557,17 +557,10 @@
 
 
     $(document).ready(function () {
-        console.log("ready!");
+        console.log("Dictionary bar ready!");
 
-        $('.dnavigation').click(function () {
-
-            var iframeurl = $(this).data('url');
-            console.log('IFRAME URL: ' + iframeurl);
-            /*
-            $.get(iframeurl, function( data ) {
-                $('#container4').html(data);
-            });
-            */
+        $("[name='topFrame']").load(function () {
+            $(this).height($(this).contents().height());
         });
 
     });
