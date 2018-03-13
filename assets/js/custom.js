@@ -920,10 +920,43 @@ $(document).ready(function () {
         }
     });
 
+    $('.ar_item_edit').click(function () {
+        var id = $(this).data('id');
+        var url = '/lms/utils/edit_archive_artricle.php';
+        $.post(url, {id: id}).done(function (data) {
+            $("body").append(data);
+            $("#myModal").modal('show');
+            $('#ae_date1').datepicker();
+            $('#ae_date2').datepicker();
+        });
+    });
+
 
     $('body').on('click', function (event) {
 
         console.log('Event ID: ' + event.target.id);
+
+
+        if (event.target.id == 'change_article_dates_done') {
+            var aid = $('#aid').val();
+            var date1 = $('#ae_date1').val();
+            var date2 = $('#ae_date2').val();
+            if (date1 == '' || date2 == '') {
+                $('#ae_err').html('Please select article date(s)');
+            } // end if
+            else {
+                $('#ae_err').html('');
+                var item = {aid: aid, date1: date1, date2: date2};
+                var url = '/lms/utils/update_article_dates.php';
+                $.post(url, {item: JSON.stringify(item)}).done(function (data) {
+                    document.location.reload();
+                }); // end of post
+            } // end else
+        }
+
+        if (event.target.id == 'cancel_article') {
+            document.location.reload();
+        }
 
         if (event.target.id == 'add_new_video_chat') {
             var title = $('#oclass_title').val();

@@ -24,6 +24,12 @@ class Utils2
     }
 
     // **************** Classes functionality ******************
+
+    /**
+     * @param $userid
+     *
+     * @return mixed
+     */
     function get_user_role($userid)
     {
         $query  = "select * from  mdl_role_assignments where userid=$userid";
@@ -35,38 +41,28 @@ class Utils2
         return $roleid;
     }
 
+    /**
+     * @param $login
+     * @param $password
+     *
+     * @return int
+     */
     function authorize($login, $password)
     {
-        $encryptedpwd = password_hash(trim($password), PASSWORD_DEFAULT);
         $this->create_json_data('article');
         $this->create_json_data('groups');
-        $query = "select * from mdl_user "
-            . "where username='$login'";
-        $num = $this->db->numrows($query);
-        if ($num > 0 && password_verify($password, $encryptedpwd)) {
-            $result = $this->db->query($query);
-            while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
-                $userid = $row['id'];
-            } // end while
-            if ($userid == 2) {
-                // It is admin
-                return 1;
-            } // end if
-            else {
-                $roleid = $this->get_user_role($userid);
-                if ($roleid < 3) {
-                    return 1;
-                } // end if
-                else {
-                    return 0;
-                } // end
-            } // end else
-        } // end if $num > 0
-        else {
-            return 0;
-        }
+        $query = "select * from mdl_admin_login "
+            . "where username='$login' and password='$password'";
+        $num   = $this->db->numrows($query);
+
+        return $num;
     }
 
+    /**
+     * @param bool $headers
+     *
+     * @return string
+     */
     function get_classes_list($headers = true)
     {
         $items = array();
@@ -87,6 +83,12 @@ class Utils2
         return $list;
     }
 
+    /**
+     * @param      $groups
+     * @param bool $headers
+     *
+     * @return string
+     */
     function create_classes_list_tab($groups, $headers = true)
     {
         $list = "";
@@ -120,6 +122,9 @@ class Utils2
         return $list;
     }
 
+    /**
+     * @return mixed
+     */
     function get_classes_num()
     {
         $query  = "select count(id) as total from mdl_groups";
@@ -131,6 +136,11 @@ class Utils2
         return $total;
     }
 
+    /**
+     * @param $id
+     *
+     * @return mixed
+     */
     function get_class_members_num($id)
     {
         $query  = "select count(id) as total from mdl_groups_members "
@@ -143,6 +153,11 @@ class Utils2
         return $total;
     }
 
+    /**
+     * @param $page
+     *
+     * @return string
+     */
     function get_classes_item($page)
     {
         $items = array();
@@ -169,6 +184,11 @@ class Utils2
         return $list;
     }
 
+    /**
+     * @param $item
+     *
+     * @return string
+     */
     function search_class($item)
     {
         $items = array();
@@ -192,6 +212,11 @@ class Utils2
 
     // **************** Tutors functionality ******************
 
+    /**
+     * @param $userid
+     *
+     * @return stdClass
+     */
     function get_user_detailes($userid)
     {
         $query  = "select * from mdl_user where id=$userid";
@@ -206,6 +231,11 @@ class Utils2
         return $item;
     }
 
+    /**
+     * @param $id
+     *
+     * @return mixed
+     */
     function get_group_name($id)
     {
         $query  = "select * from mdl_groups where id=$id";
@@ -217,6 +247,11 @@ class Utils2
         return $name;
     }
 
+    /**
+     * @param $userid
+     *
+     * @return string
+     */
     function get_user_groups($userid)
     {
         $list   = "";
@@ -242,6 +277,9 @@ class Utils2
         return $list;
     }
 
+    /**
+     * @param $tutors
+     */
     function create_csv_file($tutors)
     {
         // Write CSV data
@@ -255,6 +293,11 @@ class Utils2
         fclose($output);
     }
 
+    /**
+     * @param bool $headers
+     *
+     * @return string
+     */
     function get_tutors_list($headers = true)
     {
         $items = array();
@@ -279,6 +322,12 @@ class Utils2
         return $list;
     }
 
+    /**
+     * @param      $items
+     * @param bool $headers
+     *
+     * @return string
+     */
     function create_tutors_list_tab($items, $headers = true)
     {
         $list = "";
@@ -315,6 +364,9 @@ class Utils2
         return $list;
     }
 
+    /**
+     * @return mixed
+     */
     function get_total_tutors_number()
     {
         $query  = "select count(id) as total "
@@ -328,6 +380,11 @@ class Utils2
         return $total;
     }
 
+    /**
+     * @param $page
+     *
+     * @return string
+     */
     function get_tutor_item($page)
     {
         $items = array();
@@ -355,12 +412,21 @@ class Utils2
         return $list;
     }
 
+    /**
+     * @param $userid
+     */
     function confirm_tutor($userid)
     {
         $query = "update mdl_user set policyagreed=1 where id=$userid";
         $this->db->query($query);
     }
 
+    /**
+     * @param $firstname
+     * @param $lastname
+     *
+     * @return array
+     */
     function get_user_id_by_fio($firstname, $lastname)
     {
         $users = array();
@@ -379,6 +445,11 @@ class Utils2
         return $users;
     }
 
+    /**
+     * @param $item
+     *
+     * @return string
+     */
     function search_tutor($item)
     {
         $list      = "";
@@ -412,6 +483,11 @@ class Utils2
         return $list;
     }
 
+    /**
+     * @param $id
+     *
+     * @return mixed
+     */
     function is_user_deleted($id)
     {
         $query  = "select * from mdl_user where id=$id";
@@ -425,6 +501,11 @@ class Utils2
 
     // **************** Subscription functionality ******************
 
+    /**
+     * @param bool $headers
+     *
+     * @return string
+     */
     function get_subscription_list($headers = true)
     {
         $items = array();
@@ -449,6 +530,9 @@ class Utils2
         return $list;
     }
 
+    /**
+     * @return string
+     */
     function get_paid_keys()
     {
         $list = $this->get_subscription_list();
@@ -456,6 +540,12 @@ class Utils2
         return $list;
     }
 
+    /**
+     * @param      $items
+     * @param bool $headers
+     *
+     * @return string
+     */
     function create_subscription_list($items, $headers = true)
     {
         $list = "";
@@ -500,6 +590,9 @@ class Utils2
         return $list;
     }
 
+    /**
+     * @return mixed
+     */
     function get_total_subscription()
     {
         $query  = "select count(id) as total from mdl_card_payments";
@@ -511,6 +604,11 @@ class Utils2
         return $total;
     }
 
+    /**
+     * @param $page
+     *
+     * @return string
+     */
     function get_subscritpion_item($page)
     {
         $items = array();
@@ -537,6 +635,11 @@ class Utils2
         return $list;
     }
 
+    /**
+     * @param $data
+     *
+     * @return string
+     */
     function search_subs($data)
     {
         $list        = "";
@@ -577,6 +680,11 @@ class Utils2
         return $list;
     }
 
+    /**
+     * @param $name
+     *
+     * @return array
+     */
     function get_group_members($name)
     {
         $groupid = $this->get_group_id($name);
@@ -596,6 +704,11 @@ class Utils2
         return $users;
     }
 
+    /**
+     * @param $data
+     *
+     * @return string
+     */
     function search_trial($data)
     {
         $list        = "";
@@ -669,6 +782,11 @@ class Utils2
 
     // **************** Trial keys functionality ******************
 
+    /**
+     * @param bool $header
+     *
+     * @return string
+     */
     function get_trial_keys_tab($header = true)
     {
         $items = array();
@@ -692,6 +810,9 @@ class Utils2
         return $list;
     }
 
+    /**
+     * @return string
+     */
     function get_trial_keys()
     {
         $list = $this->get_trial_keys_tab();
@@ -699,6 +820,12 @@ class Utils2
         return $list;
     }
 
+    /**
+     * @param $items
+     * @param $headers
+     *
+     * @return string
+     */
     function create_keys_list_tab($items, $headers)
     {
         $item = 'trial';
@@ -750,6 +877,9 @@ class Utils2
         return $list;
     }
 
+    /**
+     * @return mixed
+     */
     function get_trial_total()
     {
         $query  = "select count(id) as total "
@@ -762,6 +892,11 @@ class Utils2
         return $total;
     }
 
+    /**
+     * @param $page
+     *
+     * @return string
+     */
     function get_trial_item($page)
     {
         $items = array();
@@ -790,6 +925,9 @@ class Utils2
 
     // **************** Typehead block ******************
 
+    /**
+     * @param $item
+     */
     function create_json_data($item)
     {
         switch ($item) {
@@ -906,6 +1044,11 @@ class Utils2
         }
     }
 
+    /**
+     * @param $name
+     *
+     * @return mixed
+     */
     function get_groupid_by_name($name)
     {
         $query  = "select * from mdl_groups where name='$name'";
@@ -917,6 +1060,11 @@ class Utils2
         return $id;
     }
 
+    /**
+     * @param $item
+     *
+     * @return string
+     */
     function get_search_block($item)
     {
         $list = "";
@@ -950,6 +1098,12 @@ class Utils2
 
     /*     * *********************** Adjustments **************************** */
 
+    /**
+     * @param $userid
+     * @param $groupid
+     *
+     * @return string
+     */
     function get_adjust_dialog($userid, $groupid)
     {
         $list   = "";
@@ -1011,6 +1165,9 @@ class Utils2
         return $list;
     }
 
+    /**
+     * @return string
+     */
     function get_add_trial_key_dialog()
     {
         $list = "";
@@ -1056,6 +1213,11 @@ class Utils2
         return $list;
     }
 
+    /**
+     * @param $name
+     *
+     * @return int
+     */
     function get_group_id($name)
     {
         $id    = 0;
@@ -1071,12 +1233,21 @@ class Utils2
         return $id;
     }
 
+    /**
+     * @param int $length
+     *
+     * @return bool|string
+     */
     function generateRandomString($length = 25)
     {
         return substr(str_shuffle("0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"),
             0, $length);
     }
 
+    /**
+     * @param $username
+     * @param $groupname
+     */
     function add_trial_key($username, $groupname)
     {
 
@@ -1115,6 +1286,9 @@ class Utils2
         } // end if count($users)>0
     }
 
+    /**
+     * @param $subs
+     */
     function adjust_subs($subs)
     {
 
@@ -1135,6 +1309,11 @@ class Utils2
         $this->db->query($query);
     }
 
+    /**
+     * @param $users
+     *
+     * @return string
+     */
     function get_group_modal_dialog($users)
     {
         $list           = "";
@@ -1182,6 +1361,11 @@ class Utils2
         return $list;
     }
 
+    /**
+     * @param $user
+     *
+     * @return string
+     */
     function get_adjust_trial_personal_key_modal_dialog($user)
     {
         $list = "";
@@ -1238,6 +1422,11 @@ class Utils2
         return $list;
     }
 
+    /**
+     * @param $id
+     *
+     * @return string
+     */
     function get_adjust_price_modal_dialog($id)
     {
         $list = "";
@@ -1290,6 +1479,9 @@ class Utils2
         return $list;
     }
 
+    /**
+     * @return string
+     */
     function get_add_new_school_modal_dialog()
     {
         $list = "";
@@ -1333,6 +1525,9 @@ class Utils2
         return $list;
     }
 
+    /**
+     * @return string
+     */
     function get_upload_price_csv_modal_dialog()
     {
         $list = "";
@@ -1372,6 +1567,9 @@ class Utils2
         return $list;
     }
 
+    /**
+     * @param $user
+     */
     function adjust_personal_trial_key($user)
     {
         $unix_start = strtotime($user->start);
@@ -1383,6 +1581,9 @@ class Utils2
         $this->db->query($query);
     }
 
+    /**
+     * @param $users
+     */
     function adjust_group_trial_keys($users)
     {
         $dataObj    = json_decode($users);
@@ -1398,11 +1599,17 @@ class Utils2
         } // end foreach
     }
 
+    /**
+     *
+     */
     function logout()
     {
         session_destroy();
     }
 
+    /**
+     * @return string
+     */
     function get_templates_list()
     {
         $list = "";
@@ -1421,6 +1628,9 @@ class Utils2
         return $list;
     }
 
+    /**
+     * @return string
+     */
     function get_account_tab()
     {
         $list      = "";
@@ -1440,6 +1650,11 @@ class Utils2
         return $list;
     }
 
+    /**
+     * @param $id
+     *
+     * @return string
+     */
     function get_email_template($id)
     {
         $list   = "";
@@ -1466,6 +1681,9 @@ class Utils2
         return $list;
     }
 
+    /**
+     * @param $t
+     */
     function update_email_template($t)
     {
         $query = "update mdl_email_templates "
@@ -1473,6 +1691,11 @@ class Utils2
         $this->db->query($query);
     }
 
+    /**
+     * @param $name
+     *
+     * @return int
+     */
     function is_price_item_exists($name)
     {
         $query = "select * from mdl_price where institute='$name'";
@@ -1481,6 +1704,9 @@ class Utils2
         return $num;
     }
 
+    /**
+     *
+     */
     function update_price_items()
     {
         $un     = array();
@@ -1501,6 +1727,9 @@ class Utils2
         } // end foreach
     }
 
+    /**
+     * @return string
+     */
     function get_prices_page()
     {
         $list = "";
@@ -1540,6 +1769,9 @@ class Utils2
         return $list;
     }
 
+    /**
+     * @param $item
+     */
     function update_item_price($item)
     {
         $id    = $item->id;
@@ -1548,6 +1780,9 @@ class Utils2
         $this->db->query($query);
     }
 
+    /**
+     * @param $item
+     */
     function add_new_school_to_db($item)
     {
         $name  = $item->name;
@@ -1558,6 +1793,9 @@ class Utils2
         $this->db->query($query);
     }
 
+    /**
+     * @return array
+     */
     function get_archive_items()
     {
         $items = array();
@@ -1577,6 +1815,9 @@ class Utils2
         return $items;
     }
 
+    /**
+     * @return string
+     */
     function get_archive_page()
     {
         $list  = "";
@@ -1605,7 +1846,8 @@ class Utils2
                 $list .= "<td>$item->title</td>";
                 $list .= "<td>$path</td>";
                 $list .= "<td>$date</td>";
-                $list .= "<td><a href='#' onclick='return false;' class='ar_item_del' data-id='$item->id'>Delete</a></td>";
+                $list .= "<td><a href='#' onclick='return false;' class='ar_item_del' data-id='$item->id'>Delete</a>";
+                $list .= "&nbsp;&nbsp;&nbsp;<a href='#' onclick='return false;' class='ar_item_edit' data-id='$item->id'>Edit</a></td>";
                 $list .= "</tr>";
             } // end foreach
         } // end if (count($items) > 0
@@ -1617,6 +1859,89 @@ class Utils2
         return $list;
     }
 
+    /**
+     * @param $id
+     *
+     * @return string
+     */
+    function get_edit_article_modal_dialog($id)
+    {
+        $list = "";
+
+        $query  = "select * from mdl_article where id=$id";
+        $result = $this->db->query($query);
+        while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+            $start  = date('m/d/Y', $row['start']);
+            $expire = date('m/d/Y', $row['expire']);
+        }
+
+        $list
+            .= " <div id='myModal' class='modal fade' role='dialog'>
+              <div class='modal-dialog'>
+
+                <!-- Modal content-->
+                <div class='modal-content'>
+                  <div class='modal-header'>
+                    <input type='hidden' id='aid' value='$id'>
+                    <h4 class='modal-title'>Edit article dates</h4>
+                  </div>
+                  <div class='modal-body'>
+                 
+                    <div class='container-fluid' style='text-align:center;'>
+                    <div class='col-sm-3'>Date1*</div>
+                    <div class='col-sm-3'><input type='text' id='ae_date1' value='$start'></div>
+                    </div>
+                    
+                    <div class='container-fluid' style='text-align:center;'>
+                    <div class='col-sm-3'>Date2*</div>
+                    <div class='col-sm-3'><input type='text' id='ae_date2' value='$expire'></div>
+                    </div>
+                    
+                    
+                    <div class='container-fluid' style='text-align:center;'>
+                    <div class='col-sm-6' style='color: red;' id='ae_err'></div>
+                    </div>
+                   
+                  </div>
+                  <div class='modal-footer'>
+                    <button type='button' class='btn btn-default' id='change_article_dates_done'>Ok</button>
+                    <button type='button' class='btn btn-default' data-dismiss='modal' id='cancel_article'>Cancel</button>
+                  </div>
+                </div>
+
+              </div>
+            </div>";
+
+        return $list;
+    }
+
+    /**
+     * @param $item
+     */
+    function update_article_dates($item)
+    {
+        $upath  = $this->get_article_directory($item->date1, $item->date2);
+        $query  = "select * from mdl_article where id=$item->aid";
+        $result = $this->db->query($query);
+        while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+            $opath = $row['path'];
+        }
+        $new_path = $_SERVER['DOCUMENT_ROOT'] . "/lms/articles/$upath";
+        $old_path = $_SERVER['DOCUMENT_ROOT'] . "/lms/articles/$opath";
+        rename($old_path, $new_path);
+        $ustart = strtotime($item->date1);
+        $expire = strtotime($item->date2);
+        $query
+                = "update mdl_article 
+                  set path='$upath', 
+                  start='$ustart', 
+                  expire='$expire' where id=$item->aid";
+        $this->db->query($query);
+    }
+
+    /**
+     * @return string
+     */
     function get_upload_archive_modal_dialog()
     {
         $list = "";
@@ -1671,6 +1996,10 @@ class Utils2
         return $list;
     }
 
+    /**
+     * @param $files
+     * @param $data
+     */
     function upload_archive_article($files, $data)
     {
         if ($files['error'] == 0 && $files['size'] > 0) {
@@ -1689,6 +2018,9 @@ class Utils2
         } // end if
     }
 
+    /**
+     * @param $dir
+     */
     function rrmdir($dir)
     {
         if (is_dir($dir)) {
@@ -1706,12 +2038,35 @@ class Utils2
         }
     }
 
+
+    /**
+     * @param $id
+     */
+    function remove_article_directory($id)
+    {
+        $query  = "select * from mdl_article where id=$id";
+        $result = $this->db->query($query);
+        while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+            $opath = $row['path'];
+        }
+        $oldpath = $_SERVER['DOCUMENT_ROOT'] . "/lms/articles/$opath";
+        $newpath = $oldpath . '_deleted';
+        rename($oldpath, $newpath);
+    }
+
+    /**
+     * @param $id
+     */
     function delete_archive_article($id)
     {
+        $this->remove_article_directory($id);
         $query = "update mdl_article set active=0 where id=$id";
         $this->db->query($query);
     }
 
+    /**
+     * @param $files
+     */
     function upload_price_csv_data($files)
     {
         if ($files['error'] == 0 && $files['size'] > 0) {
@@ -1788,6 +2143,12 @@ class Utils2
     }
 
 
+    /**
+     * @param $date1
+     * @param $date2
+     *
+     * @return string
+     */
     function get_article_directory($date1, $date2)
     {
         $date1_arr = explode('/', $date1);
@@ -1799,6 +2160,11 @@ class Utils2
         return $dir;
     }
 
+    /**
+     * @param $file
+     *
+     * @return bool|string
+     */
     function unzip_archive($file)
     {
         $path   = $file['tmp_name'];
@@ -1818,6 +2184,11 @@ class Utils2
     }
 
 
+    /**
+     * @param $tmpdir
+     *
+     * @return bool
+     */
     function verify_archive($tmpdir)
     {
         $hasindex  = 0;
@@ -1837,6 +2208,12 @@ class Utils2
         }
     }
 
+    /**
+     * @param $file
+     * @param $post
+     *
+     * @return bool|string
+     */
     function move_arcticle($file, $post)
     {
         $path  = $file['tmp_name'];
@@ -1859,6 +2236,11 @@ class Utils2
         }
     }
 
+    /**
+     * @param $newsdir
+     *
+     * @return int
+     */
     function is_news_exists($newsdir)
     {
         $query = "select * from mdl_article where path='$newsdir'";
@@ -1867,6 +2249,9 @@ class Utils2
         return $num;
     }
 
+    /**
+     * @param $post
+     */
     function update_article_data($post)
     {
         $now             = time();
@@ -1890,6 +2275,10 @@ class Utils2
     }
 
 
+    /**
+     * @param $file
+     * @param $post
+     */
     function upload_article_file($file, $post)
     {
         if ($file['error'] == 0 && $file['size'] > 0) {
@@ -1948,6 +2337,11 @@ class Utils2
         return $list;
     }
 
+    /**
+     * @param $pid
+     *
+     * @return string
+     */
     function get_quiz_questions($pid)
     {
         $list = "";
@@ -1966,6 +2360,11 @@ class Utils2
         return $list;
     }
 
+    /**
+     * @param $items
+     *
+     * @return string
+     */
     function create_quiz_table($items)
     {
 
@@ -2017,6 +2416,11 @@ class Utils2
 
     }
 
+    /**
+     * @param $id
+     *
+     * @return mixed
+     */
     function get_article_title($id)
     {
         $query  = "select * from mdl_article where id=$id";
@@ -2028,6 +2432,9 @@ class Utils2
         return $title;
     }
 
+    /**
+     * @return string
+     */
     function get_total_questions_dropbbox()
     {
         $list = "";
@@ -2041,6 +2448,11 @@ class Utils2
         return $list;
     }
 
+    /**
+     * @param $type
+     *
+     * @return string
+     */
     function get_news_wizard($type)
     {
         $list     = "";
@@ -2083,6 +2495,11 @@ class Utils2
         return $list;
     }
 
+    /**
+     * @param $id
+     *
+     * @return string
+     */
     function get_question_answers($id)
     {
         $list = "";
@@ -2099,6 +2516,11 @@ class Utils2
     }
 
 
+    /**
+     * @param $total
+     *
+     * @return string
+     */
     function get_questions_block($total)
     {
         $list = "";
@@ -2129,6 +2551,11 @@ class Utils2
         return $list;
     }
 
+    /**
+     * @param $item
+     *
+     * @return string
+     */
     function get_quiz_page_step2($item)
     {
         $list      = "";
@@ -2145,6 +2572,11 @@ class Utils2
 
     }
 
+    /**
+     * @param $item
+     *
+     * @return mixed
+     */
     function get_article_id_by_title($item)
     {
         $data   = explode('&&&', $item);
@@ -2160,6 +2592,12 @@ class Utils2
         return $id;
     }
 
+    /**
+     * @param $aid
+     * @param $type
+     *
+     * @return int
+     */
     function is_poll_exists($aid, $type)
     {
         $query = "select * from mdl_poll where aid=$aid and type=$type";
@@ -2169,6 +2607,11 @@ class Utils2
     }
 
 
+    /**
+     * @param $item
+     *
+     * @return string
+     */
     function add_new_quiz($item)
     {
         $list     = "";
@@ -2253,6 +2696,11 @@ class Utils2
     }
 
 
+    /**
+     * @param $items
+     *
+     * @return string
+     */
     function create_forum_page($items)
     {
         $list = "";
@@ -2295,6 +2743,11 @@ class Utils2
         return $list;
     }
 
+    /**
+     * @param $id
+     *
+     * @return mixed
+     */
     function get_article_name_by_id($id)
     {
         $query  = "select * from mdl_article where id=$id";
@@ -2306,6 +2759,9 @@ class Utils2
         return $title;
     }
 
+    /**
+     * @return string
+     */
     function get_add_forum_page()
     {
         $list = "";
@@ -2340,6 +2796,11 @@ class Utils2
         return $list;
     }
 
+    /**
+     * @param $aid
+     *
+     * @return int
+     */
     function is_forum_exists($aid)
     {
         $query = "select * from mdl_board where aid=$aid";
@@ -2348,6 +2809,11 @@ class Utils2
         return $num;
     }
 
+    /**
+     * @param $item
+     *
+     * @return string
+     */
     function add_new_forum($item)
     {
         $list   = "";
@@ -2375,6 +2841,9 @@ class Utils2
         return $list;
     }
 
+    /**
+     * @return string
+     */
     function get_online_classes_page()
     {
         $list  = "";
@@ -2396,6 +2865,11 @@ class Utils2
         return $list;
     }
 
+    /**
+     * @param $items
+     *
+     * @return string
+     */
     function create_online_classes_page($items)
     {
         $list = "";
@@ -2443,6 +2917,9 @@ class Utils2
         return $list;
     }
 
+    /**
+     * @param $item
+     */
     function add_new_online_class($item)
     {
         $date    = strtotime($item->cdate);
@@ -2454,12 +2931,20 @@ class Utils2
         $this->db->query($query);
     }
 
+    /**
+     * @param $id
+     */
     function delete_online_class($id)
     {
         $query = "update mdl_classes set active=0 where id=$id";
         $this->db->query($query);
     }
 
+    /**
+     * @param $id
+     *
+     * @return string
+     */
     function get_online_classes_ops($id)
     {
         $list = "";
