@@ -1,0 +1,853 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>NewsFacts &amp; Analysis</title>
+
+    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+
+    <style type="text/css" media="all">
+
+        a:-webkit-any-link {
+            color: #000000;
+            text-decoration: none;
+        }
+
+        a:link {
+            color: #000000;
+            text-decoration: none;
+        }
+
+        a:visited {
+            color: #000000;
+            text-decoration: none;
+        }
+
+        a:active {
+            color: #000000;
+            text-decoration: none;
+        }
+
+        a:hover {
+            color: #5b88f8;
+            text-decoration: none;
+        }
+
+        a.title:hover {
+            color: #000000;
+            font-weight: bold;
+            font-size: 28px;
+            text-decoration: none;
+        }
+
+        a.dictionary:hover {
+            color: #000000;
+            font-size: 17px;
+            text-decoration: none;
+        }
+
+        a.section:hover {
+            color: #000000;
+            font-size: 16px;
+            text-decoration: none;
+        }
+
+        input#pd_loginbutton {
+            color: #000;
+            background-color: #fff;
+            margin-left: 18px;
+            border: solid 0.5px;
+            margin-bottom: 4px;
+            margin-top: 4px;
+        }
+
+        td {
+            font-size: 14px;
+            padding-right: 22px
+        }
+
+        a {
+            font-size: 12px;
+            font-style: normal;
+        }
+
+        input[type="text"] {
+            color: #000;
+            font-style: normal;
+            background-color: #fff !important;
+            height: 15.16px;
+        }
+
+        input[type="password"] {
+            color: #000;
+            font-style: normal;
+            background-color: #fff !important;
+            height: 15.16px;
+        }
+
+        .pd_rw_menu {
+            margin-top: 2px;
+        }
+
+        .ds71 /*agl rulekind: base;*/
+        {
+            color: #000;
+        }
+
+        .sR2609 {
+            width: auto;
+            height: 34px;
+        }
+
+        #container {
+            z-index: 1;
+
+        }
+
+        .dashed-box {
+            position: relative;
+            z-index: 1;
+            border: none;
+            height: 8em;
+            margin-bottom: 0px;
+            margin-top: 0px;
+        }
+
+        .gold-box {
+            position: absolute;
+            z-index: 3; /* put .gold-box above .green-box and .dashed-box */
+            background: transparent;
+            width: 80%;
+            left: 60px;
+            top: 3em;
+        }
+
+        .green-box {
+            position: absolute;
+            z-index: 2; /* put .green-box above .dashed-box */
+            background: transparent;
+            width: 20%;
+            left: 65%;
+            top: -25px;
+            height: 7em;
+            opacity: 0.9;
+        }
+
+        /* Google Fonts */
+        @import url(https://fonts.googleapis.com/css?family=Anonymous+Pro);
+        .ds97 /*agl rulekind: base;*/
+        {
+            color: #000;
+            font-size: 18px;
+        }
+
+        .var-highlight {
+            color: #C0AD60;
+        }
+
+        .string-highlight {
+            color: rgba(253, 149, 90, 0.8);
+        }
+
+        #typewriter:after {
+            content: "|";
+            -webkit-animation: blink 500ms linear infinite alternate;
+            animation: blink 500ms linear infinite alternate;
+        }
+
+        @-webkit-keyframes blink {
+            0% {
+                opacity: 0;
+            }
+            100% {
+                opacity: 1;
+            }
+        }
+
+        @keyframes blink {
+            0% {
+                opacity: 0;
+            }
+            100% {
+                opacity: 1;
+            }
+        }
+
+        .ds119 /*agl rulekind: base;*/
+        {
+            color: #fff;
+            font-size: 16px;
+            font-family: serif;
+        }
+
+        .ds120 /*agl rulekind: base;*/
+        {
+            font-size: 22px;
+        }
+
+        .ds121 /*agl rulekind: base;*/
+        {
+            font-size: 18px;
+            font-family: serif;
+            vertical-align: text-top;
+        }
+
+        .ds122 /*agl rulekind: base;*/
+        {
+            color: #fff;
+            font-family: serif;
+        }
+
+        .ds123 /*agl rulekind: base;*/
+        {
+            font-size: 16px;
+            font-family: serif;
+        }
+
+        .ds125 /*agl rulekind: base;*/
+        {
+            font-size: 15px;
+        }
+
+        .ds126 /*agl rulekind: base;*/
+        {
+            font-size: 15px;
+            font-family: cursive;
+        }
+
+        .ds127 /*agl rulekind: base;*/
+        {
+            color: #830;
+            font-size: 48px;
+            font-family: serif;
+        }
+
+        .ds128 /*agl rulekind: base;*/
+        {
+            color: #830;
+            font-size: 22px;
+            font-family: serif;
+        }
+
+        .ds129 /*agl rulekind: base;*/
+        {
+            color: #830;
+            font-size: 60px;
+            font-family: serif;
+        }
+
+        .ds130 /*agl rulekind: base;*/
+        {
+            color: #000;
+            font-size: 60px;
+            font-family: serif;
+        }
+
+        .ds131 /*agl rulekind: base;*/
+        {
+            color: #000;
+            font-size: 48px;
+            font-family: serif;
+        }
+
+        .ds132 /*agl rulekind: base;*/
+        {
+            color: #000;
+            font-size: 22px;
+            font-family: serif;
+        }
+
+        #container39 {
+            width: 400px;
+            height: 21px;
+        }
+
+        #container15 {
+            width: 400px;
+            height: 4px;
+        }
+
+        #container16 {
+            width: 400px;
+            height: 4px;
+        }
+
+        #container17 {
+            background-color: #000;
+            width: 179px;
+            height: 1px;
+        }
+
+        #container7 {
+            background-image: url(assets/images/newspapers.jpg);
+            position: relative;
+            top: 0;
+            left: 0;
+            width: 876px;
+            height: 331px;
+            border-style: solid;
+            border-width: 0.5px;
+        }
+
+        #container29 {
+            width: 400px;
+            height: 1px;
+        }
+
+        #container30 {
+            background-color: #fff;
+            width: 400px;
+            height: 1px;
+        }
+
+        .dsR2753 /*agl rulekind: base;*/
+        {
+            width: 307px;
+            height: 12px;
+        }
+
+        .dsR2754 /*agl rulekind: base;*/
+        {
+            width: 468px;
+        }
+
+        .dsR2755 /*agl rulekind: base;*/
+        {
+            width: 878px;
+            height: 49px;
+        }
+
+        #container32 {
+            background-color: #fff;
+            width: 878px;
+            height: 44px;
+        }
+
+        #container34 {
+            width: 878px;
+            height: 248px;
+        }
+
+        #container31 {
+            background-color: #000;
+            width: 880px;
+            height: 47px;
+        }
+
+        #container37 {
+            width: 400px;
+            height: -2px;
+        }
+
+        #container41 {
+            width: 400px;
+            height: 1px;
+        }
+
+        #container42 {
+            width: 400px;
+            height: 8px;
+        }
+
+        .dsR2756 /*agl rulekind: base;*/
+        {
+            margin: 0;
+            padding: 0;
+            width: 606px;
+            height: 12.6px;
+        }
+
+        #container43 {
+            width: 766px;
+            height: 50px;
+        }
+
+        #container44 {
+            margin: 0;
+            padding: 0;
+            width: 737px;
+            height: 66px;
+        }
+
+        #layer1 {
+            width: 879px;
+            height: 3.25em;
+        }
+
+        #container20 {
+            height: 25px;
+        }
+
+        #container48 {
+            width: 879px;
+            height: 172px;
+        }
+
+        #container4 {
+            width: 805px;
+            height: 21px;
+        }
+
+        #container3 {
+            width: 459px;
+            height: 342px;
+            border-style: none double;
+            border-width: 3px;
+        }
+
+        #container9 {
+            width: 580px;
+            height: 314px;
+        }
+
+        #container2 {
+            background-color: #fff;
+            z-index: 2;
+            width: 877px;
+            height: 674px;
+        }
+
+        #container1 {
+            background-color: #000;
+            z-index: 1;
+            width: 879px;
+            height: 678px;
+            border-style: solid;
+            border-width: 1px;
+        }
+
+        #container49 {
+            background-color: #fff;
+            width: 879px;
+            height: 177px;
+        }
+
+        #container50 {
+            background-color: #000;
+            margin-bottom: 18px;
+            width: 879px;
+            height: 179px;
+            border: solid 1px #000265;
+        }
+
+        #container6 {
+            width: 879px;
+            height: 32px;
+        }
+
+        img.dsR2647.dsR2757 {
+            width: 344px;
+            height: 279px;
+        }
+
+        #container5 {
+            width: 789px;
+            height: 6px;
+        }
+
+        .ds135 /*agl rulekind: base;*/
+        {
+            color: #000;
+            font-size: 20px;
+            font-family: serif;
+        }
+
+        .ds136 /*agl rulekind: base;*/
+        {
+            font-size: 20px;
+        }
+
+        .footer {
+            position: relative;
+            left: 0;
+            bottom: 0;
+            width: 100%;
+            color: black;
+            text-align: center;
+            margin-bottom: 0px;
+            margin-top: 0px;
+            padding: 0px;
+            font-size: 14px;
+            font-family: serif;
+            font-color: #000;
+        }
+
+        #container56 {
+            width: 347px;
+            height: 172px;
+            border-style: none solid 1px;
+        }
+
+        #container10 {
+            width: 179px;
+            height: 1px;
+            border: solid 1px #fff;
+        }
+
+        #container22 {
+            width: 348px;
+            height: 18px;
+        }
+
+        #container26 {
+            width: 259px;
+            height: 3px;
+        }
+
+        #submit_button2 {
+            width: 82.8px;
+            height: 20.94px;
+        }
+
+        #container21 {
+            background-color: #d5d6df;
+            width: 400px;
+            height: 132px;
+        }
+
+        #container27 {
+            background-color: #fff;
+            z-index: 1;
+            width: 399px;
+            height: 133px;
+            border: double 6px #000;
+        }
+
+        #container46 {
+            width: 422px;
+            height: 153px;
+            border-top: 2px solid;
+            border-right-style: solid;
+            border-bottom-style: solid;
+            border-left-style: solid;
+        }
+
+        .dsR3064 /*agl rulekind: base;*/
+        {
+            font-size: 12px;
+            font-family: courier;
+            width: 236px;
+            height: 22px;
+            vertical-align: center;
+            border-style: solid;
+            border-width: 1px;
+        }
+
+        #container45 {
+            width: 400px;
+            height: 3px;
+        }
+
+        .dsR3093 /*agl rulekind: base;*/
+        {
+            width: 464.8px;
+            height: 332px;
+        }
+
+        #container14 {
+            width: 879px;
+            height: 694px;
+        }
+
+        #container35 {
+            height: 53px;
+        }
+
+        #container38 {
+            height: 9px;
+        }
+
+        #container13 {
+            width: 324px;
+            height: 4px;
+        }
+
+        #layer2 {
+            width: 583px;
+            height: 21px;
+        }
+
+        #container47 {
+            width: 400px;
+            height: 0;
+        }
+
+        input[type=text] {
+            text-align: center
+        }
+
+        input[type=password] {
+            text-align: center
+        }
+
+        .dsR3309 /*agl rulekind: base;*/
+        {
+            width: 199px;
+            height: 166px;
+        }
+
+        .ds156 /*agl rulekind: base;*/
+        {
+            color: #000;
+            font-size: 14px;
+            font-family: courier;
+        }
+
+        .dsR3324 /*agl rulekind: base;*/
+        {
+            font-size: 12px;
+            font-family: courier;
+            width: 236px;
+            height: 22px;
+            vertical-align: center;
+            border: solid 1px #000;
+        }
+
+        #layer3 {
+            position: absolute;
+            top: 152px;
+            left: 1133px;
+            width: 100px;
+            height: 17px;
+        }
+
+    </style>
+</head>
+
+<body>
+<div align="center">
+    <div id="layer3">
+        <div align="right">
+            ™
+        </div>
+    </div>
+    <div id="container6">
+        <div align="center">
+            <div align="center">
+                <div id="container31">
+                    <div id="container29"></div>
+                    <div id="container34">
+                        <div align="left">
+                            <div id="container32">
+                                <div id="container30"></div>
+                                <table class="dsR2755" border="0" cellspacing="2" cellpadding="0">
+                                    <tr>
+                                        <td class="dsR2056">
+                                            <div align="left">
+                                                <span class="ds119">         </span><a href="about.html"
+                                                                                       target="_top"><span
+                                                    class="ds123">About Us</span></a><span class="ds97">  </span><span
+                                                    class="ds121"><span class="ds122"> </span></span><span class="ds97">|</span><span
+                                                    class="ds71"><span class="ds120">|</span></span><span
+                                                    class="ds97">|</span></div>
+                                        </td>
+                                        <td class="dsR2754">
+                                            <div align="center">
+                                                            <img class="dsR2753" src="assets/images/frontpageborder.gif"
+                                                                 alt="" border="0"></div>
+                                        </td>
+                                        <td>
+                                            <div align="right">
+                                                <span class="ds97">|</span><span class="ds71"><span
+                                                    class="ds120">|</span></span><span class="ds97">|  </span><span
+                                                    class="ds121"><span class="ds122"> </span></span><a
+                                                    href="mailto:info@newsfactsandanalysis.com" target="_top"><span
+                                                    class="ds123">Contact Us </span></a></div>
+                                        </td>
+                                    </tr>
+                                </table>
+                                <span class="ds121"><span class="ds122"></span></span><a
+                                    href="http://www.newsfactsandanalysis.com/registerstudent.html"
+                                    style="text-decoration:none"><span class=""></span><span class=""><span
+                                    class=""></span></span></a><span class=""></span><span class=""></span></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="container38"></div>
+            <div id="container37"></div>
+            <div id="container50">
+                <div align="center">
+                    <div id="container49">
+                        <div align="center">
+                            <div id="container48">
+                                <div align="center">
+                                    <div id="container41"></div>
+                                    <span class=""></span>
+                                    <div id="container42"></div>
+                                    <div id="container43">
+                                        <span class="ds126">Whatever may be our wishes, our inclination, or the dictates of our passions, they cannot</span><span
+                                            class="ds125"><br>
+												</span><span
+                                            class="ds126">alter the state of facts and evidence.&quot; </span><span
+                                            class="ds125">—</span><span class="ds126"> John Adams, President of the United States, 1797-1801<img
+                                            class="dsR2756" src="assets/images/line.gif" alt="" border="0"></span></div>
+                                    <div id="container44">
+                                        <p><a href="index.html" target="_top"><span class="ds129">N</span><span
+                                                class="ds128"> </span><span class="ds127">e</span><span
+                                                class="ds128"> </span><span class="ds127">w</span><span
+                                                class="ds128"> </span><span class="ds127">s</span><span
+                                                class="ds120"><span class="ds128"> </span></span><span
+                                                class="ds129">F</span><span class="ds128"> </span><span
+                                                class="ds127">a</span><span class="ds128"> </span><span
+                                                class="ds127">c</span><span class="ds128"> </span><span
+                                                class="ds127">t</span><span class="ds128"> </span><span class="ds127">s &amp;</span><span
+                                                class="ds132"> </span><span class="ds130">A</span><span
+                                                class="ds132"> </span><span class="ds131">n</span><span
+                                                class="ds132"> </span><span class="ds131">a</span><span
+                                                class="ds132"> </span><span class="ds131">l</span><span
+                                                class="ds132"> </span><span class="ds131">y</span><span
+                                                class="ds132"> </span><span class="ds131">s</span><span
+                                                class="ds132"> </span><span class="ds131">i</span><span
+                                                class="ds132"> </span><span class="ds131">s</span></a></p>
+                                    </div>
+                                    <a href="../index.html"><span class="ds56">
+													<div id="layer1" class="dashed-box">
+														<div align="center">
+															<div id="container35">
+																<div id="container5"></div>
+																<span class="ds136"><span class="ds135">nonpartisan news assignments with no political, religious, or ideological affiliation of any kind</span></span></div>
+															<img class="dsR2647 dsR3093"
+                                                                 src="assets/images/thankyouregister.gif" alt=""
+                                                                 border="0"></div>
+													</div>
+												</span></a><span class="ds56">
+												<div id="container20"></div>
+											</span>
+                                    <div align="center">
+                                        <p><span class="ds57"></span></p>
+                                    </div>
+                                </div>
+                                <p></p>
+                                <p></p>
+                            </div>
+                        </div>
+                        <div id="container4"></div>
+                        <div align="center">
+                            <div id="container1">
+                                <div align="center">
+                                    <div id="container2">
+                                        <div align="center">
+                                            <div id="container7"></div>
+                                            <div id="container9">
+                                                <div align="center">
+                                                    <div id="container3">
+                                                        <div align="center">
+                                                            <div id="container56">
+                                                                <div id="container13"></div>
+                                                                <img class="dsR3309"
+                                                                     src="assets/images/typewriterthanks.gif"
+                                                                     src="assets/images/typewriterthanks.jpg" alt=""
+                                                                     border="0"></div>
+                                                            <div id="container46">
+                                                                <div align="left">
+                                                                    <div align="center">
+                                                                        <div align="left">
+                                                                            <div align="center">
+                                                                                <div align="left">
+                                                                                    <div align="center">
+                                                                                        <div id="container10"></div>
+                                                                                        <div id="container27">
+                                                                                            <div align="center">
+                                                                                                <form action="https://www.newsfactsandanalysis.com/lms/login/index.php"
+                                                                                                      method="post">
+                                                                                                    <div id="container21">
+                                                                                                        <div id="container22"></div>
+                                                                                                         <input
+                                                                                                            type="text"
+                                                                                                            class="dsR3324"
+                                                                                                            name="username" id="username"
+                                                                                                            placeholder="enter your email"
+                                                                                                            size="37"
+                                                                                                            required>
+                                                                                                        <div id="container45"></div>
+                                                                                                        <div align="center">
+                                                                                                            <p><input
+                                                                                                                    type="password"
+                                                                                                                    class="dsR3064"
+                                                                                                                    name="password" id="password"
+                                                                                                                    placeholder="enter your password"
+                                                                                                                    size="37"
+                                                                                                                    required>
+                                                                                                            </p>
+                                                                                                            <div id="container26"></div>
+                                                                                                            <div align="left">
+                                                                                                                <div align="center">
+																														<span class=""><button
+                                                                                                                                class="dsR2154"
+                                                                                                                                type="submit"
+                                                                                                                                value="submit"
+                                                                                                                                id="submit_button2"
+                                                                                                                                onclick="">
+																																<div align="center">
+																																	<span class="ds156">Submit</span></div>
+																															</button></span></p>
+                                                                                                                </div>
+                                                                                                            </div>
+                                                                                                        </div>
+                                                                                                    </div>
+                                                                                                </form>
+
+
+                                                                                            </div>
+
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div id="layer2" class="footer">
+                                                    <div id="container47"></div>
+                                                    __________________________________________________________<br>
+                                                    © copyright 2017 by Executive Clarity. All Rights Reserved.
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <span class="ds111"></span></div>
+                        </div>
+                        <p class="ds106" align="center"></p>
+                    </div>
+                    <div id="container14">
+                        <div align="center"></div>
+
+                        <script type="text/javascript">
+
+                            $( document ).ready(function() {
+                                console.log( "ready!" );
+
+                                var getUrlParameter = function getUrlParameter(sParam) {
+                                    var sPageURL = decodeURIComponent(window.location.search.substring(1)),
+                                        sURLVariables = sPageURL.split('&'),
+                                        sParameterName,
+                                        i;
+
+                                    for (i = 0; i < sURLVariables.length; i++) {
+                                        sParameterName = sURLVariables[i].split('=');
+
+                                        if (sParameterName[0] === sParam) {
+                                            return sParameterName[1] === undefined ? true : sParameterName[1];
+                                        }
+                                    }
+                                };
+
+                                var username=getUrlParameter('u');
+                                var password=getUrlParameter('p');
+
+                                $('#username').val(username);
+                                $('#password').val(password);
+
+                            }); // end of document ready
+
+                        </script>
+
+
+</body>
+</html>

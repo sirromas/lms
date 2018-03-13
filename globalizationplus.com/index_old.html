@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+
+<html>
+    <head>
+        <title>Globalization Plus</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+        <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+
+        <!-- Latest compiled and minified CSS -->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" >
+
+        <!-- Optional theme -->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" >
+        
+        <style type="text/css" media="all"><!--
+
+            body {margin-top: 0px; padding-top: 0px; }
+
+            a:link { color: #000000; text-decoration: none; }
+            a:visited { color: #000000; }
+            a:active { color: #000000; }
+            body { color: #000000; }
+            a:hover { 
+                color: #000000; font-size: 16px; font-weight: bold;
+            }
+
+            a.title:hover { 
+                color: #000000; font-weight: bold; font-size: 28px; font-weight: bold;
+            }
+
+            a.dictionary:hover { 
+                color: #000000;  font-size: 17px; font-weight: normal;
+            }
+
+            a.section:hover { 
+                color: #000000;  font-size: 16px; font-weight: normal;
+            }
+
+
+            .ds5 /*agl rulekind: base;*/ { font-size: 22px; }
+            .ds12 /*agl rulekind: base;*/ { font-size: 18px; }
+            .ds15 /*agl rulekind: base;*/ { color: #000; font-size: 16px; font-family: serif; }
+            .ds19 /*agl rulekind: base;*/ { color: #000; font-size: 18px; }
+            .ds20 /*agl rulekind: base;*/ { color: #000; font-size: 24px; font-weight: bold; line-height: 1.8}
+            .ds22 /*agl rulekind: base;*/ { color: #000; }
+            .ds23 /*agl rulekind: base;*/ { color: #fff; }
+            .ds74 /*agl rulekind: base;*/ { color: #000; font-size: 60px; font-family: serif; font-weight: bold; }
+            .ds75 /*agl rulekind: base;*/ { color: #fff; font-size: 2px; font-family: serif; font-weight: bold; }
+            .ds76 /*agl rulekind: base;*/ { color: #000; font-size: 48px; font-family: serif; }
+            .ds80 /*agl rulekind: base;*/ { color: #000; font-size: 18px; font-family: serif; }
+            .ds82 /*agl rulekind: base;*/ { color: #000; font-size: 24px; font-family: serif; }
+            .ds83 /*agl rulekind: base;*/ { font-family: serif; }
+            .ds84 /*agl rulekind: base;*/ { color: #000; font-size: 22px; font-family: serif; }
+            .ds85 /*agl rulekind: base;*/ { color: #fff; font-family: serif; }
+            .ds86 /*agl rulekind: base;*/ { color: #000; font-size: 21px; font-family: serif; }
+            .ds87 /*agl rulekind: base;*/ { color: #000000; font-size: 28px; font-family: serif; font-weight: bold; }
+            .ds88 /*agl rulekind: base;*/ { color: #000; font-size: 16px; font-family: serif; font-weight: bold; }
+            .ds95 /*agl rulekind: base;*/ { color: #fff; font-size: 18px; font-family: serif; }
+            .ds97 /*agl rulekind: base;*/ { font-size: 16px; font-family: serif; }
+            .ds100 /*agl rulekind: base;*/ { font-size: 22px; font-family: serif; }
+            .ds101 /*agl rulekind: base;*/ { font-size: 16px; }
+            .ds102 /*agl rulekind: base;*/ { color: #000; font-size: 16px; }
+            .ds105 /*agl rulekind: base;*/ { color: #fff; font-size: 16px; font-family: serif; }
+            #container34 { width: 400px; height: 10px; }
+            #container29 { width: 400px; height: 1px; }
+            #container30 { background-color: #fff; width: 400px; height: 11px; }
+            #container32 { background-color: #fff; width: 878px; height: 44px; }
+            #container33 { width: 878px; height: 347px; }
+            #container6 { background-color: #000; width: 880px; height: 47px; }
+            #container28 { width: 400px; height: 13px; }
+            #container20 { width: 400px; height: -2px; }
+            #container15 { width: 400px; height: 1px; }
+            #container13 { width: 839px; height: 129px; }
+            #container22 { width: 827px; height: 1px; }
+            #container9 { width: 873px; height: 205px; }
+            #container7 { width: 880px; height: 1px; }
+            #container2 { background-color: #fff; width: 878px; height: 849px; }
+            #container1 { background-color: #000; width: 882px; height: 854px; border: solid 1px #000265; }
+            .dsR830 /*agl rulekind: base;*/ { width: 896px; height: auto; }
+            .ds106 /*agl rulekind: base;*/ { text-align: left; text-indent: 0; margin: 0; }
+            .ds110 /*agl rulekind: base;*/ { color: rgb(39%,39%,39%); font-size: 14px; font-family: serif; font-style: normal; font-variant: normal; font-weight: normal; text-decoration: none; letter-spacing: 0; vertical-align: baseline; }
+            .ds111 /*agl rulekind: base;*/ { font-size: 14px; font-family: serif; }
+            #container35 { width: 400px; height: 21px; }
+            .dsR1017 /*agl rulekind: base;*/ { width: 904px; height: 954px; }
+            .dsR1018 /*agl rulekind: base;*/ { width: 914px; height: 959px; }
+            .dsR1019 /*agl rulekind: base;*/ { width: 307px; height: 12px; }
+            #container19 { width: 400px; height: 17px; }
+            #container17 { width: 400px; height: 14px; }
+            #container18 { width: 400px; height: 12px; }
+            .dsR1021 /*agl rulekind: base;*/ { width: 15px; height: 9px; }
+            #container21 { width: 770px; height: 405px; }
+            .dsR1061 /*agl rulekind: base;*/ { width: 601px; height: 39px; }
+            #container23 { width: 400px; height: 9px; }
+            .dsR1083 /*agl rulekind: base;*/ { width: 743.87px; height: 396px; border-style: solid; border-width: 0.5px; }
+            .ds59 /*agl rulekind: base;*/ { color: #000; font-size: 48px; }
+            .ds77 /*agl rulekind: base;*/ { color: #fff; font-size: 4px; font-family: serif; font-weight: bold; }
+            .ds78 /*agl rulekind: base;*/ { color: #000; font-size: 60px; font-family: serif; }
+            .ds113 /*agl rulekind: base;*/ { font-size: 16px; font-family: serif; font-style: italic; }
+            .dsR1102 /*agl rulekind: base;*/ { width: 333px; }
+            .dsR1126 /*agl rulekind: base;*/ { background-color: #fff; width: 378px; }
+            #container36 { background-color: #000; width: 387.56px; height: 1px; }
+            .dsR1189 /*agl rulekind: base;*/ { width: 759px; height: 5px; }
+            --></style>
+        <!-- Latest compiled and minified JavaScript -->
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+    </head>
+    <body>
+        <div align="center">
+            <div class="container dsR1018">
+                <div class="text-center dsR1017">
+                    <div class="row dsR830">
+                        <div align="center">
+                            <div align="center">
+                                <div id="container34"></div>
+                                <div id="container6">
+                                    <div id="container29"></div>
+                                    <div id="container33">
+                                        <div id="container32">
+                                            <div id="container30"></div>
+                                            <span class="ds83"><a href="http://globalizationplus.com/login.html" target="_blank"><span class="ds97">Log-In</span></a><span class="ds85">.</span></span><span class="ds95">...|</span><span class="ds22"><span class="ds100">|</span></span><span class="ds80">|</span><span class="ds83"><span class="ds85">.</span></span><span class="ds95">...|</span><span class="ds83"><span class="ds97"><a href="http://globalizationplus.com/about.html" target="_blank">About Us</a></span><span class="ds85">.</span></span><span class="ds95">...|</span><span class="ds80">|</span><span class="ds22"><span class="ds100">|</span></span><span class="ds80">|</span><span class="ds105">...............</span><span class="ds22"><span class="ds12"><img class="dsR1019" src="assets/images/frontpageborder.gif" alt="" border="0"></span></span><span class="ds105">.......,.......</span><span class="ds19">|</span><span class="ds22"><span class="ds5">|</span></span><span class="ds19">|</span><span class="ds83"><span class="ds85">.</span></span><span class="ds95">...|</span><span class="ds97">Register:</span><span class="ds101"><span class="ds15"><span class="ds15"> </span></span></span><a href="http://globalizationplus.com/registerprofessor.html" target="_blank"><span class="ds97">Professors</span></a><span class="ds101"><span class="ds15"><span class="ds15"><a href="http://globalizationplus.com/registerprofessor.html" target="_blank"> </a></span></span></span><span class="ds102">| </span><a href="http://globalizationplus.com/registerstudent.html" target="_blank"><span class="ds97">Students</span></a><a href="http://globalizationplus.com/registerstudent.html" style="text-decoration:none"><span class="ds23"></span><span class=""><span class=""></span></span></a><span class=""></span><span class="ds23"></span><span class="ds22"></span></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div id="container28"></div>
+                            <div id="container20"></div>
+                            <div id="container1">
+                                <div align="center">
+                                    <div id="container2">
+                                        <div align="center">
+                                            <div align="center">
+                                                <div id="container13">
+                                                    <div align="center">
+                                                        <div id="container15"></div>
+                                                        <span class="ds74">G</span><span class="ds95">.</span><span class="ds75">x</span><span class="ds76">l</span><span class="ds95">.</span><span class="ds76">o</span><span class="ds95">.</span><span class="ds76">b</span><span class="ds95">.</span><span class="ds76">a</span><span class="ds95">.</span><span class="ds76">l</span><span class="ds95">.</span><span class="ds76">i</span><span class="ds95">.</span><span class="ds76">z</span><span class="ds95">.</span><span class="ds76">a</span><span class="ds95">.</span><span class="ds76">t</span><span class="ds95">.</span><span class="ds76">i</span><span class="ds95">.</span><span class="ds76">o</span><span class="ds95">.</span><span class="ds76">n</span><span class="ds78"> </span><span class="ds74">P</span><span class="ds76">l</span><span class="ds95">.</span><span class="ds77">x</span><span class="ds59" ??</??an="??</??an"><span class="ds76">u</span></span><span class="ds95">.</span><span class="ds59" ??</??an="??</??an"><span class="ds76">s</span></span><span class="ds82"><br>
+                                                            Nonpartisan News for Political Science &amp; International Relations Courses</span>
+                                                        <p></p>
+                                                    </div>
+                                                </div>
+                                                <div id="container22">
+                                                    <div align="center">
+                                                        <p><span class="ds80">&#126; published weekly during the fall & spring semesters &#126;</span></p>
+                                                    </div>
+                                                </div>
+                                                <div id="container9">
+                                                    <div align="center">
+                                                        <span class="ds20">__________________________________________________________________</span>
+                                                        <div id="container19"></div>
+
+                                                    </div>
+                                                    <div id="container7">
+                                                        <div align="center">
+                                                            <div align="center">
+                                                                <span class="ds84">• </span><span class="ds85"> </span><span class="ds86">Lesson for the Week of January 16, 2017</span><span class="ds84"> </span><span class="ds85"> </span><span class="ds84">•</span>
+                                                                <div id="container17"></div>
+                                                                <span class="ds87">Turkey Joins Russia to Defeat Islamic State Terrorists in Syria</span>
+                                                                <div id="container18"></div>
+                                                            </div>
+                                                            <p><span class="ds22"><span class="ds80">→</span></span><span class="ds85">.....</span><span class="ds22"><span class="ds88">this issue's assignment includes</span></span><span class="ds85">.....</span><span class="ds22"><span class="ds80">←</span></span></p>
+                                                            <div align="center">
+                                                                <p></p>
+                                                            </div>
+                                                            <div align="left">
+
+                                                            </div>
+                                                        </div>
+                                                        <div align="left">
+                                                            <p></p>
+                                                            <p><span class=""></span></p>
+                                                        </div>
+                                                        <div align="center">
+
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <table class="dsR1189" border="0" cellspacing="0" cellpadding="0">
+                                            <tr>
+                                                <td class="dsR1126">
+                                                    <div align="left">
+                                                        <span class="ds95">....</span><span class="ds80">√</span><span class="ds95">..</span><span class="ds83"><span class="ds97">News Backgrounder: Syria's Challenge</span></span></div>
+                                                </td>
+                                                <td class="dsR1102">
+                                                    <div align="left">
+                                                        <span class="ds80">√</span><span class="ds95">..</span><span class="ds83"><span class="ds97">Video Report: Struggling for a Diplomatic Solution</span></span></div>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td class="dsR1126">
+                                                    <div align="left">
+                                                        <span class="ds95">....</span><span class="ds80">√</span><span class="ds95">..</span><span class="ds83"><span class="ds97">Video Report: Historic Aleppo Under Siege</span></span></div>
+                                                </td>
+                                                <td class="dsR1102">
+                                                    <div align="left">
+                                                        <span class="ds80">√</span><span class="ds95">..</span><span class="ds83"><span class="ds97">Syria Quiz </span><span class="ds113">and</span><span class="ds97"> Course Discussion Board</span></span></div>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                        <table class="dsR1061" border="0" cellspacing="0" cellpadding="0" align="center">
+                                            <tr>
+                                                <td>
+                                                    <p align="center"><span class="ds83"><img class="dsR1021" src="assets/images/arrowright.gif" alt="" border="0"></span><span class="ds85">....</span><span class="ds83"><span class="ds97">Special News Literacy Resource: The Globalization Plus Political Dictionary</span></span><span class="ds85">....</span><span class="ds22"><span class="ds83"><img class="dsR1021" src="assets/images/arrowleft.gif" alt="" border="0"></span></span></p>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                        <div align="center">
+                                            <div id="container23"></div>
+                                            <div id="container21">
+                                                <div align="center">
+                                                    <img class="dsR1083" src="assets/images/isis.jpg" alt="" border="0"></div>
+                                            </div>
+                                            <p></p>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <br>
+
+                            </div>
+                            <div id="container35"></div>
+                            <span class="ds110"></span>
+                            <div id="container36"></div>
+                            <span class="ds111">© copyright 2017 by Executive Clarity. All Rights Reserved.</span></div>
+                    </div>
+                    <p class="ds106" align="center"></p>
+                </div>
+                <!-- /container -->
+                </body>
+                </html>
+

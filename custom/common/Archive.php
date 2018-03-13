@@ -10,7 +10,7 @@ class Archive extends Utils {
 
 	function get_archive_items() {
 		$items = array();
-		$query = "select * from mdl_article order by title";
+		$query = "select * from mdl_article where active=1 order by title";
 		$num   = $this->db->numrows( $query );
 		if ( $num > 0 ) {
 			$result = $this->db->query( $query );
