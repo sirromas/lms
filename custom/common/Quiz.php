@@ -10,19 +10,17 @@ class Quiz extends Utils {
 
 	function get_question_answers( $qid, $type ) {
 		$list   = "";
-		$list   .= "<table border='0' style='475px;'>";
+		$list   .= "<table border='0' style='475px;margin-left: 12px;'>";
 		$class  = ( $type == 1 ) ? 'poll_answers' : 'quiz_answers';
 		$name   = 'name_' . $qid;
 		$query  = "select * from mdl_poll_a where qid=$qid";
 		$result = $this->db->query( $query );
 		while ( $row = $result->fetch( PDO::FETCH_ASSOC ) ) {
 			$list .= "<tr>";
-			$list .= "<td style='padding: 15px;text-align: right;width: 75px;'><input class='$class' name='$name' type='radio' value='" . $row['id'] . "'></td>";
-			$list .= "<td style='padding: 15px;text-align: left;width: 400px;'>" . $row['a'] . "</td>";
+			$list .= "<td style='padding: 5px;text-align: left;'><input class='$class' name='$name' type='radio' value='" . $row['id'] . "'></td>";
+			$list .= "<td style='padding: 5px;text-align: left;width: 400px;'>" . $row['a'] . "</td>";
 			$list .= "</tr>";
-		}
-
-
+		} // end while
 		$list .= "</table>";
 
 		return $list;
@@ -39,23 +37,23 @@ class Quiz extends Utils {
 			} // end while;
 			if ( $pid > 0 ) {
 				$query  = "select * from mdl_poll_q where pid=$pid";
+				$num=$this->db->numrows($query);
 				$result = $this->db->query( $query );
+				$i=1;
 				while ( $row = $result->fetch( PDO::FETCH_ASSOC ) ) {
 					$answers = $this->get_question_answers( $row['id'], $type );
 					$title   = $row['title'];
-
-					$list    .= "<div class='row'>";
-					$list    .= "<span class='col-md-12' style='margin-bottom: 10px;font-weight: bold; '>$title</span>";
+					$list    .= "<div class='row' style='text-align: left;'>";
+                    $list    .= "<input type='hidden' id='total_items_$type' value='$num'>";
+					$list    .= "<span class='col-md-12' style='margin-bottom: 10px;font-weight:bold;'>$i)&nbsp;$title</span>";
 					$list    .= $answers;
 					$list    .= "</div>";
-
 					$list .= "<div class='row'>";
 					$list .= "<span class='col-md-12'><br></span>";
 					$list .= "</div>";
-
-				}
-
-			}
+					$i++;
+				} // end while
+			} // end if $pid > 0
 		} // end if $num>0
 
 		return $list;

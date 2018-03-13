@@ -25,8 +25,9 @@ require_once './sheader.php';
 <!-- Container for all pages loaded via AJAX -->
 <div id="ajax_container" style="width: 935px;margin-top: 15px;"></div>
 
-<div id="poll_container" style="width: 935px;margin-top: 15px;display: none;"></div>
 <div id="quiz_container" style="width: 935px;margin-top: 15px;display: none;"></div>
+<div id="poll_container" style="width: 935px;margin-top: 15px;display: none;"></div>
+
 <div id="forum_container" style="width: 935px;margin-top: 15px;"></div>
 
 <div id="copyright_part1" style="width: 935px;text-align: center;"><hr></div>
@@ -93,14 +94,17 @@ require_once './sheader.php';
             if (event.target.id == 'submit_poll') {
                 var items = [];
                 var userid = $('#userid').val();
+                var elid='#total_items_1';
+                var total=$(elid).val();
+                console.log('Total items: '+total);
                 $('.poll_answers').each(function (index) {
                     if ($(this).is(':checked')) {
                         items.push($(this).val());
                     }
                 }); // end of each
                 console.log('Poll answers array: ' + JSON.stringify(items));
-                if (items.length == 0) {
-                    alert('You did not provide any reply!');
+                if (items.length!=total) {
+                    alert('Please reply to all questions!');
                 } // end if
                 else {
                     if (confirm('Submit research?')) {
@@ -115,6 +119,9 @@ require_once './sheader.php';
 
             if (event.target.id == 'submit_quiz') {
                 var items = [];
+                var elid='#total_items_2';
+                var total=$(elid).val();
+                console.log('Total items: '+total);
                 var userid = $('#userid').val();
                 $('.quiz_answers').each(function (index) {
                     if ($(this).is(':checked')) {
@@ -122,8 +129,8 @@ require_once './sheader.php';
                     }
                 }); // end of each
                 console.log('Quiz answers array: ' + JSON.stringify(items));
-                if (items.length == 0) {
-                    alert('You did not provide any reply!');
+                if (items.length !=total) {
+                    alert('Please reply to all questions!');
                 } // end if
                 else {
                     if (confirm('Submit Quiz?')) {

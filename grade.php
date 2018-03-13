@@ -26,8 +26,9 @@ require_once './pheader.php';
 <!-- Container for all pages loaded via AJAX -->
 <div id="ajax_container" style="width: 935px;margin-top: 15px;text-align: left;"></div>
 
-<div id="poll_container" style="width: 935px;margin-top: 15px;display: none;"></div>
 <div id="quiz_container" style="width: 935px;margin-top: 15px;display: none;"></div>
+<div id="poll_container" style="width: 935px;margin-top: 15px;display: none;"></div>
+
 <div id="forum_container" style="width: 935px;margin-top: 15px;margin-bottom: 15px;text-align: center;margin-left: 9%"></div><br><br><br>
 
 <div id="copyright_part1" style="width: 935px;text-align: center;"><hr></div>
@@ -37,6 +38,7 @@ require_once './pheader.php';
 
     $(document).ready(function () {
 
+        /* Regular code */
         var userid = $('#userid').val();
         console.log('User ID: ' + userid);
         var pollURL = '/lms/custom/common/get_news_poll.php';
@@ -51,7 +53,11 @@ require_once './pheader.php';
 
         $('#dicIframe').load(function () {
             $(this).height($(this).contents().height());
-            //$(this).width($(this).contents().width());
+            // Detect click inside iFrame? Is it possible?
+            var iframe = $('#dicIframe').contents();
+            iframe.find('.ds249').click(function(){
+                console.log('Item clicked ....');
+            });
         });
 
         $('#pageIframe').load(function () {
@@ -106,14 +112,17 @@ require_once './pheader.php';
             if (event.target.id == 'submit_poll') {
                 var items = [];
                 var userid = $('#userid').val();
+                var elid='#total_items_1';
+                var total=$(elid).val();
+                console.log('Total items: '+total);
                 $('.poll_answers').each(function (index) {
                     if ($(this).is(':checked')) {
                         items.push($(this).val());
                     }
                 }); // end of each
                 console.log('Poll answers array: ' + JSON.stringify(items));
-                if (items.length == 0) {
-                    alert('You did not provide any reply!');
+                if (items.length !=total) {
+                    alert('Please reply to all questions!');
                 } // end if
                 else {
                     if (confirm('Submit research?')) {
@@ -129,14 +138,17 @@ require_once './pheader.php';
             if (event.target.id == 'submit_quiz') {
                 var items = [];
                 var userid = $('#userid').val();
+                var elid='#total_items_2';
+                var total=$(elid).val();
+                console.log('Total items: '+total);
                 $('.quiz_answers').each(function (index) {
                     if ($(this).is(':checked')) {
                         items.push($(this).val());
                     }
                 }); // end of each
                 console.log('Quiz answers array: ' + JSON.stringify(items));
-                if (items.length == 0) {
-                    alert('You did not provide any reply!');
+                if (items.length !=total) {
+                    alert('Please reply to all questions!');
                 } // end if
                 else {
                     if (confirm('Submit Quiz?')) {
