@@ -109,6 +109,15 @@ require_once './pheader.php';
 
         $('body').on('click', function (event) {
 
+            if (event.target.id == 'logout_dashboard') {
+                if (confirm('Logout from the system?')) {
+                    var url = '/lms/logout_dashboard.php';
+                    $.post(url, {item: 1}).done(function () {
+                        window.location = 'https://www.newsfactsandanalysis.com';
+                    });
+                }
+            }
+
             if (event.target.id == 'submit_poll') {
                 var items = [];
                 var userid = $('#userid').val();
@@ -331,6 +340,15 @@ require_once './pheader.php';
                         $('#meeting_container').hide();
 
                     });
+                    break;
+
+                case 'logout':
+                    if (confirm('Logout from the system?')) {
+                        var url = '/lms/logout_dashboard.php';
+                        $.post(url, {item: 1}).done(function () {
+                            window.location = 'https://www.newsfactsandanalysis.com';
+                        });
+                    }
                     break;
 
             }

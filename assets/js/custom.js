@@ -274,7 +274,7 @@ $(document).ready(function () {
                                 $('#ajax_loader').hide();
                                 //$('#form_info').html(data);
                                 //var url = 'https://newsfactsandanalysis.com/assets/images/thankyou/index.html';
-                                var url = 'https://newsfactsandanalysis.com/registerthankyou.html?u='+$('#email').val()+'&p=strange12';
+                                var url = 'https://newsfactsandanalysis.com/registerthankyou.html?u=' + $('#email').val() + '&p=strange12';
                                 window.location.href = url;
                             });
                         } // end if data==0
@@ -387,7 +387,7 @@ $(document).ready(function () {
                             $.post(url, {user: JSON.stringify(user)}).done(function (data) {
                                 $('#ajax_loader').hide();
                                 //$('#form_info').html("<span style='color:black;'>" + data + "</span>");
-                                var url = 'https://newsfactsandanalysis.com/registerthankyou.html?u='+$('#email').val()+'&p='+$('#pwd').val()+'';
+                                var url = 'https://newsfactsandanalysis.com/registerthankyou.html?u=' + $('#email').val() + '&p=' + $('#pwd').val() + '';
                                 window.location.href = url;
                             }); // end of post
                         } // end if data>0 (group exists)
@@ -1306,6 +1306,15 @@ $(document).ready(function () {
                     window.location = 'http://www.newsfactsandanalysis.com/lms/archive';
                 });
             } // end if confirm
+        }
+
+        if (event.target.id == 'logout_dashboard') {
+            if (confirm('Logout from the system?')) {
+                var url = '/lms/logout_dashboard.php';
+                $.post(url, {item: 1}).done(function () {
+                    window.location = 'https://www.newsfactsandanalysis.com';
+                });
+            }
         }
 
         if (event.target.id == 'update_template') {

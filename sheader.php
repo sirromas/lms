@@ -316,7 +316,7 @@ $meetURL = $gr->get_meeting_url($userid);
 
                                                                                 <!-- Logout -->
                                                                         <span class="ds204"> </span></span>
-                                                                <a href="https://www.newsfactsandanalysis.com"><span
+                                                                <a href="#" class="nav3" data-item="logout" onclick="return false;"><span
                                                                             class="ds203">Logout</span></a>
 
 

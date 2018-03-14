@@ -8,30 +8,41 @@ require_once './sheader.php';
 
 <!-- Article iFrame -->
 <div class="row" id="page" style="margin: auto;text-align: center;">
-    <iframe id='pageIframe' style="margin-top:15px;width:935px;margin-left-30px;text-align: left;" frameborder="0"
+    <iframe id='pageIframe'
+            style="margin-top:15px;width:935px;margin-left-30px;text-align: left;"
+            frameborder="0"
             src="<?php echo $articleURL; ?>"></iframe>
 </div>
 
 <div style="" class="row" id="meeting_container"><?php echo $meetURL; ?></div>
 
 
-
 <!-- Dictionary iFrame -->
-<div class="row" id="dic" style="margin: auto;text-align: center;display: none;">
-    <iframe id="dicIframe" style="margin-top:15px;width:935px;margin-left-30px;text-align: left;" frameborder="0"
+<div class="row" id="dic"
+     style="margin: auto;text-align: center;display: none;">
+    <iframe id="dicIframe"
+            style="margin-top:15px;width:935px;margin-left-30px;text-align: left;"
+            frameborder="0"
             src="<?php echo $dicURL; ?>"></iframe>
 </div>
 
 <!-- Container for all pages loaded via AJAX -->
 <div id="ajax_container" style="width: 935px;margin-top: 15px;"></div>
 
-<div id="quiz_container" style="width: 935px;margin-top: 15px;display: none;"></div>
-<div id="poll_container" style="width: 935px;margin-top: 15px;display: none;"></div>
+<div id="quiz_container"
+     style="width: 935px;margin-top: 15px;display: none;"></div>
+<div id="poll_container"
+     style="width: 935px;margin-top: 15px;display: none;"></div>
 
 <div id="forum_container" style="width: 935px;margin-top: 15px;"></div>
 
-<div id="copyright_part1" style="width: 935px;text-align: center;"><hr></div>
-<div id="copyright_part2" style="width: 935px;text-align: center;margin-bottom: 25px;">© copyright 2018 by NewsFacts & Analysis. All Rights Reserved.</div>
+<div id="copyright_part1" style="width: 935px;text-align: center;">
+    <hr>
+</div>
+<div id="copyright_part2"
+     style="width: 935px;text-align: center;margin-bottom: 25px;">© copyright
+    2018 by NewsFacts & Analysis. All Rights Reserved.
+</div>
 
 </body>
 </html>
@@ -51,8 +62,8 @@ require_once './sheader.php';
             //$(this).width($(this).contents().width());
         });
 
-        var iframe= $('#dicIframe').contents();
-        iframe.find(".dnavigation").click(function(){
+        var iframe = $('#dicIframe').contents();
+        iframe.find(".dnavigation").click(function () {
             console.log('Link inside iframe clicked ...');
         });
 
@@ -94,16 +105,16 @@ require_once './sheader.php';
             if (event.target.id == 'submit_poll') {
                 var items = [];
                 var userid = $('#userid').val();
-                var elid='#total_items_1';
-                var total=$(elid).val();
-                console.log('Total items: '+total);
+                var elid = '#total_items_1';
+                var total = $(elid).val();
+                console.log('Total items: ' + total);
                 $('.poll_answers').each(function (index) {
                     if ($(this).is(':checked')) {
                         items.push($(this).val());
                     }
                 }); // end of each
                 console.log('Poll answers array: ' + JSON.stringify(items));
-                if (items.length!=total) {
+                if (items.length != total) {
                     alert('Please reply to all questions!');
                 } // end if
                 else {
@@ -117,11 +128,12 @@ require_once './sheader.php';
                 }
             }
 
+
             if (event.target.id == 'submit_quiz') {
                 var items = [];
-                var elid='#total_items_2';
-                var total=$(elid).val();
-                console.log('Total items: '+total);
+                var elid = '#total_items_2';
+                var total = $(elid).val();
+                console.log('Total items: ' + total);
                 var userid = $('#userid').val();
                 $('.quiz_answers').each(function (index) {
                     if ($(this).is(':checked')) {
@@ -129,7 +141,7 @@ require_once './sheader.php';
                     }
                 }); // end of each
                 console.log('Quiz answers array: ' + JSON.stringify(items));
-                if (items.length !=total) {
+                if (items.length != total) {
                     alert('Please reply to all questions!');
                 } // end if
                 else {
@@ -159,7 +171,12 @@ require_once './sheader.php';
                 var forumid = $('#forumid').val();
                 var text = $('#root_reply_text').val();
                 if (text != '') {
-                    var item = {forumid: forumid, userid: userid, text: text, replyto: replyto};
+                    var item = {
+                        forumid: forumid,
+                        userid: userid,
+                        text: text,
+                        replyto: replyto
+                    };
                     var url = '/lms/custom/common/add_forum_post.php';
                     $.post(url, {item: JSON.stringify(item)}).done(function (data) {
                         console.log(data);
@@ -188,7 +205,12 @@ require_once './sheader.php';
                 var text = $(elid).val();
                 console.log()
                 if (text != '') {
-                    var item = {forumid: forumid, userid: userid, text: text, replyto: replyto};
+                    var item = {
+                        forumid: forumid,
+                        userid: userid,
+                        text: text,
+                        replyto: replyto
+                    };
                     var url = '/lms/custom/common/add_forum_post.php';
                     $.post(url, {item: JSON.stringify(item)}).done(function (data) {
                         console.log(data);
@@ -296,7 +318,15 @@ require_once './sheader.php';
                     });
                     break;
 
-            }
+                case 'logout':
+                    if (confirm('Logout from the system?')) {
+                        var url = '/lms/logout_dashboard.php';
+                        $.post(url, {item: 1}).done(function () {
+                            window.location = 'https://www.newsfactsandanalysis.com';
+                        });
+                    }
+                    break;
+            } // end of switch
 
         });
 
