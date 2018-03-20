@@ -44,18 +44,37 @@ require_once './sheader.php';
     2018 by NewsFacts & Analysis. All Rights Reserved.
 </div>
 
-</body>
-</html>
+
+<!-- Bootstrap libraries -->
+<link rel="stylesheet"
+      href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+<script type="text/javascript"
+        src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 
 
 <script type="text/javascript">
 
     $(document).ready(function () {
 
+
         var userid = $('#userid').val();
         console.log('User ID: ' + userid);
         var pollURL = '/lms/custom/common/get_news_poll.php';
         var forumURL = '/lms/custom/common/get_news_forum.php';
+        var check_picture_url = '/lms/custom/common/is_student_has_picture.php';
+
+        $.post(check_picture_url, {userid: userid}).done(function (data) {
+            if (data == '') {
+                //var $ = uploadcare.jQuery;
+                //$('body').append("<input type='hidden' role='uploadcare-uploader' name='my_file' />");
+                var upload_dialog_url = '/lms/custom/common/get_upload_dialog.php';
+                $.post(upload_dialog_url, {userid: userid}).done(function (data) {
+                    $("body").append(data);
+                    $("#myModal").modal('show');
+                });
+            }
+        });
+
 
         $('#dicIframe').load(function () {
             $(this).height($(this).contents().height());
@@ -71,7 +90,6 @@ require_once './sheader.php';
             $(this).height($(this).contents().height());
             $(this).width($(this).contents().width());
         });
-
 
         // Get news poll
         $.post(pollURL, {type: 1}).done(function (data) {
@@ -99,8 +117,36 @@ require_once './sheader.php';
             });
         }
 
+        function get_teacher_class_grades(item) {
+            // We use this URL to display grades for both teacher and student
+            var url = '/lms/custom/common/get_teacher_class_grades.php'
+            $.post(url, {item: JSON.stringify(item)}).done(function (data) {
+                $('#class_grades_container').html(data);
+                $('#grades_table').DataTable();
+            });
+        }
+
 
         $('body').on('click', function (event) {
+
+
+            if (event.target.id == 'upload_my_image') {
+                var userid = $('#userid').val();
+                var file_url = $('#my_file').val();
+                if (file_url == '') {
+                    $('#upload_err').html('Please provide file to be uploaded');
+                } // end if
+                else {
+                    $('#upload_err').html('');
+                    var item = {userid: userid, file_url: file_url};
+                    var url = '/lms/custom/common/upload_user_picture.php';
+                    $.post(url, {item: JSON.stringify(item)}).done(function () {
+                        $("[data-dismiss=modal]").trigger({type: "click"});
+                        $('#myModal').data('modal', null);
+                        document.location.reload();
+                    });
+                }
+            }
 
             if (event.target.id == 'submit_poll') {
                 var items = [];
@@ -230,6 +276,31 @@ require_once './sheader.php';
 
         }); // end of  body.click event
 
+
+        $('body').on('change', function (event) {
+
+            if (event.target.id == 'teacher_groups') {
+                var userid = $('#userid').val();
+                var groupid = $('#teacher_groups').val();
+                var item = {userid: userid, groupid: groupid};
+                if (groupid > 0) {
+                    $('#export_grades_container').show();
+                    var url = '/lms/custom/common/is_teacher.php';
+                    $.post(url, {userid: userid}).done(function (data) {
+                        if (data == 0) {
+                            $('#ast_container').show();
+                        }
+                    });
+                } // end if
+                else {
+                    $('#export_grades_container').hide();
+                    $('#ast_container').hide();
+                } // end else
+                get_teacher_class_grades(item);
+            }
+
+        }); // end of body.change event
+
         $(".nav3").click(function () {
             var tag = $(this).data('item');
             var userid = $('#userid').val();
@@ -286,6 +357,7 @@ require_once './sheader.php';
                     break;
 
                 case 'dic':
+                    $("#dicIframe").attr("src", '<?php echo $dicURL; ?>');
                     $('#dic').show();
 
                     $('#page').hide();
@@ -335,7 +407,8 @@ require_once './sheader.php';
 
 </script>
 
-
+</body>
+</html>
 
 
 

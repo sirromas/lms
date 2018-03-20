@@ -45,7 +45,8 @@ class Archive extends Utils {
 
 			foreach ( $items as $item ) {
 				$date = $item->path;
-				$link = "https://" . $_SERVER['SERVER_NAME'] . "/lms/articles/$item->path";
+				$filelink = "https://" . $_SERVER['SERVER_NAME'] . "/lms/articles/$item->path";
+				$link="https://" . $_SERVER['SERVER_NAME'] . "/lms/custom/common/archive_page.php?url=$filelink";
 				$path = "<a href='$link' target='_blank'>$item->path</a>";
 				$list .= "<tr>";
 				$list .= "<td>$item->title</td>";

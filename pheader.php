@@ -73,11 +73,15 @@ $meetURL    = $gr->get_meeting_url($userid);
     <script type='text/javascript'
             src='https://cdnjs.cloudflare.com/ajax/libs/bootstrap-3-typeahead/4.0.1/bootstrap3-typeahead.js'></script>
 
-    <!-- Custom JS file -->
-    <!--<script type="text/javascript" src="https://www.newsfactsandanalysis.com/assets/js/custom.js"></script>-->
+    <!-- Font awesome -->
+    <script defer src="https://use.fontawesome.com/releases/v5.0.8/js/solid.js" integrity="sha384-+Ga2s7YBbhOD6nie0DzrZpJes+b2K1xkpKxTFFcx59QmVPaSA8c7pycsNaFwUK6l" crossorigin="anonymous"></script>
+    <script defer src="https://use.fontawesome.com/releases/v5.0.8/js/fontawesome.js" integrity="sha384-7ox8Q2yzO/uWircfojVuCQOZl+ZZBg2D2J5nkpLqzH1HY0C1dHlTKIbpRz/LG23c" crossorigin="anonymous"></script>
 
     <!-- PDF Library -->
     <script type="text/javascript" src="https://www.newsfactsandanalysis.com/assets/js/pdf/pdfobject.js"></script>
+
+    <!-- Share this Library -->
+    <script type='text/javascript' src='//platform-api.sharethis.com/js/sharethis.js#property=5ab0b082b338830013654f88&product=inline-share-buttons' async='async'></script>
 
     <link rel="stylesheet" href="./body.css">
     <link rel="stylesheet" href="./quiz.css">
@@ -252,7 +256,7 @@ $meetURL    = $gr->get_meeting_url($userid);
 
                                                                     <!-- About Us -->
                                                                     <span class="ds203"><a
-                                                                                href="https://newsfactsandanalysis.com/about.html"
+                                                                                href="https://www.newsfactsandanalysis.com/about.html"
                                                                                 class="nav2"
                                                                                 target="_blank">About Us</a></span><span
                                                                             class="ds202"><span
