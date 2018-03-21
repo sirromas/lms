@@ -24,6 +24,8 @@ else {
 
 global $USER;
 $userid     = $USER->id;
+setcookie("userid", $userid);
+$_SESSION["userid"] =$userid;
 $articleURL = $nav->get_article_url();
 
 //$dicURL     = "https://www." . $_SERVER['SERVER_NAME'] . "/lms/dictionary/index.php";

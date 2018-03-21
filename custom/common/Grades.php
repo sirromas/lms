@@ -482,8 +482,8 @@ class Grades extends Utils
             $list            .= "<span class='col-md-3'>$groups_dropdown</span>";
             $list            .= "<span class='col-md-2'><button class='btn btn-default' id='add_new_class'>Add New Class</button></span>";
             $list            .= "<span class='col-md-2' id='export_grades_container' style='display: none;'><button class='btn btn-default' id='export_class_grades'>Export Grades</button></span>";
-            $list            .= "<span class='col-md-2' id='ast_container' style='display: none;'><button class='btn btn-default' id='add_assistance'>Add Assistance Account</button></span>";
-            $list            .= "<span class='col-md-2'><div class='sharethis-inline-share-buttons'></div></span>";
+            $list            .= "<span class='col-md-2' id='ast_container' style='display: none;'><button class='btn btn-default' id='add_assistance'>Add Assistant</button></span>";
+            $list            .= "<span class='col-md-2'><button class='btn btn-default' id='share_info'>Share NewsFacts & Analysis</button></span>";
             $list            .= "</div>";
             $list            .= "<div class='row' >";
             $list            .= "<span class='col-md-12' id='class_grades_container'></span>";
@@ -494,6 +494,63 @@ class Grades extends Utils
         }  // end else
 
         return $list;
+    }
+
+    function get_share_info_dialog($userid)
+    {
+        $list = "";
+
+        $list
+            .= " <div id='myModal' class='modal fade' role='dialog'>
+              <div class='modal-dialog'>
+
+                <!-- Modal content-->
+                <div class='modal-content'>
+                  <div class='modal-header'>
+                    
+                    <h4 class='modal-title'>Share this page</h4>
+                  </div>
+                  <div class='modal-body'>
+                    <input type='hidden' id='teacherid' value='$userid'>
+            
+                    <div class='container-fluid' style='text-align:left;margin-bottom: 10px;'>
+                    <div class='col-sm-2'>Subject*</div>
+                    <div class='col-sm-6'><input type='text' id='subject' placeholder='Subject' style='width: 375px;'></div>
+                    </div>
+                    
+                    <div class='container-fluid' style='text-align:left;margin-bottom: 10px;'>
+                    <div class='col-sm-2'>Recipient*</div>
+                    <div class='col-sm-6'><input type='email' id='email' placeholder='Email' style='width: 375px;'></div>
+                    </div>
+                    
+                    <div class='container-fluid' style='text-align:left;margin-bottom: 10px;'>
+                    <div class='col-sm-2'>Message*</div>
+                    <div class='col-sm-6'><textarea id='msg' style='width: 375px;' rows='7'></textarea></div>
+                    </div>
+                    
+                    <div class='container-fluid' style='text-align:center;'>
+                    <div class='col-sm-6' style='color: red;' id='share_err'></div>
+                    </div>
+                   
+                  </div>
+                  <div class='modal-footer'>
+                    <button type='button' class='btn btn-default' id='send_share_info'>Ok</button>
+                    <button type='button' class='btn btn-default' data-dismiss='modal' id='cancel_dialog'>Cancel</button>
+                  </div>
+                </div>
+
+              </div>
+            </div>";
+
+        return $list;
+    }
+
+    function send_share_info($item)
+    {
+        //$udata = $this->get_user_details($item->userid);
+        //$names = "$udata->firstname $udata->lastname";
+        $msg   = $item->msg;
+        $this->send_email($item->subject, $msg, $item->recipient, false);
     }
 
     function get_add_new_class_dialog()
@@ -580,12 +637,19 @@ class Grades extends Utils
         $list = "";
 
         $groups          = $this->get_user_groups();
-        $groups_dropdown = $this->get_teacher_groups_dropdown($groups);
-        $list            .= "<div class='row' style='margin-bottom: 45px;'>";
-        $list            .= "<span class='col-md-3'>$groups_dropdown</span>";
-        $list            .= "</div>";
+        if (count($groups)>1) {
+            $groups_dropdown = $this->get_teacher_groups_dropdown($groups);
+            $list            .= "<div class='row' style='margin-bottom: 45px;'>";
+            $list            .= "<span class='col-md-3'>$groups_dropdown</span>";
+            $list            .= "</div>";
+        } // end if
+        else {
+            $item=new stdClass();
+            $item->userid=$userid;
+            $grades=$this->get_teacher_class_grades_table($item);
+        }
         $list            .= "<div class='row' >";
-        $list            .= "<span class='col-md-12' id='class_grades_container'></span>";
+        $list            .= "<span class='col-md-12' id='class_grades_container'>$grades</span>";
         $list            .= "</div>";
 
         return $list;

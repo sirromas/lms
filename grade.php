@@ -7,8 +7,12 @@ require_once './pheader.php';
 <input type="hidden" id="userid" value="<?php echo $USER->id; ?>">
 <input type="hidden" id="group_users" value="<?php echo $groups_string; ?>">
 
-<!-- Article iFrame -->
+<!-- Container for all pages loaded via AJAX -->
 <br><br>
+<div id="ajax_container"
+     style="width: 935px;margin-top: 15px;text-align: left;"></div>
+
+<!-- Article iFrame -->
 <div class="row" id="page" style="margin: auto;text-align: center;">
 
     <iframe id='pageIframe'
@@ -27,9 +31,6 @@ require_once './pheader.php';
             src="<?php echo $dicURL; ?>"></iframe>
 </div>
 
-<!-- Container for all pages loaded via AJAX -->
-<div id="ajax_container"
-     style="width: 935px;margin-top: 15px;text-align: left;"></div>
 
 <div id="quiz_container"
      style="width: 935px;margin-top: 15px;display: none;"></div>
@@ -58,12 +59,12 @@ require_once './pheader.php';
         var pollURL = '/lms/custom/common/get_news_poll.php';
         var forumURL = '/lms/custom/common/get_news_forum.php';
 
-        $('#page').hide();
+        //$('#page').hide();
         $('#dic').hide();
         $('#poll_container').hide();
         $('#quiz_container').hide();
-        $('#forum_container').hide();
-        $('#meeting_container').hide();
+        //$('#forum_container').hide();
+        //$('#meeting_container').hide();
 
         $('#dicIframe').load(function () {
             $(this).height($(this).contents().height());
@@ -115,6 +116,7 @@ require_once './pheader.php';
         }
 
         // Make grades page first during app open
+        /*
         var gradesURL = '/lms/custom/common/get_grades_page.php';
         $.post(gradesURL, {userid: userid}).done(function (data) {
             $('#ajax_container').html(data);
@@ -128,12 +130,23 @@ require_once './pheader.php';
             // $('#grades_table').DataTable();
             $('#ajax_container').show();
         });
+        */
 
 
         $('body').on('click', function (event) {
 
             var eclass = $(event.target).attr('class');
             console.log('Element class: ' + eclass);
+
+            if (event.target.id.indexOf("article_id_") >= 0) {
+                var id = event.target.id.replace("article_id_", "");
+                console.log('Article ID: '+id);
+                var elid='#article_id_'+id;
+                var url=$(elid).data('url');
+                console.log('Article URL: '+url);
+                $('#pageIframe').attr("src",url);
+                $('#page').show();
+            }
 
             // ************* Poll grades ****************
             if (event.target.id == 'back_to_class_grades') {
@@ -339,6 +352,45 @@ require_once './pheader.php';
                     }); // end of post
                 } // end else
             }
+
+            // ***************** Share info section *****************
+
+            if (event.target.id == 'share_info') {
+                var userid = $('#userid').val();
+                var url = '/lms/custom/common/get_share_info_dialog.php';
+                $.post(url, {userid: userid}).done(function (data) {
+                    $("body").append(data);
+                    $("#myModal").modal('show');
+                });
+            }
+
+            if (event.target.id == 'send_share_info') {
+                var userid = $('#userid').val();
+                var subject = $('#subject').val();
+                var recipient = $('#email').val();
+                var msg = $('#msg').val();
+
+                if (subject == '' || recipient == '' || msg == '') {
+                    $('#share_err').html('Please provide all required fields');
+                    return false;
+                } // end if
+                else {
+                    $('#share_err').html('');
+                    var url = '/lms/custom/common/send_share_info.php';
+                    var item = {
+                        userid: userid,
+                        subject: subject,
+                        recipient: recipient,
+                        msg: msg
+                    };
+                    $.post(url, {item: JSON.stringify(item)}).done(function (data) {
+                        console.log(data);
+                        $("[data-dismiss=modal]").trigger({type: "click"});
+                        $('#myModal').data('modal', null);
+                    });
+                }
+            }
+
 
             // ***************** Export class grades section *****************
 
@@ -635,7 +687,8 @@ require_once './pheader.php';
 
         });
 
-    }); // end of document ready
+    })
+    ; // end of document ready
 
 
 </script>

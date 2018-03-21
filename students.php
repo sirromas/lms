@@ -6,6 +6,9 @@ require_once './sheader.php';
 
 <input type="hidden" id="userid" value="<?php echo $USER->id; ?>">
 
+<!-- Container for all pages loaded via AJAX -->
+<div id="ajax_container" style="width: 935px;margin-top: 15px;"></div>
+
 <!-- Article iFrame -->
 <div class="row" id="page" style="margin: auto;text-align: center;">
     <iframe id='pageIframe'
@@ -25,9 +28,6 @@ require_once './sheader.php';
             frameborder="0"
             src="<?php echo $dicURL; ?>"></iframe>
 </div>
-
-<!-- Container for all pages loaded via AJAX -->
-<div id="ajax_container" style="width: 935px;margin-top: 15px;"></div>
 
 <div id="quiz_container"
      style="width: 935px;margin-top: 15px;display: none;"></div>
@@ -229,6 +229,16 @@ require_once './sheader.php';
                         get_news_forum(forumid);
                     });
                 }
+            }
+
+            if (event.target.id.indexOf("article_id_") >= 0) {
+                var id = event.target.id.replace("article_id_", "");
+                console.log('Article ID: '+id);
+                var elid='#article_id_'+id;
+                var url=$(elid).data('url');
+                console.log('Article URL: '+url);
+                $('#pageIframe').attr("src",url);
+                $('#page').show();
             }
 
             if (event.target.id.indexOf("student_post_reply_") >= 0) {

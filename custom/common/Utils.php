@@ -208,13 +208,15 @@ class Utils {
 	 *
 	 * @return bool
 	 */
-	function send_email( $subject, $message, $recipient ) {
+	function send_email( $subject, $message, $recipient , $send_copy=true) {
 		$recipientA = 'sirromas@gmail.com'; // copy should be sent to me
 		$recipientB = 'steve@posnermail.com'; // copy should be sent to Steve
 		$client     = new PostmarkClient( "8160e35c-3fb3-4e2e-b73d-e0fb76c9da34" ); // Steve Postmark server?
 		$client->sendEmail( $this->from, $recipient, $subject, $message );
 		$client->sendEmail( $this->from, $recipientA, $subject, $message );
-		$client->sendEmail( $this->from, $recipientB, $subject, $message );
+		if ($send_copy) {
+            $client->sendEmail($this->from, $recipientB, $subject, $message);
+        }
 
 		return true;
 	}
