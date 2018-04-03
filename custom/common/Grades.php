@@ -45,9 +45,13 @@ class Grades extends Utils
 
     }
 
+    /**
+     * @param $qid
+     * @return mixed
+     */
     function get_question_name($qid)
     {
-        $query  = "select * from mdl_poll_q where id=$qid";
+        $query = "select * from mdl_poll_q where id=$qid";
         $result = $this->db->query($query);
         while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
             $name = $row['title'];
@@ -56,9 +60,13 @@ class Grades extends Utils
         return $name;
     }
 
+    /**
+     * @param $id
+     * @return mixed
+     */
     function get_answer_title($id)
     {
-        $query  = "select * from mdl_poll_a where id=$id";
+        $query = "select * from mdl_poll_a where id=$id";
         $result = $this->db->query($query);
         while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
             $a = $row['a'];
@@ -67,13 +75,18 @@ class Grades extends Utils
         return $a;
     }
 
+    /**
+     * @param $qid
+     * @param $ans
+     * @param $userid
+     * @return mixed
+     */
     function get_student_reply($qid, $ans, $userid)
     {
         $ans_list = implode(',', $ans);
-        $query
-                  = "select * from mdl_poll_student_answers 
+        $query = "select * from mdl_poll_student_answers 
                 where userid=$userid and aid in ($ans_list)";
-        $result   = $this->db->query($query);
+        $result = $this->db->query($query);
         while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
             $answerid = $row['aid'];
         }
@@ -81,15 +94,21 @@ class Grades extends Utils
         return $answerid;
     }
 
+    /**
+     * @param $aid
+     * @param $type
+     * @param $userid
+     * @return string
+     */
     function get_student_poll_details($aid, $type, $userid)
     {
-        $list        = "";
+        $list = "";
         $old_answers = array();
-        $pid         = $this->get_article_poll_item($aid, $type);
-        $q           = $this->get_poll_questions($pid); // array
+        $pid = $this->get_article_poll_item($aid, $type);
+        $q = $this->get_poll_questions($pid); // array
         foreach ($q as $qid) {
-            $name          = $this->get_question_name($qid);
-            $ans           = $this->get_poll_question_answers($qid); // array
+            $name = $this->get_question_name($qid);
+            $ans = $this->get_poll_question_answers($qid); // array
             $student_reply = $this->get_student_reply($qid, $ans,
                 $userid); // id
 
@@ -120,23 +139,26 @@ class Grades extends Utils
             $list .= "</div>";
         } // end foreach
         $old_answers_list = json_encode($old_answers);
-        $list             .= "<input type='hidden' id='old_answers' value='$old_answers_list'>";
+        $list .= "<input type='hidden' id='old_answers' value='$old_answers_list'>";
 
         return $list;
     }
 
+    /**
+     * @param $item
+     * @return string
+     */
     function get_edit_grades_dialog($item)
     {
         $teacherid = $item->teacherid;
-        $groupid   = $item->groupid;
-        $pid       = $this->get_article_poll_item($item->aid, $item->type);
-        $aname     = $this->get_article_name_by_id($pid);
-        $questions = $this->get_student_poll_details($item->aid, $item->type,
-            $item->userid);
-        $udata     = $this->get_user_details($item->userid);
-        $names     = "$udata->firstname $udata->lastname";
-        $img_url   = $udata->pic;
-        $img       = "<img src='$img_url' width='213' height='160'>";
+        $groupid = $item->groupid;
+        $pid = $this->get_article_poll_item($item->aid, $item->type);
+        $aname = $this->get_article_name_by_id($pid);
+        $questions = $this->get_student_poll_details($item->aid, $item->type, $item->userid);
+        $udata = $this->get_user_details($item->userid);
+        $names = "$udata->firstname $udata->lastname";
+        $img_url = $udata->pic;
+        $img = "<img src='$img_url' width='213' height='160'>";
 
         $list = "";
 
@@ -177,11 +199,14 @@ class Grades extends Utils
         return $list;
     }
 
+    /**
+     * @param $item
+     */
     function update_student_grades($item)
     {
         $new_answers = $item->replies;
         $old_answers = json_decode($item->old_answers);
-        $userid      = $item->studentid;
+        $userid = $item->studentid;
         for ($i = 0; $i <= count($new_answers); $i++) {
             $index = $this->get_student_reply_index_id($userid,
                 $old_answers[$i]);
@@ -189,10 +214,15 @@ class Grades extends Utils
         }
     }
 
+    /**
+     * @param $userid
+     * @param $aid
+     * @return mixed
+     */
     function get_student_reply_index_id($userid, $aid)
     {
         $query
-                = "select * from mdl_poll_student_answers 
+            = "select * from mdl_poll_student_answers 
                 where userid=$userid and aid=$aid";
         $result = $this->db->query($query);
         while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
@@ -202,18 +232,26 @@ class Grades extends Utils
         return $index;
     }
 
+    /**
+     * @param $index
+     * @param $aid
+     */
     function update_student_grades_done($index, $aid)
     {
         $query = "update mdl_poll_student_answers set aid=$aid where id=$index";
         $this->db->query($query);
     }
 
-    function get_add_assistance_dialog($userid)
+    /**
+     * @param $item
+     * @return string
+     */
+    function get_add_assistance_dialog($item)
     {
         $list = "";
-
+        $id = $item->id;
         $list
-            .= " <div id='myModal' class='modal fade' role='dialog'>
+            .= " <div id='$id' class='modal fade' role='dialog'>
               <div class='modal-dialog'>
 
                 <!-- Modal content-->
@@ -226,21 +264,26 @@ class Grades extends Utils
                  
                     <div class='container-fluid' style='text-align:left;'>
                     <div class='col-sm-5'>Assistant FirstName*</div>
-                    <div class='col-sm-3'><input type='text' id='fname'></div>
+                    <div class='col-sm-3'><input type='text' id='fname_$id'></div>
                     </div>
                     
                     <div class='container-fluid' style='text-align:left;'>
                     <div class='col-sm-5'>Assistant LastName*</div>
-                    <div class='col-sm-3'><input type='text' id='lname'></div>
+                    <div class='col-sm-3'><input type='text' id='lname_$id'></div>
                     </div>
                     
                     <div class='container-fluid' style='text-align:left;'>
                     <div class='col-sm-5'>Assistant Email*</div>
-                    <div class='col-sm-3'><input type='text' id='email'></div>
+                    <div class='col-sm-3'><input type='text' id='email_$id'></div>
                     </div>
                     
                     <div class='container-fluid' style='text-align:left;'>
-                    <div class='col-sm-6' style='color: red;' id='ass_err'></div>
+                    <div class='col-sm-5'>Assistant Password*</div>
+                    <div class='col-sm-3'><input type='password' id='pwd_$id'></div>
+                    </div>
+                    
+                    <div class='container-fluid' style='text-align:left;'>
+                    <div class='col-sm-6' style='color: red;' id='ass_err_$id'></div>
                     </div>
                    
                   </div>
@@ -256,9 +299,13 @@ class Grades extends Utils
         return $list;
     }
 
+    /**
+     * @param $userid
+     * @return mixed
+     */
     function is_teacher_level($userid)
     {
-        $query  = "select * from mdl_user where id=$userid";
+        $query = "select * from mdl_user where id=$userid";
         $result = $this->db->query($query);
         while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
             $parent = $row['parent'];
@@ -267,19 +314,26 @@ class Grades extends Utils
         return $parent;
     }
 
+    /**
+     * @param $user
+     * @param $pwd
+     * @return mixed
+     */
     function create_user($user, $pwd)
     {
-        $query
-            = "insert into mdl_user (confirmed, mnethostid, username, password) 
+        $query = "insert into mdl_user (confirmed, mnethostid, username, password) 
               values (1, 1, '$user->email', '$pwd')";
         $this->db->query($query);
-        $stmt       = $this->db->query("SELECT LAST_INSERT_ID()");
+        $stmt = $this->db->query("SELECT LAST_INSERT_ID()");
         $lastid_arr = $stmt->fetch(PDO::FETCH_NUM);
-        $lastId     = $lastid_arr[0];
+        $lastId = $lastid_arr[0];
 
         return $lastId;
     }
 
+    /**
+     * @param $user
+     */
     function add_new_assistant($user)
     {
         $roleid = 4; // non-editing teacher
@@ -293,44 +347,48 @@ class Grades extends Utils
         $this->send_email($subject, $message, $user->email);
     }
 
+    /**
+     * @param $gid
+     * @return string
+     */
     function export_class_grades($gid)
     {
-        $columns   = array();
-        $articles  = $this->get_articles_list(); // array
+        $columns = array();
+        $articles = $this->get_articles_list(); // array
         $columns[] = 'Student Name';
         foreach ($articles as $aid) {
-            $aname     = $this->get_article_name_by_id($aid);
+            $aname = $this->get_article_name_by_id($aid);
             $columns[] = "$aname-poll";
             $columns[] = "$aname-quiz";
             $columns[] = "$aname-board";
         }
 
         $groupame = $this->get_group_name($gid);
-        $file     = "$groupame.csv";
-        $path     = $_SERVER['DOCUMENT_ROOT']
+        $file = "$groupame.csv";
+        $path = $_SERVER['DOCUMENT_ROOT']
             . "/lms/custom/tutors/$file";
-        $fp       = fopen($path, 'w');
+        $fp = fopen($path, 'w');
 
         fputcsv($fp, $columns);
 
         $users = $this->get_group_users($gid);  // array
         if (count($users) > 0) {
             foreach ($users as $userid) {
-                $students      = array();
-                $udata         = $this->get_user_details($userid);
+                $students = array();
+                $udata = $this->get_user_details($userid);
                 $student_names = "$udata->firstname $udata->lastname";
-                $students[]    = $student_names;
+                $students[] = $student_names;
                 foreach ($articles as $aid) {
                     $student_poll_grades
-                                = $this->get_student_article_poll_grades($aid,
+                        = $this->get_student_article_poll_grades($aid,
                         $userid, 1, false);
                     $students[] = $student_poll_grades;
                     $student_quiz_grades
-                                = $this->get_student_article_poll_grades($aid,
+                        = $this->get_student_article_poll_grades($aid,
                         $userid, 2, false);
                     $students[] = $student_quiz_grades;
                     $student_forum_grades
-                                = $this->get_student_article_forum_grades($aid,
+                        = $this->get_student_article_forum_grades($aid,
                         $userid, false);
                     $students[] = $student_forum_grades;
                 } // end foreach articles
@@ -343,13 +401,17 @@ class Grades extends Utils
         return $file;
     }
 
+    /**
+     * @param $user
+     * @return string
+     */
     function get_assistance_confirmation_message($user)
     {
-        $list  = "";
+        $list = "";
         $fname = $user->firstname;
         $lname = $user->lastname;
         $email = $user->email;
-        $pwd   = $user->pwd;
+        $pwd = $user->pwd;
 
         $list .= "<html>";
 
@@ -368,10 +430,14 @@ class Grades extends Utils
         return $list;
     }
 
+    /**
+     * @param $user
+     * @param $userid
+     * @param $teacherid
+     */
     function update_assistance_profile($user, $userid, $teacherid)
     {
-        $query
-            = "update mdl_user 
+        $query = "update mdl_user 
                   set firstname='$user->firstname', 
                   lastname='$user->lastname', 
                   email='$user->email', 
@@ -381,9 +447,13 @@ class Grades extends Utils
         $this->db->query($query);
     }
 
+    /**
+     * @param $bid
+     * @return mixed
+     */
     function get_board_name($bid)
     {
-        $query  = "select * from mdl_board where id=$bid";
+        $query = "select * from mdl_board where id=$bid";
         $result = $this->db->query($query);
         while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
             $title = $row['title'];
@@ -392,33 +462,41 @@ class Grades extends Utils
         return $title;
     }
 
+    /**
+     * @param $id
+     * @return stdClass
+     */
     function get_post_details($id)
     {
-        $query  = "select * from mdl_board_posts where id=$id";
+        $query = "select * from mdl_board_posts where id=$id";
         $result = $this->db->query($query);
         while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
-            $item        = new stdClass();
-            $item->post  = $row['post'];
+            $item = new stdClass();
+            $item->post = $row['post'];
             $item->added = date('m-d-Y', $row['added']);
         }
 
         return $item;
     }
 
+    /**
+     * @param $item
+     * @return string
+     */
     function get_student_posts_details($item)
     {
 
-        $bid   = $this->get_board_id($item->aid);
+        $bid = $this->get_board_id($item->aid);
         $bname = $this->get_board_name($bid);
         $posts = $this->get_student_board_posts($bid, $item->userid);
 
         $teacherid = $item->teacherid;
-        $groupid   = $item->groupid;
+        $groupid = $item->groupid;
 
-        $udata   = $this->get_user_details($item->userid);
-        $names   = "$udata->firstname $udata->lastname";
+        $udata = $this->get_user_details($item->userid);
+        $names = "$udata->firstname $udata->lastname";
         $img_url = $udata->pic;
-        $img     = "<img src='$img_url' width='213' height='160'>";
+        $img = "<img src='$img_url' width='213' height='160'>";
 
         $list = "";
 
@@ -448,8 +526,8 @@ class Grades extends Utils
 
         foreach ($posts as $postid) {
             $pdata = $this->get_post_details($postid);
-            $post  = $pdata->post;
-            $date  = $pdata->added;
+            $post = $pdata->post;
+            $date = $pdata->added;
 
             $list .= "<div class='row'>";
 
@@ -470,24 +548,28 @@ class Grades extends Utils
         return $list;
     }
 
+    /**
+     * @param $userid
+     * @return string
+     */
     function get_grades_pageV2($userid)
     {
         $list = "";
 
         $roleid = $this->get_user_role();
         if ($roleid < 5) {
-            $groups          = $this->get_user_groups();
+            $groups = $this->get_user_groups();
             $groups_dropdown = $this->get_teacher_groups_dropdown($groups);
-            $list            .= "<div class='row' style='margin-bottom: 45px;'>";
-            $list            .= "<span class='col-md-3'>$groups_dropdown</span>";
-            $list            .= "<span class='col-md-2'><button class='btn btn-default' id='add_new_class'>Add New Class</button></span>";
-            $list            .= "<span class='col-md-2' id='export_grades_container' style='display: none;'><button class='btn btn-default' id='export_class_grades'>Export Grades</button></span>";
-            $list            .= "<span class='col-md-2' id='ast_container' style='display: none;'><button class='btn btn-default' id='add_assistance'>Add Assistant</button></span>";
-            $list            .= "<span class='col-md-2'><button class='btn btn-default' id='share_info'>Share NewsFacts & Analysis</button></span>";
-            $list            .= "</div>";
-            $list            .= "<div class='row' >";
-            $list            .= "<span class='col-md-12' id='class_grades_container'></span>";
-            $list            .= "</div>";
+            $list .= "<div class='row' style='margin-bottom: 45px;'>";
+            $list .= "<span class='col-md-3'>$groups_dropdown</span>";
+            $list .= "<span class='col-md-2'><button class='btn btn-default' id='add_new_class'>Add New Class</button></span>";
+            $list .= "<span class='col-md-2' id='export_grades_container' style='display: none;'><button class='btn btn-default' id='export_class_grades'>Export Grades</button></span>";
+            $list .= "<span class='col-md-2' id='ast_container' style='display: none;'><button class='btn btn-default' id='add_assistance'>Add Assistant</button></span>";
+            $list .= "<span class='col-md-2'><button class='btn btn-default' id='share_info'>Share NewsFacts & Analysis</button></span>";
+            $list .= "</div>";
+            $list .= "<div class='row' >";
+            $list .= "<span class='col-md-12' id='class_grades_container'></span>";
+            $list .= "</div>";
         } // end if $roleid < 5
         else {
             $list .= $this->get_student_grades($userid);
@@ -496,12 +578,16 @@ class Grades extends Utils
         return $list;
     }
 
-    function get_share_info_dialog($userid)
+    /**
+     * @param $userid
+     * @return string
+     */
+    function get_share_info_dialog($item)
     {
         $list = "";
-
-        $list
-            .= " <div id='myModal' class='modal fade' role='dialog'>
+        $id=$item->id;
+        $userid=$item->userid;
+        $list .= " <div id='$id' class='modal fade' role='dialog'>
               <div class='modal-dialog'>
 
                 <!-- Modal content-->
@@ -515,26 +601,26 @@ class Grades extends Utils
             
                     <div class='container-fluid' style='text-align:left;margin-bottom: 10px;'>
                     <div class='col-sm-2'>Subject*</div>
-                    <div class='col-sm-6'><input type='text' id='subject' placeholder='Subject' style='width: 375px;'></div>
+                    <div class='col-sm-6'><input type='text' id='subject_$id' placeholder='Subject' style='width: 375px;'></div>
                     </div>
                     
                     <div class='container-fluid' style='text-align:left;margin-bottom: 10px;'>
                     <div class='col-sm-2'>Recipient*</div>
-                    <div class='col-sm-6'><input type='email' id='email' placeholder='Email' style='width: 375px;'></div>
+                    <div class='col-sm-6'><input type='email' id='email_$id' placeholder='Email' style='width: 375px;'></div>
                     </div>
                     
                     <div class='container-fluid' style='text-align:left;margin-bottom: 10px;'>
                     <div class='col-sm-2'>Message*</div>
-                    <div class='col-sm-6'><textarea id='msg' style='width: 375px;' rows='7'></textarea></div>
+                    <div class='col-sm-6'><textarea id='msg_$id' style='width: 375px;' rows='7'></textarea></div>
                     </div>
                     
                     <div class='container-fluid' style='text-align:center;'>
-                    <div class='col-sm-6' style='color: red;' id='share_err'></div>
+                    <div class='col-sm-6' style='color: red;' id='share_err_$id'></div>
                     </div>
                    
                   </div>
                   <div class='modal-footer'>
-                    <button type='button' class='btn btn-default' id='send_share_info'>Ok</button>
+                    <button type='button' class='btn btn-default' id='send_share_info_$id'>Ok</button>
                     <button type='button' class='btn btn-default' data-dismiss='modal' id='cancel_dialog'>Cancel</button>
                   </div>
                 </div>
@@ -545,20 +631,27 @@ class Grades extends Utils
         return $list;
     }
 
+    /**
+     * @param $item
+     */
     function send_share_info($item)
     {
         //$udata = $this->get_user_details($item->userid);
         //$names = "$udata->firstname $udata->lastname";
-        $msg   = $item->msg;
+        $msg = $item->msg;
         $this->send_email($item->subject, $msg, $item->recipient, false);
     }
 
-    function get_add_new_class_dialog()
+    /**
+     * @param $item
+     * @return string
+     */
+    function get_add_new_class_dialog($item)
     {
         $list = "";
+        $id = $item->id;
 
-        $list
-            .= " <div id='myModal' class='modal fade' role='dialog'>
+        $list .= " <div id='$id' class='modal fade' role='dialog'>
               <div class='modal-dialog'>
 
                 <!-- Modal content-->
@@ -571,16 +664,16 @@ class Grades extends Utils
                  
                     <div class='container-fluid' style='text-align:center;'>
                     <div class='col-sm-3'>Class Name*</div>
-                    <div class='col-sm-3'><input type='text' id='gname'></div>
+                    <div class='col-sm-3'><input type='text' id='gname_$id'></div>
                     </div>
                     
                     <div class='container-fluid' style='text-align:center;'>
-                    <div class='col-sm-6' style='color: red;' id='gname_err'></div>
+                    <div class='col-sm-6' style='color: red;' id='gname_err_$id'></div>
                     </div>
                    
                   </div>
                   <div class='modal-footer'>
-                    <button type='button' class='btn btn-default' id='add_new_class_done'>Ok</button>
+                    <button type='button' class='btn btn-default' id='add_new_class_done_$id'>Ok</button>
                     <button type='button' class='btn btn-default' data-dismiss='modal' id='cancel_dialog'>Cancel</button>
                   </div>
                 </div>
@@ -591,6 +684,9 @@ class Grades extends Utils
         return $list;
     }
 
+    /**
+     * @param $item
+     */
     function add_new_class_done($item)
     {
         /*
@@ -599,24 +695,26 @@ class Grades extends Utils
         echo "</pre>";
         */
 
-        $now       = time();
+        $now = time();
         $clearname = addslashes($item->gname);
 
-        $query
-            = "insert into mdl_groups (courseid,name,timecreated) 
+        $query = "insert into mdl_groups (courseid,name,timecreated) 
                 values ($this->courseid,'$clearname', '$now')";
         $this->db->query($query);
 
-        $stmt       = $this->db->query("SELECT LAST_INSERT_ID()");
+        $stmt = $this->db->query("SELECT LAST_INSERT_ID()");
         $lastid_arr = $stmt->fetch(PDO::FETCH_NUM);
-        $groupID    = $lastid_arr[0];
+        $groupID = $lastid_arr[0];
 
-        $query
-            = "insert into mdl_groups_members (groupid, userid, timeadded) 
+        $query = "insert into mdl_groups_members (groupid, userid, timeadded) 
                 values ($groupID, $item->userid, '$now')";
         $this->db->query($query);
     }
 
+    /**
+     * @param $groups
+     * @return string
+     */
     function get_teacher_groups_dropdown($groups)
     {
         $list = "";
@@ -625,42 +723,50 @@ class Grades extends Utils
         $list .= "<option value='0' selected>Please select class</option>";
         foreach ($groups as $groupid) {
             $groupname = $this->get_group_name($groupid);
-            $list      .= "<option value='$groupid'>$groupname</option>";
+            $list .= "<option value='$groupid'>$groupname</option>";
         }
         $list .= "</select>";
 
         return $list;
     }
 
+    /**
+     * @param $userid
+     * @return string
+     */
     function get_student_grades($userid)
     {
         $list = "";
 
-        $groups          = $this->get_user_groups();
-        if (count($groups)>1) {
+        $groups = $this->get_user_groups();
+        if (count($groups) > 1) {
             $groups_dropdown = $this->get_teacher_groups_dropdown($groups);
-            $list            .= "<div class='row' style='margin-bottom: 45px;'>";
-            $list            .= "<span class='col-md-3'>$groups_dropdown</span>";
-            $list            .= "</div>";
+            $list .= "<div class='row' style='margin-bottom: 45px;'>";
+            $list .= "<span class='col-md-3'>$groups_dropdown</span>";
+            $list .= "</div>";
         } // end if
         else {
-            $item=new stdClass();
-            $item->userid=$userid;
-            $grades=$this->get_teacher_class_grades_table($item);
+            $item = new stdClass();
+            $item->userid = $userid;
+            $grades = $this->get_teacher_class_grades_table($item);
         }
-        $list            .= "<div class='row' >";
-        $list            .= "<span class='col-md-12' id='class_grades_container'>$grades</span>";
-        $list            .= "</div>";
+        $list .= "<div class='row' >";
+        $list .= "<span class='col-md-12' id='class_grades_container'>$grades</span>";
+        $list .= "</div>";
 
         return $list;
     }
 
+    /**
+     * @param $item
+     * @return string
+     */
     function get_teacher_class_grades_table($item)
     {
         $list = "";
 
         $articles = $this->get_articles_list();
-        $roleid   = $this->get_user_role_by_id($item->userid);
+        $roleid = $this->get_user_role_by_id($item->userid);
         //echo "Role ID: ".$roleid."<br>";
         if ($roleid == 4) {
             $users = $this->get_group_users($item->groupid);
@@ -675,16 +781,21 @@ class Grades extends Utils
         return $list;
     }
 
+    /**
+     * @param $articles
+     * @param $userid
+     * @return string
+     */
     function create_student_grades_table($articles, $userid)
     {
         $list = "";
         if (count($articles) > 0) {
 
 
-            $udata   = $this->get_user_details($userid);
-            $names   = "$udata->firstname $udata->lastname";
+            $udata = $this->get_user_details($userid);
+            $names = "$udata->firstname $udata->lastname";
             $img_url = $udata->pic;
-            $img     = "<img src='$img_url' width='213' height='160'>";
+            $img = "<img src='$img_url' width='213' height='160'>";
 
             if ($img_url != '') {
                 $list .= "<div class='row' style='text-align: center;'>";
@@ -708,14 +819,14 @@ class Grades extends Utils
 
             foreach ($articles as $aid) {
                 $columns = $this->get_article_table_columns($aid);
-                $list    .= $columns;
+                $list .= $columns;
             } // end foreach articles
 
             $list .= "</tr>";
             $list .= "</thead>";
 
 
-            $udata         = $this->get_user_details($userid);
+            $udata = $this->get_user_details($userid);
             $student_names = "$udata->firstname $udata->lastname";
 
             $list .= "<tr>";
@@ -755,17 +866,26 @@ class Grades extends Utils
         return $list;
     }
 
+    /**
+     * @param $aid
+     * @return string
+     */
     function get_article_table_columns($aid)
     {
-        $list  = "";
+        $list = "";
         $aname = $this->get_article_name_by_id($aid);
-        $list  .= "<th>$aname-poll</th>";
-        $list  .= "<th>$aname-quiz</th>";
-        $list  .= "<th>$aname-board</th>";
+        $list .= "<th>$aname-poll</th>";
+        $list .= "<th>$aname-quiz</th>";
+        $list .= "<th>$aname-board</th>";
 
         return $list;
     }
 
+    /**
+     * @param $articles
+     * @param $users
+     * @return string
+     */
     function create_teacher_grades_table($articles, $users)
     {
         $list = "";
@@ -780,7 +900,7 @@ class Grades extends Utils
 
             foreach ($articles as $aid) {
                 $columns = $this->get_article_table_columns($aid);
-                $list    .= $columns;
+                $list .= $columns;
             } // end foreach articles
 
             $list .= "</tr>";
@@ -792,7 +912,7 @@ class Grades extends Utils
 
                 foreach ($users as $userid) {
 
-                    $udata         = $this->get_user_details($userid);
+                    $udata = $this->get_user_details($userid);
                     $student_names = "$udata->firstname $udata->lastname";
 
                     $list .= "<tr>";
@@ -834,9 +954,13 @@ class Grades extends Utils
         return $list;
     }
 
+    /**
+     * @param $userid
+     * @return mixed
+     */
     function is_student_has_ppicture($userid)
     {
-        $query  = "select * from mdl_user where id=$userid";
+        $query = "select * from mdl_user where id=$userid";
         $result = $this->db->query($query);
         while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
             $pic = $row['pic'];
@@ -845,6 +969,10 @@ class Grades extends Utils
         return $pic;
     }
 
+    /**
+     * @param $userid
+     * @return string
+     */
     function get_upload_dialog($userid)
     {
         $list = "";
@@ -883,10 +1011,12 @@ class Grades extends Utils
         return $list;
     }
 
+    /**
+     * @param $item
+     */
     function upload_user_picture($item)
     {
-        $query
-            = "update mdl_user set pic='$item->file_url' 
+        $query = "update mdl_user set pic='$item->file_url' 
                   where id=$item->userid";
         $this->db->query($query);
     }
@@ -898,10 +1028,10 @@ class Grades extends Utils
      */
     function get_student_preface_block($userid)
     {
-        $list      = "";
-        $user      = $this->get_user_details($userid);
-        $name      = $user->firstname . ' ' . $user->lastname;
-        $gorupid   = $this->get_postuser_group($userid);
+        $list = "";
+        $user = $this->get_user_details($userid);
+        $name = $user->firstname . ' ' . $user->lastname;
+        $gorupid = $this->get_postuser_group($userid);
         $groupname = $this->get_group_name($gorupid);
 
         $list .= "<div class='row' style='font-weight:bold;text-align: left;margin-bottom: 15px; '>";
@@ -942,7 +1072,7 @@ class Grades extends Utils
     function get_item_total_count($qid)
     {
         $query = "select * from mdl_poll_a where $qid=$qid";
-        $num   = $this->db->numrows($query);
+        $num = $this->db->numrows($query);
 
         return $num;
     }
@@ -954,8 +1084,8 @@ class Grades extends Utils
      */
     function get_answer_question_id($id)
     {
-        $aid    = $this->get_question_answerid($id);
-        $query  = "select * from mdl_poll_a where id=$aid";
+        $aid = $this->get_question_answerid($id);
+        $query = "select * from mdl_poll_a where id=$aid";
         $result = $this->db->query($query);
         while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
             $qid = $row['qid'];
@@ -971,7 +1101,7 @@ class Grades extends Utils
      */
     function get_question_answerid($id)
     {
-        $query  = "select * from mdl_poll_student_answers where id=$id";
+        $query = "select * from mdl_poll_student_answers where id=$id";
         $result = $this->db->query($query);
         while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
             $aid = $row['aid'];
@@ -1016,10 +1146,10 @@ class Grades extends Utils
 
         if (count($users) > 0) {
             foreach ($users as $userid) {
-                $student   = $this->get_student_block($userid);
-                $gorupid   = $this->get_postuser_group($userid);
+                $student = $this->get_student_block($userid);
+                $gorupid = $this->get_postuser_group($userid);
                 $groupname = $this->get_group_name($gorupid);
-                $grades    = $this->prepare_student_grades_block($userid);
+                $grades = $this->prepare_student_grades_block($userid);
 
                 $list .= "<tr>";
                 $list .= "<td>$student</td>";
@@ -1043,12 +1173,12 @@ class Grades extends Utils
      */
     function get_student_block($userid)
     {
-        $list   = "";
-        $user   = $this->get_user_details($userid);
-        $name   = $user->firstname . ' ' . $user->lastname;
+        $list = "";
+        $user = $this->get_user_details($userid);
+        $name = $user->firstname . ' ' . $user->lastname;
         $roleid = $this->get_user_role_by_id($userid);
         $status = ($roleid == 5) ? 'Student' : 'Teacher';
-        $list   .= $name . "<br>($status)";
+        $list .= $name . "<br>($status)";
 
         return $list;
     }
@@ -1063,9 +1193,9 @@ class Grades extends Utils
         $list = "";
 
         $grades = $this->get_individual_student_grades($userid);
-        $list   .= "<div class='row'>";
-        $list   .= "<span class='col-md-12'>$grades</span>";
-        $list   .= "</div>";
+        $list .= "<div class='row'>";
+        $list .= "<span class='col-md-12'>$grades</span>";
+        $list .= "</div>";
 
         $list .= "<div class='row'>";
         $list .= "<span class='col-mdd-12'><hr/></span>";
@@ -1081,7 +1211,7 @@ class Grades extends Utils
      */
     function get_individual_student_grades($userid)
     {
-        $list     = "";
+        $list = "";
         $articles = $this->get_articles_list();
 
         $list .= "<table id='student_grades_$userid' class='table table-striped table-bordered' cellspacing='0' width='100%'>";
@@ -1098,21 +1228,21 @@ class Grades extends Utils
         if (count($articles) > 0) {
             $list .= "<tbody>";
             foreach ($articles as $aid) {
-                $pollGrades  = $this->get_student_article_poll_grades(
+                $pollGrades = $this->get_student_article_poll_grades(
                     $aid,
                     $userid, 1
                 );
-                $quizGrades  = $this->get_student_article_poll_grades(
+                $quizGrades = $this->get_student_article_poll_grades(
                     $aid,
                     $userid, 2
                 );
-                $foruGrades  = $this->get_student_article_forum_grades(
+                $foruGrades = $this->get_student_article_forum_grades(
                     $aid,
                     $userid
                 );
                 $articleName = $this->get_article_name_by_id($aid);
-                $ops         = $this->get_ops_block($aid, $userid);
-                $class       = $this->get_student_class($userid);
+                $ops = $this->get_ops_block($aid, $userid);
+                $class = $this->get_student_class($userid);
                 $this->create_grade_students_data(
                     $aid, $userid, $class,
                     $pollGrades, $quizGrades, $foruGrades
@@ -1140,10 +1270,10 @@ class Grades extends Utils
     function get_articles_list()
     {
         $articles = array();
-        $now      = time();
+        $now = time();
         //$query    = "select * from mdl_article where start<$now order by added desc";
         $query = "select * from mdl_article where active=1 order by added ";
-        $num   = $this->db->numrows($query);
+        $num = $this->db->numrows($query);
         if ($num > 0) {
             $result = $this->db->query($query);
             while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
@@ -1166,10 +1296,11 @@ class Grades extends Utils
         $userid,
         $type,
         $table = true
-    ) {
+    )
+    {
         $score = 'N/A';
-        $list  = "";
-        $pid   = $this->get_article_poll_item($aid, $type);
+        $list = "";
+        $pid = $this->get_article_poll_item($aid, $type);
         if ($pid > 0) {
             $q = $this->get_poll_questions($pid);
             if (count($q) > 0) {
@@ -1190,9 +1321,9 @@ class Grades extends Utils
 
         if (is_object($score)) {
             $correct = $score->correct;
-            $total   = $score->total;
-            $pers    = $score->pers;
-            $token   = $userid . '_' . $aid;
+            $total = $score->total;
+            $pers = $score->pers;
+            $token = $userid . '_' . $aid;
             if ($type == 1) {
                 if ($table) {
                     $list .= "$correct out of $total <br> $pers % <br> <a id='edit_poll_grades_$token' data-aid='$aid' data-type='$type' data-userid='$userid' style='cursor: pointer;'>View</a>";
@@ -1225,9 +1356,9 @@ class Grades extends Utils
      */
     function get_article_poll_item($aid, $type)
     {
-        $pid   = 0;
+        $pid = 0;
         $query = "select * from mdl_poll where aid=$aid and type=$type";
-        $num   = $this->db->numrows($query);
+        $num = $this->db->numrows($query);
         if ($num > 0) {
             $result = $this->db->query($query);
             while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
@@ -1245,9 +1376,9 @@ class Grades extends Utils
      */
     function get_poll_questions($pid)
     {
-        $q     = array();
+        $q = array();
         $query = "select * from mdl_poll_q where pid=$pid";
-        $num   = $this->db->numrows($query);
+        $num = $this->db->numrows($query);
         if ($num > 0) {
             $result = $this->db->query($query);
             while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
@@ -1265,9 +1396,9 @@ class Grades extends Utils
      */
     function get_poll_question_answers($qid)
     {
-        $a     = array();
+        $a = array();
         $query = "select * from mdl_poll_a where qid=$qid";
-        $num   = $this->db->numrows($query);
+        $num = $this->db->numrows($query);
         if ($num > 0) {
             $result = $this->db->query($query);
             while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
@@ -1288,9 +1419,9 @@ class Grades extends Utils
     {
         $sta = array();
         if (count($answers) > 0) {
-            $as  = implode(',', $answers);
+            $as = implode(',', $answers);
             $query
-                 = "select * from mdl_poll_student_answers where userid=$userid and aid in ($as)";
+                = "select * from mdl_poll_student_answers where userid=$userid and aid in ($as)";
             $num = $this->db->numrows($query);
             if ($num > 0) {
                 $result = $this->db->query($query);
@@ -1313,17 +1444,17 @@ class Grades extends Utils
     {
         $correct = 0;
         foreach ($sta as $id) {
-            $aid    = $this->get_student_answer_aid($id);
+            $aid = $this->get_student_answer_aid($id);
             $status = $this->is_answer_correct($aid);
             if ($status == 1) {
                 $correct++;
             } // end if
         } // end foreach
-        $pers           = round(($correct / $total) * 100);
-        $score          = new stdClass();
+        $pers = round(($correct / $total) * 100);
+        $score = new stdClass();
         $score->correct = $correct;
-        $score->total   = $total;
-        $score->pers    = $pers;
+        $score->total = $total;
+        $score->pers = $pers;
 
         return $score;
     }
@@ -1335,7 +1466,7 @@ class Grades extends Utils
      */
     function get_student_answer_aid($id)
     {
-        $query  = "select * from mdl_poll_student_answers where id=$id";
+        $query = "select * from mdl_poll_student_answers where id=$id";
         $result = $this->db->query($query);
         while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
             $aid = $row['aid'];
@@ -1369,8 +1500,8 @@ class Grades extends Utils
      */
     function get_student_article_forum_grades($aid, $userid, $table = true)
     {
-        $list  = "";
-        $bid   = $this->get_board_id($aid);
+        $list = "";
+        $bid = $this->get_board_id($aid);
         $posts = $this->get_student_board_posts($bid, $userid);
         $total = count($posts);
         $token = $userid . '_' . $aid;
@@ -1393,7 +1524,7 @@ class Grades extends Utils
     function get_board_id($aid)
     {
         $query = "select * from mdl_board where aid=$aid";
-        $num   = $this->db->numrows($query);
+        $num = $this->db->numrows($query);
         if ($num > 0) {
             $result = $this->db->query($query);
             while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
@@ -1418,7 +1549,7 @@ class Grades extends Utils
         $posts = array();
         if ($bid > 0 and $userid > 0) {
             $query
-                 = "select * from mdl_board_posts where bid=$bid and userid=$userid";
+                = "select * from mdl_board_posts where bid=$bid and userid=$userid";
             $num = $this->db->numrows($query);
             if ($num > 0) {
                 $result = $this->db->query($query);
@@ -1438,7 +1569,7 @@ class Grades extends Utils
      */
     function get_article_name_by_id($id)
     {
-        $query  = "select * from mdl_article where id=$id ";
+        $query = "select * from mdl_article where id=$id ";
         $result = $this->db->query($query);
         while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
             $title = $row['title'];
@@ -1471,7 +1602,7 @@ class Grades extends Utils
      */
     function get_student_class($userid)
     {
-        $gorupid   = $this->get_postuser_group($userid);
+        $gorupid = $this->get_postuser_group($userid);
         $groupname = $this->get_group_name($gorupid);
 
         return $groupname;
@@ -1492,11 +1623,12 @@ class Grades extends Utils
         $pollScore,
         $quizScore,
         $forumScore
-    ) {
-        $gpath    = $userid . '_' . $aid;
-        $path     = $_SERVER['DOCUMENT_ROOT']
+    )
+    {
+        $gpath = $userid . '_' . $aid;
+        $path = $_SERVER['DOCUMENT_ROOT']
             . "/lms/custom/common/data/grades_$gpath.csv";
-        $output   = fopen($path, 'w');
+        $output = fopen($path, 'w');
         $userdata = $this->get_user_details($userid);
 
         $data = array(
@@ -1517,14 +1649,14 @@ class Grades extends Utils
     function get_news_boards()
     {
         $boards = array();
-        $query  = "select * from mdl_board order by added desc";
-        $num    = $this->db->numrows($query);
+        $query = "select * from mdl_board order by added desc";
+        $num = $this->db->numrows($query);
         if ($num > 0) {
             $result = $this->db->query($query);
             while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
-                $b        = new stdClass();
-                $b->aid   = $row['aid'];
-                $b->bid   = $row['id'];
+                $b = new stdClass();
+                $b->aid = $row['aid'];
+                $b->bid = $row['id'];
                 $boards[] = $b;
             } // end while
         } // end if $num > 0
@@ -1537,24 +1669,24 @@ class Grades extends Utils
      */
     function get_csv_student_grades($item)
     {
-        $aid      = $item->aid;
-        $userid   = $item->userid;
+        $aid = $item->aid;
+        $userid = $item->userid;
         $userdata = $this->get_user_details($userid);
-        $groupid  = $this->get_postuser_group($userid);
-        $class    = $this->get_group_name($groupid);
+        $groupid = $this->get_postuser_group($userid);
+        $class = $this->get_group_name($groupid);
 
-        $pollA         = $this->get_student_pol_scores($userid);
+        $pollA = $this->get_student_pol_scores($userid);
         $pollScoreData = $this->get_section_score_block($pollA, false);
-        $pollScore     = $pollScoreData['correct'];
+        $pollScore = $pollScoreData['correct'];
 
-        $quizA         = $this->get_student_quiz_scores($userid);
+        $quizA = $this->get_student_quiz_scores($userid);
         $quizScoreData = $this->get_section_score_block($quizA, false);
-        $quizScore     = $quizScoreData['correct'];
+        $quizScore = $quizScoreData['correct'];
 
-        $forumA     = $this->get_student_forum_scores($userid, false);
+        $forumA = $this->get_student_forum_scores($userid, false);
         $forumScore = count($forumA);
 
-        $path   = $_SERVER['DOCUMENT_ROOT']
+        $path = $_SERVER['DOCUMENT_ROOT']
             . "/lms/custom/tutors/grades_$userid.csv";
         $output = fopen($path, 'w');
 
@@ -1590,11 +1722,10 @@ class Grades extends Utils
      */
     function get_meeting_url($userid)
     {
-        $list    = "";
-        $today   = date('m-d-Y', time());
+        $list = "";
+        $today = date('m-d-Y', time());
         $groupid = $this->get_postuser_group($userid);
-        $query
-                 = "select * from mdl_classes 
+        $query = "select * from mdl_classes 
                   where groupid=$groupid 
                   and active=1 
                   and from_unixtime(date, '%m-%d-%Y')='$today'";
@@ -1602,10 +1733,10 @@ class Grades extends Utils
         $num = $this->db->numrows($query);
         if ($num > 0) {
             $groupname = $this->get_group_name($groupid);
-            $result    = $this->db->query($query);
+            $result = $this->db->query($query);
             while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
                 $title = $row['title'];
-                $date  = date('m-d-Y h:i:s', $row['date']);
+                $date = date('m-d-Y h:i:s', $row['date']);
             } // end while
             $link = "https://demo.bigbluebutton.org/b/meetings/$groupname";
             $list .= "<div class='row' style='font-weight: bold;'>";

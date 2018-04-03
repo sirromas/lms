@@ -140,11 +140,11 @@ require_once './pheader.php';
 
             if (event.target.id.indexOf("article_id_") >= 0) {
                 var id = event.target.id.replace("article_id_", "");
-                console.log('Article ID: '+id);
-                var elid='#article_id_'+id;
-                var url=$(elid).data('url');
-                console.log('Article URL: '+url);
-                $('#pageIframe').attr("src",url);
+                console.log('Article ID: ' + id);
+                var elid = '#article_id_' + id;
+                var url = $(elid).data('url');
+                console.log('Article URL: ' + url);
+                $('#pageIframe').attr("src", url);
                 $('#page').show();
             }
 
@@ -257,42 +257,49 @@ require_once './pheader.php';
 
 
             if (event.target.id == 'cancel_dialog') {
-                document.location.reload();
+                //document.location.reload();
             }
 
             if (event.target.id == 'add_new_class') {
                 var userid = $('#userid').val();
+                var id = Math.round((new Date()).getTime() / 1000);
                 var url = '/lms/custom/common/get_add_new_class_dialog.php';
-                $.post(url, {userid: userid}).done(function (data) {
+                var item = {userid: userid, id: id};
+                $.post(url, {item: JSON.stringify(item)}).done(function (data) {
+                    var modalID = '#' + id;
                     $("body").append(data);
-                    $("#myModal").modal('show');
+                    $(modalID).modal('show');
                 });
             }
 
-            if (event.target.id == 'add_new_class_done') {
+            if (event.target.id.indexOf("add_new_class_done_") >= 0) {
+                var id = event.target.id.replace('add_new_class_done_', '');
+                console.log('ID: ' + id);
                 var userid = $('#userid').val();
-                var gname = $('#gname').val();
+                var groupelid = '#gname_' + id;
+                var gname = $(groupelid).val();
+                var errelid = '#gname_err_' + id;
                 if (gname == '') {
-                    $('#gname_err').html('Please provide class name');
+                    $(errelid).html('Please provide class name');
                 } // end if
                 else {
-                    $('#gname_err').html('');
+                    $(errelid).html('');
                     var check_url = '/lms/custom/common/is_group_exists.php';
                     $.post(check_url, {gname: gname}).done(function (status) {
                         console.log('Group exists status: ' + status);
                         if (status > 0) {
-                            $('#gname_err').html('Provided class name already exists');
+                            $(errelid).html('Provided class name already exists');
                             return false;
                         } // end if
                         else {
-                            $('#gname_err').html('');
+                            $(errelid).html('');
                             var item = {userid: userid, gname: gname};
                             var url = '/lms/custom/common/add_new_class_done.php';
                             $.post(url, {item: JSON.stringify(item)}).done(function (data) {
                                 console.log('Server response: ' + data);
                                 $("[data-dismiss=modal]").trigger({type: "click"});
-                                $('#myModal').data('modal', null);
-                                document.location.reload();
+                                //$('#myModal').data('modal', null);
+                                //document.location.reload();
                             }); // end of post
                         } // end else
                     }); // end of post
@@ -303,10 +310,13 @@ require_once './pheader.php';
 
             if (event.target.id == 'add_assistance') {
                 var userid = $('#userid').val();
+                var id = Math.round((new Date()).getTime() / 1000);
                 var url = '/lms/custom/common/get_add_assistance_dialog.php';
-                $.post(url, {userid: userid}).done(function (data) {
+                var item = {userid: userid, id: id};
+                $.post(url, {item: JSON.stringify(item)}).done(function (data) {
+                    var modalID = '#' + id;
                     $("body").append(data);
-                    $("#myModal").modal('show');
+                    $(modalID).modal('show');
                 });
             }
 
@@ -316,8 +326,9 @@ require_once './pheader.php';
                 var fname = $('#fname').val();
                 var lname = $('#lname').val();
                 var email = $('#email').val();
+                var pwd = $('#pwd').val();
                 var groupid = $('#teacher_groups').val();
-                if (fname == '' || lname == '' || email == '') {
+                if (fname == '' || lname == '' || email == '' || pwd == '') {
                     $('#ass_err').html('Please provide all required fields');
                 } // end if
                 else {
@@ -328,7 +339,7 @@ require_once './pheader.php';
                         firstname: fname,
                         lastname: lname,
                         email: email,
-                        pwd: 'strange12',
+                        pwd: pwd,
                         state: 'US'
                     };
                     var check_url = '/lms/custom/tutors/is_email_exists.php';
@@ -344,7 +355,7 @@ require_once './pheader.php';
                                 $.post(url, {item: JSON.stringify(item)}).done(function (data) {
                                     console.log(data);
                                     $("[data-dismiss=modal]").trigger({type: "click"});
-                                    $('#myModal').data('modal', null);
+                                    //$('#myModal').data('modal', null);
                                     //document.location.reload();
                                 }); // end of post
                             } // end if confirm
@@ -357,25 +368,32 @@ require_once './pheader.php';
 
             if (event.target.id == 'share_info') {
                 var userid = $('#userid').val();
+                var id = Math.round((new Date()).getTime() / 1000);
                 var url = '/lms/custom/common/get_share_info_dialog.php';
-                $.post(url, {userid: userid}).done(function (data) {
+                var item = {userid: userid, id: id};
+                $.post(url, {item: JSON.stringify(item)}).done(function (data) {
+                    var modalID = '#' + id;
                     $("body").append(data);
-                    $("#myModal").modal('show');
+                    $(modalID).modal('show');
                 });
             }
 
-            if (event.target.id == 'send_share_info') {
+            if (event.target.id.indexOf("send_share_info_") >= 0) {
+                var id = event.target.id.replace('send_share_info_', '');
                 var userid = $('#userid').val();
-                var subject = $('#subject').val();
-                var recipient = $('#email').val();
-                var msg = $('#msg').val();
-
+                var subelid = '#subject_' + id;
+                var subject = $(subelid).val();
+                var recipientelid = '#email_' + id;
+                var recipient = $(recipientelid).val();
+                var msgelid = '#msg_' + id;
+                var msg = $(msgelid).val();
+                var errlid = '#share_err_' + id;
                 if (subject == '' || recipient == '' || msg == '') {
-                    $('#share_err').html('Please provide all required fields');
+                    $(errlid).html('Please provide all required fields');
                     return false;
                 } // end if
                 else {
-                    $('#share_err').html('');
+                    $(errlid).html('');
                     var url = '/lms/custom/common/send_share_info.php';
                     var item = {
                         userid: userid,
@@ -386,7 +404,7 @@ require_once './pheader.php';
                     $.post(url, {item: JSON.stringify(item)}).done(function (data) {
                         console.log(data);
                         $("[data-dismiss=modal]").trigger({type: "click"});
-                        $('#myModal').data('modal', null);
+                        //$('#myModal').data('modal', null);
                     });
                 }
             }
@@ -434,7 +452,7 @@ require_once './pheader.php';
                 else {
                     if (confirm('Submit research?')) {
                         var url = '/lms/custom/common/submit_quiz_results.php';
-                        var item = {userid: userid, items: items};
+                        var item = {userid: userid, items: items, type: 1};
                         $.post(url, {item: JSON.stringify(item)}).done(function (data) {
                             $('#poll_container').html(data);
                         });
@@ -460,7 +478,7 @@ require_once './pheader.php';
                 else {
                     if (confirm('Submit Quiz?')) {
                         var url = '/lms/custom/common/submit_quiz_results.php';
-                        var item = {userid: userid, items: items};
+                        var item = {userid: userid, items: items, type: 2};
                         $.post(url, {item: JSON.stringify(item)}).done(function (data) {
                             $('#quiz_container').html(data);
                         });

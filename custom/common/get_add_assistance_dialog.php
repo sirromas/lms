@@ -1,7 +1,7 @@
 <?php
 
 require_once './Grades.php';
-$gr     = new Grades();
-$userid = $_REQUEST['userid'];
-$list   = $gr->get_add_assistance_dialog($userid);
+$gr = new Grades();
+$item = $_REQUEST['item'];
+$list = $gr->get_add_assistance_dialog(json_decode($item));
 echo $list;

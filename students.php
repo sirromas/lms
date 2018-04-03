@@ -166,7 +166,7 @@ require_once './sheader.php';
                 else {
                     if (confirm('Submit research?')) {
                         var url = '/lms/custom/common/submit_quiz_results.php';
-                        var item = {userid: userid, items: items};
+                        var item = {userid: userid, items: items, type: 1};
                         $.post(url, {item: JSON.stringify(item)}).done(function (data) {
                             $('#poll_container').html(data);
                         });
@@ -193,7 +193,7 @@ require_once './sheader.php';
                 else {
                     if (confirm('Submit Quiz?')) {
                         var url = '/lms/custom/common/submit_quiz_results.php';
-                        var item = {userid: userid, items: items};
+                        var item = {userid: userid, items: items, type: 2};
                         $.post(url, {item: JSON.stringify(item)}).done(function (data) {
                             $('#quiz_container').html(data);
                         });
@@ -233,11 +233,11 @@ require_once './sheader.php';
 
             if (event.target.id.indexOf("article_id_") >= 0) {
                 var id = event.target.id.replace("article_id_", "");
-                console.log('Article ID: '+id);
-                var elid='#article_id_'+id;
-                var url=$(elid).data('url');
-                console.log('Article URL: '+url);
-                $('#pageIframe').attr("src",url);
+                console.log('Article ID: ' + id);
+                var elid = '#article_id_' + id;
+                var url = $(elid).data('url');
+                console.log('Article URL: ' + url);
+                $('#pageIframe').attr("src", url);
                 $('#page').show();
             }
 

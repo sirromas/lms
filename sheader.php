@@ -76,10 +76,6 @@ $meetURL = $gr->get_meeting_url($userid);
     <script type='text/javascript'
             src='https://cdnjs.cloudflare.com/ajax/libs/bootstrap-3-typeahead/4.0.1/bootstrap3-typeahead.js'></script>
 
-    <!-- Font awesome -->
-    <script defer src="https://use.fontawesome.com/releases/v5.0.8/js/solid.js" integrity="sha384-+Ga2s7YBbhOD6nie0DzrZpJes+b2K1xkpKxTFFcx59QmVPaSA8c7pycsNaFwUK6l" crossorigin="anonymous"></script>
-    <script defer src="https://use.fontawesome.com/releases/v5.0.8/js/fontawesome.js" integrity="sha384-7ox8Q2yzO/uWircfojVuCQOZl+ZZBg2D2J5nkpLqzH1HY0C1dHlTKIbpRz/LG23c" crossorigin="anonymous"></script>
-
     <!-- PDF Library -->
     <script type="text/javascript" src="https://www.newsfactsandanalysis.com/assets/js/pdf/pdfobject.js"></script>
 

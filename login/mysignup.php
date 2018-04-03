@@ -16,7 +16,7 @@ if ($_REQUEST) {
     $posted_user = json_decode($user_data);
 
     $user = new stdClass();
-    $user->confirmed = 1; // It is always confirmed, but we check payment status after user login
+    $user->confirmed = 0;
     $user->username = strtolower($posted_user->email);
     $user->password = $posted_user->pwd;
     $user->purepassword = $posted_user->pwd;

@@ -36,7 +36,6 @@ class Archive extends Utils {
 			$list .= "<thead>";
 			$list .= "<tr>";
 			$list .= "<th>Title</th>";
-			$list .= "<th>Link</th>";
 			$list .= "<th>Date</th>";
 			//$list .= "<th>Operations</th>";
 			$list .= "</tr>";
@@ -51,9 +50,8 @@ class Archive extends Utils {
 				//$link="https://" . $_SERVER['SERVER_NAME'] . "/lms/custom/common/archive_page.php?roleid=$roleid&url=$filelink";
 				//$path = "<a href='$link' target='_blank'>$item->path</a>";
                 $index='article_id_'.$item->id;
-                $path = "<a href='#' onclick='return false;' data-url='$filelink' id='$index'>$item->path</a>";
+                $path = "<a href='#' onclick='return false;' data-url='$filelink' id='$index'>$item->title</a>";
 				$list .= "<tr>";
-				$list .= "<td>$item->title</td>";
 				$list .= "<td>$path</td>";
 				$list .= "<td>$date</td>";
 				//$list .= "<td><a href='#' onclick='return false;' class='ar_item_del' data-id='$item->id'>Delete</a></td>";
