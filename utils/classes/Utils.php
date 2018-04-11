@@ -2459,8 +2459,7 @@ class Utils2
         $title    = ($type == 1) ? 'Poll params' : 'Quiz params';
         $totalbox = $this->get_total_questions_dropbbox();
 
-        $list
-            .= "<div class='panel panel-default' style='margin-top: 15px;'>
+        $list .= "<div class='panel panel-default' style='margin-top: 15px;'>
 			  		<div class='panel-heading'>$title </div>
 			  		<div class='panel-body'>
 			  		<input type='hidden' id='type' value='$type'>
@@ -2500,16 +2499,25 @@ class Utils2
      *
      * @return string
      */
-    function get_question_answers($id)
+    function get_question_answers($id, $type)
     {
         $list = "";
         for ($i = 1; $i <= 5; $i++) {
             $index = $id . '_' . $i;
-            $list  .= "<div class='row' style='padding: 15px;'>";
-            $list  .= "<span class='col-md-2'>Answer$i</span>";
-            $list  .= "<span class='col-md-8'><input type='text' class='answers$id' style='width: 100%' data-id='$i'></span>";
-            $list  .= "<span class='col-md-2'><input type='checkbox' class='correct_answers$id' id='ca_$index' data-id='$i'>&nbsp; Correct Reply</span>";
-            $list  .= "</div>";
+            if ($type==2) {
+                $list .= "<div class='row' style='padding: 15px;'>";
+                $list .= "<span class='col-md-2'>Answer$i</span>";
+                $list .= "<span class='col-md-8'><input type='text' class='answers$id' style='width: 100%' data-id='$i'></span>";
+                $list .= "<span class='col-md-2'><input type='checkbox' class='correct_answers$id' id='ca_$index' data-id='$i'>&nbsp; Correct Reply</span>";
+                $list .= "</div>";
+            } // end if
+            else {
+                $list .= "<div class='row' style='padding: 15px;'>";
+                $list .= "<span class='col-md-2'>Answer$i</span>";
+                $list .= "<span class='col-md-8'><input type='text' class='answers$id' style='width: 100%' data-id='$i'></span>";
+                $list .= "<span class='col-md-2' style='display: none;'><input type='checkbox' checked class='correct_answers$id' id='ca_$index' data-id='$i'>&nbsp; Correct Reply</span>";
+                $list .= "</div>";
+            }
         }
 
         return $list;
@@ -2521,11 +2529,11 @@ class Utils2
      *
      * @return string
      */
-    function get_questions_block($total)
+    function get_questions_block($total, $type)
     {
         $list = "";
         for ($i = 1; $i <= $total; $i++) {
-            $answers = $this->get_question_answers($i);
+            $answers = $this->get_question_answers($i, $type);
             $list    .= "<div class='row' style='padding: 15px;'>";
             $list    .= "<span class='col-md-2'>Question#$i</span>";
             $list    .= "<span class='col-md-10'><input type='text' class='questions' style='width: 100%' data-id='$i'></span>";
@@ -2559,9 +2567,8 @@ class Utils2
     function get_quiz_page_step2($item)
     {
         $list      = "";
-        $questions = $this->get_questions_block($item->total);
-        $list
-                   .= "<div class='panel panel-default' style='margin-top: 15px;'>
+        $questions = $this->get_questions_block($item->total, $item->type);
+        $list .= "<div class='panel panel-default' style='margin-top: 15px;'>
 			  		<div class='panel-heading'>Questions</div>
 			  		<div class='panel-body'>$questions";
 

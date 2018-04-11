@@ -1,20 +1,48 @@
 <?php
 
 require_once $_SERVER['DOCUMENT_ROOT'] . '/lms/custom/common/Utils.php';
+require_once $_SERVER['DOCUMENT_ROOT'] . '/lms/custom/authorize/Payment.php';
 
 class Grades extends Utils
 {
 
+    /**
+     * @var array
+     */
     public $users = array();
+    /**
+     * @var array
+     */
     public $news_poll_questions = array();
+    /**
+     * @var array
+     */
     public $news_quiz_questions = array();
+    /**
+     * @var array
+     */
     public $student_poll_score = array();
+    /**
+     * @var array
+     */
     public $student_quiz_score = array();
+    /**
+     * @var array
+     */
     public $student_forum_score = array();
+    /**
+     * @var
+     */
     public $articleID;
+    /**
+     * @var int
+     */
     public $courseid;
 
 
+    /**
+     * Grades constructor.
+     */
     function __construct()
     {
         parent::__construct();
@@ -119,7 +147,7 @@ class Grades extends Utils
             foreach ($ans as $answerid) {
                 $a_title = $this->get_answer_title($answerid);
                 $cstatus = ($this->is_answer_correct($answerid) == 1)
-                    ? 'Correct' : 'Incorrect';
+                    ? 'Correct' : '';
                 if ($answerid == $student_reply) {
                     array_push($old_answers, $student_reply);
                     $radio_btn
@@ -548,6 +576,18 @@ class Grades extends Utils
         return $list;
     }
 
+
+    /**
+     * @param $userid
+     * @return string
+     */
+    function update_teachers_classes_list($userid)
+    {
+        $groups = $this->get_user_groups($userid);
+        $groups_dropdown = $this->get_teacher_groups_dropdown($groups);
+        return $groups_dropdown;
+    }
+
     /**
      * @param $userid
      * @return string
@@ -556,19 +596,25 @@ class Grades extends Utils
     {
         $list = "";
 
+        $p = new Payment();
+        $dateObj = $p->get_key_expiration_dates();
+        $date1 = $dateObj->start;
+        $date2 = $dateObj->end;
+        $list .= "<p style='text-align: center;font-weight: bold;font-size: larger;'>Subscription Start Date $date1 Subscription End Date $date2</p>";
+
         $roleid = $this->get_user_role();
         if ($roleid < 5) {
-            $groups = $this->get_user_groups();
+            $groups = $this->get_user_groups($userid);
             $groups_dropdown = $this->get_teacher_groups_dropdown($groups);
             $list .= "<div class='row' style='margin-bottom: 45px;'>";
-            $list .= "<span class='col-md-3'>$groups_dropdown</span>";
+            $list .= "<span class='col-md-3' id='teacher_classes_container'>$groups_dropdown</span>";
             $list .= "<span class='col-md-2'><button class='btn btn-default' id='add_new_class'>Add New Class</button></span>";
             $list .= "<span class='col-md-2' id='export_grades_container' style='display: none;'><button class='btn btn-default' id='export_class_grades'>Export Grades</button></span>";
             $list .= "<span class='col-md-2' id='ast_container' style='display: none;'><button class='btn btn-default' id='add_assistance'>Add Assistant</button></span>";
             $list .= "<span class='col-md-2'><button class='btn btn-default' id='share_info'>Share NewsFacts & Analysis</button></span>";
             $list .= "</div>";
             $list .= "<div class='row' >";
-            $list .= "<span class='col-md-12' id='class_grades_container'></span>";
+            $list .= "<span class='col-md-12' id='class_grades_container' style='width: 945px;overflow: scroll;height:auto;'></span>";
             $list .= "</div>";
         } // end if $roleid < 5
         else {
@@ -578,6 +624,75 @@ class Grades extends Utils
         return $list;
     }
 
+    function grades_get_send_message_dialog($item)
+    {
+        $list = "";
+        $teacherid = $item->userid;
+        $emails = $item->emails;
+        $id = $item->id;
+        $list .= " <div id='$id' class='modal fade' role='dialog'>
+              <div class='modal-dialog'>
+
+                <!-- Modal content-->
+                <div class='modal-content'>
+                  <div class='modal-header'>
+                    
+                    <h4 class='modal-title'>Send Grades Feedback</h4>
+                  </div>
+                  <div class='modal-body'>
+                    <input type='hidden' id='teacherid' value='$teacherid'>
+                    <input type='hidden' id='emails_$id' value='$emails'>
+                  
+                    <div class='container-fluid' style='text-align:left;margin-bottom: 10px;'>
+                    <div class='col-sm-2'>Subject*</div>
+                    <div class='col-sm-6'><input type='text' id='subject_$id' placeholder='Subject' style='width: 375px;'></div>
+                    </div>
+                    
+                    <div class='container-fluid' style='text-align:left;margin-bottom: 10px;'>
+                    <div class='col-sm-2'>Message*</div>
+                    <div class='col-sm-6'><textarea id='msg_$id' style='width: 375px;' rows='7'></textarea></div>
+                    </div>
+                    
+                    <div class='container-fluid' style='text-align:center;'>
+                    <div class='col-sm-8' style='color: red;' id='send_grade_err_$id'></div>
+                    </div>
+                   
+                  </div>
+                  <div class='modal-footer'>
+                    <button type='button' class='btn btn-default' id='send_grade_comment_$id'>Ok</button>
+                    <button type='button' class='btn btn-default' data-dismiss='modal' id='cancel_dialog'>Cancel</button>
+                  </div>
+                </div>
+
+              </div>
+            </div>";
+
+        return $list;
+    }
+
+    function send_grades_feedback($item)
+    {
+        $teacherid = $item->teacherid;
+        $teacher = $this->get_user_details($teacherid);
+        $fname = $teacher->firstname;
+        $lname = $teacher->lastname;
+        $emails = explode(',', $item->emails);
+        $subject = $item->subject;
+        $msg = $item->msg;
+        if (count($emails) > 0) {
+            $list = "";
+            $list .= "<html>";
+            $list .= "<body>";
+            $list .= "<p style='text-align: justify'>$msg</p>";
+            $list .= "<p>$fname $lname</p>";
+            $list .= "</body>";
+            $list .= "</html>";
+            foreach ($emails as $email) {
+                $this->send_email($subject, $list, $email);
+            }
+        } // end if ount($emails)>0
+    }
+
     /**
      * @param $userid
      * @return string
@@ -585,8 +700,8 @@ class Grades extends Utils
     function get_share_info_dialog($item)
     {
         $list = "";
-        $id=$item->id;
-        $userid=$item->userid;
+        $id = $item->id;
+        $userid = $item->userid;
         $list .= " <div id='$id' class='modal fade' role='dialog'>
               <div class='modal-dialog'>
 
@@ -767,9 +882,8 @@ class Grades extends Utils
 
         $articles = $this->get_articles_list();
         $roleid = $this->get_user_role_by_id($item->userid);
-        //echo "Role ID: ".$roleid."<br>";
         if ($roleid == 4) {
-            $users = $this->get_group_users($item->groupid);
+            $users = $this->get_group_users($item->groupid, 5);
             $this->export_class_grades($item->groupid);
             $list .= $this->create_teacher_grades_table($articles, $users);
         } // end if
@@ -892,6 +1006,10 @@ class Grades extends Utils
 
         if (count($articles) > 0) {
 
+            $list .= "<div class='row' style='margin-bottom: 15px;text-align: center;'>";
+            $list .= "<span class='col-md-12'><button class='btn btn-default' id='grades_get_send_message_dialog'>Send Grades Feedback</button></span>";
+            $list .= "</div>";
+
             $list .= "<table id='grades_table' class='table table-striped table-bordered' cellspacing='0' width='100%'>";
 
             $list .= "<thead>";
@@ -902,6 +1020,9 @@ class Grades extends Utils
                 $columns = $this->get_article_table_columns($aid);
                 $list .= $columns;
             } // end foreach articles
+
+            $list .= "<th>Email</th>";
+            $list .= "<th><input type='checkbox' id='select_all' style='margin-right: 15px;'>All</th>";
 
             $list .= "</tr>";
             $list .= "</thead>";
@@ -914,7 +1035,7 @@ class Grades extends Utils
 
                     $udata = $this->get_user_details($userid);
                     $student_names = "$udata->firstname $udata->lastname";
-
+                    $email = $udata->email;
                     $list .= "<tr>";
                     $list .= "<td>$student_names</td>";
 
@@ -935,6 +1056,9 @@ class Grades extends Utils
                         $list .= "<td>$student_forum_grades</td>";
 
                     } // end foreach
+
+                    $list .= "<td>$email</td>";
+                    $list .= "<td><input type='checkbox' class='students' value='$email' style='margin-right: 15px;'></td>";
 
                     $list .= "</tr>";
                 } // end foreach users
@@ -1298,7 +1422,7 @@ class Grades extends Utils
         $table = true
     )
     {
-        $score = 'N/A';
+        $score = '0';
         $list = "";
         $pid = $this->get_article_poll_item($aid, $type);
         if ($pid > 0) {

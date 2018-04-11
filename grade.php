@@ -21,6 +21,8 @@ require_once './pheader.php';
             src="<?php echo $articleURL; ?>"></iframe>
 </div>
 
+</div>
+
 <div id="meeting_container"><?php echo $meetURL; ?></div>
 
 <!-- Dictionary iFrame -->
@@ -107,6 +109,8 @@ require_once './pheader.php';
         }
 
         function get_teacher_class_grades(item) {
+            // item.userid, item.groupid
+
             // We use this URL to display grades for both teacher and student
             var url = '/lms/custom/common/get_teacher_class_grades.php'
             $.post(url, {item: JSON.stringify(item)}).done(function (data) {
@@ -274,7 +278,6 @@ require_once './pheader.php';
 
             if (event.target.id.indexOf("add_new_class_done_") >= 0) {
                 var id = event.target.id.replace('add_new_class_done_', '');
-                console.log('ID: ' + id);
                 var userid = $('#userid').val();
                 var groupelid = '#gname_' + id;
                 var gname = $(groupelid).val();
@@ -286,7 +289,6 @@ require_once './pheader.php';
                     $(errelid).html('');
                     var check_url = '/lms/custom/common/is_group_exists.php';
                     $.post(check_url, {gname: gname}).done(function (status) {
-                        console.log('Group exists status: ' + status);
                         if (status > 0) {
                             $(errelid).html('Provided class name already exists');
                             return false;
@@ -296,10 +298,11 @@ require_once './pheader.php';
                             var item = {userid: userid, gname: gname};
                             var url = '/lms/custom/common/add_new_class_done.php';
                             $.post(url, {item: JSON.stringify(item)}).done(function (data) {
-                                console.log('Server response: ' + data);
                                 $("[data-dismiss=modal]").trigger({type: "click"});
-                                //$('#myModal').data('modal', null);
-                                //document.location.reload();
+                                var update_url = '/lms/custom/common/update_teacher_classes_list.php';
+                                $.post(update_url, {userid: userid}).done(function (data) {
+                                    $('#teacher_classes_container').html(data);
+                                }) // end of pust
                             }); // end of post
                         } // end else
                     }); // end of post
@@ -361,6 +364,75 @@ require_once './pheader.php';
                             } // end if confirm
                         } // end else
                     }); // end of post
+                } // end else
+            }
+
+            // ********** Send Message to graded students ***********
+
+            if (event.target.id == 'select_all') {
+                if ($('#select_all').prop('checked')) {
+                    $('.students').prop('checked', true);
+                } // end if
+                else {
+                    $('.students').prop('checked', false);
+                } // end else
+            }
+
+            if (event.target.id == 'grades_get_send_message_dialog') {
+                var userid = $('#userid').val();
+                var selectedStudents = new Array();
+                var n = $(".students:checked").length;
+                if (n > 0) {
+                    $(".students:checked").each(function () {
+                        selectedStudents.push($(this).val());
+                    });
+                }
+                var students = selectedStudents.join();
+                console.log('Selected students: ' + students)
+                if (students == '') {
+                    alert('You did not select any student!')
+                } // end if
+                else {
+                    var id = Math.round((new Date()).getTime() / 1000);
+                    var url = '/lms/custom/common/grades_get_send_message_dialog.php';
+                    var item = {userid: userid, id: id, emails: students};
+                    $.post(url, {item: JSON.stringify(item)}).done(function (data) {
+                        var modalID = '#' + id;
+                        $("body").append(data);
+                        $(modalID).modal('show');
+                    });
+                }
+            }
+
+
+            if (event.target.id.indexOf("send_grade_comment_") >= 0) {
+                var id = event.target.id.replace('send_grade_comment_', '');
+                var userid = $('#userid').val();
+
+                var subjectelid = '#subject_' + id;
+                var subject = $(subjectelid).val();
+
+                var msgelid = '#msg_' + id;
+                var msg = $(msgelid).val();
+
+                var emailelid = '#emails_' + id;
+                var emails = $(emailelid).val();
+
+                var errelid = '#send_grade_err_' + id;
+
+                if (subject == '' || msg == '') {
+                    $(errelid).html('Please provide message subject and content');
+                } // end if
+                else {
+                    $(errelid).html('');
+                    if (confirm('Send message to selected students?')) {
+                        var url = '/lms/custom/common/send_grades_feedback.php';
+                        var item = {teacherid: userid, emails: emails, subject: subject, msg: msg};
+                        $.post(url, {item: JSON.stringify(item)}).done(function (data) {
+                            $("[data-dismiss=modal]").trigger({type: "click"});
+                            console.log(data);
+                        }); // end of post
+                    }
                 } // end else
             }
 

@@ -628,7 +628,12 @@ $(document).ready(function () {
 
             if (questions.length == 0) {
                 $('#quiz_err').html('');
-                $('#quiz_err').html('Please provide questions text with answers');
+                if (type == 2) {
+                    $('#quiz_err').html('Please provide questions with answers');
+                } // end if
+                else {
+                    $('#quiz_err').html('Please provide poll questions');
+                } // end else
                 return false;
             }
 
