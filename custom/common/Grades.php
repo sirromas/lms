@@ -276,10 +276,10 @@ class Grades extends Utils
      */
     function get_add_assistance_dialog($item)
     {
+
         $list = "";
         $id = $item->id;
-        $list
-            .= " <div id='$id' class='modal fade' role='dialog'>
+        $list .= " <div id='$id' class='modal fade' role='dialog'>
               <div class='modal-dialog'>
 
                 <!-- Modal content-->
@@ -316,7 +316,7 @@ class Grades extends Utils
                    
                   </div>
                   <div class='modal-footer'>
-                    <button type='button' class='btn btn-default' id='add_assistance_done'>Ok</button>
+                    <button type='button' class='btn btn-default' id='add_assistance_done_$id'>Ok</button>
                     <button type='button' class='btn btn-default' data-dismiss='modal' id='cancel_dialog'>Cancel</button>
                   </div>
                 </div>

@@ -324,18 +324,42 @@ require_once './pheader.php';
             }
 
 
-            if (event.target.id == 'add_assistance_done') {
+            if (event.target.id.indexOf("add_assistance_done_") >= 0) {
+                var id = event.target.id.replace('add_assistance_done_', '');
                 var teacherid = $('#userid').val();
-                var fname = $('#fname').val();
-                var lname = $('#lname').val();
-                var email = $('#email').val();
-                var pwd = $('#pwd').val();
+
+                var fnamelid = '#fname_' + id;
+                var fname = $(fnamelid).val();
+
+                var lnamelid = '#lname_' + id;
+                var lname = $(lnamelid).val();
+
+                var emailelid = '#email_' + id;
+                var email = $(emailelid).val();
+
+                var pwdelid = '#pwd_' + id;
+                var pwd = $(pwdelid).val();
+
                 var groupid = $('#teacher_groups').val();
+
+                var errelid = '#ass_err_' + id;
+
+                var item = {
+                    teacherid: teacherid,
+                    groupid: groupid,
+                    firstname: fname,
+                    lastname: lname,
+                    email: email,
+                    pwd: pwd,
+                    state: 'US'
+                };
+                console.log('Item: '+JSON.stringify(item));
+
                 if (fname == '' || lname == '' || email == '' || pwd == '') {
-                    $('#ass_err').html('Please provide all required fields');
+                    $(errelid).html('Please provide all required fields');
                 } // end if
                 else {
-                    $('#ass_err').html('');
+                    $(errelid).html('');
                     var item = {
                         teacherid: teacherid,
                         groupid: groupid,
@@ -348,11 +372,11 @@ require_once './pheader.php';
                     var check_url = '/lms/custom/tutors/is_email_exists.php';
                     $.post(check_url, {email: email}).done(function (status) {
                         if (status > 0) {
-                            $('#ass_err').html('Provided email already exists');
+                            $(errelid).html('Provided email already exists');
                             return false;
                         } // end if
                         else {
-                            $('#ass_err').html('');
+                            $(errelid).html('');
                             var url = '/lms/custom/common/add_new_assistant_done.php';
                             if (confirm('Add new assistance account to current class?')) {
                                 $.post(url, {item: JSON.stringify(item)}).done(function (data) {
