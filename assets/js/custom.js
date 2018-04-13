@@ -104,23 +104,34 @@ $(document).ready(function () {
     function show_loader() {
         console.log('Function called ..');
         $('#login_err').html('');
-        //$('#after_form').show();
-        document.getElementById("after_form").style.display = "block";
+        $('#after_form').show();
+        //document.getElementById("after_form").style.display = "block";
     }
 
-    $('#login_form').submit(function () {
-        setTimeout(show_loader, 1);
+    $('#login_form').submit(function (event) {
+        //setTimeout(show_loader, 1);
+        event.preventDefault();
+        var username = $('#username').val();
+        var password = $('#password').val();
+        if (username == '' || password == '') {
+            $('#form_err').html('Please provide email and password');
+
+        }
+        else {
+            $('#form_err').html('');
+            $('#submit_button').attr("disabled", "disabled");
+            $('#after_form').show();
+        }
+
     });
 
 
     /*
-     $("#submit_button").click(function () {
-     $('#submit_button').attr("disabled", "disabled");
-     $('#container27').hide();
-     $('#after_form').show();
-     submit_login_form();
-     });
-     */
+    $("#submit_button").click(function () {
+    $('#submit_button').attr("disabled", "disabled");
+    $('#after_form').show();
+    });
+    */
 
     $("#grades").click(function () {
         console.log('Clicked ...');

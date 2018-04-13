@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+
+    <title>NewsFacts & Analysis</title>
+
+    <!-- jQuery library -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+    <!-- Share this Library -->
+    <script type='text/javascript'
+            src='//platform-api.sharethis.com/js/sharethis.js#property=5ab0b082b338830013654f88&product=inline-share-buttons'
+            async='async'></script>
+
+    <!--Custom JS file -->
+    <script type="text/javascript" src="/assets/js/custom.js"></script>
+
+    <!-- Typehead library -->
+    <script type="text/javascript"
+            src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-3-typeahead/4.0.1/bootstrap3-typeahead.js"></script>
+
+    <!-- Data tables JS -->
+    <script type="text/javascript" src='https://cdn.datatables.net/1.10.13/js/jquery.dataTables.min.js'></script>
+    <script type="text/javascript" src='https://cdn.datatables.net/1.10.13/js/dataTables.bootstrap.min.js'></script>
+
+    <!-- Data tables CSS -->
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.13/css/dataTables.bootstrap.min.css">
+
+    <!-- Latest compiled JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+
+    <!-- Site CSS -->
+    <link rel="stylesheet" href="assets/css/site.css">
+
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+
+            var getUrlParameter = function getUrlParameter(sParam) {
+                var sPageURL = decodeURIComponent(window.location.search.substring(1)),
+                    sURLVariables = sPageURL.split('&'),
+                    sParameterName,
+                    i;
+
+                for (i = 0; i < sURLVariables.length; i++) {
+                    sParameterName = sURLVariables[i].split('=');
+
+                    if (sParameterName[0] === sParam) {
+                        return sParameterName[1] === undefined ? true : sParameterName[1];
+                    }
+                }
+            };
+
+
+            $.get('https://www.newsfactsandanalysis.com/lms/custom/students/groups.json', function (data) {
+                $("#class").typeahead({source: data, items: 256000});
+            });
+
+            $.get('https://www.newsfactsandanalysis.com/lms/custom/students/un.json', function (data) {
+                $("#school").typeahead({source: data, items: 256000});
+            });
+
+            var groupid = getUrlParameter('groupid');
+            console.log('Group ID: ' + groupid);
+            if (jQuery.type(groupid) !== "undefined") {
+                var url = 'https://www.newsfactsandanalysis.com/lms/custom/students/get_class_name.php';
+                $.post(url, {groupid: groupid}).done(function (data) {
+                    console.log('Server response: ' + data);
+                    var item = jQuery.parseJSON(data);
+                    var name = item.name;
+                    var price = item.price;
+                    var school = item.school;
+                    $('#class').val(name);
+                    $('#school').val(school);
+                    $('#price').val(price);      // hidden value
+                    $('#ui_price').html(price);  // visible value
+                });
+            } // end if
+            else {
+                var priceUrl = 'https://www.newsfactsandanalysis.com/lms/custom/students/get_basic_price.php';
+                $.post(priceUrl, {id: 1}).done(function (price) {
+                    $('#price').val(price); // hidden value;
+                    $('#ui_price').html(price); // visible for students
+                });
+            } // end else
+
+        }); // end of document.ready
+
+    </script>
+
+</head>
+<body>
+
+<div id="navcontainer">
+    <ul id="menu_ul" style="padding-top: 10px;padding-top: 5px;">
+        <li>
+            <a href="about.html" target="_blank" style="height: 12px;">About Us</a>
+            <span style="font-size: 18px;font-family:serif; ">|</span>
+            <span style="font-size: 22px;font-family:serif;">|</span>
+            <span style="font-size: 18px;font-family:serif;">|</span>
+        </li>
+        <li>
+            <a href="#"><img style="height: 12px;" src="assets/images/frontpageborder.gif"></a>
+        </li>
+        <li>
+            <span style="font-size: 18px;font-family:serif; ">|</span>
+            <span style="font-size: 22px;font-family:serif;">|</span>
+            <span style="font-size: 18px;font-family:serif;">|</span>
+            <a style="color:black;height: 12px;" href="mailto:info@newsfactsandanalysis.com">Contact Us</a>
+        </li>
+    </ul>
+</div>
+
+<div class="row" id="main_content" style="margin-bottom: 0px;">
+
+    <div class="row" style="width:75%;margin: auto;margin-top: 2%;">
+        <span class="col-md-12" style="padding-top: 10px; text-align: center; font-size: 15px;font-family: cursive;">"Whatever may be our wishes, our inclination, or the dictates of our passions, they cannot
+                alter the state of facts and evidence." — John Adams, President of the United States, 1797-1801
+        </span>
+    </div>
+
+    <div class="row" style="width: 75%;margin: auto;">
+    <span class="col-md-12" style="text-align: center;padding-top: 10px;">
+    <img class="img-responsive" src="assets/images/line.gif" alt="" border="0" style="height: 13px;width: 100%;">
+    </span>
+    </div>
+
+    <div class="row" style="width: 80%;margin: auto;text-align: center;">
+        <span class="col-md-12" style="padding-top: 10px;">
+            <span style="font-family: serif;font-size: 60px;color: #830;">N</span>
+            <span style=""></span>
+            <span style="font-family: serif;font-size: 48px;color: #830;">e</span>
+            <span style=""></span>
+            <span style="font-family: serif;font-size: 48px;color: #830;">w</span>
+            <span style=""></span>
+            <span style="font-family: serif;font-size: 48px;color: #830;">s</span>
+            <span style=""></span>
+            <span style="font-family: serif;font-size: 60px;color: #830;">F</span>
+            <span style=""></span>
+            <span style="font-family: serif;font-size: 48px;color: #830;">a</span>
+            <span style=""></span>
+            <span style="font-family: serif;font-size: 48px;color: #830;">c</span>
+            <span style=""></span>
+            <span style="font-family: serif;font-size: 48px;color: #830;">t</span>
+            <span style=""></span>
+            <span style="font-family: serif;font-size: 48px;color: #830;">s</span>
+            <span style=""></span>
+            <span style="font-family: serif;font-size: 48px;color: #830;">&</span>
+            <span style=""></span>
+            <span style="font-family: serif;font-size: 60px;color: #000;">A</span>
+            <span style=""></span>
+            <span style="font-family: serif;font-size: 48px;color: #000;">n</span>
+            <span style=""></span>
+            <span style="font-family: serif;font-size: 48px;color: #000;">a</span>
+            <span style=""></span>
+            <span style="font-family: serif;font-size: 48px;color: #000;">l</span>
+            <span style=""></span>
+            <span style="font-family: serif;font-size: 48px;color: #000;">y</span>
+            <span style=""></span>
+            <span style="font-family: serif;font-size: 48px;color: #000;">s</span>
+            <span style=""></span>
+            <span style="font-family: serif;font-size: 48px;color: #000;">i</span>
+            <span style=""></span>
+            <span style="font-family: serif;font-size: 48px;color: #000;">s</span>
+            <span style=""></span>
+        </span>
+    </div>
+
+    <div class="row" style="width: 95%;margin: auto;text-align: center;margin-bottom: 25px;">
+        <span class="col-md-12" style="padding-top: 10px;font-size: 19px;font-family: serif;">nonpartisan news assignments with no political, religious, or ideological affiliation of any kind</span>
+    </div>
+
+</div>
+
+<div class="row" id="main_content2" style="">
+
+    <div class="panel panel-default dsR1144">
+        <div class="panel-heading">
+            <div class="text-center">
+                <div align="center">
+                                    <span class="ds1">
+                                        <h3>University Student Registration<br>
+                                        </h3>
+                                        <h4>($<span id="ui_price">30</span> per semester)</h4>
+                                        <input type="hidden" id="price" value="30">
+                                    </span></div>
+            </div>
+        </div>
+        <div class="panel-body">
+            <form id="student_signup" method="post" _lpchecked="1">
+                <div class="form-group">
+                    <div align="left">
+                        <label for="first">First*</label> <input type="text" class="form-control" id="first"
+                                                                 name="first" required=""
+                                                                 placeholder="Enter Your Firstname"
+                                                                 style="background-image: url(&quot;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IArs4c6QAAAfBJREFUWAntVk1OwkAUZkoDKza4Utm61iP0AqyIDXahN2BjwiHYGU+gizap4QDuegWN7lyCbMSlCQjU7yO0TOlAi6GwgJc0fT/fzPfmzet0crmD7HsFBAvQbrcrw+Gw5fu+AfOYvgylJ4TwCoVCs1ardYTruqfj8fgV5OUMSVVT93VdP9dAzpVvm5wJHZFbg2LQ2pEYOlZ/oiDvwNcsFoseY4PBwMCrhaeCJyKWZU37KOJcYdi27QdhcuuBIb073BvTNL8ln4NeeR6NRi/wxZKQcGurQs5oNhqLshzVTMBewW/LMU3TTNlO0ieTiStjYhUIyi6DAp0xbEdgTt+LE0aCKQw24U4llsCs4ZRJrYopB6RwqnpA1YQ5NGFZ1YQ41Z5S8IQQdP5laEBRJcD4Vj5DEsW2gE6s6g3d/YP/g+BDnT7GNi2qCjTwGd6riBzHaaCEd3Js01vwCPIbmWBRx1nwAN/1ov+/drgFWIlfKpVukyYihtgkXNp4mABK+1GtVr+SBhJDbBIubVw+Cd/TDgKO2DPiN3YUo6y/nDCNEIsqTKH1en2tcwA9FKEItyDi3aIh8Gl1sRrVnSDzNFDJT1bAy5xpOYGn5fP5JuL95ZjMIn1ya7j5dPGfv0A5eAnpZUY3n5jXcoec5J67D9q+VuAPM47D3XaSeL4AAAAASUVORK5CYII=&quot;); background-repeat: no-repeat; background-attachment: scroll; background-size: 16px 18px; background-position: 98% 50%;">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div align="left">
+                        <label for="last">Last*</label> <input type="text" class="form-control" id="last" name="last"
+                                                               required="" placeholder="Enter Your Lastname"></div>
+                </div>
+
+                <div class="form-group">
+                    <div align="left">
+                        <label for="email">Email*</label> <input type="email" class="form-control" id="email"
+                                                                 name="email" required="" aria-describedby="emailHelp"
+                                                                 placeholder="Enter email"></div>
+                </div>
+
+                <div class="form-group">
+                    <div align="left">
+                        <label for="pwd">Password*</label> <input type="password" class="form-control" required=""
+                                                                  id="pwd" name="pwd" placeholder="Password"
+                                                                  style="background-image: url(&quot;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR4nGP6zwAAAgcBApocMXEAAAAASUVORK5CYII=&quot;);">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div align="left">
+                        <label for="street">Street*</label> <input type="text" class="form-control" required=""
+                                                                   id="street" name="street"
+                                                                   placeholder="Enter Your Street"></div>
+                </div>
+
+                <div class="form-group">
+                    <div align="left">
+                        <label for="city">City*</label> <input type="text" class="form-control" id="city" name="city"
+                                                               required="" placeholder="Enter Your City"></div>
+                </div>
+
+                <div class="form-group">
+                    <div align="left">
+                        <label for="state">State*</label> <select id="state" class="form-control">
+                        <option value="0" selected="">State</option>
+                        <option value="1">Alabama</option>
+                        <option value="2">Alaska</option>
+                        <option value="3">Arkansas</option>
+                        <option value="4">Arizona</option>
+                        <option value="5">California</option>
+                        <option value="6">Colorado</option>
+                        <option value="7">Connecticut</option>
+                        <option value="8">Delaware</option>
+                        <option value="9">District of Colombia</option>
+                        <option value="10">Florida</option>
+                        <option value="11">Georgia</option>
+                        <option value="12">Hawaii</option>
+                        <option value="13">Idaho</option>
+                        <option value="14">Illinois</option>
+                        <option value="15">Indiana</option>
+                        <option value="16">Iowa</option>
+                        <option value="17">Kansas</option>
+                        <option value="18">Kentucky</option>
+                        <option value="19">Louisiana</option>
+                        <option value="20">Maine</option>
+                        <option value="21">Maryland</option>
+                        <option value="22">Massachusetts</option>
+                        <option value="23">Michigan</option>
+                        <option value="24">Minnesota</option>
+                        <option value="25">Mississippi</option>
+                        <option value="26">Missouri</option>
+                        <option value="27">Montana</option>
+                        <option value="28">Nebraska</option>
+                        <option value="29">Nevada</option>
+                        <option value="30">New Hampshire</option>
+                        <option value="31">New Jersey</option>
+                        <option value="32">New Mexico</option>
+                        <option value="33">New York</option>
+                        <option value="34">North Carolina</option>
+                        <option value="35">North Dakota</option>
+                        <option value="36">Ohio</option>
+                        <option value="37">Oklahoma</option>
+                        <option value="38">Oregon</option>
+                        <option value="39">Pennsylvania</option>
+                        <option value="40">Rhode Island</option>
+                        <option value="41">South Carolina</option>
+                        <option value="42">South Dakota</option>
+                        <option value="43">Tennessee</option>
+                        <option value="44">Texas</option>
+                        <option value="45">Utah</option>
+                        <option value="46">Vermont</option>
+                        <option value="47">Virginia</option>
+                        <option value="48">Washington</option>
+                        <option value="49">West Virginia</option>
+                        <option value="50">Wisconsin</option>
+                        <option value="51">Wyoming</option>
+                    </select></div>
+                </div>
+
+                <div class="form-group">
+                    <div align="left">
+                        <label for="zip">Zip*</label> <input type="text" class="form-control" id="zip" name="zip"
+                                                             required="" placeholder="Enter Your ZIP"></div>
+                </div>
+
+                <div class="form-group">
+                    <div align="left">
+                        <label for="school">School Name*</label> <input type="text" class="form-control" id="school"
+                                                                        name="school"
+                                                                        placeholder="Enter Your School Name"></div>
+                </div>
+
+                <div class="form-group">
+                    <div align="left">
+                        <label for="class">Class Name*</label> <input type="text" class="typeahead" autocomplete="off"
+                                                                      spellcheck="false" id="class" name="class"
+                                                                      required="" placeholder="Enter Your Class Name"
+                                                                      style="display: block;
+                                                                                                                 width: 100%;
+                                                                                                                 height: @input-height-base;
+                                                                                                                 padding: @padding-base-vertical @padding-base-horizontal;
+                                                                                                                 font-size: @font-size-base;
+                                                                                                                 line-height: @line-height-base;
+                                                                                                                 color: @input-color;
+                                                                                                                 background-color: @input-bg;
+                                                                                                                 background-image: none;
+                                                                                                                 border: 1px solid @input-border;
+                                                                                                                 border-radius: @input-border-radius; ">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div align="left">
+                        <label for="cardholder">Card Holder*</label> <input type="text" class="form-control"
+                                                                            id="cardholder" name="cardholder"
+                                                                            required=""
+                                                                            placeholder="Enter Your Card Holder Name">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div align="left">
+                        <label for="cardnumber">Card Number*</label> <input type="text" class="form-control"
+                                                                            id="cardnumber" name="cardnumber"
+                                                                            required=""
+                                                                            placeholder="Enter Your Card Number"></div>
+                </div>
+
+                <div class="form-group">
+                    <div align="left">
+                        <label for="cvv">CVV code*</label> <input type="text" class="form-control" id="cvv" name="cvv"
+                                                                  required="" placeholder="Enter Your Card CVV"></div>
+                </div>
+
+                <div class="form-group">
+                    <div align="left">
+                        <label for="card_month">Expiration Month*</label> <select id="cardmonth" class="form-control">
+                        <option value="0" selected="">Month</option>
+                        <option value="01">01</option>
+                        <option value="02">02</option>
+                        <option value="03">03</option>
+                        <option value="04">04</option>
+                        <option value="05">05</option>
+                        <option value="06">06</option>
+                        <option value="07">07</option>
+                        <option value="08">08</option>
+                        <option value="09">09</option>
+                        <option value="10">10</option>
+                        <option value="11">11</option>
+                        <option value="12">12</option>
+                    </select></div>
+                </div>
+                <div class="form-group">
+                    <div align="left">
+                        <label for="card_year">Expiration Year*</label> <select id="cardyear" class="form-control">
+                        <option value="0" selected="">Year</option>
+                        <option value="2017">2017</option>
+                        <option value="2018">2018</option>
+                        <option value="2019">2019</option>
+                        <option value="2020">2020</option>
+                        <option value="2021">2021</option>
+                        <option value="2022">2022</option>
+                        <option value="2023">2023</option>
+                        <option value="2024">2024</option>
+                        <option value="2025">2025</option>
+                        <option value="2026">2026</option>
+                        <option value="2027">2027</option>
+                        <option value="2028">2028</option>
+                        <option value="2029">2029</option>
+                        <option value="2030">2030</option>
+                    </select></div>
+                </div>
+                <div align="center">
+                    <div class="form-group">
+                        <div align="center">
+                            <div class="text-error" id="form_err"></div>
+                            <div class="form-group dsR1141">
+                                <div align="center">
+                                    <div class="text-info" id="form_info"></div>
+                                    <div class="form-group dsR1140">
+                                        <div align="center">
+                                            <div class="text-info" id="ajax_loader"
+                                                 style="display:none;text-align: center;">
+                                                <img src="assets/images/ajax.gif"></div>
+                                            <br>
+                                            <button type="submit" class="btn btn-default">Submit</button>
+                                        </div>
+
+                                        <div align="center">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+</div>
+
+</body>
+</html>
