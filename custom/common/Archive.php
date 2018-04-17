@@ -46,7 +46,7 @@ class Archive extends Utils {
 				$date = $item->path;
 				$userid=$this->user->id;
 				$roleid=$this->get_user_role_by_id($userid);
-				$filelink = "https://" . $_SERVER['SERVER_NAME'] . "/lms/articles/$item->path";
+				$filelink = "https://www." . $_SERVER['SERVER_NAME'] . "/lms/articles/$item->path";
 				//$link="https://" . $_SERVER['SERVER_NAME'] . "/lms/custom/common/archive_page.php?roleid=$roleid&url=$filelink";
 				//$path = "<a href='$link' target='_blank'>$item->path</a>";
                 $index='article_id_'.$item->id;

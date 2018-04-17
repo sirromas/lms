@@ -146,8 +146,13 @@ class Grades extends Utils
 
             foreach ($ans as $answerid) {
                 $a_title = $this->get_answer_title($answerid);
-                $cstatus = ($this->is_answer_correct($answerid) == 1)
-                    ? 'Correct' : '';
+                if ($type==2) {
+                    $cstatus = ($this->is_answer_correct($answerid) == 1)
+                        ? 'Correct' : '';
+                } // end if
+                else {
+                    $cstatus='';
+                }
                 if ($answerid == $student_reply) {
                     array_push($old_answers, $student_reply);
                     $radio_btn

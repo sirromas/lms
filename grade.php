@@ -10,7 +10,7 @@ require_once './pheader.php';
 <!-- Container for all pages loaded via AJAX -->
 <br><br>
 <div id="ajax_container"
-     style="width: 935px;margin-top: 15px;text-align: left;"></div>
+     style="width: 935px;margin-top: 15px;text-align: left;height: auto;"></div>
 
 <!-- Article iFrame -->
 <div class="row" id="page" style="margin: auto;text-align: center;">
@@ -149,6 +149,10 @@ require_once './pheader.php';
                 var url = $(elid).data('url');
                 console.log('Article URL: ' + url);
                 $('#pageIframe').attr("src", url);
+                $('#pageIframe').load(function () {
+                    $(this).height($(this).contents().height());
+                    $(this).width($(this).contents().width());
+                });
                 $('#page').show();
             }
 
@@ -705,7 +709,6 @@ require_once './pheader.php';
                         $('#quiz_container').hide();
                         $('#forum_container').hide();
                         $('#meeting_container').hide();
-
                     });
 
                     break;

@@ -115,23 +115,15 @@ $(document).ready(function () {
         var password = $('#password').val();
         if (username == '' || password == '') {
             $('#form_err').html('Please provide email and password');
-
         }
         else {
             $('#form_err').html('');
             $('#submit_button').attr("disabled", "disabled");
             $('#after_form').show();
+            $('#login_form')[0].submit();
         }
 
     });
-
-
-    /*
-    $("#submit_button").click(function () {
-    $('#submit_button').attr("disabled", "disabled");
-    $('#after_form').show();
-    });
-    */
 
     $("#grades").click(function () {
         console.log('Clicked ...');
@@ -183,11 +175,6 @@ $(document).ready(function () {
                         } // end of success
                     }); // end of $.ajax ..
                 }
-                /*
-                 if (email != '' && file != '') {
-                 $('#form_err').html('You can upload file or provide recipient email, but not both');
-                 }
-                 */
             } // end else
         } // end if
         else {
@@ -204,7 +191,7 @@ $(document).ready(function () {
      **********************************************************************/
 
     $("body").on("click mousedown mouseup focus blur keydown change", function (e) {
-        //console.log(e);
+        console.log(e);
     });
 
     // Monitor for Login errors reported from LMS
@@ -227,7 +214,7 @@ $(document).ready(function () {
     console.log('Error code: ' + code);
     if (code == 3) {
         $('#container27').hide();
-        $('#login_err').html('Invalid email address or password');
+        $('#form_err').html('Invalid email address or password');
     }
 
     $.get('https://www.newsfactsandanalysis.com/lms/custom/students/groups.json', function (data) {

@@ -16,7 +16,7 @@ if ($_REQUEST) {
     $posted_user = json_decode($user_data);
 
     $user = new stdClass();
-    $user->confirmed = 0;
+    $user->confirmed = 1;
     $user->username = strtolower($posted_user->email);
     $user->password = $posted_user->pwd;
     $user->purepassword = $posted_user->pwd;
