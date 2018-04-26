@@ -116,6 +116,7 @@ require_once './pheader.php';
             $.post(url, {item: JSON.stringify(item)}).done(function (data) {
                 $('#class_grades_container').html(data);
                 $('#grades_table').DataTable();
+                $('#assistants_table').DataTable();
             });
         }
 
@@ -186,6 +187,34 @@ require_once './pheader.php';
                     $('#class_grades_container').html(data);
                 });
             }
+
+
+            if (event.target.id.indexOf("student_edit_own_post_") >= 0) {
+                var id = event.target.id.replace('student_edit_own_post_', '');
+                var container = '#edit_post_container_' + id;
+                if ($(container).is(":visible")) {
+                    $(container).hide();
+                } // end if
+                else {
+                    $(container).show();
+                } // end else
+            }
+
+            if (event.target.id.indexOf("update_student_reply_") >= 0) {
+                var id = event.target.id.replace('update_student_reply_', '');
+                var postcontainer = '#update_student_post_text_' + id;
+                var userpost = $(postcontainer).val();
+                console.log('User post: ' + userpost);
+                if (userpost != '') {
+                    var url = '/lms/custom/common/update_user_post.php';
+                    var item = {id: id, post: userpost};
+                    $.post(url, {item: JSON.stringify(item)}).done(function (data) {
+                        get_news_forum();
+                    });
+                }
+
+            }
+
 
             if (event.target.id.indexOf("edit_quiz_grades_") >= 0) {
                 console.log('Edit quiz grades clicked ...');
@@ -357,7 +386,7 @@ require_once './pheader.php';
                     pwd: pwd,
                     state: 'US'
                 };
-                console.log('Item: '+JSON.stringify(item));
+                console.log('Item: ' + JSON.stringify(item));
 
                 if (fname == '' || lname == '' || email == '' || pwd == '') {
                     $(errelid).html('Please provide all required fields');
@@ -393,6 +422,26 @@ require_once './pheader.php';
                         } // end else
                     }); // end of post
                 } // end else
+            }
+
+
+            if (event.target.id.indexOf("assistant_id_") >= 0) {
+                var groupid = $('#teacher_groups').val();
+                var teacherid = $('#userid').val();
+                var assistantid = event.target.id.replace('assistant_id_', '');
+                if (confirm('Delete current assistant?')) {
+                    var url = '/lms/custom/common/delete_assistant.php';
+                    var item = {
+                        teacherid: teacherid,
+                        groupid: groupid,
+                        assistantid: assistantid
+                    };
+                    $.post(url, {item: JSON.stringify(item)}).done(function (data) {
+                        $('#assistant_table_container').html(data);
+                        $('#assistants_table').DataTable();
+                    });
+                }
+
             }
 
             // ********** Send Message to graded students ***********

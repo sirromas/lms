@@ -16,11 +16,11 @@ class Utils2
 
     function __construct()
     {
-        $this->db           = new pdo_db();
-        $this->limit        = 3;
+        $this->db = new pdo_db();
+        $this->limit = 3;
         $this->student_role = 5;
-        $this->tutor_role   = 4;
-        $this->json_path    = $_SERVER['DOCUMENT_ROOT'] . '/lms/utils/data';
+        $this->tutor_role = 4;
+        $this->json_path = $_SERVER['DOCUMENT_ROOT'] . '/lms/utils/data';
     }
 
     // **************** Classes functionality ******************
@@ -32,7 +32,7 @@ class Utils2
      */
     function get_user_role($userid)
     {
-        $query  = "select * from  mdl_role_assignments where userid=$userid";
+        $query = "select * from  mdl_role_assignments where userid=$userid";
         $result = $this->db->query($query);
         while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
             $roleid = $row['roleid'];
@@ -53,7 +53,7 @@ class Utils2
         $this->create_json_data('groups');
         $query = "select * from mdl_admin_login "
             . "where username='$login' and password='$password'";
-        $num   = $this->db->numrows($query);
+        $num = $this->db->numrows($query);
 
         return $num;
     }
@@ -67,7 +67,7 @@ class Utils2
     {
         $items = array();
         $query = "select * from mdl_groups order by name";
-        $num   = $this->db->numrows($query);
+        $num = $this->db->numrows($query);
         if ($num > 0) {
             $result = $this->db->query($query);
             while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
@@ -127,7 +127,7 @@ class Utils2
      */
     function get_classes_num()
     {
-        $query  = "select count(id) as total from mdl_groups";
+        $query = "select count(id) as total from mdl_groups";
         $result = $this->db->query($query);
         while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
             $total = $row['total'];
@@ -143,7 +143,7 @@ class Utils2
      */
     function get_class_members_num($id)
     {
-        $query  = "select count(id) as total from mdl_groups_members "
+        $query = "select count(id) as total from mdl_groups_members "
             . "where groupid=$id";
         $result = $this->db->query($query);
         while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
@@ -165,10 +165,10 @@ class Utils2
             $offset = 0;
         } // end if $page==1
         else {
-            $page   = $page - 1;
+            $page = $page - 1;
             $offset = $this->limit * $page;
         }
-        $query  = "select * from mdl_groups  "
+        $query = "select * from mdl_groups  "
             . "order by name "
             . "LIMIT $offset, $this->limit";
         $result = $this->db->query($query);
@@ -219,7 +219,7 @@ class Utils2
      */
     function get_user_detailes($userid)
     {
-        $query  = "select * from mdl_user where id=$userid";
+        $query = "select * from mdl_user where id=$userid";
         $result = $this->db->query($query);
         while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
             $item = new stdClass();
@@ -238,7 +238,7 @@ class Utils2
      */
     function get_group_name($id)
     {
-        $query  = "select * from mdl_groups where id=$id";
+        $query = "select * from mdl_groups where id=$id";
         $result = $this->db->query($query);
         while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
             $name = $row['name'];
@@ -254,10 +254,10 @@ class Utils2
      */
     function get_user_groups($userid)
     {
-        $list   = "";
+        $list = "";
         $groups = array();
-        $query  = "select * from mdl_groups_members where userid=$userid";
-        $num    = $this->db->numrows($query);
+        $query = "select * from mdl_groups_members where userid=$userid";
+        $num = $this->db->numrows($query);
         if ($num > 0) {
             $result = $this->db->query($query);
             while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
@@ -265,7 +265,7 @@ class Utils2
             } // end while
             foreach ($groups as $groupid) {
                 $groupname = $this->get_group_name($groupid);
-                $list      .= "$groupname<br>";
+                $list .= "$groupname<br>";
             }
         } // end if $num > 0
         else {
@@ -283,7 +283,7 @@ class Utils2
     function create_csv_file($tutors)
     {
         // Write CSV data
-        $path   = $this->json_path . '/tutors.csv';
+        $path = $this->json_path . '/tutors.csv';
         $output = fopen($path, 'w');
         fputcsv($output, array('Firstname', 'Lastname', 'Email'));
         foreach ($tutors as $tutor) {
@@ -302,10 +302,10 @@ class Utils2
     {
         $items = array();
         $query
-               = "select u.id, u.firstname, u.lastname, u.policyagreed, u.deleted, u.email, "
+            = "select u.id, u.firstname, u.lastname, u.policyagreed, u.deleted, u.email, "
             . "r.roleid, r.userid from mdl_user u, mdl_role_assignments r "
             . "where u.deleted=0 and r.roleid=$this->tutor_role and u.id=r.userid ";
-        $num   = $this->db->numrows($query);
+        $num = $this->db->numrows($query);
         if ($num > 0) {
             $result = $this->db->query($query);
             while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
@@ -342,15 +342,15 @@ class Utils2
             $list .= "</thead>";
             $list .= "<tbody>";
             foreach ($items as $item) {
-                $user   = $this->get_user_detailes($item->userid);
+                $user = $this->get_user_detailes($item->userid);
                 $groups = $this->get_user_groups($item->userid);
                 $status = ($user->policyagreed == 1) ? "Confirmed"
                     : "Not confirmed&nbsp;<a href='#' class='confirm' onClick='return false;' data-userid='$item->userid'>Confrm</a>";
-                $list   .= "<tr>";
-                $list   .= "<td>$user->firstname $user->lastname<br>$user->email</td>";
-                $list   .= "<td>$groups</td>";
-                $list   .= "<td>$status</td>";
-                $list   .= "</tr>";
+                $list .= "<tr>";
+                $list .= "<td>$user->firstname $user->lastname<br>$user->email</td>";
+                $list .= "<td>$groups</td>";
+                $list .= "<td>$status</td>";
+                $list .= "</tr>";
             } // end foreach
             $list .= "</tbody>";
             $list .= "</table>";
@@ -369,7 +369,7 @@ class Utils2
      */
     function get_total_tutors_number()
     {
-        $query  = "select count(id) as total "
+        $query = "select count(id) as total "
             . "from mdl_role_assignments "
             . "where roleid=$this->tutor_role";
         $result = $this->db->query($query);
@@ -392,10 +392,10 @@ class Utils2
             $offset = 0;
         } // end if $page==1
         else {
-            $page   = $page - 1;
+            $page = $page - 1;
             $offset = $this->limit * $page;
         }
-        $query  = "select u.id, u.firstname, u.lastname, u.policyagreed, "
+        $query = "select u.id, u.firstname, u.lastname, u.policyagreed, "
             . "r.roleid, r.userid from mdl_user u, mdl_role_assignments r "
             . "where r.roleid=$this->tutor_role and u.id=r.userid "
             . "limit $offset, $this->limit";
@@ -452,12 +452,12 @@ class Utils2
      */
     function search_tutor($item)
     {
-        $list      = "";
-        $items     = array();
-        $data_arr  = explode(' ', $item);
+        $list = "";
+        $items = array();
+        $data_arr = explode(' ', $item);
         $firstname = $data_arr[1];
-        $lastname  = $data_arr[0];
-        $query     = "select * from mdl_user "
+        $lastname = $data_arr[0];
+        $query = "select * from mdl_user "
             . "where firstname like '%$firstname%' "
             . "and lastname like '%$lastname%' and deleted=0";
         //echo "Query: " . $query . "<br>";
@@ -470,7 +470,7 @@ class Utils2
                     $tutor->$key = $value;
                 }
                 $tutor->userid = $row['id'];
-                $items[]       = $tutor;
+                $items[] = $tutor;
             } // end while
             $list .= $this->create_tutors_list_tab($items, false);
         } // end if $num > 0
@@ -490,7 +490,7 @@ class Utils2
      */
     function is_user_deleted($id)
     {
-        $query  = "select * from mdl_user where id=$id";
+        $query = "select * from mdl_user where id=$id";
         $result = $this->db->query($query);
         while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
             $deleted = $row['deleted'];
@@ -511,7 +511,7 @@ class Utils2
         $items = array();
         $query = "select * from mdl_card_payments "
             . "order by added desc";
-        $num   = $this->db->numrows($query);
+        $num = $this->db->numrows($query);
         if ($num > 0) {
             $result = $this->db->query($query);
             while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
@@ -564,19 +564,19 @@ class Utils2
             $list .= "</thead>";
             $list .= "<tbody>";
             foreach ($items as $item) {
-                $user  = $this->get_user_detailes($item->userid);
+                $user = $this->get_user_detailes($item->userid);
                 $class = $this->get_group_name($item->groupid);
                 $start = date('m-d-Y', $item->start_date);
-                $exp   = date('m-d-Y', $item->exp_date);
-                $list  .= "<tr>";
-                $list  .= "<td>$user->firstname $user->lastname</td>";
-                $list  .= "<td>$user->email</td>";
-                $list  .= "<td>$class</td>";
-                $list  .= "<td>$item->auth_key</td>";
-                $list  .= "<td>$start</td>";
-                $list  .= "<td>$exp</td>";
-                $list  .= "<td><a href='#' onClick='return false;' class='adjust' data-userid='$item->userid' data-paymentid='$item->id' data-groupid='$item->groupid'>Adjust</a></td>";
-                $list  .= "</tr>";
+                $exp = date('m-d-Y', $item->exp_date);
+                $list .= "<tr>";
+                $list .= "<td>$user->firstname $user->lastname</td>";
+                $list .= "<td>$user->email</td>";
+                $list .= "<td>$class</td>";
+                $list .= "<td>$item->auth_key</td>";
+                $list .= "<td>$start</td>";
+                $list .= "<td>$exp</td>";
+                $list .= "<td><a href='#' onClick='return false;' class='adjust' data-userid='$item->userid' data-paymentid='$item->id' data-groupid='$item->groupid'>Adjust</a></td>";
+                $list .= "</tr>";
             } // end foreach
             $list .= "</tbody>";
             $list .= "</table>";
@@ -595,7 +595,7 @@ class Utils2
      */
     function get_total_subscription()
     {
-        $query  = "select count(id) as total from mdl_card_payments";
+        $query = "select count(id) as total from mdl_card_payments";
         $result = $this->db->query($query);
         while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
             $total = $row['total'];
@@ -616,10 +616,10 @@ class Utils2
             $offset = 0;
         } // end if $page==1
         else {
-            $page   = $page - 1;
+            $page = $page - 1;
             $offset = $this->limit * $page;
         }
-        $query  = "select * from mdl_card_payments  "
+        $query = "select * from mdl_card_payments  "
             . "order by added desc "
             . "LIMIT $offset, $this->limit";
         $result = $this->db->query($query);
@@ -642,16 +642,16 @@ class Utils2
      */
     function search_subs($data)
     {
-        $list        = "";
-        $items       = array();
-        $data_arr    = explode(' ', $data);
-        $firstname   = $data_arr[1];
-        $lastname    = $data_arr[0];
+        $list = "";
+        $items = array();
+        $data_arr = explode(' ', $data);
+        $firstname = $data_arr[1];
+        $lastname = $data_arr[0];
         $users_array = $this->get_user_id_by_fio($firstname, $lastname);
         if (count($users_array) > 0) {
             $users_list = implode(",", $users_array);
             $query
-                        = "select * from mdl_card_payments where userid in ($users_list)";
+                = "select * from mdl_card_payments where userid in ($users_list)";
             // echo "Query: " . $query . "<br>";
             $num = $this->db->numrows($query);
             if ($num > 0) {
@@ -688,7 +688,7 @@ class Utils2
     function get_group_members($name)
     {
         $groupid = $this->get_group_id($name);
-        $users   = array();
+        $users = array();
         if ($groupid > 0) {
             $query = "select * from mdl_groups_members where groupid=$groupid";
             //echo "Query: " . $query . "<br>";
@@ -711,11 +711,11 @@ class Utils2
      */
     function search_trial($data)
     {
-        $list        = "";
-        $items       = array();
-        $data_arr    = explode(' ', $data);
-        $firstname   = $data_arr[1];
-        $lastname    = $data_arr[0];
+        $list = "";
+        $items = array();
+        $data_arr = explode(' ', $data);
+        $firstname = $data_arr[1];
+        $lastname = $data_arr[0];
         $group_users = $this->get_group_members($data);
         /*
           echo "Group users: <pre>";
@@ -744,7 +744,7 @@ class Utils2
             if (count($group_users) > 0) {
                 $groupid = $this->get_group_id($data);
                 $query
-                         = "select * from mdl_trial_keys where groupid=$groupid ";
+                    = "select * from mdl_trial_keys where groupid=$groupid ";
             } // end if
             //echo "Query: " . $query . "<br>";
             $num = $this->db->numrows($query);
@@ -791,7 +791,7 @@ class Utils2
     {
         $items = array();
         $query = "select * from mdl_trial_keys order by added";
-        $num   = $this->db->numrows($query);
+        $num = $this->db->numrows($query);
         if ($num > 0) {
             $result = $this->db->query($query);
             while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
@@ -851,13 +851,13 @@ class Utils2
             $list .= "</thead>";
             $list .= "<tbody>";
             foreach ($items as $item) {
-                $user  = $this->get_user_detailes($item->userid);
+                $user = $this->get_user_detailes($item->userid);
                 $class = $this->get_group_name($item->groupid);
                 $start = date('m-d-Y', $item->start_date);
-                $exp   = date('m-d-Y', $item->exp_date);
-                $list  .= "<tr>";
-                $list  .= "<td>$user->firstname $user->lastname</td>";
-                $list  .= "<td>$user->email</td>";
+                $exp = date('m-d-Y', $item->exp_date);
+                $list .= "<tr>";
+                $list .= "<td>$user->firstname $user->lastname</td>";
+                $list .= "<td>$user->email</td>";
                 //$list.="<td>$class</td>";
                 $list .= "<td>$item->auth_key</td>";
                 $list .= "<td>$start</td>";
@@ -882,7 +882,7 @@ class Utils2
      */
     function get_trial_total()
     {
-        $query  = "select count(id) as total "
+        $query = "select count(id) as total "
             . "from mdl_trial_keys ";
         $result = $this->db->query($query);
         while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
@@ -904,10 +904,10 @@ class Utils2
             $offset = 0;
         } // end if $page==1
         else {
-            $page   = $page - 1;
+            $page = $page - 1;
             $offset = $this->limit * $page;
         }
-        $query  = "select * from mdl_trial_keys  order by added "
+        $query = "select * from mdl_trial_keys  order by added "
             . "LIMIT $offset, $this->limit";
         $result = $this->db->query($query);
         while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
@@ -933,13 +933,13 @@ class Utils2
         switch ($item) {
             case "article":
                 $query = "select * from mdl_article order by title";
-                $num   = $this->db->numrows($query);
+                $num = $this->db->numrows($query);
                 if ($num > 0) {
                     $result = $this->db->query($query);
                     while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
-                        $title  = mb_convert_encoding(trim($row['title']),
+                        $title = mb_convert_encoding(trim($row['title']),
                             'UTF-8');
-                        $dates  = mb_convert_encoding(trim($row['path']),
+                        $dates = mb_convert_encoding(trim($row['path']),
                             'UTF-8');
                         $data[] = $title . '&&&' . $dates;
                     }
@@ -949,7 +949,7 @@ class Utils2
                 break;
             case "class":
                 $query = "select * from mdl_groups order by name";
-                $num   = $this->db->numrows($query);
+                $num = $this->db->numrows($query);
                 if ($num > 0) {
                     $result = $this->db->query($query);
                     while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
@@ -962,7 +962,7 @@ class Utils2
                 break;
             case "tutor":
                 $query
-                     = "select u.id, u.firstname, u.lastname, u.policyagreed, "
+                    = "select u.id, u.firstname, u.lastname, u.policyagreed, "
                     . "r.roleid, r.userid from mdl_user u, mdl_role_assignments r "
                     . "where r.roleid=$this->tutor_role and u.id=r.userid ";
                 $num = $this->db->numrows($query);
@@ -970,11 +970,11 @@ class Utils2
                     $result = $this->db->query($query);
                     while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
                         $firstname
-                                  = mb_convert_encoding(trim($row['firstname']),
+                            = mb_convert_encoding(trim($row['firstname']),
                             'UTF-8');
                         $lastname = mb_convert_encoding(trim($row['lastname']),
                             'UTF-8');
-                        $data2[]  = $lastname . " " . $firstname;
+                        $data2[] = $lastname . " " . $firstname;
                     } // end while
                     $path = $this->json_path . '/tutors.json';
                     file_put_contents($path, json_encode($data2));
@@ -982,7 +982,7 @@ class Utils2
                 break;
             case "subs":
                 $query
-                     = "select u.id, u.firstname, u.lastname, u.policyagreed, "
+                    = "select u.id, u.firstname, u.lastname, u.policyagreed, "
                     . "r.roleid, r.userid, p.userid "
                     . "from mdl_user u, mdl_role_assignments r, mdl_card_payments p "
                     . "where r.roleid=$this->student_role "
@@ -993,11 +993,11 @@ class Utils2
                     $result = $this->db->query($query);
                     while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
                         $firstname
-                                  = mb_convert_encoding(trim($row['firstname']),
+                            = mb_convert_encoding(trim($row['firstname']),
                             'UTF-8');
                         $lastname = mb_convert_encoding(trim($row['lastname']),
                             'UTF-8');
-                        $data3[]  = $lastname . " " . $firstname;
+                        $data3[] = $lastname . " " . $firstname;
                     } // end while
                     $path = $this->json_path . '/subs.json';
                     file_put_contents($path, json_encode($data3));
@@ -1005,19 +1005,19 @@ class Utils2
                 break;
             case "trial":
                 $query = "select * from mdl_user where deleted=0";
-                $num   = $this->db->numrows($query);
+                $num = $this->db->numrows($query);
                 if ($num > 0) {
                     $result = $this->db->query($query);
                     while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
                         $firstname
-                                  = mb_convert_encoding(trim($row['firstname']),
+                            = mb_convert_encoding(trim($row['firstname']),
                             'UTF-8');
                         $lastname = mb_convert_encoding(trim($row['lastname']),
                             'UTF-8');
-                        $users[]  = $lastname . " " . $firstname;
+                        $users[] = $lastname . " " . $firstname;
                     } // end while
 
-                    $query  = "select * from mdl_groups order by name";
+                    $query = "select * from mdl_groups order by name";
                     $result = $this->db->query($query);
                     while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
                         $groups[] = mb_convert_encoding(trim($row['name']),
@@ -1032,7 +1032,7 @@ class Utils2
                 }
                 break;
             case 'groups':
-                $query  = "select * from mdl_groups order by name";
+                $query = "select * from mdl_groups order by name";
                 $result = $this->db->query($query);
                 while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
                     $groups[] = mb_convert_encoding(trim($row['name']),
@@ -1051,7 +1051,7 @@ class Utils2
      */
     function get_groupid_by_name($name)
     {
-        $query  = "select * from mdl_groups where name='$name'";
+        $query = "select * from mdl_groups where name='$name'";
         $result = $this->db->query($query);
         while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
             $id = $row['id'];
@@ -1106,23 +1106,23 @@ class Utils2
      */
     function get_adjust_dialog($userid, $groupid)
     {
-        $list   = "";
-        $query  = "select * from mdl_card_payments "
+        $list = "";
+        $query = "select * from mdl_card_payments "
             . "where userid=$userid and groupid=$groupid";
         $result = $this->db->query($query);
         while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
-            $id              = $row['id'];
+            $id = $row['id'];
             $unix_start_date = $row['start_date'];
-            $unix_exp_date   = $row['exp_date'];
+            $unix_exp_date = $row['exp_date'];
         }
 
         //echo "Unix start date: " . $unix_start_date . "<br>";
         //echo "Unix exp date: " . $unix_exp_date . "<br>";
 
         $start = date('m/d/Y', $unix_start_date);
-        $end   = date('m/d/Y', $unix_exp_date);
+        $end = date('m/d/Y', $unix_exp_date);
         $list
-               .= "<!-- Trigger the modal with a button -->
+            .= "<!-- Trigger the modal with a button -->
        
             <!-- Modal -->
             <div id='myModal_paid_$userid' class='modal fade' role='dialog'>
@@ -1172,7 +1172,7 @@ class Utils2
     {
         $list = "";
         $list
-              .= "<!-- Trigger the modal with a button -->
+            .= "<!-- Trigger the modal with a button -->
        
             <!-- Modal -->
             <div id='myModal' class='modal fade' role='dialog'>
@@ -1220,9 +1220,9 @@ class Utils2
      */
     function get_group_id($name)
     {
-        $id    = 0;
+        $id = 0;
         $query = "select * from mdl_groups where name='$name'";
-        $num   = $this->db->numrows($query);
+        $num = $this->db->numrows($query);
         if ($num > 0) {
             $result = $this->db->query($query);
             while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
@@ -1252,15 +1252,15 @@ class Utils2
     {
 
         $unix_start = time();
-        $unix_exp   = $unix_start + 259200; // tree days later
-        $names      = explode(" ", $username);
-        $firstname  = $names[1];
-        $lastname   = $names[0];
-        $courseid   = 2;
-        $groupid    = $this->get_group_id($groupname);
-        $key        = $this->generateRandomString();
-        $now        = time();
-        $users      = $this->get_user_id_by_fio($firstname, $lastname); // array
+        $unix_exp = $unix_start + 259200; // tree days later
+        $names = explode(" ", $username);
+        $firstname = $names[1];
+        $lastname = $names[0];
+        $courseid = 2;
+        $groupid = $this->get_group_id($groupname);
+        $key = $this->generateRandomString();
+        $now = time();
+        $users = $this->get_user_id_by_fio($firstname, $lastname); // array
         if (count($users) > 0) {
             foreach ($users as $userid) {
                 $query = "insert into mdl_trial_keys "
@@ -1299,8 +1299,8 @@ class Utils2
          */
 
         $unix_start = strtotime($subs->start);
-        $unix_exp   = strtotime($subs->exp);
-        $query      = "update mdl_card_payments set "
+        $unix_exp = strtotime($subs->exp);
+        $query = "update mdl_card_payments set "
             . "start_date='$unix_start', "
             . "exp_date='$unix_exp' "
             . "where id=$subs->paymentid";
@@ -1316,10 +1316,10 @@ class Utils2
      */
     function get_group_modal_dialog($users)
     {
-        $list           = "";
+        $list = "";
         $endcoded_users = json_encode($users);
         $list
-                        .= "<!-- Trigger the modal with a button -->
+            .= "<!-- Trigger the modal with a button -->
        
             <!-- Modal -->
             <div id='myModal' class='modal fade' role='dialog'>
@@ -1370,12 +1370,12 @@ class Utils2
     {
         $list = "";
 
-        $query  = "select * from mdl_trial_keys "
+        $query = "select * from mdl_trial_keys "
             . "where userid=$user->userid and groupid=$user->groupid";
         $result = $this->db->query($query);
         while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
             $start = date('m-d-Y', $row['start_date']);
-            $end   = date('m-d-Y', $row['exp_date']);
+            $end = date('m-d-Y', $row['exp_date']);
         }
 
         $list
@@ -1431,10 +1431,10 @@ class Utils2
     {
         $list = "";
 
-        $query  = "select * from mdl_price where id=$id ";
+        $query = "select * from mdl_price where id=$id ";
         $result = $this->db->query($query);
         while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
-            $name  = $row['institute'];
+            $name = $row['institute'];
             $price = $row['price'];
         }
 
@@ -1573,8 +1573,8 @@ class Utils2
     function adjust_personal_trial_key($user)
     {
         $unix_start = strtotime($user->start);
-        $unix_end   = strtotime($user->end);
-        $query      = "update mdl_trial_keys "
+        $unix_end = strtotime($user->end);
+        $query = "update mdl_trial_keys "
             . "set start_date='$unix_start' , exp_date='$unix_end' "
             . "where userid=$user->userid and groupid=$user->groupid";
         echo "Query: " . $query . "<br>";
@@ -1586,12 +1586,12 @@ class Utils2
      */
     function adjust_group_trial_keys($users)
     {
-        $dataObj    = json_decode($users);
+        $dataObj = json_decode($users);
         $users_data = (array)json_decode(json_decode($dataObj->users));
         foreach ($users_data as $userObj) {
             $unix_start = strtotime($dataObj->start);
-            $unix_end   = strtotime($dataObj->end);
-            $query      = "update mdl_trial_keys "
+            $unix_end = strtotime($dataObj->end);
+            $query = "update mdl_trial_keys "
                 . "set start_date='$unix_start', exp_date='$unix_end' "
                 . "where userid=$userObj->userid "
                 . "and groupid=$userObj->groupid";
@@ -1614,12 +1614,12 @@ class Utils2
     {
         $list = "";
 
-        $list   .= "<select id='templates_list' style='width:365px;'>";
-        $list   .= "<option value='0' selected>Please select template</option>";
-        $query  = "select * from mdl_email_templates order by template_name";
+        $list .= "<select id='templates_list' style='width:365px;'>";
+        $list .= "<option value='0' selected>Please select template</option>";
+        $query = "select * from mdl_email_templates order by template_name";
         $result = $this->db->query($query);
         while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
-            $id   = $row['id'];
+            $id = $row['id'];
             $item = $row['template_name'];
             $list .= "<option value='$id'>$item</option>";
         }
@@ -1633,11 +1633,11 @@ class Utils2
      */
     function get_account_tab()
     {
-        $list      = "";
+        $list = "";
         $templates = $this->get_templates_list();
-        $list      .= "<div class='container-fluid'>";
-        $list      .= "<span class='col-sm-6'>$templates</span>";
-        $list      .= "</div>";
+        $list .= "<div class='container-fluid'>";
+        $list .= "<span class='col-sm-6'>$templates</span>";
+        $list .= "</div>";
 
         $list .= "<div class='container-fluid'>";
         $list .= "<span class='col-sm-12' id='template_content'></span>";
@@ -1657,8 +1657,8 @@ class Utils2
      */
     function get_email_template($id)
     {
-        $list   = "";
-        $query  = "select * from mdl_email_templates where id=$id";
+        $list = "";
+        $query = "select * from mdl_email_templates where id=$id";
         $result = $this->db->query($query);
         while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
             $content = $row['template_content'];
@@ -1668,7 +1668,7 @@ class Utils2
         $list .= "<span class='col-sm-12'>";
         $list .= "<br><textarea name='editor1' id='editor1' rows='10' style='width:675px;'>$content</textarea>";
         $list
-              .= "<script>
+            .= "<script>
                 CKEDITOR.replace( 'editor1' );
             </script>";
         $list .= "</span>";
@@ -1699,7 +1699,7 @@ class Utils2
     function is_price_item_exists($name)
     {
         $query = "select * from mdl_price where institute='$name'";
-        $num   = $this->db->numrows($query);
+        $num = $this->db->numrows($query);
 
         return $num;
     }
@@ -1709,8 +1709,8 @@ class Utils2
      */
     function update_price_items()
     {
-        $un     = array();
-        $query  = "select * from mdl_user where deleted=0 "
+        $un = array();
+        $query = "select * from mdl_user where deleted=0 "
             . "and institution<>'' and institution<>'n/a'";
         $result = $this->db->query($query);
         while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
@@ -1722,7 +1722,7 @@ class Utils2
             if ($status == 0) {
                 $clearname = addslashes($name);
                 $query
-                           = "insert into mdl_price (institute) values ('$clearname')";
+                    = "insert into mdl_price (institute) values ('$clearname')";
             } // end if
         } // end foreach
     }
@@ -1740,28 +1740,28 @@ class Utils2
         $list .= "<span class='col-sm-2'><button class='btn btn-default' id='get_price_upload_dialog'>Upload</button></span>";
         $list .= "</div>";
 
-        $list   .= "<br><br><table id='price_table' class='table table-striped table-bordered' cellspacing='0' width='100%'>";
-        $list   .= "<thead>";
-        $list   .= "<tr>";
-        $list   .= "<th>Schoolname</th>";
-        $list   .= "<th>Price</th>";
-        $list   .= "<th>Operations</th>";
-        $list   .= "</tr>";
-        $list   .= "</thead>";
-        $list   .= "<tbody>";
-        $query  = "select * from mdl_price order by institute";
+        $list .= "<br><br><table id='price_table' class='table table-striped table-bordered' cellspacing='0' width='100%'>";
+        $list .= "<thead>";
+        $list .= "<tr>";
+        $list .= "<th>Schoolname</th>";
+        $list .= "<th>Price</th>";
+        $list .= "<th>Operations</th>";
+        $list .= "</tr>";
+        $list .= "</thead>";
+        $list .= "<tbody>";
+        $query = "select * from mdl_price order by institute";
         $result = $this->db->query($query);
         while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
-            $name  = $row['institute'];
+            $name = $row['institute'];
             $price = $row['price'];
             $link
-                   = "<a href='#' onClick='return false;' class='price_adjust' data-id='"
+                = "<a href='#' onClick='return false;' class='price_adjust' data-id='"
                 . $row['id'] . "'>Adjust</a>";
-            $list  .= "<tr>";
-            $list  .= "<td>$name</td>";
-            $list  .= "<td>$$price</td>";
-            $list  .= "<td>$link</td>";
-            $list  .= "</tr>";
+            $list .= "<tr>";
+            $list .= "<td>$name</td>";
+            $list .= "<td>$$price</td>";
+            $list .= "<td>$link</td>";
+            $list .= "</tr>";
         }
         $list .= "</tbody>";
         $list .= "</table>";
@@ -1774,7 +1774,7 @@ class Utils2
      */
     function update_item_price($item)
     {
-        $id    = $item->id;
+        $id = $item->id;
         $price = $item->price;
         $query = "update mdl_price set price='$price' where id=$id";
         $this->db->query($query);
@@ -1785,7 +1785,7 @@ class Utils2
      */
     function add_new_school_to_db($item)
     {
-        $name  = $item->name;
+        $name = $item->name;
         $price = $item->price;
         $query = "insert into mdl_price "
             . "(institute,price) "
@@ -1800,7 +1800,7 @@ class Utils2
     {
         $items = array();
         $query = "select * from mdl_article where active=1 order by title";
-        $num   = $this->db->numrows($query);
+        $num = $this->db->numrows($query);
         if ($num > 0) {
             $result = $this->db->query($query);
             while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
@@ -1820,7 +1820,7 @@ class Utils2
      */
     function get_archive_page()
     {
-        $list  = "";
+        $list = "";
         $items = $this->get_archive_items();
 
         $list .= "<div class='row-fluid'>";
@@ -1868,11 +1868,12 @@ class Utils2
     {
         $list = "";
 
-        $query  = "select * from mdl_article where id=$id";
+        $query = "select * from mdl_article where id=$id";
         $result = $this->db->query($query);
         while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
-            $start  = date('m/d/Y', $row['start']);
+            $start = date('m/d/Y', $row['start']);
             $expire = date('m/d/Y', $row['expire']);
+            $title = $row['title'];
         }
 
         $list
@@ -1886,6 +1887,10 @@ class Utils2
                     <h4 class='modal-title'>Edit article dates</h4>
                   </div>
                   <div class='modal-body'>
+            
+                    <div class='container-fluid'>
+                    <div class='col-sm-6' style='margin-left: 6%;'><input type='text' id='ae_title' value='$title' style='width: 100%;'></div>
+                    </div>
                  
                     <div class='container-fluid' style='text-align:center;'>
                     <div class='col-sm-3'>Date1*</div>
@@ -1920,8 +1925,8 @@ class Utils2
      */
     function update_article_dates($item)
     {
-        $upath  = $this->get_article_directory($item->date1, $item->date2);
-        $query  = "select * from mdl_article where id=$item->aid";
+        $upath = $this->get_article_directory($item->date1, $item->date2);
+        $query = "select * from mdl_article where id=$item->aid";
         $result = $this->db->query($query);
         while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
             $opath = $row['path'];
@@ -1931,9 +1936,11 @@ class Utils2
         rename($old_path, $new_path);
         $ustart = strtotime($item->date1);
         $expire = strtotime($item->date2);
+        $clear_title = addslashes($item->title);
         $query
-                = "update mdl_article 
+            = "update mdl_article 
                   set path='$upath', 
+                  title='$clear_title',
                   start='$ustart', 
                   expire='$expire' where id=$item->aid";
         $this->db->query($query);
@@ -2003,13 +2010,13 @@ class Utils2
     function upload_archive_article($files, $data)
     {
         if ($files['error'] == 0 && $files['size'] > 0) {
-            $date     = strtotime($data['adate']);
-            $now      = time();
-            $title    = $data['title'];
+            $date = strtotime($data['adate']);
+            $now = time();
+            $title = $data['title'];
             $destfile = "arcticle_$now.pdf";
-            $dest     = $_SERVER['DOCUMENT_ROOT']
+            $dest = $_SERVER['DOCUMENT_ROOT']
                 . "/lms/utils/archive/$destfile";
-            $status   = move_uploaded_file($files['tmp_name'], $dest);
+            $status = move_uploaded_file($files['tmp_name'], $dest);
             if ($status) {
                 $query
                     = "insert into mdl_archive (title,path,adate) values ('$title','$destfile','$date')";
@@ -2044,7 +2051,7 @@ class Utils2
      */
     function remove_article_directory($id)
     {
-        $query  = "select * from mdl_article where id=$id";
+        $query = "select * from mdl_article where id=$id";
         $result = $this->db->query($query);
         while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
             $opath = $row['path'];
@@ -2070,11 +2077,11 @@ class Utils2
     function upload_price_csv_data($files)
     {
         if ($files['error'] == 0 && $files['size'] > 0) {
-            $now      = time();
+            $now = time();
             $destfile = "prices_$now.csv";
-            $dest     = $_SERVER['DOCUMENT_ROOT']
+            $dest = $_SERVER['DOCUMENT_ROOT']
                 . "/lms/utils/archive/$destfile";
-            $status   = move_uploaded_file($files['tmp_name'], $dest);
+            $status = move_uploaded_file($files['tmp_name'], $dest);
             if ($status) {
                 $csv = array_map('str_getcsv', file($dest));
                 /*
@@ -2153,9 +2160,9 @@ class Utils2
     {
         $date1_arr = explode('/', $date1);
         $date2_arr = explode('/', $date2);
-        $dir1      = $date1_arr[0] . '-' . $date1_arr[1] . '-' . $date1_arr[2];
-        $dir2      = $date2_arr[0] . '-' . $date2_arr[1] . '-' . $date2_arr[2];
-        $dir       = $dir1 . '_' . $dir2;
+        $dir1 = $date1_arr[0] . '-' . $date1_arr[1] . '-' . $date1_arr[2];
+        $dir2 = $date2_arr[0] . '-' . $date2_arr[1] . '-' . $date2_arr[2];
+        $dir = $dir1 . '_' . $dir2;
 
         return $dir;
     }
@@ -2167,8 +2174,8 @@ class Utils2
      */
     function unzip_archive($file)
     {
-        $path   = $file['tmp_name'];
-        $now    = time();
+        $path = $file['tmp_name'];
+        $now = time();
         $tmpdir = $_SERVER['DOCUMENT_ROOT'] . "/lms/tmp/$now";
         mkdir($tmpdir, 0777);
         $zip = new ZipArchive;
@@ -2191,10 +2198,10 @@ class Utils2
      */
     function verify_archive($tmpdir)
     {
-        $hasindex  = 0;
-        $imgdir    = $tmpdir . '/assets/images';
+        $hasindex = 0;
+        $imgdir = $tmpdir . '/assets/images';
         $dirstatus = is_dir($imgdir);
-        $files     = scandir($tmpdir);
+        $files = scandir($tmpdir);
         foreach ($files as $file) {
             if ($file == 'index.php') {
                 $hasindex = 1;
@@ -2216,12 +2223,12 @@ class Utils2
      */
     function move_arcticle($file, $post)
     {
-        $path  = $file['tmp_name'];
+        $path = $file['tmp_name'];
         $date1 = $post['date1'];
         $date2 = $post['date2'];
-        $adir  = $this->get_article_directory($date1, $date2);
-        $dir   = $_SERVER['DOCUMENT_ROOT'] . "/lms/articles/$adir";
-        if ( ! is_dir($dir)) {
+        $adir = $this->get_article_directory($date1, $date2);
+        $dir = $_SERVER['DOCUMENT_ROOT'] . "/lms/articles/$adir";
+        if (!is_dir($dir)) {
             mkdir($dir, 0777);
         }
         $zip = new ZipArchive;
@@ -2244,7 +2251,7 @@ class Utils2
     function is_news_exists($newsdir)
     {
         $query = "select * from mdl_article where path='$newsdir'";
-        $num   = $this->db->numrows($query);
+        $num = $this->db->numrows($query);
 
         return $num;
     }
@@ -2254,12 +2261,12 @@ class Utils2
      */
     function update_article_data($post)
     {
-        $now             = time();
-        $newsdir         = $this->get_article_directory($post['date1'],
+        $now = time();
+        $newsdir = $this->get_article_directory($post['date1'],
             $post['date2']);
         $news_dir_status = $this->is_news_exists($newsdir);
-        $start           = strtotime($post['date1']);
-        $expire          = strtotime($post['date2']);
+        $start = strtotime($post['date1']);
+        $expire = strtotime($post['date2']);
         if ($news_dir_status == 0) {
             $query
                 = "insert into mdl_article (title,  path, start, expire, added)
@@ -2318,10 +2325,10 @@ class Utils2
 
     function get_news_quiz_page()
     {
-        $list  = "";
+        $list = "";
         $items = array();
         $query = "select * from mdl_poll order by added desc";
-        $num   = $this->db->numrows($query);
+        $num = $this->db->numrows($query);
         if ($num > 0) {
             $result = $this->db->query($query);
             while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
@@ -2346,14 +2353,14 @@ class Utils2
     {
         $list = "";
 
-        $query  = "select * from mdl_poll_q where pid=$pid";
+        $query = "select * from mdl_poll_q where pid=$pid";
         $result = $this->db->query($query);
-        $i      = 1;
+        $i = 1;
         while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
             $title = $row['title'];
-            $list  .= "<div class='row'>";
-            $list  .= "<span class='col-md-12'>$i) $title<br></span>";
-            $list  .= "</div>";
+            $list .= "<div class='row'>";
+            $list .= "<span class='col-md-12'>$i) $title<br></span>";
+            $list .= "</div>";
             $i++;
         }
 
@@ -2392,18 +2399,18 @@ class Utils2
         $list .= "<tbody>";
         if (count($items) > 0) {
             foreach ($items as $item) {
-                $title     = $item->title;
-                $type      = ($item->type == 1) ? 'Poll' : 'Quiz';
-                $article   = $this->get_article_title($item->aid);
-                $date      = date('m-d-Y', $item->added);
+                $title = $item->title;
+                $type = ($item->type == 1) ? 'Poll' : 'Quiz';
+                $article = $this->get_article_title($item->aid);
+                $date = date('m-d-Y', $item->added);
                 $questions = $this->get_quiz_questions($item->id);
-                $list      .= "<tr>";
-                $list      .= "<td>$title</td>";
-                $list      .= "<td>$article</td>";
-                $list      .= "<td>$type</td>";
-                $list      .= "<td>$questions</td>";
-                $list      .= "<td>$date</td>";
-                $list      .= "</tr>";
+                $list .= "<tr>";
+                $list .= "<td>$title</td>";
+                $list .= "<td>$article</td>";
+                $list .= "<td>$type</td>";
+                $list .= "<td>$questions</td>";
+                $list .= "<td>$date</td>";
+                $list .= "</tr>";
             } // end foreach
         } // end if count($items)>0
         $list .= "</tbody>";
@@ -2423,7 +2430,7 @@ class Utils2
      */
     function get_article_title($id)
     {
-        $query  = "select * from mdl_article where id=$id";
+        $query = "select * from mdl_article where id=$id";
         $result = $this->db->query($query);
         while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
             $title = $row['title'];
@@ -2455,8 +2462,8 @@ class Utils2
      */
     function get_news_wizard($type)
     {
-        $list     = "";
-        $title    = ($type == 1) ? 'Poll params' : 'Quiz params';
+        $list = "";
+        $title = ($type == 1) ? 'Poll params' : 'Quiz params';
         $totalbox = $this->get_total_questions_dropbbox();
 
         $list .= "<div class='panel panel-default' style='margin-top: 15px;'>
@@ -2504,7 +2511,7 @@ class Utils2
         $list = "";
         for ($i = 1; $i <= 5; $i++) {
             $index = $id . '_' . $i;
-            if ($type==2) {
+            if ($type == 2) {
                 $list .= "<div class='row' style='padding: 15px;'>";
                 $list .= "<span class='col-md-2'>Answer$i</span>";
                 $list .= "<span class='col-md-8'><input type='text' class='answers$id' style='width: 100%' data-id='$i'></span>";
@@ -2534,10 +2541,10 @@ class Utils2
         $list = "";
         for ($i = 1; $i <= $total; $i++) {
             $answers = $this->get_question_answers($i, $type);
-            $list    .= "<div class='row' style='padding: 15px;'>";
-            $list    .= "<span class='col-md-2'>Question#$i</span>";
-            $list    .= "<span class='col-md-10'><input type='text' class='questions' style='width: 100%' data-id='$i'></span>";
-            $list    .= "</div>";
+            $list .= "<div class='row' style='padding: 15px;'>";
+            $list .= "<span class='col-md-2'>Question#$i</span>";
+            $list .= "<span class='col-md-10'><input type='text' class='questions' style='width: 100%' data-id='$i'></span>";
+            $list .= "</div>";
 
             $list .= "<div class='row' style='padding: 15px;'>";
             $list .= "<span class='col-md-12'>$answers</span>";
@@ -2566,7 +2573,7 @@ class Utils2
      */
     function get_quiz_page_step2($item)
     {
-        $list      = "";
+        $list = "";
         $questions = $this->get_questions_block($item->total, $item->type);
         $list .= "<div class='panel panel-default' style='margin-top: 15px;'>
 			  		<div class='panel-heading'>Questions</div>
@@ -2586,11 +2593,11 @@ class Utils2
      */
     function get_article_id_by_title($item)
     {
-        $data   = explode('&&&', $item);
-        $title  = $data[0];
-        $path   = $data[1];
+        $data = explode('&&&', $item);
+        $title = $data[0];
+        $path = $data[1];
         $query
-                = "select * from mdl_article where title='$title' and path='$path'";
+            = "select * from mdl_article where title='$title' and path='$path'";
         $result = $this->db->query($query);
         while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
             $id = $row['id'];
@@ -2608,7 +2615,7 @@ class Utils2
     function is_poll_exists($aid, $type)
     {
         $query = "select * from mdl_poll where aid=$aid and type=$type";
-        $num   = $this->db->numrows($query);
+        $num = $this->db->numrows($query);
 
         return $num;
     }
@@ -2621,7 +2628,7 @@ class Utils2
      */
     function add_new_quiz($item)
     {
-        $list     = "";
+        $list = "";
         $response = ($item->type == 1) ? 'poll' : 'quiz';
 
         $now = time();
@@ -2634,9 +2641,9 @@ class Utils2
                 = "insert into mdl_poll (aid, type, title, added) values ($aid, $item->type, '"
                 . addslashes($item->title) . "', '$now') ";
             $this->db->query($query);
-            $stmt       = $this->db->query("SELECT LAST_INSERT_ID()");
+            $stmt = $this->db->query("SELECT LAST_INSERT_ID()");
             $lastid_arr = $stmt->fetch(PDO::FETCH_NUM);
-            $pollID     = $lastid_arr[0];
+            $pollID = $lastid_arr[0];
 
             $questions = $item->questions;
             foreach ($questions as $q) {
@@ -2644,7 +2651,7 @@ class Utils2
                     = "insert into mdl_poll_q (pid, title, added) values ($pollID, '"
                     . addslashes($q->text) . "', '$now')";
                 $this->db->query($query);
-                $stmt       = $this->db->query("SELECT LAST_INSERT_ID()");
+                $stmt = $this->db->query("SELECT LAST_INSERT_ID()");
                 $lastid_arr = $stmt->fetch(PDO::FETCH_NUM);
                 $questionID = $lastid_arr[0];
 
@@ -2683,10 +2690,10 @@ class Utils2
 
     function get_news_forum_page()
     {
-        $list  = "";
+        $list = "";
         $items = array();
         $query = "select * from mdl_board order by title";
-        $num   = $this->db->numrows($query);
+        $num = $this->db->numrows($query);
         if ($num > 0) {
             $result = $this->db->query($query);
             while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
@@ -2732,13 +2739,13 @@ class Utils2
         if (count($items) > 0) {
             foreach ($items as $item) {
                 $article = $this->get_article_name_by_id($item->aid);
-                $title   = $item->title;
-                $date    = date('m-d-Y', $item->added);
-                $list    .= "<tr>";
-                $list    .= "<td>$title</td>";
-                $list    .= "<td>$article</td>";
-                $list    .= "<td>$date</td>";
-                $list    .= "</tr>";
+                $title = $item->title;
+                $date = date('m-d-Y', $item->added);
+                $list .= "<tr>";
+                $list .= "<td>$title</td>";
+                $list .= "<td>$article</td>";
+                $list .= "<td>$date</td>";
+                $list .= "</tr>";
             } // end foreach
         } // end if count count( $items) > 0
         $list .= "</tbody>";
@@ -2757,7 +2764,7 @@ class Utils2
      */
     function get_article_name_by_id($id)
     {
-        $query  = "select * from mdl_article where id=$id";
+        $query = "select * from mdl_article where id=$id";
         $result = $this->db->query($query);
         while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
             $title = $row['title'];
@@ -2811,7 +2818,7 @@ class Utils2
     function is_forum_exists($aid)
     {
         $query = "select * from mdl_board where aid=$aid";
-        $num   = $this->db->numrows($query);
+        $num = $this->db->numrows($query);
 
         return $num;
     }
@@ -2823,9 +2830,9 @@ class Utils2
      */
     function add_new_forum($item)
     {
-        $list   = "";
-        $now    = time();
-        $aid    = $this->get_article_id_by_title($item->article);
+        $list = "";
+        $now = time();
+        $aid = $this->get_article_id_by_title($item->article);
         $status = $this->is_forum_exists($aid);
         if ($status == 0) {
             $query
@@ -2853,10 +2860,10 @@ class Utils2
      */
     function get_online_classes_page()
     {
-        $list  = "";
+        $list = "";
         $items = array();
         $query = "select * from mdl_classes where active=1 order by date desc";
-        $num   = $this->db->numrows($query);
+        $num = $this->db->numrows($query);
         if ($num > 0) {
             $result = $this->db->query($query);
             while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
@@ -2905,15 +2912,15 @@ class Utils2
 
         if (count($items) > 0) {
             foreach ($items as $item) {
-                $date      = date('m-d-Y h:i:s', $item->date);
+                $date = date('m-d-Y h:i:s', $item->date);
                 $groupname = $this->get_group_name($item->groupid);
-                $ops       = $this->get_online_classes_ops($item->id);
-                $list      .= "<tr>";
-                $list      .= "<td>$item->title</td>";
-                $list      .= "<td>$groupname</td>";
-                $list      .= "<td>$date</td>";
-                $list      .= "<td>$ops</td>";
-                $list      .= "</tr>";
+                $ops = $this->get_online_classes_ops($item->id);
+                $list .= "<tr>";
+                $list .= "<td>$item->title</td>";
+                $list .= "<td>$groupname</td>";
+                $list .= "<td>$date</td>";
+                $list .= "<td>$ops</td>";
+                $list .= "</tr>";
             } // end foreach
         } // end count($items)
 
@@ -2929,10 +2936,10 @@ class Utils2
      */
     function add_new_online_class($item)
     {
-        $date    = strtotime($item->cdate);
+        $date = strtotime($item->cdate);
         $groupid = $this->get_group_id($item->group);
         $query
-                 = "insert into mdl_classes 
+            = "insert into mdl_classes 
                 (title, groupid, date) 
                 values ('$item->title','$groupid','$date')";
         $this->db->query($query);

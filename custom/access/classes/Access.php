@@ -51,7 +51,7 @@ class Access extends Utils {
         $list.="</div>";
 
         $list.="<div class='container-fluid' style='text-align:center;'>";
-        $list.="<span class='span12'>You do not have subscription or it is expired. Please click <a href='http://www." . $_SERVER['SERVER_NAME'] . "/lms/payments/payment.php?userid=$userid&groups=$groups_list' target='_blank'>here</a> to get your subscription.</span>";
+        $list.="<span class='span12'><h3>You do not have subscription or it is expired. Please click <a href='http://www." . $_SERVER['SERVER_NAME'] . "/lms/payments/payment.php?userid=$userid&groups=$groups_list' target='_blank'>here</a> to get your subscription.</h3></span>";
         $list.="</div>";
         return $list;
     }

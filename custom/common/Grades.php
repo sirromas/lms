@@ -146,12 +146,12 @@ class Grades extends Utils
 
             foreach ($ans as $answerid) {
                 $a_title = $this->get_answer_title($answerid);
-                if ($type==2) {
+                if ($type == 2) {
                     $cstatus = ($this->is_answer_correct($answerid) == 1)
                         ? 'Correct' : '';
                 } // end if
                 else {
-                    $cstatus='';
+                    $cstatus = '';
                 }
                 if ($answerid == $student_reply) {
                     array_push($old_answers, $student_reply);
@@ -375,7 +375,7 @@ class Grades extends Utils
         $this->enrol_user($userid, $roleid);
         $this->add_to_group($user->groupid, $userid);
         $this->update_assistance_profile($user, $userid, $user->teacherid);
-        $subject = 'Account Creation Confirmation';
+        $subject = 'Assistant Account Created';
         $message = $this->get_assistance_confirmation_message($user);
         $this->send_email($subject, $message, $user->email);
     }
@@ -446,8 +446,18 @@ class Grades extends Utils
         $email = $user->email;
         $pwd = $user->pwd;
 
-        $list .= "<html>";
+        $query = "select * from mdl_email_templates where id=4";
+        $result = $this->db->query($query);
+        while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+            $template = $row['template_content'];
+        }
 
+        $search = array('{firstname}', '{lastname}', '{email}', '{password}');
+        $replace = array($fname, $lname, $email, $pwd);
+        $list .= str_replace($search, $replace, $template);
+
+        /*
+        $list .= "<html>";
         $list .= "<body>";
         $list .= "<table>";
         $list .= "<tr><td colspan='2' style='padding: 15px;text-align: center;'>Dear $fname $lname!</td></tr>";
@@ -457,8 +467,8 @@ class Grades extends Utils
         $list .= "<tr><td colspan='2' style='padding: 15px;text-align: center;'>If you need assistance please contact us by email info@newsfactsandanalysis.com</td></tr>";
         $list .= "</table>";
         $list .= "</body>";
-
         $list .= "</html>";
+        */
 
         return $list;
     }
@@ -629,6 +639,10 @@ class Grades extends Utils
         return $list;
     }
 
+    /**
+     * @param $item
+     * @return string
+     */
     function grades_get_send_message_dialog($item)
     {
         $list = "";
@@ -675,6 +689,9 @@ class Grades extends Utils
         return $list;
     }
 
+    /**
+     * @param $item
+     */
     function send_grades_feedback($item)
     {
         $teacherid = $item->teacherid;
@@ -721,7 +738,7 @@ class Grades extends Utils
             
                     <div class='container-fluid' style='text-align:left;margin-bottom: 10px;'>
                     <div class='col-sm-2'>Subject*</div>
-                    <div class='col-sm-6'><input type='text' id='subject_$id' placeholder='Subject' style='width: 375px;'></div>
+                    <div class='col-sm-6'><input type='text' id='subject_$id' placeholder='Subject' style='width: 375px;' value='Thought you’d find this useful'></div>
                     </div>
                     
                     <div class='container-fluid' style='text-align:left;margin-bottom: 10px;'>
@@ -731,7 +748,7 @@ class Grades extends Utils
                     
                     <div class='container-fluid' style='text-align:left;margin-bottom: 10px;'>
                     <div class='col-sm-2'>Message*</div>
-                    <div class='col-sm-6'><textarea id='msg_$id' style='width: 375px;' rows='7'></textarea></div>
+                    <div class='col-sm-6'><textarea id='msg_$id' style='width: 375px;' rows='7'>NewsFacts & Analysis https://www.newsfactsandanalysis.com</textarea></div>
                     </div>
                     
                     <div class='container-fluid' style='text-align:center;'>
@@ -756,9 +773,9 @@ class Grades extends Utils
      */
     function send_share_info($item)
     {
-        //$udata = $this->get_user_details($item->userid);
-        //$names = "$udata->firstname $udata->lastname";
-        $msg = $item->msg;
+        $udata = $this->get_user_details($item->userid);
+        $names = "$udata->firstname $udata->lastname";
+        $msg = $item->msg . "<br><br>$names";
         $this->send_email($item->subject, $msg, $item->recipient, false);
     }
 
@@ -890,7 +907,7 @@ class Grades extends Utils
         if ($roleid == 4) {
             $users = $this->get_group_users($item->groupid, 5);
             $this->export_class_grades($item->groupid);
-            $list .= $this->create_teacher_grades_table($articles, $users);
+            $list .= $this->create_teacher_grades_table($articles, $users, $item->groupid);
         } // end if
         else {
             $list .= $this->create_student_grades_table($articles,
@@ -985,6 +1002,17 @@ class Grades extends Utils
         return $list;
     }
 
+    function delete_assistant($item)
+    {
+        $list = "";
+
+        $query = "update mdl_user set deleted=1 where id=$item->assistantid";
+        $this->db->query($query);
+        $list .= $this->get_teacher_assistances_table($item->teacherid, $item->groupid);
+
+        return $list;
+    }
+
     /**
      * @param $aid
      * @return string
@@ -1001,13 +1029,93 @@ class Grades extends Utils
     }
 
     /**
+     * @param $groupid
+     * @param $userid
+     * @return int
+     */
+    function is_group_participant($groupid, $userid)
+    {
+        $query = "select * from mdl_groups_members 
+              where groupid=$groupid and userid=$userid";
+        $num = $this->db->numrows($query);
+        return $num;
+    }
+
+
+    /**
+     * @param $teacherid
+     * @param $groupid
+     * @return string
+     */
+    function get_teacher_assistances_table($teacherid, $groupid)
+    {
+        $list = "";
+
+        $list .= "<div class='row'>";
+        $list .= "<span class='col-md-12' style='text-align: center;font-weight: bold;'>Assistances list</span>";
+        $list .= "</div>";
+
+        $list .= "<div class='row'>";
+        $list .= "<span class='col-md-12'>";
+
+        $list .= "<table id='assistants_table' class='table table-striped table-bordered' cellspacing='0' width='100%'>";
+
+        $list .= "<thead>";
+        $list .= "<tr>";
+        $list .= "<th>Firstname</th>";
+        $list .= "<th>Lastname</th>";
+        $list .= "<th>Email</th>";
+        $list .= "<th>Ops</th>";
+        $list .= "</tr>";
+        $list .= "</thead>";
+
+        $list .= "<tbody>";
+
+        $query = "SELECT u.id, u.deleted, u.parent, g.groupid, g.userid FROM mdl_groups_members g, 
+                  mdl_user u WHERE u.parent=$teacherid and g.groupid=$groupid and u.deleted=0
+                  and u.id=g.userid";
+        $num = $this->db->numrows($query);
+        if ($num > 0) {
+            $result = $this->db->query($query);
+            while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+                $assistantid = $row['id'];
+                $udata = $this->get_user_details($assistantid);
+                $fname = $udata->firstname;
+                $lname = $udata->lastname;
+                $email = $udata->email;
+                $list .= "<tr>";
+                $list .= "<td>$fname</td>";
+                $list .= "<td>$lname</td>";
+                $list .= "<td>$email</td>";
+                $list .= "<td><button class='btn btn-default' id='assistant_id_$assistantid'>Delete</button></td>";
+                $list .= "</tr>";
+            } // end while
+        } // end if $num>0
+
+        $list .= "</tbody>";
+
+        $list .= "</table>";
+
+        $list .= "</span>";
+        $list .= "</div>";
+
+        return $list;
+    }
+
+    /**
      * @param $articles
      * @param $users
      * @return string
      */
-    function create_teacher_grades_table($articles, $users)
+    function create_teacher_grades_table($articles, $users, $groupid)
     {
         $list = "";
+
+        $userid = $this->user->id;
+        $assistances_table = $this->get_teacher_assistances_table($userid, $groupid);
+        $list .= "<div class='row' style='margin-bottom: 15px;text-align: center;'>";
+        $list .= "<span class='col-md-12' id='assistant_table_container'>$assistances_table</span>";
+        $list .= "</div>";
 
         if (count($articles) > 0) {
 

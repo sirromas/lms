@@ -942,14 +942,15 @@ $(document).ready(function () {
 
         if (event.target.id == 'change_article_dates_done') {
             var aid = $('#aid').val();
+            var title = $('#ae_title').val();
             var date1 = $('#ae_date1').val();
             var date2 = $('#ae_date2').val();
-            if (date1 == '' || date2 == '') {
-                $('#ae_err').html('Please select article date(s)');
+            if (date1 == '' || date2 == '' || title == '') {
+                $('#ae_err').html('Please provide article title and select article date(s)');
             } // end if
             else {
                 $('#ae_err').html('');
-                var item = {aid: aid, date1: date1, date2: date2};
+                var item = {aid: aid, date1: date1, date2: date2, title: title};
                 var url = '/lms/utils/update_article_dates.php';
                 $.post(url, {item: JSON.stringify(item)}).done(function (data) {
                     document.location.reload();

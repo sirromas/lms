@@ -130,6 +130,33 @@ require_once './sheader.php';
         $('body').on('click', function (event) {
 
 
+            if (event.target.id.indexOf("student_edit_own_post_") >= 0) {
+                var id = event.target.id.replace('student_edit_own_post_', '');
+                var container = '#edit_post_container_' + id;
+                if ($(container).is(":visible")) {
+                    $(container).hide();
+                } // end if
+                else {
+                    $(container).show();
+                } // end else
+            }
+
+            if (event.target.id.indexOf("update_student_reply_") >= 0) {
+                var id = event.target.id.replace('update_student_reply_', '');
+                var postcontainer = '#update_student_post_text_' + id;
+                var userpost = $(postcontainer).val();
+                console.log('User post: ' + userpost);
+                if (userpost != '') {
+                    var url = '/lms/custom/common/update_user_post.php';
+                    var item = {id: id, post: userpost};
+                    $.post(url, {item: JSON.stringify(item)}).done(function (data) {
+                        get_news_forum();
+                    });
+                }
+
+            }
+
+
             if (event.target.id == 'upload_my_image') {
                 var userid = $('#userid').val();
                 var file_url = $('#my_file').val();
