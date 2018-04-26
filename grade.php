@@ -14,9 +14,8 @@ require_once './pheader.php';
 
 <!-- Article iFrame -->
 <div class="row" id="page" style="margin: auto;text-align: center;">
-
     <iframe id='pageIframe'
-            style="margin-top:15px;width:935px;margin-left-30px;text-align: left;"
+            style="margin-top:15px;width:935px;text-align: center;padding-right: 5%;"
             frameborder="0"
             src="<?php echo $articleURL; ?>"></iframe>
 </div>
@@ -61,22 +60,20 @@ require_once './pheader.php';
         var pollURL = '/lms/custom/common/get_news_poll.php';
         var forumURL = '/lms/custom/common/get_news_forum.php';
 
-        //$('#page').hide();
         $('#dic').hide();
         $('#poll_container').hide();
         $('#quiz_container').hide();
-        //$('#forum_container').hide();
-        //$('#meeting_container').hide();
 
+        // Get Dictionary content
         $('#dicIframe').load(function () {
             $(this).height($(this).contents().height());
-            // Detect click inside iFrame? Is it possible?
             var iframe = $('#dicIframe').contents();
             iframe.find('.ds249').click(function () {
                 console.log('Item clicked ....');
             });
         });
 
+        // Get article content
         $('#pageIframe').load(function () {
             $(this).height($(this).contents().height());
             $(this).width($(this).contents().width());
@@ -100,7 +97,7 @@ require_once './pheader.php';
             $('#forum_container').height('#forum_container').contents().height();
         });
 
-
+        // Update news forum container
         function get_news_forum() {
             $.post(forumURL, {userid: userid}).done(function (data) {
                 $('#forum_container').html(data);
@@ -109,7 +106,7 @@ require_once './pheader.php';
         }
 
         function get_teacher_class_grades(item) {
-            // item.userid, item.groupid
+            // item.userid, item.groupid <-- items posted
 
             // We use this URL to display grades for both teacher and student
             var url = '/lms/custom/common/get_teacher_class_grades.php'
@@ -119,24 +116,6 @@ require_once './pheader.php';
                 $('#assistants_table').DataTable();
             });
         }
-
-        // Make grades page first during app open
-        /*
-        var gradesURL = '/lms/custom/common/get_grades_page.php';
-        $.post(gradesURL, {userid: userid}).done(function (data) {
-            $('#ajax_container').html(data);
-            var users = $('#group_users').val();
-            console.log('Grpoup users: ' + users);
-            var group_users = users.split(",");
-            for (i = 0; i < group_users.length; i++) {
-                var tableid = '#student_grades_' + group_users[i];
-                $(tableid).DataTable();
-            }
-            // $('#grades_table').DataTable();
-            $('#ajax_container').show();
-        });
-        */
-
 
         $('body').on('click', function (event) {
 
@@ -268,14 +247,20 @@ require_once './pheader.php';
                 var replies = [];
                 var studentid = $('#studentid').val();
                 var old_answers = $('#old_answers').val();
+                var aid = $('#articleid').val();
+                var polid = $('#pollid').val();
+                var ograde = $('#ograde').val();
                 console.log('Student id: ' + studentid);
                 $('input[type="radio"]:checked').each(function () {
                     replies.push($(this).data('id'));
                 });
                 var item = {
+                    aid: aid,
+                    polid: polid,
                     studentid: studentid,
                     replies: replies,
-                    old_answers: old_answers
+                    old_answers: old_answers,
+                    ograde: ograde
                 };
                 console.log('Item: ' + JSON.stringify(item));
                 if (confirm('Update student grades?')) {
@@ -478,6 +463,67 @@ require_once './pheader.php';
                         $("body").append(data);
                         $(modalID).modal('show');
                     });
+                }
+            }
+
+            if (event.target.id == 'delete_student_btn') {
+                var userid = $('#userid').val();
+                var groupid = $('#').val();
+                var selectedStudents = new Array();
+                var n = $(".students:checked").length;
+                if (n > 0) {
+                    $(".students:checked").each(function () {
+                        selectedStudents.push($(this).val());
+                    });
+                }
+                var students = selectedStudents.join();
+                if (students == '') {
+                    alert('You did not select any student!')
+                } // end if
+                else {
+                    if (confirm('Delete selected student(s)?')) {
+                        var url = '/lms/custom/common/delete_student.php';
+                        $.post(url, {students: selectedStudents}).done(function (data) {
+                            var item = {userid: userid, groupid: groupid};
+                            get_teacher_class_grades(item);
+                        });
+                    }
+                }
+            }
+
+            if (event.target.id == 'move_student_btn') {
+                var userid = $('#userid').val();
+                var selectedStudents = new Array();
+                var n = $(".students:checked").length;
+                if (n > 0) {
+                    $(".students:checked").each(function () {
+                        selectedStudents.push($(this).val());
+                    });
+                }
+                var students = selectedStudents.join();
+                console.log('Selected students: ' + students)
+                if (students == '') {
+                    alert('You did not select any student!')
+                } // end if
+                else {
+                    if (confirm('Move selected student(s)?')) {
+                        var oldgroup = $('#teacher_groups').val();
+                        var newgroup = $('#move_groups').val();
+                        if (newgroup == 0) {
+                            alert('Please select class to move!');
+                        } // end if
+                        else {
+                            var url = '/lms/custom/common/move_student.php';
+                            item = {oldgroup: oldgroup, newgroup: newgroup, students: selectedStudents};
+                            $.post(url, {item: JSON.stringify(item)}).done(function (data) {
+                                var item2 = {
+                                    userid: userid,
+                                    groupid: oldgroup
+                                };
+                                get_teacher_class_grades(item2);
+                            });
+                        }
+                    }
                 }
             }
 

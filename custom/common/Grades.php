@@ -181,14 +181,51 @@ class Grades extends Utils
      * @param $item
      * @return string
      */
+    function get_student_override_grades_dropbox($item)
+    {
+        $list = "";
+        $grade = 'n/a';
+        $list .= "<select id='ograde' style='width: 175px;'>";
+        $query = "select * from mdl_poll_grades_override 
+                where aid=$item->aid AND 
+                      polid=$item->polid AND 
+                      userid=$item->studentid";
+        $num = $this->db->numrows($query);
+        if ($num > 0) {
+            $result = $this->db->query($query);
+            while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+                $grade = $row['grade'];
+            }
+        } // end if $num > 0
+        for ($i = 0; $i <= 100; $i++) {
+            $val = $i . '%';
+            if ($val == $grade) {
+                $list .= "<option value='$val' selected>$val</option>";
+            } // end if
+            else {
+                $list .= "<option value='$val'>$val</option>";
+            }
+        }
+        $list .= "</select>";
+
+        return $list;
+    }
+
+
+    /**
+     * @param $item
+     * @return string
+     */
     function get_edit_grades_dialog($item)
     {
         $teacherid = $item->teacherid;
         $groupid = $item->groupid;
         $pid = $this->get_article_poll_item($item->aid, $item->type);
-        $aname = $this->get_article_name_by_id($pid);
         $questions = $this->get_student_poll_details($item->aid, $item->type, $item->userid);
         $udata = $this->get_user_details($item->userid);
+        $item->polid = $pid;
+        $item->studentid = $item->userid;
+        $overridegrades = $this->get_student_override_grades_dropbox($item);
         $names = "$udata->firstname $udata->lastname";
         $img_url = $udata->pic;
         $img = "<img src='$img_url' width='213' height='160'>";
@@ -197,6 +234,8 @@ class Grades extends Utils
 
         $list .= "<div class='panel panel-default'>";
         $list .= "<input type='hidden' id='studentid' value='$item->userid'>";
+        $list .= "<input type='hidden' id='articleid' value='$item->aid'>";
+        $list .= "<input type='hidden' id='pollid' value='$pid'>";
         $list .= "<div class='panel-heading'>Student grades details</div>";
 
         $list .= "<div class='panel-body'>";
@@ -221,6 +260,10 @@ class Grades extends Utils
         $list .= "</div>";
 
         $list .= "<div class='row'>";
+        $list .= "<span class='col-md-4'>Change student's grade to:</span><span>$overridegrades</span>";
+        $list .= "</div>";
+
+        $list .= "<div class='row'>";
         $list .= "<span class='col-md-1'><button class='btn btn-default'  id='update_student_grades'>Update</button></span>";
         $list .= "<span class='col-md-1'><button class='btn btn-default' data-teacherid='$teacherid' data-groupid='$groupid' id='back_to_class_grades'>Cancel</button></span>";
         $list .= "</div>";
@@ -237,6 +280,14 @@ class Grades extends Utils
      */
     function update_student_grades($item)
     {
+        /*
+        echo "<br><pre>";
+        print_r($item);
+        echo "</pre><br>";
+        $ograde = $item->ograde;
+        */
+
+        /*
         $new_answers = $item->replies;
         $old_answers = json_decode($item->old_answers);
         $userid = $item->studentid;
@@ -245,7 +296,73 @@ class Grades extends Utils
                 $old_answers[$i]);
             $this->update_student_grades_done($index, $new_answers[$i]);
         }
+        */
+
+        if ($item->ograde != '') {
+            $this->set_student_override_grades($item);
+        }
+
+
     }
+
+    /**
+     * @param $item
+     */
+    function set_student_override_grades($item)
+    {
+        $num = $this->is_override_grade_exists($item);
+        if ($num > 0) {
+            $query = "update mdl_poll_grades_override 
+                    set grade='$item->ograde' 
+                    where aid=$item->aid AND 
+                          polid=$item->polid AND 
+                          userid=$item->studentid";
+        } // end if
+        else {
+            $query = "insert into mdl_poll_grades_override 
+                    (aid, polid, userid, grade) 
+                    values ($item->aid,
+                            $item->polid,
+                            $item->studentid,
+                            '$item->ograde')";
+        }
+        echo "Update Grades Query: " . $query . "<br>";
+        $this->db->query($query);
+    }
+
+    /**
+     * @param $item
+     * @return int
+     */
+    function is_override_grade_exists($item)
+    {
+        $query = "select * from mdl_poll_grades_override 
+                where aid=$item->aid and 
+                polid=$item->polid and 
+                userid=$item->studentid";
+        //echo "Is override grade exists query: " . $query . "<br>";
+        $num = $this->db->numrows($query);
+        return $num;
+    }
+
+
+    /**
+     * @param $item
+     * @return mixed
+     */
+    function get_student_override_grade($item)
+    {
+        $query = "select * from mdl_poll_grades_override 
+                where aid=$item->aid and 
+                polid=$item->polid and 
+                userid=$item->studentid";
+        $result = $this->db->query($query);
+        while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+            $grade = $row['grade'];
+        }
+        return $grade;
+    }
+
 
     /**
      * @param $userid
@@ -1002,6 +1119,10 @@ class Grades extends Utils
         return $list;
     }
 
+    /**
+     * @param $item
+     * @return string
+     */
     function delete_assistant($item)
     {
         $list = "";
@@ -1103,6 +1224,57 @@ class Grades extends Utils
     }
 
     /**
+     * @return string
+     */
+    function get_groups_to_move_dropdwn()
+    {
+        $list = "";
+        $list .= "<select id='move_groups'>";
+        $list .= "<option value='0' selected>Please select</option>";
+        $groups = $this->get_user_groups();
+        foreach ($groups as $groupid) {
+            $groupname = $this->get_group_name($groupid);
+            $list .= "<option value='$groupid'>$groupname</option>";
+        }
+        $list .= "</select>";
+
+        return $list;
+    }
+
+
+    /**
+     * @param $students
+     */
+    function delete_student($students)
+    {
+        if (count($students) > 0) {
+            foreach ($students as $email) {
+                $userid = $this->get_user_id($email);
+                $query = "update mdl_user set deleted=1 where id=$userid";
+                $this->db->query($query);
+            }
+        }
+    }
+
+    /**
+     * @param $item
+     */
+    function move_students($item)
+    {
+        $oldgroup = $item->oldgroup;
+        $newgroup = $item->newgroup;
+        $students_arr = $item->students;
+        if (count($students_arr) > 0) {
+            foreach ($students_arr as $email) {
+                $userid = $this->get_user_id($email);
+                $this->delete_from_group($oldgroup, $userid);
+                $this->add_student_to_group($newgroup, $userid);
+            }
+        }
+    }
+
+
+    /**
      * @param $articles
      * @param $users
      * @return string
@@ -1118,9 +1290,13 @@ class Grades extends Utils
         $list .= "</div>";
 
         if (count($articles) > 0) {
-
+            $movegroups = $this->get_groups_to_move_dropdwn();
             $list .= "<div class='row' style='margin-bottom: 15px;text-align: center;'>";
-            $list .= "<span class='col-md-12'><button class='btn btn-default' id='grades_get_send_message_dialog'>Send Grades Feedback</button></span>";
+            $list .= "<span class='col-md-3'><button class='btn btn-default' id='grades_get_send_message_dialog'>Send Grades Feedback</button></span>";
+            $list .= "<span class='col-md-3'>Move student to class:</span>";
+            $list .= "<span class='col-md-2'>$movegroups</span>";
+            $list .= "<span class='col-md-2'><button class='btn btn-default' id='move_student_btn'>Move</button></span>";
+            $list .= "<span class='col-md-2'><button class='btn btn-default' id='delete_student_btn'>Delete</button></span>";
             $list .= "</div>";
 
             $list .= "<table id='grades_table' class='table table-striped table-bordered' cellspacing='0' width='100%'>";
@@ -1535,25 +1711,41 @@ class Grades extends Utils
         $table = true
     )
     {
-        $score = '0';
         $list = "";
         $pid = $this->get_article_poll_item($aid, $type);
         if ($pid > 0) {
-            $q = $this->get_poll_questions($pid);
-            if (count($q) > 0) {
-                foreach ($q as $qid) {
-                    $a = $this->get_poll_question_answers($qid);
-                    foreach ($a as $id) {
-                        $an[] = $id;
-                    }    // end foreach
-                } // end foreach
-                if (count($an) > 0) {
-                    $sta = $this->get_student_answers($userid, $an);
-                    if (count($sta) > 0) {
-                        $score = $this->get_student_item_score($sta, count($q));
-                    } // end if count($sta)>0
-                } // end if count($a)>0
-            } // end if count($q)>0
+            $item = new stdClass();
+            $item->aid = $aid;
+            $item->polid = $pid;
+            $item->studentid = $userid;
+            $override_grade_status = $this->is_override_grade_exists($item);
+            if ($override_grade_status > 0) {
+                $token = $userid . '_' . $aid;
+                $list .= $this->get_student_override_grade($item);
+                if ($type == 1) {
+                    $list .= "<br> <a id='edit_poll_grades_$token' data-aid='$aid' data-type='$type' data-userid='$userid' style='cursor: pointer;'>View</a>";
+                } // end if
+                else {
+                    $list .= "<br> <a id='edit_quiz_grades_$token' data-aid='$aid' data-type='$type' data-userid='$userid' style='cursor: pointer;'>View</a>";
+                }
+            } // end if $override_grade_status>0
+            else {
+                $q = $this->get_poll_questions($pid);
+                if (count($q) > 0) {
+                    foreach ($q as $qid) {
+                        $a = $this->get_poll_question_answers($qid);
+                        foreach ($a as $id) {
+                            $an[] = $id;
+                        }    // end foreach
+                    } // end foreach
+                    if (count($an) > 0) {
+                        $sta = $this->get_student_answers($userid, $an);
+                        if (count($sta) > 0) {
+                            $score = $this->get_student_item_score($sta, count($q));
+                        } // end if count($sta)>0
+                    } // end if count($a)>0
+                } // end if count($q)>0
+            } // end else when no override grades
         } // end if $pid>0
 
         if (is_object($score)) {
@@ -1563,24 +1755,25 @@ class Grades extends Utils
             $token = $userid . '_' . $aid;
             if ($type == 1) {
                 if ($table) {
-                    $list .= "$correct out of $total <br> $pers % <br> <a id='edit_poll_grades_$token' data-aid='$aid' data-type='$type' data-userid='$userid' style='cursor: pointer;'>View</a>";
+                    $list .= " $pers % <br> <a id='edit_poll_grades_$token' data-aid='$aid' data-type='$type' data-userid='$userid' style='cursor: pointer;'>View</a>";
                 } // end if
                 else {
-                    $list .= "$correct out of $total $pers % ";
+                    $list .= " $pers % ";
                 } // end else
             } // end if
             else {
                 if ($table) {
-                    $list .= "$correct out of $total <br> $pers % <br> <a id='edit_quiz_grades_$token' data-aid='$aid' data-type='$type' data-userid='$userid' style='cursor: pointer;'>View</a>";
+                    $list .= " $pers % <br> <a id='edit_quiz_grades_$token' data-aid='$aid' data-type='$type' data-userid='$userid' style='cursor: pointer;'>View</a>";
                 } // end if
                 else {
-                    $list .= "$correct out of $total $pers % ";
+                    $list .= "$pers % ";
                 } // end else
             } // end else
         } // end if
         else {
             $list .= $score;
         }
+
 
         return $list;
     }

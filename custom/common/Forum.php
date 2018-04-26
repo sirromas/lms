@@ -83,13 +83,15 @@ class Forum extends Utils
     {
         $list = "";
         $now = time();
-        $query = "select * from mdl_board_posts where id=$id and userid=$postuserid";
-        $result = $this->db->query($query);
-        while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
-            $added = $row['added'];
-        }
-        if (($now - $added) <= 7200) {
-            $list .= "<button class='btn btn-default' id='student_edit_own_post_$id'>Edit</button>";
+        if ($this->user->id == $postuserid) {
+            $query = "select * from mdl_board_posts where id=$id and userid=$postuserid";
+            $result = $this->db->query($query);
+            while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+                $added = $row['added'];
+            }
+            if (($now - $added) <= 7200) {
+                $list .= "<button class='btn btn-default' id='student_edit_own_post_$id'>Edit</button>";
+            }
         }
         return $list;
     }
@@ -117,7 +119,7 @@ class Forum extends Utils
         $list .= "<span class='col-md-2' style='margin-top: 10px;'><button class='btn btn-default' id='submit_root_reply'>Submit</button></span>";
         $list .= "</div>";
 
-        $query = "select * from mdl_board_posts where bid=$id order by added desc";
+        $query = "select * from mdl_board_posts where bid=$id order by added ";
         $num = $this->db->numrows($query);
         if ($num > 0) {
             $list .= "<div class='row' style='margin-bottom: 15px;margin-left: 35px'>";
@@ -184,14 +186,20 @@ class Forum extends Utils
     {
         $groups = $this->get_user_groups();
         $pid = $this->get_postuser_group($postuserid);
-
-        //echo "Post user id: " . $postuserid . "<br>";
-        //echo "Post user group ID:" . $pid . "<br>";
-
         $status = (in_array($pid, $groups) == true) ? true : false;
 
         return $status;
 
+    }
+
+    function get_forum_groups_dropdown($groups)
+    {
+        $list = "";
+        foreach ($groups as $groupid) {
+
+        }
+
+        return $list;
     }
 
     /**
@@ -202,6 +210,8 @@ class Forum extends Utils
     {
         $list = "";
         $aid = $this->get_news_id();
+        $roleid = $this->get_user_role_by_id($userid);
+        $groups = $this->get_user_groups();
         if ($aid > 0) {
             $query = "select * from  mdl_board where aid=$aid";
             $num = $this->db->numrows($query);
@@ -233,6 +243,15 @@ class Forum extends Utils
 
             } // end if $num>0
         }
+
+        return $list;
+    }
+
+
+    function create_news_forum_block()
+    {
+        $list = "";
+
 
         return $list;
     }

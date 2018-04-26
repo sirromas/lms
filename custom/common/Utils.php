@@ -315,7 +315,7 @@ class Utils
     function is_valid_user($userid)
     {
         $status = false;
-        $query = "select * from mdl_user where id=$userid";
+        $query = "select * from mdl_user where id=$userid and deleted=0";
         $result = $this->db->query($query);
         while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
             $firstname = $row['firstname'];
@@ -326,6 +326,33 @@ class Utils
             }
         }
         return $status;
+    }
+
+    /**
+     * @param $groupid
+     * @param $userid
+     */
+    function delete_from_group($groupid, $userid)
+    {
+        $query = "delete from mdl_groups_members 
+                where groupid=$groupid and userid=$userid";
+        echo "Query: ".$query."<br>";
+        $this->db->query($query);
+    }
+
+
+    /**
+     * @param $groupid
+     * @param $userid
+     */
+    function add_student_to_group($groupid, $userid)
+    {
+        $now = time();
+        $query = "insert into mdl_groups_members 
+                (groupid, userid, timeadded) 
+                values ($groupid,$userid,'$now')";
+        echo "Move Query: ".$query."<br>";
+        $this->db->query($query);
     }
 
     /**
@@ -485,7 +512,6 @@ class Utils
         $groups = array();
         $userid = $this->user->id;
         $query = "select * from mdl_groups_members where userid=$userid";
-        //echo "Query: ".$query."<br>";
         $num = $this->db->numrows($query);
         if ($num > 0) {
             $result = $this->db->query($query);
