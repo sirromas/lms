@@ -183,6 +183,7 @@ class Quiz extends Utils
         return $list;
     }
 
+
     /**
      * @param $type
      * @return string
@@ -194,10 +195,15 @@ class Quiz extends Utils
         if ($aid > 0) {
             $title = ($type == 1) ? 'Polling Questions' : 'News Quiz';
             $userid = $this->user->id;
-            $data = $this->get_poll_data($aid, $type);
-            $btn = $this->get_poll_submit_btn($aid, $type, $userid);
-            if ($data!='') {
-                $list .= "<div id='container138'>
+            $groups = $this->get_user_groups();
+            if (count($groups) == 0) {
+                $list.="<br><div class='row'></div>";
+            } // end if
+            else {
+                $data = $this->get_poll_data($aid, $type);
+                $btn = $this->get_poll_submit_btn($aid, $type, $userid);
+                if ($data != '') {
+                    $list .= "<div id='container138'>
 						<div id='container127'></div>
 						<div id='container137'>
 							<div id='container136'>
@@ -217,8 +223,9 @@ class Quiz extends Utils
 							</div>
 						</div>	
 					</div>";
-            }
+                }
 
+            }
         }
 
         return $list;

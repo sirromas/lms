@@ -1245,12 +1245,17 @@ class Grades extends Utils
     /**
      * @param $students
      */
-    function delete_student($students)
+    function delete_student($item)
     {
+        $groupid = $item->groupid;
+        $students = $item->students;
+
         if (count($students) > 0) {
             foreach ($students as $email) {
                 $userid = $this->get_user_id($email);
-                $query = "update mdl_user set deleted=1 where id=$userid";
+                $query = "delete from mdl_groups_members 
+                          where groupid=$groupid 
+                          and userid=$userid";
                 $this->db->query($query);
             }
         }

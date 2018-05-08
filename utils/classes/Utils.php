@@ -13,6 +13,7 @@ class Utils2
     public $student_role;
     public $tutor_role;
     public $json_path;
+    public $from_address_alredy_used;
 
     function __construct()
     {
@@ -21,6 +22,7 @@ class Utils2
         $this->student_role = 5;
         $this->tutor_role = 4;
         $this->json_path = $_SERVER['DOCUMENT_ROOT'] . '/lms/utils/data';
+        $this->from_address_alredy_used = 0;
     }
 
     // **************** Classes functionality ******************
@@ -540,6 +542,83 @@ class Utils2
         return $list;
     }
 
+
+    /**
+     * @return string
+     */
+    function get_from_emails_block()
+    {
+        $list = "";
+        $list .= "<br><br><div class='row' style='text-align: left;font-weight: bold;'>";
+        $list .= "<span class='col-md-12'>Emails used to send confirmation emails ('From' address)</span>";
+        $list .= "</div>";
+
+        $query = "select * from mdl_from_addr";
+        $result = $this->db->query($query);
+        while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+            $emails[] = $row['email'];
+        }
+
+        $teacher_email = $emails[0];
+        $student_email = $emails[1];
+
+        $list .= "<div class='row' style='text-align: left;'>";
+        $list .= "<span class='col-md-2'>For professors</span><span class='col-md-2'><input type='text' id='professor_from' value='$teacher_email'></span><span class='col-md-2'><button class='update_from_email' id='update_professor_from_btn'>Update</button></span>";
+        $list .= "</div>";
+
+        $list .= "<div class='row' style='text-align: left;'>";
+        $list .= "<span class='col-md-2'>For students</span><span class='col-md-2'><input type='text' id='student_from' value='$student_email'></span><span class='col-md-2'><button class='update_from_email' id='update_student_from_btn'>Update</button></span>";
+        $list .= "</div>";
+        return $list;
+    }
+
+
+    /**
+     * @return string
+     */
+    function get_semestr_duration_block()
+    {
+        $list = "";
+        $list .= "<br><div class='row' style='font-weight: bold;text-align: left;'>";
+        $list .= "<span class='col-md-12'>Semestr date(s)</span>";
+        $list .= "</div>";
+
+        $query = "select * from mdl_semestr_duration";
+        $result = $this->db->query($query);
+        while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+            $text_id = $row['item_text'];
+            $btn_id = $row['item_text'] . '_btn';
+            $list .= "<div class='row'>";
+            $list .= "<span class='col-md-2'>" . $row['item_text'] . "</span>";
+            $list .= "<span class='col-md-2'><input type='text' value='" . $row['item_value'] . "' id='$text_id'></span>";
+            $list .= "<span class='col-md-2'><button class='update_semestr' data-text='$text_id' id='$btn_id'>Update</button></span>";
+            $list .= "</div>";
+        }
+
+        return $list;
+
+    }
+
+    /**
+     * @param $item
+     */
+    function update_semestr_date($item)
+    {
+        $query = "update mdl_semestr_duration set item_value='$item->item_value' 
+          where item_text='$item->item_text'";
+        $this->db->query($query);
+    }
+
+
+    /**
+     * @param $item
+     */
+    function update_from_email($item)
+    {
+        $query = "update mdl_from_addr set email='$item->email' where roleid=$item->roleid";
+        $this->db->query($query);
+    }
+
     /**
      * @param      $items
      * @param bool $headers
@@ -549,6 +628,9 @@ class Utils2
     function create_subscription_list($items, $headers = true)
     {
         $list = "";
+        $list .= $this->get_from_emails_block();
+        $list .= $this->get_semestr_duration_block();
+
         if (count($items) > 0) {
             $list .= "<br><br><table id='subs_table' class='table table-striped table-bordered' cellspacing='0' width='100%'>";
             $list .= "<thead>";
@@ -2711,6 +2793,60 @@ class Utils2
 
 
     /**
+     * @return string
+     */
+    function get_post_treshold_dropbox()
+    {
+        $list = "";
+
+        $list .= "<select id='post_threshold'>";
+
+        $query = "select * from mdl_edit_post_treshold";
+        $result = $this->db->query($query);
+        while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+            $treshold = $row['threshold'];
+        }
+
+        for ($i = 1; $i <= 10; $i++) {
+            if ($i == $treshold) {
+                $list .= "<option value='$i' selected>$i</option>";
+            } // end if
+            else {
+                $list .= "<option value='$i'>$i</option>";
+            } // end esle
+        }
+
+        $list .= "</select>";
+
+
+        return $list;
+    }
+
+
+    /**
+     * @return string
+     */
+    function get_edit_thresold_block()
+    {
+        $list = "";
+
+        $list .= "<br><div class='row' style='text-align: left;'>";
+        $box = $this->get_post_treshold_dropbox();
+        $list .= "<span class='col-md-4' style='font-weight: bold;'>Discussion board edit post threshold:</span>";
+        $list .= "<span class='col-md-2'>$box &nbsp;h</span>";
+        $list .= "<span class='col-md-2'><button id='update_post_treshold'>Update</button></span>";
+        $list .= "</div>";
+
+        return $list;
+    }
+
+    function update_post_treshold($period)
+    {
+        $query = "update mdl_edit_post_treshold set threshold='$period'";
+        $this->db->query($query);
+    }
+
+    /**
      * @param $items
      *
      * @return string
@@ -2719,9 +2855,12 @@ class Utils2
     {
         $list = "";
 
+
         $list .= "<div class='row' style='margin-top: 25px;'>";
         $list .= "<span class='col-lg-4'><button class='btn btn-default' id='add_forum'>Add Board</button></span>";
         $list .= "</div>";
+
+        $list .= $this->get_edit_thresold_block();
 
         $list .= "<div class='row' style='margin-top: 25px;'>";
         $list .= "<span class='col-md-12'>";

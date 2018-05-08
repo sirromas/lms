@@ -6,7 +6,8 @@ require_once $_SERVER['DOCUMENT_ROOT'] . '/lms/custom/authorize/Api/vendor/autol
 use net\authorize\api\contract\v1 as AnetAPI;
 use net\authorize\api\controller as AnetController;
 
-class Payment extends Utils {
+class Payment extends Utils
+{
 
     private $AUTHORIZENET_LOG_FILE;
     //private $LOGIN_ID = '6cUTfQ5238'; // sandbox data
@@ -20,19 +21,46 @@ class Payment extends Utils {
     public $second_semestr_start;
     public $second_semestr_end;
 
-    function __construct() {
+    function __construct()
+    {
         parent::__construct();
         $this->AUTHORIZENET_LOG_FILE = 'phplog';
         $this->log_file_path = $_SERVER['DOCUMENT_ROOT'] . '/lms/custom/authorize/failed_transactions.log';
         $y = date("Y");
         $ny = $y + 1;
+        /*
         $this->first_semestr_start = "09/01/$y";
         $this->first_semestr_end = "02/20/$ny";
         $this->second_semestr_start = "03/01/$y";
         $this->second_semestr_end = "08/20/$y";
+        */
+
+        $this->first_semestr_start = $this->get_semestr_date('first_semestr_start');
+        $this->first_semestr_end = $this->get_semestr_date('first_semestr_end ');
+        $this->second_semestr_start = $this->get_semestr_date('second_semestr_start');
+        $this->second_semestr_end = $this->get_semestr_date('second_semestr_end');
     }
 
-    function get_user_state($stateid) {
+    /**
+     * @param $item
+     * @return mixed
+     */
+    function get_semestr_date($item)
+    {
+        $query = "select * from mdl_semestr_duration where item_text='$item'";
+        $result = $this->db->query($query);
+        while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+            $value = $row['item_value'];
+        }
+        return $value;
+    }
+
+    /**
+     * @param $stateid
+     * @return mixed
+     */
+    function get_user_state($stateid)
+    {
         $query = "select * from mdl_states where id=$stateid";
         $result = $this->db->query($query);
         while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
@@ -41,7 +69,11 @@ class Payment extends Utils {
         return $code;
     }
 
-    function save_log($data) {
+    /**
+     * @param $data
+     */
+    function save_log($data)
+    {
         $fp = fopen($this->log_file_path, 'a');
         $date = date('m-d-Y h:i:s', time());
         fwrite($fp, $date . "\n");
@@ -49,48 +81,62 @@ class Payment extends Utils {
         fclose($fp);
     }
 
-    function authorize() {
+    /**
+     * @return AnetAPI\MerchantAuthenticationType
+     */
+    function authorize()
+    {
         $merchantAuthentication = new AnetAPI\MerchantAuthenticationType();
         $merchantAuthentication->setName($this->LOGIN_ID);
         $merchantAuthentication->setTransactionKey($this->TRANSACTION_KEY);
         return $merchantAuthentication;
     }
 
-    function sandbox_authorize() {
+    /**
+     * @return AnetAPI\MerchantAuthenticationType
+     */
+    function sandbox_authorize()
+    {
         $merchantAuthentication = new AnetAPI\MerchantAuthenticationType();
         $merchantAuthentication->setName('6cUTfQ5238');
         $merchantAuthentication->setTransactionKey('5bN8q5WT3qa257p9');
         return $merchantAuthentication;
     }
 
-    function add_student_payment($user, $status) {
+    /**
+     * @param $user
+     * @param $status
+     * @return stdClass
+     */
+    function add_student_payment($user, $status)
+    {
         $key = $this->generateRandomString();
         $card_last_four = substr($user->cardnumber, -4);
         $key_dates = $this->get_key_expiration_dates();
         $added = time();
         $query = "insert into mdl_card_payments "
-                . "(userid,"
-                . "courseid,"
-                . "groupid,"
-                . "card_last_four,"
-                . "transid,"
-                . "authcode,"
-                . "auth_key,"
-                . "start_date,"
-                . "exp_date,"
-                . "amount,"
-                . "added) "
-                . "values($status->userid,"
-                . "$this->courseid,"
-                . "$status->groupid,"
-                . "'$card_last_four',"
-                . "'$status->trans_id',"
-                . "'$status->auth_code',"
-                . "'$key',"
-                . "'" . strtotime($key_dates->start) . "',"
-                . "'" . strtotime($key_dates->end) . "',"
-                . "'$user->amount',"
-                . "'$added')";
+            . "(userid,"
+            . "courseid,"
+            . "groupid,"
+            . "card_last_four,"
+            . "transid,"
+            . "authcode,"
+            . "auth_key,"
+            . "start_date,"
+            . "exp_date,"
+            . "amount,"
+            . "added) "
+            . "values($status->userid,"
+            . "$this->courseid,"
+            . "$status->groupid,"
+            . "'$card_last_four',"
+            . "'$status->trans_id',"
+            . "'$status->auth_code',"
+            . "'$key',"
+            . "'" . strtotime($key_dates->start) . "',"
+            . "'" . strtotime($key_dates->end) . "',"
+            . "'$user->amount',"
+            . "'$added')";
         //echo "Query: " . $query . "<br>";
         $this->db->query($query);
         $keyObj = new stdClass();
@@ -100,7 +146,11 @@ class Payment extends Utils {
         return $keyObj;
     }
 
-    function get_key_expiration_dates() {
+    /**
+     * @return stdClass
+     */
+    function get_key_expiration_dates()
+    {
         $m = date('m');
         $key = new stdClass();
         if ($m >= 2 && $m < 9) {
@@ -116,7 +166,12 @@ class Payment extends Utils {
         return $key;
     }
 
-    function prepare_order($order) {
+    /**
+     * @param $order
+     * @return AnetAPI\PaymentType
+     */
+    function prepare_order($order)
+    {
         $exp_date = $order->cardyear . '-' . $order->cardmonth;
         $creditCard = new AnetAPI\CreditCardType();
         $creditCard->setCardNumber($order->cardnumber);
@@ -127,7 +182,12 @@ class Payment extends Utils {
         return $payment;
     }
 
-    function make_transaction($post_order) {
+    /**
+     * @param $post_order
+     * @return bool|stdClass
+     */
+    function make_transaction($post_order)
+    {
 
         $names = explode(" ", $post_order->cardholder);
         if (count($names) == 2) {
@@ -148,7 +208,7 @@ class Payment extends Utils {
         $invoiceNo = time();
         $order = new AnetAPI\OrderType();
         $order->setInvoiceNumber($invoiceNo);
-        
+
         $order->setDescription($post_order->item);
         $lineitem = new AnetAPI\LineItemType();
         $lineitem->setItemId(time());
@@ -165,7 +225,7 @@ class Payment extends Utils {
         $customer->setEmail($post_order->email);
 
         //Ship To Info
-        $address = (string) $post_order->street . " " . (string) $post_order->city . " " . $state;
+        $address = (string)$post_order->street . " " . (string)$post_order->city . " " . $state;
 
         $shipto = new AnetAPI\NameAndAddressType();
         $shipto->setFirstName($firstname);
@@ -228,7 +288,7 @@ class Payment extends Utils {
                 $status->response_code = $tresponse->getResponseCode();
                 $status->userid = $userid;
                 $status->groupid = $groupid;
-                $key=$this->add_student_payment($post_order, $status);
+                $key = $this->add_student_payment($post_order, $status);
                 return $key;
             } // end if ($tresponse != null) && ($tresponse->getResponseCode() == "1")
             else {
@@ -242,7 +302,12 @@ class Payment extends Utils {
         }
     }
 
-    function createSubscription($post_order) {
+    /**
+     * @param $post_order
+     * @return string
+     */
+    function createSubscription($post_order)
+    {
 
         // Common Set Up for API Credentials
         $merchantAuthentication = new AnetAPI\MerchantAuthenticationType();
@@ -331,7 +396,12 @@ class Payment extends Utils {
         return $msg;
     }
 
-    function prepareExpirationDate($exp_date) {
+    /**
+     * @param $exp_date
+     * @return string
+     */
+    function prepareExpirationDate($exp_date)
+    {
         // MMYY - format
         $mm = substr($exp_date, 0, 2);
         $yy = substr($exp_date, 4);
@@ -339,7 +409,15 @@ class Payment extends Utils {
         return $date;
     }
 
-    function makeRefund($amount, $card_last_four, $exp_date, $trans_id) {
+    /**
+     * @param $amount
+     * @param $card_last_four
+     * @param $exp_date
+     * @param $trans_id
+     * @return bool|AnetAPI\AnetApiResponseType
+     */
+    function makeRefund($amount, $card_last_four, $exp_date, $trans_id)
+    {
         $merchantAuthentication = $this->authorize();
         $refId = 'ref' . time();
         $date = $this->prepareExpirationDate($exp_date);
@@ -372,7 +450,7 @@ class Payment extends Utils {
             //print_r($tresponse);
             //echo "</pre>";
 
-            if (($tresponse != null) && ($tresponse->getResponseCode() == "1" )) {
+            if (($tresponse != null) && ($tresponse->getResponseCode() == "1")) {
                 //echo "it is ok ....";
                 return TRUE;
             } // end if ($tresponse != null) && ($tresponse->getResponseCode() == \SampleCode\Constants::RESPONSE_OK)            

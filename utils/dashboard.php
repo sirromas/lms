@@ -250,6 +250,11 @@ if ($_REQUEST) {
                 $('#oclass_date').datetimepicker();
 
 
+                // ***** Semestr duration **********
+                $('#first_semestr_start_text').datepicker();
+                $('#first_semestr_end_text').datepicker();
+                $('#second_semestr_start_text').datepicker();
+                $('#second_semestr_end_text').datepicker();
 
 
 

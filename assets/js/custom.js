@@ -226,6 +226,7 @@ $(document).ready(function () {
     $("#prof_signup").submit(function (event) {
         event.preventDefault();
         var email = $('#email').val();
+        var pwd = $('#pwd').val();
         var state = $('#state').val();
         var course1 = $('#course1').val();
         if (state > 0 && course1 != '') {
@@ -251,7 +252,7 @@ $(document).ready(function () {
                                 lastname: $('#last').val(),
                                 email: $('#email').val(),
                                 phone: $('#phone').val(),
-                                pwd: 'strange12',
+                                pwd: pwd,
                                 state: state,
                                 street: $('#street').val(),
                                 city: $('#city').val(),
@@ -383,10 +384,15 @@ $(document).ready(function () {
                             };
                             var url = 'https://www.newsfactsandanalysis.com/lms/custom/students/students_signup.php';
                             $.post(url, {user: JSON.stringify(user)}).done(function (data) {
+                                console.log('Server response: ' + data);
                                 $('#ajax_loader').hide();
-                                //$('#form_info').html("<span style='color:black;'>" + data + "</span>");
-                                var url = 'https://newsfactsandanalysis.com/registerthankyou.html?u=' + $('#email').val() + '&p=' + $('#pwd').val() + '';
-                                window.location.href = url;
+                                if (data != 'ok') {
+                                    $('#form_info').html("<span style='color:black;'>" + data + "</span>");
+                                }
+                                else {
+                                    var url = 'https://www.newsfactsandanalysis.com/registerthankyou.html?u=' + $('#email').val() + '&p=' + $('#pwd').val() + '';
+                                    window.location.href = url;
+                                }
                             }); // end of post
                         } // end if data>0 (group exists)
                         else {
@@ -550,219 +556,266 @@ $(document).ready(function () {
 
     $('body').on('click', 'button', function (event) {
 
-        if (event.target.id == 'add_poll') {
-            var type = 1;
-            var url = '/lms/utils/get_news_wizard.php';
-            $.post(url, {type: type}).done(function (data) {
-                $('#quiz').html(data);
-                $.get('/lms/utils/data/articles.json', function (data) {
-                    $("#article").typeahead({source: data, items: 256000});
-                });
-            });
-        }
-
-        if (event.target.id == 'add_quiz') {
-            var type = 2;
-            var url = '/lms/utils/get_news_wizard.php';
-            $.post(url, {type: type}).done(function (data) {
-                $('#quiz').html(data);
-                $.get('/lms/utils/data/articles.json', function (data) {
-                    $("#article").typeahead({source: data, items: 256000});
-                });
-            });
-
-        }
-
-        if (event.target.id == 'cancelQuiz') {
-            var url = '/lms/utils/get_qiz_page.php';
-            $.post(url, {type: 1}).done(function (data) {
-                $('#quiz').html(data);
-                $('#poll_table').DataTable();
-            });
-        }
-
-        if (event.target.id == 'qnextStep2') {
-            var title = $('#qtitle').val();
-            var article = $('#article').val();
-            var total = $('#q_total').val();
-            var type = $('#type').val();
-            if (title == '' || article == '') {
-                $('#qStep1Error').html('Please provide title and select related article');
-            } // end if
-            else {
-                $('#qStep1Error').html('');
-                $("#qnextStep2").prop("disabled", true);
-                var item = {title: title, article: article, total: total, type: type};
-                var url = '/lms/utils/get_quiz_page_step2.php';
-                $.post(url, {item: JSON.stringify(item)}).done(function (data) {
-                    $('#quiz').append(data);
-                });
-            }
-        }
-
-
-        if (event.target.id == 'add_new_quiz_item') {
-            var questions = [];
-
-            var title = $('#qtitle').val();
-            var article = $('#article').val();
-            var total = $('#q_total').val();
-            var type = $('#type').val();
-
-            if (title == '' || article == '') {
-                $('#quiz_err').html('');
-                $('#quiz_err').html('Please provide title and select related article');
-                return false;
-            }
-
-            $(".questions").each(function (index) {
-                var a = get_question_answers($(this).data('id'));
-                if ($(this).val() != '' && a.length != 0) {
-                    var item = {id: $(this).data('id'), text: $(this).val(), a: a};
-                    questions.push(item);
-                }
-            }); // end of each
-            // console.log('Questions array: ' + JSON.stringify(questions));
-
-            if (questions.length == 0) {
-                $('#quiz_err').html('');
-                if (type == 2) {
-                    $('#quiz_err').html('Please provide questions with answers');
+            if ($(this).prop("class") == 'update_semestr') {
+                var elid = '#' + $(this).data('text');
+                var date = $(elid).val();
+                if (date == '') {
+                    alert('Date could not be empty!');
                 } // end if
                 else {
-                    $('#quiz_err').html('Please provide poll questions');
-                } // end else
-                return false;
+                    var url = '/lms/utils/update_semestr_date.php';
+                    var item = {item_text: $(this).data('text'), item_value: date};
+                    $.post(url, {item: JSON.stringify(item)}).done(function (data) {
+                        alert('Semestr Date was updates successfully!');
+                    });
+                }
             }
 
-            $('#quiz_err').html('');
-            var item = {title: title, article: article, total: total, type: type, questions: questions};
-            var url = '/lms/utils/add_new_quiz.php';
-            $.post(url, {item: JSON.stringify(item)}).done(function (data) {
-                $('#quiz').html(data);
-            });
-
-        }
-
-
-        if (event.target.id == 'modal_ok') {
-            if (confirm('Adjust key expiration for current student?')) {
-                var userid = $('#userid').val();
-                var groupid = $('#groupid').val();
-                var start = $('#subs_start').val();
-                var exp = $('#subs_exp').val();
-                var paymentid = $(this).data('paymentid');
-                var post_url = "https://www.newsfactsandanalysis.com/lms/utils/adjust_subs.php";
-                var subs = {userid: userid, groupid: groupid, start: start, exp: exp, paymentid: paymentid};
-                $.post(post_url, {subs: JSON.stringify(subs)}).done(function (data) {
-                    console.log(data);
-                    $("[data-dismiss=modal]").trigger({type: "click"});
-                    var url2 = 'https://www.newsfactsandanalysis.com/lms/utils/get_paid_keys.php';
-                    $.post(url2, {item: 1}).done(function (data) {
-                        $('#paid_keys').html(data);
-                        $('#subs_table').DataTable();
-                        $("#subs_start").datepicker();
-                        $("#subs_exp").datepicker();
+            if (event.target.id == 'add_poll') {
+                var type = 1;
+                var url = '/lms/utils/get_news_wizard.php';
+                $.post(url, {type: type}).done(function (data) {
+                    $('#quiz').html(data);
+                    $.get('/lms/utils/data/articles.json', function (data) {
+                        $("#article").typeahead({source: data, items: 256000});
                     });
                 });
-            } // end if 
-        }
+            }
 
-        if (event.target.id == 'trial_ok') {
-            var username = $('#trial_user').val();
-            var groupname = $('#trial_class').val();
-            if (username == '' || groupname == '') {
-                $('#subs_err').html('Please select student and class');
-            } // end if
-            else {
-                $('#subs_err').html('');
-                if (confirm('Add trial key for current student?')) {
-                    var post_url = "https://www.newsfactsandanalysis.com/lms/utils/add_trial_key.php";
-                    $.post(post_url, {username: username, groupname: groupname}).done(function (data) {
+            if (event.target.id == 'update_professor_from_btn') {
+                var email = $('#professor_from').val();
+                if (email == '') {
+                    alert('Email could not be empty');
+                }
+                else {
+                    var roleid = 4;
+                    var url = '/lms/utils/update_from_email.php';
+                    var item = {roleid: roleid, email: email};
+                    $.post(url, {item: JSON.stringify(item)}).done(function (data) {
+                        alert('Email address was successfully updated!');
+                    });
+                }
+            }
+
+            if (event.target.id == 'update_student_from_btn') {
+                var email = $('#student_from').val();
+                if (email == '') {
+                    alert('Email could not be empty');
+                }
+                else {
+                    var roleid = 5;
+                    var url = '/lms/utils/update_from_email.php';
+                    var item = {roleid: roleid, email: email};
+                    $.post(url, {item: JSON.stringify(item)}).done(function (data) {
+                        alert('Email address was successfully updated!');
+                    });
+                }
+            }
+
+
+            if (event.target.id == 'add_quiz') {
+                var type = 2;
+                var url = '/lms/utils/get_news_wizard.php';
+                $.post(url, {type: type}).done(function (data) {
+                    $('#quiz').html(data);
+                    $.get('/lms/utils/data/articles.json', function (data) {
+                        $("#article").typeahead({source: data, items: 256000});
+                    });
+                });
+
+            }
+
+            if (event.target.id == 'cancelQuiz') {
+                var url = '/lms/utils/get_qiz_page.php';
+                $.post(url, {type: 1}).done(function (data) {
+                    $('#quiz').html(data);
+                    $('#poll_table').DataTable();
+                });
+            }
+
+            if (event.target.id == 'qnextStep2') {
+                var title = $('#qtitle').val();
+                var article = $('#article').val();
+                var total = $('#q_total').val();
+                var type = $('#type').val();
+                if (title == '' || article == '') {
+                    $('#qStep1Error').html('Please provide title and select related article');
+                } // end if
+                else {
+                    $('#qStep1Error').html('');
+                    $("#qnextStep2").prop("disabled", true);
+                    var item = {title: title, article: article, total: total, type: type};
+                    var url = '/lms/utils/get_quiz_page_step2.php';
+                    $.post(url, {item: JSON.stringify(item)}).done(function (data) {
+                        $('#quiz').append(data);
+                    });
+                }
+            }
+
+
+            if (event.target.id == 'add_new_quiz_item') {
+                var questions = [];
+
+                var title = $('#qtitle').val();
+                var article = $('#article').val();
+                var total = $('#q_total').val();
+                var type = $('#type').val();
+
+                if (title == '' || article == '') {
+                    $('#quiz_err').html('');
+                    $('#quiz_err').html('Please provide title and select related article');
+                    return false;
+                }
+
+                $(".questions").each(function (index) {
+                    var a = get_question_answers($(this).data('id'));
+                    if ($(this).val() != '' && a.length != 0) {
+                        var item = {id: $(this).data('id'), text: $(this).val(), a: a};
+                        questions.push(item);
+                    }
+                }); // end of each
+                // console.log('Questions array: ' + JSON.stringify(questions));
+
+                if (questions.length == 0) {
+                    $('#quiz_err').html('');
+                    if (type == 2) {
+                        $('#quiz_err').html('Please provide questions with answers');
+                    } // end if
+                    else {
+                        $('#quiz_err').html('Please provide poll questions');
+                    } // end else
+                    return false;
+                }
+
+                $('#quiz_err').html('');
+                var item = {title: title, article: article, total: total, type: type, questions: questions};
+                var url = '/lms/utils/add_new_quiz.php';
+                $.post(url, {item: JSON.stringify(item)}).done(function (data) {
+                    $('#quiz').html(data);
+                });
+
+            }
+
+
+            if (event.target.id == 'modal_ok') {
+                if (confirm('Adjust key expiration for current student?')) {
+                    var userid = $('#userid').val();
+                    var groupid = $('#groupid').val();
+                    var start = $('#subs_start').val();
+                    var exp = $('#subs_exp').val();
+                    var paymentid = $(this).data('paymentid');
+                    var post_url = "https://www.newsfactsandanalysis.com/lms/utils/adjust_subs.php";
+                    var subs = {userid: userid, groupid: groupid, start: start, exp: exp, paymentid: paymentid};
+                    $.post(post_url, {subs: JSON.stringify(subs)}).done(function (data) {
                         console.log(data);
                         $("[data-dismiss=modal]").trigger({type: "click"});
-                        $('#myModal').data('modal', null);
-                    });
-                } // end if 
-            } // end else
-        }
-
-        if (event.target.id == 'personal_modal_trial_ok') {
-            var userid = $('#userid').val();
-            var groupid = $('#groupid').val();
-            var start = $('#trial_start').val();
-            var end = $('#trial_exp').val();
-
-            if (start == '' || end == '') {
-                $('#subs_err').html('Please provide key start and expiration dates');
-            } // end if
-            else {
-                $('#subs_err').html('');
-                if (confirm('Adjust trial key for selected user?')) {
-                    var post_url = "https://www.newsfactsandanalysis.com/lms/utils/adjust_personal_trial_key.php";
-                    var user = {userid: userid, groupid: groupid, start: start, end: end};
-                    $.post(post_url, {user: JSON.stringify(user)}).done(function () {
-                        //console.log(data);
-                        $("[data-dismiss=modal]").trigger({type: "click"});
-                        $('#myModal').data('modal', null);
-                        var url = 'https://www.newsfactsandanalysis.com/lms/utils/get_trial_keys.php';
-                        $.post(url, {item: 1}).done(function (data) {
-                            $('#trial_keys').html(data);
-                            $('#trial_table').DataTable();
-                            $("#trial_start").datepicker();
-                            $("#trial_exp").datepicker();
+                        var url2 = 'https://www.newsfactsandanalysis.com/lms/utils/get_paid_keys.php';
+                        $.post(url2, {item: 1}).done(function (data) {
+                            $('#paid_keys').html(data);
+                            $('#subs_table').DataTable();
+                            $("#subs_start").datepicker();
+                            $("#subs_exp").datepicker();
                         });
                     });
                 } // end if
-            } // end else
-        }
-
-        if (event.target.id == 'update_school_price') {
-            var id = $('#id').val();
-            var price = $('#school_price').val();
-            if (price == '' || !$.isNumeric(price) || price == 0) {
-                $('#price_err').html('Please provide valid price ');
-            } // end if
-            else {
-                $('#price_err').html('');
-                var item = {id: id, price: price};
-                var url = 'https://www.newsfactsandanalysis.com/lms/utils/update_item_price.php';
-                $.post(url, {item: JSON.stringify(item)}).done(function () {
-                    $("[data-dismiss=modal]").trigger({type: "click"});
-                    $('#myModal').data('modal', null);
-                    document.location.reload();
-                });
             }
-        }
 
-        $("#target").click(function () {
-            alert("Handler for .click() called.");
-        });
+            if (event.target.id == 'trial_ok') {
+                var username = $('#trial_user').val();
+                var groupname = $('#trial_class').val();
+                if (username == '' || groupname == '') {
+                    $('#subs_err').html('Please select student and class');
+                } // end if
+                else {
+                    $('#subs_err').html('');
+                    if (confirm('Add trial key for current student?')) {
+                        var post_url = "https://www.newsfactsandanalysis.com/lms/utils/add_trial_key.php";
+                        $.post(post_url, {username: username, groupname: groupname}).done(function (data) {
+                            console.log(data);
+                            $("[data-dismiss=modal]").trigger({type: "click"});
+                            $('#myModal').data('modal', null);
+                        });
+                    } // end if
+                } // end else
+            }
 
+            if (event.target.id == 'personal_modal_trial_ok') {
+                var userid = $('#userid').val();
+                var groupid = $('#groupid').val();
+                var start = $('#trial_start').val();
+                var end = $('#trial_exp').val();
 
-        if (event.target.id == 'group_modal_trial_ok') {
-            var users = $('#users').val();
-            var start = $('#trial_start').val();
-            var end = $('#trial_exp').val();
-            if (start == '' || end == '') {
-                $('#subs_err').html('Please select start and expiration dates(s)');
-            } // end if 
-            else {
-                $('#subs_err').html('');
-                if (confirm('Adjust trial key(s) for selected user(s)?')) {
-                    var keys = {users: JSON.stringify(users), start: start, end: end};
-                    var url = 'https://www.newsfactsandanalysis.com/lms/utils/adjust_group_trial_keys.php';
-                    $.post(url, {users: JSON.stringify(keys)}).done(function () {
+                if (start == '' || end == '') {
+                    $('#subs_err').html('Please provide key start and expiration dates');
+                } // end if
+                else {
+                    $('#subs_err').html('');
+                    if (confirm('Adjust trial key for selected user?')) {
+                        var post_url = "https://www.newsfactsandanalysis.com/lms/utils/adjust_personal_trial_key.php";
+                        var user = {userid: userid, groupid: groupid, start: start, end: end};
+                        $.post(post_url, {user: JSON.stringify(user)}).done(function () {
+                            //console.log(data);
+                            $("[data-dismiss=modal]").trigger({type: "click"});
+                            $('#myModal').data('modal', null);
+                            var url = 'https://www.newsfactsandanalysis.com/lms/utils/get_trial_keys.php';
+                            $.post(url, {item: 1}).done(function (data) {
+                                $('#trial_keys').html(data);
+                                $('#trial_table').DataTable();
+                                $("#trial_start").datepicker();
+                                $("#trial_exp").datepicker();
+                            });
+                        });
+                    } // end if
+                } // end else
+            }
+
+            if (event.target.id == 'update_school_price') {
+                var id = $('#id').val();
+                var price = $('#school_price').val();
+                if (price == '' || !$.isNumeric(price) || price == 0) {
+                    $('#price_err').html('Please provide valid price ');
+                } // end if
+                else {
+                    $('#price_err').html('');
+                    var item = {id: id, price: price};
+                    var url = 'https://www.newsfactsandanalysis.com/lms/utils/update_item_price.php';
+                    $.post(url, {item: JSON.stringify(item)}).done(function () {
                         $("[data-dismiss=modal]").trigger({type: "click"});
                         $('#myModal').data('modal', null);
-                        //document.location.reload();
+                        document.location.reload();
                     });
+                }
+            }
+
+            $("#target").click(function () {
+                alert("Handler for .click() called.");
+            });
+
+
+            if (event.target.id == 'group_modal_trial_ok') {
+                var users = $('#users').val();
+                var start = $('#trial_start').val();
+                var end = $('#trial_exp').val();
+                if (start == '' || end == '') {
+                    $('#subs_err').html('Please select start and expiration dates(s)');
                 } // end if
-            } // end else
+                else {
+                    $('#subs_err').html('');
+                    if (confirm('Adjust trial key(s) for selected user(s)?')) {
+                        var keys = {users: JSON.stringify(users), start: start, end: end};
+                        var url = 'https://www.newsfactsandanalysis.com/lms/utils/adjust_group_trial_keys.php';
+                        $.post(url, {users: JSON.stringify(keys)}).done(function () {
+                            $("[data-dismiss=modal]").trigger({type: "click"});
+                            $('#myModal').data('modal', null);
+                            //document.location.reload();
+                        });
+                    } // end if
+                } // end else
+            }
+
+
         }
-
-
-    }); // end of $('body').on('click', 'button'
+    ); // end of $('body').on('click', 'button'
 
     // Search classes
     $("#search_class_button").click(function () {
@@ -939,6 +992,13 @@ $(document).ready(function () {
 
         console.log('Event ID: ' + event.target.id);
 
+        if (event.target.id == 'update_post_treshold') {
+            var period = $('#post_threshold').val();
+            var url = '/lms/utils/update_post_treshhold.php';
+            $.post(url, {period: period}).done(function (data) {
+                alert('Data updated successfully');
+            });
+        }
 
         if (event.target.id == 'change_article_dates_done') {
             var aid = $('#aid').val();
@@ -1298,7 +1358,7 @@ $(document).ready(function () {
             var url = 'https://www.newsfactsandanalysis.com/lms/utils/logout.php';
             if (confirm('Logout from system?')) {
                 $.post(url, {item: 1}).done(function () {
-                    window.location = 'http://www.newsfactsandanalysis.com/lms/utils';
+                    window.location = 'https://www.newsfactsandanalysis.com/lms/utils';
                 });
             } // end if confirm
         }

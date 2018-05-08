@@ -468,7 +468,7 @@ require_once './pheader.php';
 
             if (event.target.id == 'delete_student_btn') {
                 var userid = $('#userid').val();
-                var groupid = $('#').val();
+                var groupid = $('#teacher_groups').val();
                 var selectedStudents = new Array();
                 var n = $(".students:checked").length;
                 if (n > 0) {
@@ -483,7 +483,8 @@ require_once './pheader.php';
                 else {
                     if (confirm('Delete selected student(s)?')) {
                         var url = '/lms/custom/common/delete_student.php';
-                        $.post(url, {students: selectedStudents}).done(function (data) {
+                        var item = {students: selectedStudents, groupid: groupid};
+                        $.post(url, {item: JSON.stringify(item)}).done(function (data) {
                             var item = {userid: userid, groupid: groupid};
                             get_teacher_class_grades(item);
                         });

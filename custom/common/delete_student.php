@@ -2,5 +2,5 @@
 
 require_once './Grades.php';
 $gr = new Grades();
-$students = $_REQUEST['students'];
-$gr->delete_student($students);
+$item = $_REQUEST['item'];
+$gr->delete_student(json_decode($item));

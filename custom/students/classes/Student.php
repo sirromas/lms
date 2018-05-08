@@ -166,9 +166,10 @@ class Student extends Utils
             $result = $p->make_transaction(json_decode($user));
             if ($result !== false) {
                 $subject = 'Signup confirmation';
+                $from=$this->get_from_address($roleid);
                 $message = $this->get_confirmation_message($userid, $groupid, $userobj);
-                $this->send_email($subject, $message, $userobj->email);
-                $list .= "Thank you for signup! Confirmation email is sent to $userobj->email";
+                $this->send_email($subject, $message, $userobj->email, true, $from);
+                $list .= "ok";
             } // end if $result !== false
             else {
                 $this->delete_user_registration($userid);

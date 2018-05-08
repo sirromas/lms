@@ -75,6 +75,19 @@ class Forum extends Utils
     }
 
     /**
+     * @return int
+     */
+    function get_post_treshold()
+    {
+        $query = "select * from mdl_edit_post_treshold";
+        $result = $this->db->query($query);
+        while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+            $threshold = $row['threshold'];
+        }
+        return $threshold * 3600;
+    }
+
+    /**
      * @param $id
      * @param $postuserid
      * @return string
@@ -89,7 +102,8 @@ class Forum extends Utils
             while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
                 $added = $row['added'];
             }
-            if (($now - $added) <= 7200) {
+            $threshold = $this->get_post_treshold();
+            if (($now - $added) <= $threshold) {
                 $list .= "<button class='btn btn-default' id='student_edit_own_post_$id'>Edit</button>";
             }
         }
@@ -192,6 +206,10 @@ class Forum extends Utils
 
     }
 
+    /**
+     * @param $groups
+     * @return string
+     */
     function get_forum_groups_dropdown($groups)
     {
         $list = "";
@@ -212,42 +230,50 @@ class Forum extends Utils
         $aid = $this->get_news_id();
         $roleid = $this->get_user_role_by_id($userid);
         $groups = $this->get_user_groups();
-        if ($aid > 0) {
-            $query = "select * from  mdl_board where aid=$aid";
-            $num = $this->db->numrows($query);
-            if ($num > 0) {
+        if (count($groups) == 0) {
+            $list .= "<div class='row'></div>";
+        } // end if
+        else {
+            if ($aid > 0) {
+                $query = "select * from  mdl_board where aid=$aid";
+                $num = $this->db->numrows($query);
+                if ($num > 0) {
 
-                $result = $this->db->query($query);
-                while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
-                    $forumid = $row['id'];
-                    $title = $row['title'];
-                    $added = $row['added'];
-                }
-                $posts = $this->get_forum_posts($forumid, $title, $added, $userid);
-                $list .= "<div id='container36' style='width: 738px;height: auto;margin-bottom: 35px;text-align: center;'>";
-                $list .= "<input type='hidden' id='forumid' value='$forumid'>";
+                    $result = $this->db->query($query);
+                    while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+                        $forumid = $row['id'];
+                        $title = $row['title'];
+                        $added = $row['added'];
+                    }
+                    $posts = $this->get_forum_posts($forumid, $title, $added, $userid);
+                    $list .= "<div id='container36' style='width: 738px;height: auto;margin-bottom: 35px;text-align: center;'>";
+                    $list .= "<input type='hidden' id='forumid' value='$forumid'>";
 
-                $list .= "<div class='row' style='padding-bottom: 15px;padding-top: 15px'>";
-                $list .= "<span style='font-size: 20px;border-bottom: 2px solid #000000;padding-bottom: 2px;'>Disscussion board</span>";
-                $list .= "</div>";
+                    $list .= "<div class='row' style='padding-bottom: 15px;padding-top: 15px'>";
+                    $list .= "<span style='font-size: 20px;border-bottom: 2px solid #000000;padding-bottom: 2px;'>Disscussion board</span>";
+                    $list .= "</div>";
 
-                $list .= "<div class='row' style='text-align: center;margin: 15px;'>";
-                $list .= "<span class='col-md-10'>$posts</span>";
-                $list .= "</div>";
+                    $list .= "<div class='row' style='text-align: center;margin: 15px;'>";
+                    $list .= "<span class='col-md-10'>$posts</span>";
+                    $list .= "</div>";
 
-                $list .= "<div class='row' style='margin-top: 15px;margin-bottom: 35px;'>";
-                $list .= "<span class='col-md-2'></span>";
-                $list .= "</div>";
+                    $list .= "<div class='row' style='margin-top: 15px;margin-bottom: 35px;'>";
+                    $list .= "<span class='col-md-2'></span>";
+                    $list .= "</div>";
 
-                $list .= "</div>";
+                    $list .= "</div>";
 
-            } // end if $num>0
+                } // end if $num>0
+            }
         }
 
         return $list;
     }
 
 
+    /**
+     * @return string
+     */
     function create_news_forum_block()
     {
         $list = "";
@@ -272,6 +298,9 @@ class Forum extends Utils
         $this->db->query($query);
     }
 
+    /**
+     * @param $item
+     */
     function update_user_post($item)
     {
         $id = $item->id;

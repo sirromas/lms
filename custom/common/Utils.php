@@ -104,7 +104,8 @@ class Utils
         $context = stream_context_create($options);
         $response = @file_get_contents($this->signup_url, false, $context);
 
-        return $response;
+        //return $response;
+        return 1;
     }
 
     /**
@@ -176,7 +177,9 @@ class Utils
                         '2',
                          '" . time() . "',
                          '" . time() . "')";
+        //echo "Query1: ".$query."<br>";
         $this->db->query($query);
+
 
         // 2. Insert into mdl_role_assignments table
         $query = "insert into mdl_role_assignments
@@ -190,6 +193,7 @@ class Utils
                            '" . $userid . "',
                            '" . time() . "',
                             '2'         )";
+        //echo "Query2: ".$query."<br>";
         $this->db->query($query);
     }
 
@@ -221,18 +225,39 @@ class Utils
      *
      * @return bool
      */
-    function send_email($subject, $message, $recipient, $send_copy = true)
+    function send_email($subject, $message, $recipient, $send_copy = true, $from = 'info@newsfactsandanalysis.com')
     {
         $recipientA = 'sirromas@gmail.com'; // copy should be sent to me
         $recipientB = 'steve@posnermail.com'; // copy should be sent to Steve
         $client = new PostmarkClient("8160e35c-3fb3-4e2e-b73d-e0fb76c9da34"); // Steve Postmark server?
-        $client->sendEmail($this->from, $recipient, $subject, $message);
-        $client->sendEmail($this->from, $recipientA, $subject, $message);
+        $client->sendEmail($from, $recipient, $subject, $message);
+        $client->sendEmail($from, $recipientA, $subject, $message);
         if ($send_copy) {
-            $client->sendEmail($this->from, $recipientB, $subject, $message);
+            $client->sendEmail($from, $recipientB, $subject, $message);
         }
 
         return true;
+    }
+
+
+    /**
+     * @param $roleid
+     * @return string
+     */
+    function get_from_address($roleid)
+    {
+        $query = "select * from mdl_from_addr where roleid=$roleid";
+        $num = $this->db->numrows($query);
+        if ($num > 0) {
+            $result = $this->db->query($query);
+            while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+                $email = $row['email'];
+            }
+        } // end if
+        else {
+            $email = 'info@newsfactsandanalysis.com';
+        } // end else
+        return $email;
     }
 
     /**
@@ -336,7 +361,7 @@ class Utils
     {
         $query = "delete from mdl_groups_members 
                 where groupid=$groupid and userid=$userid";
-        echo "Query: ".$query."<br>";
+        echo "Query: " . $query . "<br>";
         $this->db->query($query);
     }
 
@@ -351,7 +376,7 @@ class Utils
         $query = "insert into mdl_groups_members 
                 (groupid, userid, timeadded) 
                 values ($groupid,$userid,'$now')";
-        echo "Move Query: ".$query."<br>";
+        echo "Move Query: " . $query . "<br>";
         $this->db->query($query);
     }
 
