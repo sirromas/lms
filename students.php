@@ -4,59 +4,56 @@ require_once './sheader.php';
 
 ?>
 
-<input type="hidden" id="userid" value="<?php echo $USER->id; ?>">
-
 <!-- Container for all pages loaded via AJAX -->
-<div id="ajax_container" style="width: 935px;margin-top: 15px;"></div>
+<?php if ($mobile) { ?>
+<div class="row" id="ajax_container" style="width: 100%;margin-top: 15px;text-align: left;height: auto;"></div>
+<?php }
+else { ?>
+    <div id="ajax_container" style="width: 935px;margin-top: 15px;text-align: left;height: auto;"></div>
+<?php } ?>
 
 <!-- Article iFrame -->
 <div class="row" id="page" style="margin: auto;text-align: center;">
     <iframe id='pageIframe'
-            style="margin-top:15px;width:935px;margin-left-30px;text-align: left;"
+            style="margin-top:15px;width:100%;margin-left-30px;text-align: left;"
             frameborder="0"
             src="<?php echo $articleURL; ?>"></iframe>
 </div>
 
 <div style="" class="row" id="meeting_container"><?php echo $meetURL; ?></div>
 
-
 <!-- Dictionary iFrame -->
 <div class="row" id="dic"
      style="margin: auto;text-align: center;display: none;">
     <iframe id="dicIframe"
-            style="margin-top:15px;width:935px;margin-left-30px;text-align: left;"
+            style="margin-top:15px;width:100%;margin-left-30px;text-align: left;"
             frameborder="0"
             src="<?php echo $dicURL; ?>"></iframe>
 </div>
 
-<div id="quiz_container"
-     style="width: 935px;margin-top: 15px;display: none;"></div>
-<div id="poll_container"
-     style="width: 935px;margin-top: 15px;display: none;"></div>
+<div id="quiz_container" style="width: 100%;margin-top: 15px;display: none;"></div>
+<div id="poll_container" style="width: 100%;margin-top: 15px;display: none;"></div>
 
-<div id="forum_container" style="width: 935px;margin-top: 15px;"></div>
+<?php if ($mobile) { ?>
+    <div class="row" id="forum_container" style="width: 100%;margin-top: 15px;margin-bottom: 15px;text-align: center;"></div>
+<?php }
+else {?>
+    <div id="forum_container"
+         style="width: 935px;margin-top: 15px;margin-bottom: 15px;text-align: center;margin-left: 16%"></div>
+<?php } ?>
 
-<div id="copyright_part1" style="width: 935px;text-align: center;">
+<div id="copyright_part1" style="width: 100%;text-align: center;">
     <hr>
 </div>
 <div id="copyright_part2"
-     style="width: 935px;text-align: center;margin-bottom: 25px;">© copyright
+     style="width: 100%;text-align: center;margin-bottom: 25px;">© copyright
     2018 by NewsFacts & Analysis. All Rights Reserved.
 </div>
-
-
-<!-- Bootstrap libraries -->
-<link rel="stylesheet"
-      href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-<script type="text/javascript"
-        src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 
 
 <script type="text/javascript">
 
     $(document).ready(function () {
-
-
         var userid = $('#userid').val();
         console.log('User ID: ' + userid);
         var pollURL = '/lms/custom/common/get_news_poll.php';
@@ -65,8 +62,6 @@ require_once './sheader.php';
 
         $.post(check_picture_url, {userid: userid}).done(function (data) {
             if (data == '') {
-                //var $ = uploadcare.jQuery;
-                //$('body').append("<input type='hidden' role='uploadcare-uploader' name='my_file' />");
                 var upload_dialog_url = '/lms/custom/common/get_upload_dialog.php';
                 $.post(upload_dialog_url, {userid: userid}).done(function (data) {
                     $("body").append(data);

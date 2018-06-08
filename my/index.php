@@ -164,11 +164,19 @@ if (empty($CFG->forcedefaultmymoodle) && $PAGE->user_allowed_editing()) {
     $USER->editing = $edit = 0;
 }
 
-$roleid = $ac->get_user_role();
-//echo "Role id: ".$roleid."<br>";
-if ($roleid == 4) {
 
-    // Check tutor's access
+/**********************************************************************
+ *
+ *       We replace Moodle default pages with custom pages
+ *
+ **********************************************************************/
+$roleid = $ac->get_user_role();
+$userid=$ac->user->id;
+//echo "User ID: ".$userid."<br>";
+//echo "Role ID: ".$roleid."<br>";
+//die('Stopped!');
+
+if ($roleid == 4) {
     $groups = $ac->get_user_groups();
     $status = $ac->has_confirmed($ac->user->id);
     if ($status == 0) {
@@ -176,17 +184,14 @@ if ($roleid == 4) {
         echo $dialog;
         die();
     }
-
     $groupid = $groups[0];
-    //$url = "http://www." . $_SERVER['SERVER_NAME'] . "/lms/grade/report/grader/index.php?id=" . $ac->courseid . "&group=$groupid";
-    $url = "https://www." . $_SERVER['SERVER_NAME'] . "/lms/grade.php";
+    $url = "http://www." . $_SERVER['SERVER_NAME'] . "/lms/grade.php?userid=$userid";
+    //$url = "https://www." . $_SERVER['SERVER_NAME'] . "/dashboard/grade.php";
     header("Location: $url");
 } // end if $roleid == 4
 
 
 if ($roleid == 5) {
-
-    // Check student's access
     $groups = $ac->get_user_groups();
     $status = $ac->has_access($ac->user->id);
     if ($status == 0) {
@@ -194,25 +199,10 @@ if ($roleid == 5) {
         echo $dialog;
         die();
     }
-
-
-    $pageid = $nav->get_page_id(); // you need to find workaround
-    //echo "My index Page ID: ".$pageid."<br>";
-    if ($pageid != 0 && $userid != 2) {
-        //$url = "http://www." . $_SERVER['SERVER_NAME'] . "/lms/mod/page/view.php?id=" . $pageid . "";
-        $url = "https://www." . $_SERVER['SERVER_NAME'] . "/lms/students.php";
-        header("Location: $url");
-    } // end if $pageid != 0
-    else {
-        echo $OUTPUT->header();
-        echo "<br><br><br><br><div class='row-fluid' style='text-align:center;'>";
-        echo "<span class='span12'>Course still does not have content</span>";
-        echo "</div>";
-        echo $OUTPUT->footer();
-        die();
-    } // end else
+    $url = "http://www." . $_SERVER['SERVER_NAME'] . "/lms/students.php?userid=$userid";
+    //$url = "https://www." . $_SERVER['SERVER_NAME'] . "/dashboard/students.php";
+    header("Location: $url");
 } // end if $roleid == 5
-
 
 
 echo $OUTPUT->header();

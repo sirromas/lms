@@ -65,6 +65,7 @@ class Tutor extends Utils
             $userObj = json_decode($user);
             $email = $userObj->email;
             $userid = $this->get_user_id($email);
+            $this->set_user_password($userObj, $userid);
             $userObj->userid = $userid;
             $this->enrol_user($userid, $roleid);
 
@@ -206,7 +207,7 @@ class Tutor extends Utils
         if (count($groups) > 0) {
             foreach ($groups as $id) {
                 $name = $this->get_group_name($id);
-                $list .= "<p><a href='http://www." . $_SERVER['SERVER_NAME'] . "/registerstudentbody.html?groupid=$id' target='_blank'>$name</a></p>";
+                $list .= "<p><a href='https://www." . $_SERVER['SERVER_NAME'] . "/registerstudentbody.html?groupid=$id' target='_blank'>$name</a></p>";
             } // end foreach
         } // end if count($groups)>0
 
@@ -266,8 +267,8 @@ class Tutor extends Utils
     {
         $subject = 'Signup confirmation';
         $msg = "";
-        $roleid=4;
-        $from=$this->get_from_address($roleid);
+        $roleid = 4;
+        $from = $this->get_from_address($roleid);
         $msg .= $this->get_tutor_confirmation_message($user);
         $result = $this->send_email($subject, $msg, $user->email, true, $from);
         return $result;

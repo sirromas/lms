@@ -60,16 +60,30 @@ class Forum extends Utils
         $list = "";
         $user = $this->get_student_details($userid);
 
-        $date = date('F j, Y, g:i a', $added);
 
-        $list .= "<div class='row' style='text-align: left;'>";
-        $list .= "<span style=''>Re: <span style='font-weight: bold'>$title</span><br>$post</span>";
-        $list .= "</div>";
 
-        $list .= "<div class='row'>";
-        $list .= "<span style=''>by $user - $date</span>";
-        $list .= "</div>";
+        $mobile = $_SESSION['mobile'];
 
+        if ($mobile) {
+            $date = date('m/d/Y', $added);
+            $list .= "<div class='row' style='text-align: center;margin-left: 0px;margin-right: 0px;'>";
+            $list .= "<span style='margin-left: 15%;'>Re: $post</span>";
+            $list .= "</div>";
+
+            $list .= "<div class='row'>";
+            $list .= "<span style='margin-left: 15%;'>by $user - $date</span>";
+            $list .= "</div>";
+        } // end if
+        else {
+            $date = date('F j, Y, g:i a', $added);
+            $list .= "<div class='row' style='text-align: left;'>";
+            $list .= "<span style=''>Re: <span style='font-weight: bold'>$title</span><br>$post</span>";
+            $list .= "</div>";
+
+            $list .= "<div class='row'>";
+            $list .= "<span style=''>by $user - $date</span>";
+            $list .= "</div>";
+        }
         return $list;
 
     }
@@ -120,59 +134,119 @@ class Forum extends Utils
     function get_forum_posts($id, $title, $added, $userid)
     {
         $list = "";
-        $titleBlock = $this->get_forum_title_block($title, $added);
-        $list .= "<div class='row' style='background: #f7f8f9;' style='width: 700px; '>";
-        $list .= "<span class='col-md-2'><i class='fa fa-address-book-o fa-5x' aria-hidden='true'></i></span>";
-        $list .= "<span class='col-md-6' style='margin-top: 10px;'>$titleBlock</span>";
-        $list .= "<span class='col-md-2' style='margin-top: 15px;'><button class='btn btn-default' id='root_reply'>Reply</button></span>";
-        $list .= "</div>";
+        $mobile = $_SESSION['mobile'];
 
-        $list .= "<div class='row' style='display: none;' id='root_reply_container'>";
-        $list .= "<span class='col-md-2'>&nbsp;</span>";
-        $list .= "<span class='col-md-6' style='margin-top: 10px;'><textarea id='root_reply_text' rows='6' style='width: 100%'></textarea></span>";
-        $list .= "<span class='col-md-2' style='margin-top: 10px;'><button class='btn btn-default' id='submit_root_reply'>Submit</button></span>";
-        $list .= "</div>";
-
-        $query = "select * from mdl_board_posts where bid=$id order by added ";
-        $num = $this->db->numrows($query);
-        if ($num > 0) {
-            $list .= "<div class='row' style='margin-bottom: 15px;margin-left: 35px'>";
-            $list .= "<span class='col-md-12'></span>";
+        if ($mobile) {
+            $titleBlock = $this->get_forum_title_block($title, $added);
+            $list .= "<div class='row' style='background: #f7f8f9;' style='width: 100%; '>";
+            $list .= "<span class='col-md-2'><i class='fa fa-address-book-o fa-5x' aria-hidden='true'></i></span>";
+            $list .= "<span class='col-md-6' style='margin-top: 10px;'>$titleBlock</span>";
+            $list .= "<span class='col-md-2' style='margin-top: 15px;'><button class='btn btn-default' id='root_reply'>Reply</button></span>";
             $list .= "</div>";
-            $result = $this->db->query($query);
-            while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
-                $id = $row['id'];
-                $post = $row['post'];
-                $added = $row['added'];
-                $replyto = $row['replyto'];
-                $postuserid = $row['userid'];
-                $status = $this->is_user_belongs_to_current_group($postuserid);
-                if ($status) {
-                    $studentpost = $this->get_student_title_block($title, $post, $postuserid, $added, $replyto);
-                    $edit_btn = $this->get_edit_post_btn($id, $postuserid);
-                    $list .= "<div class='row' style='background: #f7f8f9;' style='width: 700px;margin-left: 25px; '>";
-                    $list .= "<span class='col-md-2'><i class='fa fa-user-circle fa-3x' aria-hidden='true'></i></span>";
-                    $list .= "<span class='col-md-8' style='margin-top: 10px;'>$studentpost</span>";
-                    $list .= "<span class='col-md-2' style='margin-top: 15px;'>
+
+            $list .= "<div class='row' style='display: none;' id='root_reply_container'>";
+            $list .= "<span class='col-md-2'>&nbsp;</span>";
+            $list .= "<span class='col-md-6' style='margin-top: 10px;'><textarea id='root_reply_text' rows='6' style='width: 100%'></textarea></span>";
+            $list .= "<span class='col-md-2' style='margin-top: 10px;'><button class='btn btn-default' id='submit_root_reply'>Submit</button></span>";
+            $list .= "</div>";
+
+            $query = "select * from mdl_board_posts where bid=$id order by added ";
+            $num = $this->db->numrows($query);
+            if ($num > 0) {
+                $list .= "<div class='row' style='margin-bottom: 15px;'>";
+                $list .= "<span class='col-md-12'></span>";
+                $list .= "</div>";
+                $result = $this->db->query($query);
+                while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+                    $id = $row['id'];
+                    $post = $row['post'];
+                    $added = $row['added'];
+                    $replyto = $row['replyto'];
+                    $postuserid = $row['userid'];
+                    $status = $this->is_user_belongs_to_current_group($postuserid);
+                    if ($status) {
+                        $studentpost = $this->get_student_title_block($title, $post, $postuserid, $added, $replyto);
+                        $edit_btn = $this->get_edit_post_btn($id, $postuserid);
+                        $list .= "<div class='row' style='background: #f7f8f9;' style='width: 100%;'>";
+                        $list .= "<span class='col-md-2'><i class='fa fa-user-circle fa-3x' aria-hidden='true'></i></span>";
+                        $list .= "<span class='col-md-8' style='margin-top: 10px;margin-left: 3%;'>$studentpost</span>";
+                        $list .= "<span class='col-md-2' style='margin-top: 15px;'>
                     <button class='btn btn-default' id='student_post_reply_$id'>Reply</button>
                     <br>$edit_btn
                     </span>";
-                    $list .= "</div>";
+                        $list .= "</div>";
 
-                    $list .= "<div class='row' style='display: none;' id='edit_post_container_$id'>";
-                    $list .= "<span class='col-md-2'>&nbsp;</span>";
-                    $list .= "<span class='col-md-6' style='margin-top: 10px;'><textarea id='update_student_post_text_$id' rows='6' style='width: 100%'>$post</textarea></span>";
-                    $list .= "<span class='col-md-2' style='margin-top: 10px;'><button class='btn btn-default' id='update_student_reply_$id'>Submit</button></span>";
-                    $list .= "</div>";
+                        $list .= "<div class='row' style='display: none;' id='edit_post_container_$id'>";
+                        $list .= "<span class='col-md-2'>&nbsp;</span>";
+                        $list .= "<span class='col-md-6' style='margin-top: 10px;'><textarea id='update_student_post_text_$id' rows='6' style='width: 100%'>$post</textarea></span>";
+                        $list .= "<span class='col-md-2' style='margin-top: 10px;'><button class='btn btn-default' id='update_student_reply_$id'>Submit</button></span>";
+                        $list .= "</div>";
 
-                    $list .= "<div class='row' style='display: none;' id='student_reply_container_$id'>";
-                    $list .= "<span class='col-md-2'>&nbsp;</span>";
-                    $list .= "<span class='col-md-6' style='margin-top: 10px;'><textarea id='student_reply_text_$id' rows='6' style='width: 100%'></textarea></span>";
-                    $list .= "<span class='col-md-2' style='margin-top: 10px;'><button class='btn btn-default' id='submit_student_reply_$id'>Submit</button></span>";
-                    $list .= "</div>";
-                } // end if $status
-            } // end while
-        } // end if $num>0
+                        $list .= "<div class='row' style='display: none;' id='student_reply_container_$id'>";
+                        $list .= "<span class='col-md-2'>&nbsp;</span>";
+                        $list .= "<span class='col-md-6' style='margin-top: 10px;'><textarea id='student_reply_text_$id' rows='6' style='width: 100%'></textarea></span>";
+                        $list .= "<span class='col-md-2' style='margin-top: 10px;'><button class='btn btn-default' id='submit_student_reply_$id'>Submit</button></span>";
+                        $list .= "</div>";
+                    } // end if $status
+                } // end while
+            } // end if $num>0
+
+        } // end if
+        else {
+            $titleBlock = $this->get_forum_title_block($title, $added);
+            $list .= "<div class='row' style='background: #f7f8f9;' style='width: 700px; '>";
+            $list .= "<span class='col-md-2'><i class='fa fa-address-book-o fa-5x' aria-hidden='true'></i></span>";
+            $list .= "<span class='col-md-6' style='margin-top: 10px;'>$titleBlock</span>";
+            $list .= "<span class='col-md-2' style='margin-top: 15px;'><button class='btn btn-default' id='root_reply'>Reply</button></span>";
+            $list .= "</div>";
+
+            $list .= "<div class='row' style='display: none;' id='root_reply_container'>";
+            $list .= "<span class='col-md-2'>&nbsp;</span>";
+            $list .= "<span class='col-md-6' style='margin-top: 10px;'><textarea id='root_reply_text' rows='6' style='width: 100%'></textarea></span>";
+            $list .= "<span class='col-md-2' style='margin-top: 10px;'><button class='btn btn-default' id='submit_root_reply'>Submit</button></span>";
+            $list .= "</div>";
+
+            $query = "select * from mdl_board_posts where bid=$id order by added ";
+            $num = $this->db->numrows($query);
+            if ($num > 0) {
+                $list .= "<div class='row' style='margin-bottom: 15px;margin-left: 35px'>";
+                $list .= "<span class='col-md-12'></span>";
+                $list .= "</div>";
+                $result = $this->db->query($query);
+                while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+                    $id = $row['id'];
+                    $post = $row['post'];
+                    $added = $row['added'];
+                    $replyto = $row['replyto'];
+                    $postuserid = $row['userid'];
+                    $status = $this->is_user_belongs_to_current_group($postuserid);
+                    if ($status) {
+                        $studentpost = $this->get_student_title_block($title, $post, $postuserid, $added, $replyto);
+                        $edit_btn = $this->get_edit_post_btn($id, $postuserid);
+                        $list .= "<div class='row' style='background: #f7f8f9;' style='width: 700px;margin-left: 25px; '>";
+                        $list .= "<span class='col-md-2'><i class='fa fa-user-circle fa-3x' aria-hidden='true'></i></span>";
+                        $list .= "<span class='col-md-8' style='margin-top: 10px;'>$studentpost</span>";
+                        $list .= "<span class='col-md-2' style='margin-top: 15px;'>
+                    <button class='btn btn-default' id='student_post_reply_$id'>Reply</button>
+                    <br>$edit_btn
+                    </span>";
+                        $list .= "</div>";
+
+                        $list .= "<div class='row' style='display: none;' id='edit_post_container_$id'>";
+                        $list .= "<span class='col-md-2'>&nbsp;</span>";
+                        $list .= "<span class='col-md-6' style='margin-top: 10px;'><textarea id='update_student_post_text_$id' rows='6' style='width: 100%'>$post</textarea></span>";
+                        $list .= "<span class='col-md-2' style='margin-top: 10px;'><button class='btn btn-default' id='update_student_reply_$id'>Submit</button></span>";
+                        $list .= "</div>";
+
+                        $list .= "<div class='row' style='display: none;' id='student_reply_container_$id'>";
+                        $list .= "<span class='col-md-2'>&nbsp;</span>";
+                        $list .= "<span class='col-md-6' style='margin-top: 10px;'><textarea id='student_reply_text_$id' rows='6' style='width: 100%'></textarea></span>";
+                        $list .= "<span class='col-md-2' style='margin-top: 10px;'><button class='btn btn-default' id='submit_student_reply_$id'>Submit</button></span>";
+                        $list .= "</div>";
+                    } // end if $status
+                } // end while
+            } // end if $num>0
+        }
 
         return $list;
     }
@@ -198,7 +272,7 @@ class Forum extends Utils
      */
     function is_user_belongs_to_current_group($postuserid)
     {
-        $groups = $this->get_user_groups();
+        $groups = $this->get_user_groups_by_userid($postuserid);
         $pid = $this->get_postuser_group($postuserid);
         $status = (in_array($pid, $groups) == true) ? true : false;
 
@@ -228,8 +302,7 @@ class Forum extends Utils
     {
         $list = "";
         $aid = $this->get_news_id();
-        $roleid = $this->get_user_role_by_id($userid);
-        $groups = $this->get_user_groups();
+        $groups = $this->get_user_groups_by_userid($userid);
         if (count($groups) == 0) {
             $list .= "<div class='row'></div>";
         } // end if
@@ -245,23 +318,46 @@ class Forum extends Utils
                         $title = $row['title'];
                         $added = $row['added'];
                     }
+
+                    $mobile = $_SESSION['mobile'];
                     $posts = $this->get_forum_posts($forumid, $title, $added, $userid);
-                    $list .= "<div id='container36' style='width: 738px;height: auto;margin-bottom: 35px;text-align: center;'>";
-                    $list .= "<input type='hidden' id='forumid' value='$forumid'>";
 
-                    $list .= "<div class='row' style='padding-bottom: 15px;padding-top: 15px'>";
-                    $list .= "<span style='font-size: 20px;border-bottom: 2px solid #000000;padding-bottom: 2px;'>Disscussion board</span>";
-                    $list .= "</div>";
+                    if ($mobile) {
 
-                    $list .= "<div class='row' style='text-align: center;margin: 15px;'>";
-                    $list .= "<span class='col-md-10'>$posts</span>";
-                    $list .= "</div>";
 
-                    $list .= "<div class='row' style='margin-top: 15px;margin-bottom: 35px;'>";
-                    $list .= "<span class='col-md-2'></span>";
-                    $list .= "</div>";
+                        $list .= "<input type='hidden' id='forumid' value='$forumid'>";
 
-                    $list .= "</div>";
+                        $list .= "<div class='row' style='padding-bottom: 15px;padding-top: 15px'>";
+                        $list .= "<span style='font-size: 20px;border-bottom: 2px solid #000000;padding-bottom: 2px;'>Disscussion board</span>";
+                        $list .= "</div>";
+
+
+                        $list .= "<div class='row' style='text-align: center'>";
+                        $list .= "<span class=''>$posts</span>";
+                        $list .= "</div>";
+
+
+                    } // end if
+                    else {
+
+                        $list .= "<div id='container36' style='width: 738px;height: auto;margin-bottom: 35px;text-align: center;'>";
+                        $list .= "<input type='hidden' id='forumid' value='$forumid'>";
+
+                        $list .= "<div class='row' style='padding-bottom: 15px;padding-top: 15px'>";
+                        $list .= "<span style='font-size: 20px;border-bottom: 2px solid #000000;padding-bottom: 2px;'>Disscussion board</span>";
+                        $list .= "</div>";
+
+                        $list .= "<div class='row' style='text-align: center;margin: 15px;'>";
+                        $list .= "<span class='col-md-10'>$posts</span>";
+                        $list .= "</div>";
+
+                        $list .= "<div class='row' style='margin-top: 15px;margin-bottom: 35px;'>";
+                        $list .= "<span class='col-md-2'></span>";
+                        $list .= "</div>";
+
+                        $list .= "</div>";
+
+                    } // end else
 
                 } // end if $num>0
             }

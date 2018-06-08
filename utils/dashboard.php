@@ -251,10 +251,10 @@ if ($_REQUEST) {
 
 
                 // ***** Semestr duration **********
-                $('#first_semestr_start_text').datepicker();
-                $('#first_semestr_end_text').datepicker();
-                $('#second_semestr_start_text').datepicker();
-                $('#second_semestr_end_text').datepicker();
+                $('#first_semestr_start').datepicker();
+                $('#first_semestr_end').datepicker();
+                $('#second_semestr_start').datepicker();
+                $('#second_semestr_end').datepicker();
 
 
 

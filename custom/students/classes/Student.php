@@ -159,6 +159,7 @@ class Student extends Utils
             $roleid = 5; // student
             $userobj = json_decode($user);
             $userid = $this->get_user_id($userobj->email);
+            $this->set_user_password($userobj, $userid);
             $groupid = $this->get_group_id($userobj->class);
             $this->enrol_user($userid, $roleid);
             $this->add_to_group($groupid, $userid);
@@ -166,7 +167,7 @@ class Student extends Utils
             $result = $p->make_transaction(json_decode($user));
             if ($result !== false) {
                 $subject = 'Signup confirmation';
-                $from=$this->get_from_address($roleid);
+                $from = $this->get_from_address($roleid);
                 $message = $this->get_confirmation_message($userid, $groupid, $userobj);
                 $this->send_email($subject, $message, $userobj->email, true, $from);
                 $list .= "ok";
@@ -191,13 +192,6 @@ class Student extends Utils
         $list = "";
         $userObj = json_decode($user);
         $userObj->cardholder = $userObj->firstname . ' ' . $userObj->lastname;
-
-        /*
-          echo "<pre>";
-          print_r($userObj);
-          echo "</pre>";
-         */
-
         $user_data = $this->get_user_details($userObj->userid);
         $userObj->email = $user_data->email;
         $p = new Payment();

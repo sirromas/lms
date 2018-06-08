@@ -9,10 +9,10 @@ use net\authorize\api\controller as AnetController;
 class Payment extends Utils {
 
     private $AUTHORIZENET_LOG_FILE;
-    private $LOGIN_ID = '6cUTfQ5238'; // sandbox data
-    private $TRANSACTION_KEY = '5bN8q5WT3qa257p9'; // sandbox data
-    ///private $LOGIN_ID = '83uKk2VcBBsC'; // production data
-    //private $TRANSACTION_KEY = '23P447taH34H26h5'; // production data
+    //private $LOGIN_ID = '6cUTfQ5238'; // sandbox data
+    //private $TRANSACTION_KEY = '5bN8q5WT3qa257p9'; // sandbox data
+    private $LOGIN_ID = '83uKk2VcBBsC'; // production data
+    private $TRANSACTION_KEY = '23P447taH34H26h5'; // production data
     public $period = 28; // 28 days of installment 
     public $log_file_path;
     public $first_semestr_start;
@@ -141,7 +141,9 @@ class Payment extends Utils {
         } // end if
 
         $payment = $this->prepare_order($post_order);
-        $merchantAuthentication = $this->authorize();
+        $merchantAuthentication = $this->sandbox_authorize();
+        //$merchantAuthentication=$this->production_authorize();
+
         $refId = 'ref' . time();
         $state = $this->get_user_state($post_order->state);
 

@@ -2,8 +2,7 @@
 
 require_once $_SERVER['DOCUMENT_ROOT'] . '/lms/config.php';
 require_once $_SERVER['DOCUMENT_ROOT'] . '/lms/class.database.php';
-require_once $_SERVER['DOCUMENT_ROOT']
-    . '/lms/custom/common/mailer/vendor/PHPMailerAutoload.php';
+require_once $_SERVER['DOCUMENT_ROOT'] . '/lms/custom/common/mailer/vendor/PHPMailerAutoload.php';
 
 class Utils2
 {
@@ -240,10 +239,13 @@ class Utils2
      */
     function get_group_name($id)
     {
-        $query = "select * from mdl_groups where id=$id";
-        $result = $this->db->query($query);
-        while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
-            $name = $row['name'];
+        $name = '';
+        if ($id > 0) {
+            $query = "select * from mdl_groups where id=$id";
+            $result = $this->db->query($query);
+            while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+                $name = $row['name'];
+            }
         }
 
         return $name;
@@ -324,6 +326,18 @@ class Utils2
         return $list;
     }
 
+
+    function is_assistant($userid)
+    {
+        $query = "select * from mdl_user where id=$userid";
+        $result = $this->db->query($query);
+        while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+            $parent = $row['parent'];
+        }
+        return $parent;
+    }
+
+
     /**
      * @param      $items
      * @param bool $headers
@@ -346,10 +360,17 @@ class Utils2
             foreach ($items as $item) {
                 $user = $this->get_user_detailes($item->userid);
                 $groups = $this->get_user_groups($item->userid);
-                $status = ($user->policyagreed == 1) ? "Confirmed"
-                    : "Not confirmed&nbsp;<a href='#' class='confirm' onClick='return false;' data-userid='$item->userid'>Confrm</a>";
+                $is_assistant = $this->is_assistant($item->userid);
+                $status = ($user->policyagreed == 1) ? "Confirmed" : "Not confirmed&nbsp;<a href='#' class='confirm' onClick='return false;' data-userid='$item->userid'>Confrm</a>";
                 $list .= "<tr>";
-                $list .= "<td>$user->firstname $user->lastname<br>$user->email</td>";
+                if ($is_assistant == 0) {
+                    $list .= "<td>$user->firstname $user->lastname<br>u: $user->email<br>p: $user->purepwd</td>";
+                } // end if
+                else {
+                    $tutor_data = $this->get_user_detailes($is_assistant);
+                    $list .= "<td>$user->firstname $user->lastname
+                    <br>u: $user->email<br>p: $user->purepwd<br> Assistant of $tutor_data->firstname $tutor_data->lastname</td>";
+                }
                 $list .= "<td>$groups</td>";
                 $list .= "<td>$status</td>";
                 $list .= "</tr>";
@@ -1086,6 +1107,7 @@ class Utils2
                 }
                 break;
             case "trial":
+                $groups = array();
                 $query = "select * from mdl_user where deleted=0";
                 $num = $this->db->numrows($query);
                 if ($num > 0) {
@@ -1114,14 +1136,16 @@ class Utils2
                 }
                 break;
             case 'groups':
+                $groups = array();
                 $query = "select * from mdl_groups order by name";
                 $result = $this->db->query($query);
                 while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
-                    $groups[] = mb_convert_encoding(trim($row['name']),
-                        'UTF-8');
+                    $groups[] = mb_convert_encoding(trim($row['name']), 'UTF-8');
                 }
                 $path = $this->json_path . '/groups.json';
-                file_put_contents($path, json_encode($groups));
+                if (count($groups) > 0) {
+                    file_put_contents($path, json_encode($groups));
+                }
                 break;
         }
     }
@@ -1921,8 +1945,7 @@ class Utils2
         if (count($items) > 0) {
             foreach ($items as $item) {
                 $date = $item->path;
-                $link = "https://" . $_SERVER['SERVER_NAME']
-                    . "/lms/articles/$item->path";
+                $link = "http://www." . $_SERVER['SERVER_NAME'] . "/articles/$item->path";
                 $path = "<a href='$link' target='_blank'>$item->path</a>";
                 $list .= "<tr>";
                 $list .= "<td>$item->title</td>";
@@ -2013,8 +2036,8 @@ class Utils2
         while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
             $opath = $row['path'];
         }
-        $new_path = $_SERVER['DOCUMENT_ROOT'] . "/lms/articles/$upath";
-        $old_path = $_SERVER['DOCUMENT_ROOT'] . "/lms/articles/$opath";
+        $new_path = $_SERVER['DOCUMENT_ROOT'] . "/articles/$upath";
+        $old_path = $_SERVER['DOCUMENT_ROOT'] . "/articles/$opath";
         rename($old_path, $new_path);
         $ustart = strtotime($item->date1);
         $expire = strtotime($item->date2);
@@ -2096,12 +2119,10 @@ class Utils2
             $now = time();
             $title = $data['title'];
             $destfile = "arcticle_$now.pdf";
-            $dest = $_SERVER['DOCUMENT_ROOT']
-                . "/lms/utils/archive/$destfile";
+            $dest = $_SERVER['DOCUMENT_ROOT'] . "/lms/utils/archive/$destfile";
             $status = move_uploaded_file($files['tmp_name'], $dest);
             if ($status) {
-                $query
-                    = "insert into mdl_archive (title,path,adate) values ('$title','$destfile','$date')";
+                $query = "insert into mdl_archive (title,path,adate) values ('$title','$destfile','$date')";
                 $this->db->query($query);
             }
         } // end if
@@ -2309,7 +2330,8 @@ class Utils2
         $date1 = $post['date1'];
         $date2 = $post['date2'];
         $adir = $this->get_article_directory($date1, $date2);
-        $dir = $_SERVER['DOCUMENT_ROOT'] . "/lms/articles/$adir";
+        //$dir = $_SERVER['DOCUMENT_ROOT'] . "/lms/articles/$adir";
+        $dir = $_SERVER['DOCUMENT_ROOT'] . "/articles/$adir";
         if (!is_dir($dir)) {
             mkdir($dir, 0777);
         }

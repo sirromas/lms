@@ -1,60 +1,99 @@
 <?php
 
+
 require_once './pheader.php';
 
-?>
+if ($mobile) { ?>
 
-<input type="hidden" id="userid" value="<?php echo $USER->id; ?>">
-<input type="hidden" id="group_users" value="<?php echo $groups_string; ?>">
+    <div class="row" id="ajax_container" style="width: 100%;margin-top: 15px;text-align: left;height: auto;"></div>
 
-<!-- Container for all pages loaded via AJAX -->
-<br><br>
-<div id="ajax_container"
-     style="width: 935px;margin-top: 15px;text-align: left;height: auto;"></div>
+    <div class="row" id="page" style="margin: auto;text-align: center;margin-right:2%;">
+        <iframe id='pageIframe'
+                style="margin-top:15px;width:100%;text-align: center;"
+                frameborder="0"
+                src="<?php echo $articleURL; ?>"></iframe>
+    </div>
 
-<!-- Article iFrame -->
-<div class="row" id="page" style="margin: auto;text-align: center;">
-    <iframe id='pageIframe'
-            style="margin-top:15px;width:935px;text-align: center;padding-right: 5%;"
-            frameborder="0"
-            src="<?php echo $articleURL; ?>"></iframe>
-</div>
+    <div class="row" id="meeting_container"><?php echo $meetURL; ?></div>
 
-</div>
-
-<div id="meeting_container"><?php echo $meetURL; ?></div>
-
-<!-- Dictionary iFrame -->
-<div class="row" id="dic" style="margin: auto;text-align: center;">
-    <iframe id="dicIframe"
-            style="margin-top:15px;width:935px;margin-left-30px;text-align: left;"
-            frameborder="0"
-            src="<?php echo $dicURL; ?>"></iframe>
-</div>
+    <!-- Dictionary iFrame -->
+    <div class="row" id="dic" style="margin: auto;text-align: center;">
+        <iframe id="dicIframe" style="margin-top:15px;width:100%;margin-left-30px;text-align: left;" frameborder="0"
+                src="<?php echo $dicURL; ?>"></iframe>
+    </div>
 
 
-<div id="quiz_container"
-     style="width: 935px;margin-top: 15px;display: none;"></div>
-<div id="poll_container"
-     style="width: 935px;margin-top: 15px;display: none;"></div>
+    <div class="row" id="quiz_container" style="width: 100%;margin-top: 15px;display: none;"></div>
 
-<div id="forum_container"
-     style="width: 935px;margin-top: 15px;margin-bottom: 15px;text-align: center;margin-left: 9%"></div>
-<br><br><br>
+    <div class="row" id="poll_container" style="width: 100%;margin-top: 15px;display: none;"></div>
 
-<div id="copyright_part1" style="width: 935px;text-align: center;">
-    <hr>
-</div>
-<div id="copyright_part2"
-     style="width: 935px;text-align: center;margin-bottom: 25px;">© copyright
-    2018 by NewsFacts & Analysis. All Rights Reserved.
-</div>
+    <div class="row" id="forum_container" style="width: 100%;margin-top: 15px;margin-bottom: 15px;text-align: center;"></div>
+
+
+<?php } else { ?>
+
+
+    <!-- Container for all pages loaded via AJAX -->
+    <br><br>
+    <div id="ajax_container"
+         style="width: 935px;margin-top: 15px;text-align: left;height: auto;"></div>
+
+    <!-- Article iFrame -->
+    <div class="row" id="page" style="margin: auto;text-align: center;margin-right:2%;">
+        <iframe id='pageIframe'
+                style="margin-top:15px;width:100%;text-align: center;"
+                frameborder="0"
+                src="<?php echo $articleURL; ?>"></iframe>
+    </div>
+
+
+    <div id="meeting_container"><?php echo $meetURL; ?></div>
+
+    <!-- Dictionary iFrame -->
+    <div class="row" id="dic" style="margin: auto;text-align: center;">
+        <iframe id="dicIframe"
+                style="margin-top:15px;width:935px;margin-left-30px;text-align: left;"
+                frameborder="0"
+                src="<?php echo $dicURL; ?>"></iframe>
+    </div>
+
+    <div id="quiz_container"
+         style="width: 935px;margin-top: 15px;display: none;"></div>
+    <div id="poll_container"
+         style="width: 935px;margin-top: 15px;display: none;"></div>
+
+    <div id="forum_container"
+         style="width: 935px;margin-top: 15px;margin-bottom: 15px;text-align: center;margin-left: 8%"></div>
+
+    <div id="copyright_part1" style="width: 100%;text-align: center;">
+        <hr>
+    </div>
+    <div id="copyright_part2"
+         style="width: 100%;text-align: center;margin-bottom: 25px;">© copyright
+        2018 by NewsFacts & Analysis. All Rights Reserved.
+    </div>
+
+<?php } ?>
+
 
 <script type="text/javascript">
 
     $(document).ready(function () {
 
-        /* Regular code */
+        console.log('Article URL: '+ '<?php echo $articleURL; ?>');
+        //PDFObject.embed('<?php echo $articleURL; ?>', '#page');
+
+        function resizeIframe(obj) {
+            obj.style.height = (obj.contentWindow.document.body.scrollHeight + 10) + 'px';
+        }
+
+        if ("import" in document.createElement("link")) {
+            console.log('This browser supports HTML5 Imports');
+        }
+        else {
+            console.log('We do not support this browser!');
+        }
+
         var userid = $('#userid').val();
         console.log('User ID: ' + userid);
         var pollURL = '/lms/custom/common/get_news_poll.php';
@@ -64,19 +103,14 @@ require_once './pheader.php';
         $('#poll_container').hide();
         $('#quiz_container').hide();
 
-        // Get Dictionary content
-        $('#dicIframe').load(function () {
-            $(this).height($(this).contents().height());
-            var iframe = $('#dicIframe').contents();
-            iframe.find('.ds249').click(function () {
-                console.log('Item clicked ....');
-            });
-        });
-
         // Get article content
         $('#pageIframe').load(function () {
             $(this).height($(this).contents().height());
-            $(this).width($(this).contents().width());
+        });
+
+        // Get Dictionary content
+        $('#dicIframe').load(function () {
+            $(this).height($(this).contents().height());
         });
 
         // Get news poll
@@ -96,6 +130,7 @@ require_once './pheader.php';
             $('#forum_container').html(data);
             $('#forum_container').height('#forum_container').contents().height();
         });
+
 
         // Update news forum container
         function get_news_forum() {
@@ -400,8 +435,6 @@ require_once './pheader.php';
                                 $.post(url, {item: JSON.stringify(item)}).done(function (data) {
                                     console.log(data);
                                     $("[data-dismiss=modal]").trigger({type: "click"});
-                                    //$('#myModal').data('modal', null);
-                                    //document.location.reload();
                                 }); // end of post
                             } // end if confirm
                         } // end else
@@ -619,7 +652,6 @@ require_once './pheader.php';
                 }
             }
 
-            // ***************** Poll section *****************
 
             if (event.target.id == 'logout_dashboard') {
                 if (confirm('Logout from the system?')) {
@@ -629,6 +661,8 @@ require_once './pheader.php';
                     });
                 }
             }
+
+            // ***************** Poll section *****************
 
             if (event.target.id == 'submit_poll') {
                 var items = [];

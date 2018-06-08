@@ -1,36 +1,36 @@
 <?php
 
 
-require_once $_SERVER['DOCUMENT_ROOT']
-    . '/lms/custom/access/classes/Access.php';
-require_once $_SERVER['DOCUMENT_ROOT']
-    . '/lms/custom/navigation/classes/Navigation.php';
-require_once $_SERVER['DOCUMENT_ROOT']
-    . '/lms/custom/students/classes/Student.php';
+require_once $_SERVER['DOCUMENT_ROOT'] . '/lms/custom/access/classes/Access.php';
+require_once $_SERVER['DOCUMENT_ROOT'] . '/lms/custom/navigation/classes/Navigation.php';
+require_once $_SERVER['DOCUMENT_ROOT'] . '/lms/custom/students/classes/Student.php';
 require_once $_SERVER['DOCUMENT_ROOT'] . '/lms/custom/common/Archive.php';
 require_once $_SERVER['DOCUMENT_ROOT'] . '/lms/custom/common/Grades.php';
 require_once $_SERVER['DOCUMENT_ROOT'] . '/lms/custom/common/Forum.php';
 require_once $_SERVER['DOCUMENT_ROOT'] . '/lms/custom/common/Quiz.php';
+require_once $_SERVER['DOCUMENT_ROOT'] . '/51/core/51Degrees.php';
+require_once $_SERVER['DOCUMENT_ROOT'] . '/51/core/51Degrees_usage.php';
 
 $ac  = new Access();
 $nav = new Navigation();
+$mobile = $_51d['IsMobile'];
+$userid = $_GET['userid'];
 
-if ( ! isloggedin()) {
+$_SESSION['userid'] = $userid;
+$_SESSION['mobile'] = $mobile;
+
+if ($userid == '' || $userid == 0) {
     $url = "https://www.newsfactsandanalysis.com/";
     header("Location: $url");
 } // end if
 
 else {
 
-global $USER;
-$userid     = $USER->id;
-setcookie("userid", $userid);
-$_SESSION["userid"] =$userid;
+echo "<input type='hidden' id='userid' value='$userid'>";
+echo "<input type='hidden' id='mobile' value='$mobile'>";
 $articleURL = $nav->get_article_url();
 
-//$dicURL     = "https://www." . $_SERVER['SERVER_NAME'] . "/lms/dictionary/index.php";
-$dicURL
-        = "https://www.newsfactsandanalysis.com/dictionary/politicaldictionary.html";
+$dicURL = "http://www.newsfactsandanalysis.com/dictionary/politicaldictionary.html";
 $rgroup = 13; // This is special group for readers only
 $groups = $nav->get_user_groups(); // array
 
@@ -89,6 +89,48 @@ $meetURL = $gr->get_meeting_url($userid);
 
 </head>
 <body>
+
+<?php if ($mobile) { ?>
+
+    <nav class="navbar navbar-default">
+        <div class="container-fluid">
+            <!-- Brand and toggle get grouped for better mobile display -->
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse"
+                        data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="#" style="font-weight: bold;">NF&A</a>
+            </div>
+
+            <!-- Navigation links -->
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav">
+                    <li class="active"><a href="#" class="nav3" data-item="article">Article <span class="sr-only">(current)</span></a>
+                    </li>
+                    <li><a href="#" class="nav3" data-item="quiz">News Quiz</a></li>
+                    <li><a href="#" class="nav3" data-item="dic">Political Dictionary</a></li>
+                    <li><a href="#" class="nav3" data-item="archive">Archives</a></li>
+                    <li><a href="#" class="nav3" data-item="grades">Grades</a></li>
+                    <li>
+                        <a href="https://www.newsfactsandanalysis.com/about.html" class="nav2" target="_blank">About
+                            Us</a>
+                    </li>
+                    <li><a href="mailto:info@newsfactsandanalysis.com" class="nav2">Contact Us</a></li>
+                    <li><a href="#" class="nav2" data-item="logout">Logout</a></li>
+                </ul>
+            </div><!-- /.navbar-collapse -->
+        </div><!-- /.container-->
+    </nav>
+    </nav>
+
+
+<?php }
+
+else {?>
 <div align="center">
     <div align="center">
         <div id="container34"></div>
@@ -349,6 +391,7 @@ $meetURL = $gr->get_meeting_url($userid);
                 </div>
             </div>
         </div>
+        <?php } ?>
 
         <?php } ?>
 

@@ -260,10 +260,12 @@ if ($frm and isset($frm->username)) {                             // Login WITH 
 }
 
 /// Detect problems with timedout sessions
+
 if ($session_has_timed_out and !data_submitted()) {
     $errormsg = get_string('sessionerroruser', 'error');
     $errorcode = 4;
 }
+
 
 /// First, let's remember where the user was trying to get to before they got here
 
@@ -302,7 +304,7 @@ if (!empty($CFG->alternateloginurl)) {
 }
 
 // make sure we really are on the https page when https login required
-$PAGE->verify_https_required();
+//$PAGE->verify_https_required();
 
 /// Generate the login page with forms
 

@@ -26,15 +26,6 @@ class Payment extends Utils
         parent::__construct();
         $this->AUTHORIZENET_LOG_FILE = 'phplog';
         $this->log_file_path = $_SERVER['DOCUMENT_ROOT'] . '/lms/custom/authorize/failed_transactions.log';
-        $y = date("Y");
-        $ny = $y + 1;
-        /*
-        $this->first_semestr_start = "09/01/$y";
-        $this->first_semestr_end = "02/20/$ny";
-        $this->second_semestr_start = "03/01/$y";
-        $this->second_semestr_end = "08/20/$y";
-        */
-
         $this->first_semestr_start = $this->get_semestr_date('first_semestr_start');
         $this->first_semestr_end = $this->get_semestr_date('first_semestr_end ');
         $this->second_semestr_start = $this->get_semestr_date('second_semestr_start');
@@ -84,11 +75,11 @@ class Payment extends Utils
     /**
      * @return AnetAPI\MerchantAuthenticationType
      */
-    function authorize()
+    function production_authorize()
     {
         $merchantAuthentication = new AnetAPI\MerchantAuthenticationType();
-        $merchantAuthentication->setName($this->LOGIN_ID);
-        $merchantAuthentication->setTransactionKey($this->TRANSACTION_KEY);
+        $merchantAuthentication->setName('83uKk2VcBBsC');
+        $merchantAuthentication->setTransactionKey('23P447taH34H26h5');
         return $merchantAuthentication;
     }
 
@@ -189,6 +180,9 @@ class Payment extends Utils
     function make_transaction($post_order)
     {
 
+        $merchantAuthentication = $this->sandbox_authorize();
+        //$merchantAuthentication=$this->production_authorize();
+
         $names = explode(" ", $post_order->cardholder);
         if (count($names) == 2) {
             $firstname = $names[0];
@@ -201,9 +195,14 @@ class Payment extends Utils
         } // end if
 
         $payment = $this->prepare_order($post_order);
-        $merchantAuthentication = $this->sandbox_authorize();
+
         $refId = 'ref' . time();
-        $state = $this->get_user_state($post_order->state);
+        if ($post_order->state > 0) {
+            $state = $this->get_user_state($post_order->state);
+        } // end if
+        else {
+            $state = $post_order->state;
+        }
 
         $invoiceNo = time();
         $order = new AnetAPI\OrderType();
@@ -272,15 +271,11 @@ class Payment extends Utils
             if (($tresponse != null) && ($tresponse->getResponseCode() == "1")) {
                 $userid = $this->get_user_id($post_order->email);
                 if (!is_numeric($post_order->class)) {
-                    //echo "Inside group name ...<br>";
                     $groupid = $this->get_group_id($post_order->class);
                 } // end if
                 else {
-                    //echo "Inside group id ...<br>";
                     $groupid = $post_order->class;
                 }
-
-                //echo "Group ID: ".$groupid."<br>";
 
                 $status = new stdClass();
                 $status->auth_code = $tresponse->getAuthCode();
@@ -297,7 +292,6 @@ class Payment extends Utils
             }
         } // end if $response != null        
         else {
-            //echo "Charge Credit card Null response returned";
             return false;
         }
     }

@@ -10,6 +10,9 @@ require_once $_SERVER['DOCUMENT_ROOT'] . '/lms/group/lib.php';
 require_once $_SERVER['DOCUMENT_ROOT'] . '/lms/class.database.php';
 require_once $_SERVER['DOCUMENT_ROOT'] . '/lms/custom/common/mailer/vendor/PHPMailerAutoload.php';
 require_once $_SERVER['DOCUMENT_ROOT'] . '/lms/custom/postmark/vendor/autoload.php';
+require_once $_SERVER['DOCUMENT_ROOT'] . '/lms/custom/pdf/mpdf/mpdf.php';
+require_once $_SERVER['DOCUMENT_ROOT'] . '/51/core/51Degrees.php';
+require_once $_SERVER['DOCUMENT_ROOT'] . '/51/core/51Degrees_usage.php';
 
 use Postmark\PostmarkClient;
 
@@ -549,6 +552,25 @@ class Utils
     }
 
     /**
+     * @param $userid
+     * @return array
+     */
+    function get_user_groups_by_userid($userid)
+    {
+        $groups = array();
+        $query = "select * from mdl_groups_members where userid=$userid";
+        $num = $this->db->numrows($query);
+        if ($num > 0) {
+            $result = $this->db->query($query);
+            while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+                $groups[] = $row['groupid'];
+            }
+        } // end if
+
+        return $groups;
+    }
+
+    /**
      * @param $email
      *
      * @return int
@@ -605,9 +627,18 @@ class Utils
             $aid = $row['id'];
         }
 
-        //$aid=12; // temp workaround for testing
-
         return $aid;
+    }
+
+
+    /**
+     * @param $userobj
+     * @param $userid
+     */
+    function set_user_password($userobj, $userid)
+    {
+        $query = "update mdl_user set purepwd='$userobj->pwd' where id=$userid";
+        $this->db->query($query);
     }
 
 }

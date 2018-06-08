@@ -2,13 +2,23 @@
 
 require_once $_SERVER['DOCUMENT_ROOT'] . '/lms/custom/common/Utils.php';
 
-class Access extends Utils {
+class Access extends Utils
+{
 
-    function __construct() {
+    /**
+     * Access constructor.
+     */
+    function __construct()
+    {
         parent::__construct();
     }
 
-    function has_access($userid) {
+    /**
+     * @param $userid
+     * @return int
+     */
+    function has_access($userid)
+    {
         $now = time();
         $status = 0;
 
@@ -42,21 +52,32 @@ class Access extends Utils {
         return $status;
     }
 
-    function get_acces_dialog($userid, $groups) {
+    /**
+     * @param $userid
+     * @param $groups
+     * @return string
+     */
+    function get_acces_dialog($userid, $groups)
+    {
         $groups_list = implode(',', $groups);
         $list = "";
-        $list.="<br><br>";
-        $list.="<div class='container-fluid' style='text-align:center;'>";
-        $list.="<span class='span12'><h1>NewsFacts & Analysis<br>Nonpartisan Current Events Reports for University Students & Faculty</h1></span>";
-        $list.="</div>";
+        $list .= "<br><br>";
+        $list .= "<div class='container-fluid' style='text-align:center;'>";
+        $list .= "<span class='span12'><h1>NewsFacts & Analysis<br>Nonpartisan Current Events Reports for University Students & Faculty</h1></span>";
+        $list .= "</div>";
 
-        $list.="<div class='container-fluid' style='text-align:center;'>";
-        $list.="<span class='span12'><h3>You do not have subscription or it is expired. Please click <a href='http://www." . $_SERVER['SERVER_NAME'] . "/lms/payments/payment.php?userid=$userid&groups=$groups_list' target='_blank'>here</a> to get your subscription.</h3></span>";
-        $list.="</div>";
+        $list .= "<div class='container-fluid' style='text-align:center;'>";
+        $list .= "<span class='span12'><h3>You do not have subscription or it is expired. Please click <a href='http://www." . $_SERVER['SERVER_NAME'] . "/lms/payments/payment.php?userid=$userid&groups=$groups_list' target='_blank'>here</a> to get your subscription.</h3></span>";
+        $list .= "</div>";
         return $list;
     }
 
-    function has_confirmed($userid) {
+    /**
+     * @param $userid
+     * @return mixed
+     */
+    function has_confirmed($userid)
+    {
         $query = "select * from mdl_user where id=$userid";
         $result = $this->db->query($query);
         while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
@@ -65,18 +86,57 @@ class Access extends Utils {
         return $confirmed;
     }
 
-    function get_tutor_access_dialog($userid, $groups) {
+    /**
+     * @param $userid
+     * @param $groups
+     * @return string
+     */
+    function get_tutor_access_dialog($userid, $groups)
+    {
         $groups_list = implode(',', $groups);
         $list = "";
-        $list.="<br><br>";
-        $list.="<div class='container-fluid' style='text-align:center;'>";
-        $list.="<span class='span12'><h1>NewsFacts & Analysis<br>Nonpartisan Current Events Reports for University Students & Faculty</h1></span>";
-        $list.="</div>";
+        $list .= "<br><br>";
+        $list .= "<div class='container-fluid' style='text-align:center;'>";
+        $list .= "<span class='span12'><h1>NewsFacts & Analysis<br>Nonpartisan Current Events Reports for University Students & Faculty</h1></span>";
+        $list .= "</div>";
 
-        $list.="<div class='container-fluid' style='text-align:center;'>";
-        $list.="<span class='span12'>You did not confirm your professor's membership. Please click <a href='http://www." . $_SERVER['SERVER_NAME'] . "/lms/tutors/index.php?userid=$userid&groups=$groups_list' target='_blank'>here</a> to get confirmed.</span>";
-        $list.="</div>";
+        $list .= "<div class='container-fluid' style='text-align:center;'>";
+        $list .= "<span class='span12'>You did not confirm your professor's membership. Please click <a href='http://www." . $_SERVER['SERVER_NAME'] . "/lms/tutors/index.php?userid=$userid&groups=$groups_list' target='_blank'>here</a> to get confirmed.</span>";
+        $list .= "</div>";
         return $list;
+    }
+
+    /**
+     * @param $username
+     * @return mixed
+     */
+    function get_user_id_by_username($username)
+    {
+        $query = "select * from mdl_user where username='$username'";
+        $result = $this->db->query($query);
+        while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+            $id = $row['id'];
+        }
+        return $id;
+    }
+
+    /**
+     * @param $u
+     * @param $p
+     * @return int
+     */
+    function get_userid_by_credentials($u, $p)
+    {
+        $id = 0;
+        $query = "select * from mdl_user where username='$u' and purepwd='$p'";
+        $num = $this->db->numrows($query);
+        if ($num > 0) {
+            $result = $this->db->query($query);
+            while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+                $id = $row['id'];
+            }
+        }
+        return $id;
     }
 
 }

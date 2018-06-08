@@ -18,19 +18,32 @@ class Quiz extends Utils
     function get_question_answers($qid, $type)
     {
         $list = "";
-        $list .= "<table border='0' style='475px;margin-left: 12px;'>";
-        $class = ($type == 1) ? 'poll_answers' : 'quiz_answers';
-        $name = 'name_' . $qid;
-        $query = "select * from mdl_poll_a where qid=$qid";
-        $result = $this->db->query($query);
-        while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
-            $list .= "<tr>";
-            $list .= "<td style='padding: 5px;text-align: left;'><input class='$class' name='$name' type='radio' value='" . $row['id'] . "'></td>";
-            $list .= "<td style='padding: 5px;text-align: left;width: 400px;'>" . $row['a'] . "</td>";
-            $list .= "</tr>";
-        } // end while
-        $list .= "</table>";
-
+        $mobile = $_SESSION['mobile'];
+        if ($mobile) {
+            $class = ($type == 1) ? 'poll_answers' : 'quiz_answers';
+            $name = 'name_' . $qid;
+            $query = "select * from mdl_poll_a where qid=$qid";
+            $result = $this->db->query($query);
+            while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+                $list .= "<div style='padding-left: 10%;'>";
+                $list .= "<input class='$class' name='$name' type='radio' value='" . $row['id'] . "'>&nbsp;" . $row['a'] . "";
+                $list .= "</div>";
+            }
+        } // end if
+        else {
+            $list .= "<table border='0' style='475px;margin-left: 12px;'>";
+            $class = ($type == 1) ? 'poll_answers' : 'quiz_answers';
+            $name = 'name_' . $qid;
+            $query = "select * from mdl_poll_a where qid=$qid";
+            $result = $this->db->query($query);
+            while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+                $list .= "<tr>";
+                $list .= "<td style='padding: 5px;text-align: left;'><input class='$class' name='$name' type='radio' value='" . $row['id'] . "'></td>";
+                $list .= "<td style='padding: 5px;text-align: left;width: 400px;'>" . $row['a'] . "</td>";
+                $list .= "</tr>";
+            } // end while
+            $list .= "</table>";
+        }
         return $list;
     }
 
@@ -44,6 +57,7 @@ class Quiz extends Utils
         $list = "";
         $query = "select * from mdl_poll where aid=$aid and type=$type";
         $num = $this->db->numrows($query);
+        $mobile = $_SESSION['mobile'];
         if ($num > 0) {
             $result = $this->db->query($query);
             while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
@@ -57,14 +71,23 @@ class Quiz extends Utils
                 while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
                     $answers = $this->get_question_answers($row['id'], $type);
                     $title = $row['title'];
-                    $list .= "<div class='row' style='text-align: left;'>";
-                    $list .= "<input type='hidden' id='total_items_$type' value='$num'>";
-                    $list .= "<span class='col-md-12' style='margin-bottom: 10px;font-weight:bold;'>$i)&nbsp;$title</span>";
-                    $list .= $answers;
-                    $list .= "</div>";
-                    $list .= "<div class='row'>";
-                    $list .= "<span class='col-md-12'><br></span>";
-                    $list .= "</div>";
+                    if ($mobile) {
+                        $list .= "<div style='text-align: left;'>";
+                        $list .= "<input type='hidden' id='total_items_$type' value='$num'>";
+                        $list .= "<div style='margin-bottom: 10px;font-weight:bold;padding-left:10%;'><br>$i)&nbsp;$title</div>";
+                        $list .= "<br>$answers";
+                        $list .= "</div>";
+                    } // end if
+                    else {
+                        $list .= "<div class='row' style='text-align: left;'>";
+                        $list .= "<input type='hidden' id='total_items_$type' value='$num'>";
+                        $list .= "<span class='col-md-12' style='margin-bottom: 10px;font-weight:bold;'>$i)&nbsp;$title</span>";
+                        $list .= $answers;
+                        $list .= "</div>";
+                        $list .= "<div class='row'>";
+                        $list .= "<span class='col-md-12'><br></span>";
+                        $list .= "</div>";
+                    }
                     $i++;
                 } // end while
             } // end if $pid > 0
@@ -174,10 +197,10 @@ class Quiz extends Utils
         $btnTitle = ($type == 1) ? 'Submit Research' : 'Submit Quiz';
         $status = $this->is_student_already_took_poll($aid, $type, $userid);
         if ($status > 0) {
-            $list .= "<button class='btn btn-primary' id='$btnID' disabled>$btnTitle</button>";
+            $list .= "<button class='btn btn-primary' id='$btnID' disabled>$btnTitle</button><br>";
         } // end if
         else {
-            $list .= "<button class='btn btn-primary' id='$btnID'>$btnTitle</button>";
+            $list .= "<button class='btn btn-primary' id='$btnID'>$btnTitle</button><br>";
         }
 
         return $list;
@@ -194,16 +217,26 @@ class Quiz extends Utils
         $aid = $this->get_news_id();
         if ($aid > 0) {
             $title = ($type == 1) ? 'Polling Questions' : 'News Quiz';
-            $userid = $this->user->id;
-            $groups = $this->get_user_groups();
+            $userid = $_SESSION['userid'];
+            $mobile = $_SESSION['mobile'];
+            $groups = $this->get_user_groups_by_userid($userid);
             if (count($groups) == 0) {
-                $list.="<br><div class='row'></div>";
+                $list .= "<br><div class='row'></div>";
             } // end if
             else {
                 $data = $this->get_poll_data($aid, $type);
                 $btn = $this->get_poll_submit_btn($aid, $type, $userid);
                 if ($data != '') {
-                    $list .= "<div id='container138'>
+                    if ($mobile) {
+                        $list .= "<div class='row' style='text-align: center;font-size: 35px;font-weight: bold;'>";
+                        $list .= $title;
+                        $list .= "</div>";
+                        $list .= "<div class='row' style='text-align: center;'>";
+                        $list .= "$data<br>$btn<br>";
+                        $list .= "</div>";
+                    } // end if
+                    else {
+                        $list .= "<div id='container138'>
 						<div id='container127'></div>
 						<div id='container137'>
 							<div id='container136'>
@@ -223,8 +256,8 @@ class Quiz extends Utils
 							</div>
 						</div>	
 					</div>";
+                    }
                 }
-
             }
         }
 
