@@ -1,0 +1,173 @@
+﻿@media (max-device-width : 1024px) 
+{
+    body { background-color: #252525; }
+    body, p, h1, h2, h3, h4, h5, h6, h7, h8, h9, table, .Normal, .NormalDisabled, .NormalDelete, .NormalBold { color: #FFFFFF; }    
+    body, p, a, .Normal, .NormalDisabled, .NormalDelete, .NormalBold, li, ul, table, td, th, tr, tbody { font-size: 9pt; }
+    p { margin: 0.1em; }
+}
+@media (min-device-width : 1024px) 
+{
+    body { background-color: #FFFFFF; }
+    body, p, h1, h2, h3, h4, h5, h6, h7, h8, h9, table, .Normal, .NormalDisabled, .NormalDelete, .NormalBold { color: #252525; }    
+    body, p, a, .Normal, .NormalDisabled, .NormalDelete, .NormalBold, li, ul, table, td, th, tr, tbody { font-size: 11pt; }
+    p { margin: 0.2em; }
+}
+
+body, p, h1, h2, h3, h4, h5, h6, h7, h8, h9, a, table, .Normal, .NormalDisabled, .NormalDelete { font-family: 'Droid Sans', sans-serif; }
+a, a:visited, a:link { color: #cd2b27; text-decoration: none; }
+a:hover { color: #cd2b27; text-decoration: underline; }
+a, img { border: 0 none; }
+h1 { font-size: 1.4em; }
+h2 { font-size: 1.3em; }
+h3 { font-size: 1.2em; }
+h4 { font-size: 1.1em; }
+h5 { font-size: 1.0em; }
+
+/* Main Style */
+.main { width: 100%; }
+
+/* Header Styles */
+.main .header { width: 100%; margin-top: 1em; }
+.main .header .logo { float: left; clear: left; margin: 1em; }
+.main .header .controls { float: right; clear: right; margin: 1em; font-size: 11pt; color: #cd2b27; font-weight: bold; }
+
+
+/* Footer Styles */
+.main .footer { width: 100%; clear: both; border-top: 2px solid #252525; padding-top: 0.5em; }
+.main .footer .left { float: left; clear: left; margin-left: 1em; }
+.main .footer .left div { float: left; }
+.main .footer .right { float: right; clear: right; margin-right: 1em;}
+.main .footer .right div { float: left; }
+.stats { color: #757575; font-size: 9pt; }
+.stats span { display: block; float: left; margin: 0.5em; }
+
+/* Menu Styles */
+@media (max-device-width : 768px) 
+{
+    /* Menus for Mobile */
+    .main .header .menu { clear: both; margin: 0em 1em; }    
+    .menu { margin: 0; line-height: 100%; text-align: left; width: 100%; clear: both; }
+    .menu ul { margin: 0; padding: 0; list-style-type: none; }
+    .menu li { list-style: none; display: block; padding: 0.5em; background-color: #353535; margin: 0.5em; }
+    .menu a { font-weight: bold; color: #FFFFFF; text-decoration: none; display: block; margin: 0; font-size: 14pt; }
+}
+@media (min-device-width : 768px) and (max-device-width : 1024px) {
+    /* Menus for Tablet */
+    .main .header .menu { clear: both; margin: 0em 1em; }    
+    .menu { margin: 0; line-height: 100%; text-align: left; width: 100%; clear: both; }
+    .menu ul { margin: 0; padding: 0; list-style-type: none; }
+    .menu li { list-style: none; display: block; padding: 0.5em; background-color: #353535; margin: 0.5em; }
+    .menu a { font-weight: bold; color: #FFFFFF; text-decoration: none; display: block; margin: 0; font-size: 14pt; }
+}
+@media (min-device-width : 1024px) {
+    /* Menus for Non Mobile */
+    .main .header .menu { float: right; clear: right; margin: 0em 1em; }    
+    .menu { float: right; clear: both; margin: 0 1em; }
+    .menu ul { margin: 0; padding: 0; line-height: 100%; font-size: 14pt; text-transform:uppercase; float: left; }
+    .menu li { position: relative; list-style: none; text-align: left; display: inline-block; margin-left: 2em; }
+    .menu a { font-weight: bold; color: #252525; text-decoration: none; display: block; margin: 0; }
+    .menu .selected { border-bottom: 3px solid #cd2b27; padding-bottom: 0.2em; }
+    .menu li:hover > ul { display: block; }
+    .menu li:hover > ul > li { display: block; margin-bottom: 1em; }
+    .menu li:hover > ul > li:last-child { margin-bottom: 0; }
+}
+
+/* Control Styles */
+.button, .searchButton
+{
+    background-color: #cd2b27;
+    padding: 0.5em;
+    font-size: 14pt;
+    text-decoration: none;
+    color: #FFFFFF;
+    border-width: 0;
+    border-radius: 0;
+    box-shadow: none;
+    text-shadow: none;
+    font-weight: normal;
+}
+
+.textbox 
+{
+    font-size: 1.2em;
+    width: 300px;
+}
+
+/* Content Styles */
+.content { margin: 1em; padding-top: 1em; clear: both; }
+
+/* 51Degrees Control Styles */
+.tester .textbox { width: 100%; }
+.tester .button { clear: both; margin: 1em 0em; }
+
+.redirect .buttons .button { margin: 0 1em 0 0; }
+
+.deviceExplorerVendors .item { margin: 0.5em; height: 2.5em; width: 120px; float: left; overflow: hidden; vertical-align: top; }
+.deviceExplorerVendors .item .vendor { text-align: center; font-weight: bold; }
+
+.deviceExplorerDevices .item  { border: solid 2px #F2F2F2; }
+.deviceExplorerDevices .item { width: 130px;}
+
+.topDevices .item { width: 138px;}
+.topDevices .item , .deviceExplorerDevices .item { margin: 2px; padding: 0.5em; height: 178px; float: left; text-align: center; vertical-align: top; overflow: hidden; }
+.topDevices .item .model, .deviceExplorerDevices .item  { font-weight: bold; margin-bottom: 4px; }
+.topDevices .item .model a, .deviceExplorerDevices .item .model a { text-decoration: none; color: Red; margin-bottom: 4px; }
+.topDevices .item .item .name, .deviceExplorerDevices .item .name { overflow: hidden; margin-top: 4px; }
+.topDevices .item .name a, .deviceExplorerDevices .item .name a { text-decoration: none; color: #777777; padding-top: 0.5em; }
+
+.pager { margin: 1em 0; }
+
+.search { text-align: center; margin: 1em 0; padding: 0.5em; display: block; }
+.search .searchBox { font-size: 1.2em; width: 300px; }
+.search {  }
+.searchText { display: none; }
+
+.deviceExplorerDevice h1, .propertyDictionary h1, .deviceExplorerDevice h2, .propertyDictionary h2, .deviceExplorerDevice h3, .propertyDictionary h3, .deviceExplorerDevice h4, .propertyDictionary h4 { clear: both; }
+.propertyDictionary table, .propertyDictionary .item { margin: 0.5em; width: 100%; }
+.propertyDictionary .description { margin: 0.5em; display: inline-block; }
+.deviceExplorerDevice .premium, .propertyDictionary .premium, .propertyDictionary .premium a { color: #b22222; }
+.deviceExplorerDevice .cms, .propertyDictionary .cms, .propertyDictionary .cms a { color: #008500; }
+.deviceExplorerDevice .lite, .propertyDictionary .lite, .propertyDictionary .lite a { color: #777777; }
+
+.deviceExplorerDevice .property a, .propertyDictionary .property a { text-decoration: none; }
+.propertyDictionary .value { font-weight: bold; display: block; margin: 0.5em 0px; }
+ 
+.deviceExplorerDevice .value { font-weight: bold; float: left; margin: 0.5em 0px; height: 100%; vertical-align: middle; }
+
+.deviceExplorerDevice .property, .propertyDictionary .property { float: left; height: 100%; vertical-align: middle; }
+.deviceExplorerDevice .wide { float: left; vertical-align: top; }
+.deviceExplorerDevice .item { float: left; vertical-align: top; }
+
+@media (max-device-width : 1024px) 
+{
+    .deviceExplorerDevice .property, .propertyDictionary .property { width: 180px; margin: 0.2em 0px; }
+    .deviceExplorerDevice .wide { width: 120px; margin: 0.2em; }
+    .deviceExplorerDevice .item { width: 220px; margin: 0.2em; }
+}
+@media (min-device-width : 1024px) 
+{
+    .deviceExplorerDevice .property, .propertyDictionary .property { width: 240px; margin: 0.5em 0px; }
+    .deviceExplorerDevice .wide { width: 220px; margin: 0.5em; }
+    .deviceExplorerDevice .item { width: 320px; margin: 0.5em; }
+}
+ 
+.deviceExplorerDevice .back, .deviceExplorerDevices .back { padding: 1em 0.5em 1em 0px; }
+.deviceExplorerDevice .back a, .deviceExplorerDevices .back a { padding: 0.5em; border: 1px solid #DDDDDD; background-color: #EEEEEE; text-decoration: none; }
+
+.activate .textbox, .userAgentTester .textbox { width: 100%; }
+.activate .button, .userAgentTester .button { margin: 0.5em 0px; display: block; }
+
+.message p, .activate p, .userAgentTester p, .propertyDictionary p, .deviceExplorerVendors p, .deviceExplorerDevices p, .deviceExplorerDevice p { margin: 1em 0px; padding: 0px; }
+
+.deviceExplorerDevice .deviceImageCaption { text-align: center; }
+
+.topDevices { display: block; clear: both; height: 200px; }
+
+.userAgentTester input { font-size: 1.1em; }
+
+.match { margin-left: 1em; }
+.match th { font-weight: bold; text-align: left; }
+.match td { padding-left: 1em; font-family: Courier; }
+
+/* Image Gallary Styles */
+.gallery { padding: 0; margin: 0 auto; max-width: 600px; width: 100%; }
