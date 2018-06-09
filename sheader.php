@@ -19,6 +19,9 @@ $userid = $_GET['userid'];
 $_SESSION['userid'] = $userid;
 $_SESSION['mobile'] = $mobile;
 
+$_COOKIE['userid']=$userid;
+$_COOKIE['mobile']=$mobile;
+
 if ($userid == '' || $userid == 0) {
     $url = "https://www.newsfactsandanalysis.com/";
     header("Location: $url");
@@ -119,8 +122,8 @@ $meetURL = $gr->get_meeting_url($userid);
                         <a href="https://www.newsfactsandanalysis.com/about.html" class="nav2" target="_blank">About
                             Us</a>
                     </li>
-                    <li><a href="mailto:info@newsfactsandanalysis.com" class="nav2">Contact Us</a></li>
-                    <li><a href="#" class="nav2" data-item="logout">Logout</a></li>
+                    <li><a href="mailto:info@newsfactsandanalysis.com" class="nav3">Contact Us</a></li>
+                    <li><a href="#" class="nav3" data-item="logout">Logout</a></li>
                 </ul>
             </div><!-- /.navbar-collapse -->
         </div><!-- /.container-->
